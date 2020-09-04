@@ -1,0 +1,21 @@
+with orders as (
+
+    select *
+    from {{ ref('stg_shopify__order') }}
+
+), aggregated as (
+
+    select
+        customer_id,
+        min(created_timestamp) as first_order_timestamp,
+        max(created_timestamp) as most_recent_order_timestamp,
+        count(*) as number_of_orders,
+        sum(total_price) as lifetime_total_price,
+        sum(subtotal_price) as lifetime_subtotal_price
+    from orders
+    group by 1
+
+)
+
+select *
+from aggregated

@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: shopify__customer_cohorts
+    columns:
+      - name: customer_cohort_id
+        tests:
+          - unique
+          - not_null
+  - name: shopify__orders
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+  - name: shopify__customers
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null

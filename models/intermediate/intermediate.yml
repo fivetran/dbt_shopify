@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: shopify__customers__order_aggregates
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+  - name: shopify__orders__order_line_aggregates
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
