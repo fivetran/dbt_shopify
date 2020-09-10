@@ -19,3 +19,15 @@ models:
         tests:
           - unique
           - not_null
+  - name: shopify__products
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+  - name: shopify__order_lines
+    columns:
+      - name: order_line_id
+        tests:
+          - unique
+          - not_null

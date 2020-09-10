@@ -11,7 +11,7 @@ with orders as (
         max(created_timestamp) as most_recent_order_timestamp,
         count(*) as number_of_orders,
         sum(total_price) as lifetime_total_price,
-        sum(subtotal_price) as lifetime_subtotal_price
+        avg(total_price)  as average_order_value
     from orders
     group by 1
 

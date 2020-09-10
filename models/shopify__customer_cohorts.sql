@@ -49,7 +49,8 @@ with calendar as (
         *,
         sum(total_price_in_month) over ({{ partition_string }}) as total_price_lifetime,
         sum(order_count_in_month) over ({{ partition_string }}) as order_count_lifetime,
-        sum(line_item_count_in_month) over ({{ partition_string }}) as line_item_count_lifetime
+        sum(line_item_count_in_month) over ({{ partition_string }}) as line_item_count_lifetime,
+        row_number() over (partition by customer_id order by date_month asc) as cohort_month_number
     from orders_joined
         
 ), surrogate_key as (
