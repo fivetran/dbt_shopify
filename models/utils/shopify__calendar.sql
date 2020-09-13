@@ -1,6 +1,6 @@
 {{ dbt_utils.date_spine(
     datepart="day",
-    start_date="to_date('01/01/2019', 'mm/dd/yyyy')",
+    start_date="'2019-01-01'",
     end_date="current_date"
    )
 }}

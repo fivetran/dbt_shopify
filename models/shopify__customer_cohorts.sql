@@ -2,7 +2,7 @@ with calendar as (
 
     select *
     from {{ ref('shopify__calendar') }}
-    where date_trunc('month', date_day) = date_day
+    where cast({{ dbt_utils.date_trunc('month','date_day') }} as date) = date_day
 
 ), customers as (
 
@@ -20,10 +20,10 @@ with calendar as (
         calendar.date_day as date_month,
         customers.customer_id,
         customers.first_order_timestamp,
-        date_trunc('month',first_order_timestamp) as cohort_month
+        {{ dbt_utils.date_trunc('month', 'first_order_timestamp') }} as cohort_month
     from calendar
     inner join customers
-        on date_trunc('month', customers.first_order_timestamp) <= calendar.date_day
+        on cast({{ dbt_utils.date_trunc('month', 'first_order_timestamp') }} as date) <= calendar.date_day
 
 ), orders_joined as (
 
@@ -38,7 +38,7 @@ with calendar as (
     from customer_calendar
     left join orders
         on customer_calendar.customer_id = orders.customer_id
-        and customer_calendar.date_month = date_trunc('month', created_timestamp)::date
+        and customer_calendar.date_month = cast({{ dbt_utils.date_trunc('month', 'created_timestamp') }} as date)
     group by 1,2,3,4
 
 ), windows as (
