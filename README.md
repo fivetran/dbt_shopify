@@ -13,6 +13,8 @@ This package contains transformation models, designed to work simultaneously wit
 | shopify__customer_cohorts | Each record represents the monthly performance of a customer, including fields for the month of their 'cohort'. |
 | shopify__customers        | Each record represents a customer, with additional dimensions like lifetime value and number of orders.         |
 | shopify__orders           | Each record represents an order, with additional dimensions like whether it is a new or repeat purchase.        |
+| shopify__order_lines      | Each record represents an order line item, with additional dimensions like how many items were refunded.        |
+| shopify__products         | Each record represents an product, with additional dimensions like most recent order date and order volume.     |
 
 ## Installation Instructions
 Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
