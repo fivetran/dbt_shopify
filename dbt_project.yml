@@ -9,3 +9,9 @@ test-paths: ["tests"]
 data-paths: ["data"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
+
+models: 
+  shopify:
+    materialized: table
+    intermediate:
+      materialized: table
