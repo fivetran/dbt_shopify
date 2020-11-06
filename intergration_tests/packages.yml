@@ -1,5 +1,0 @@
-packages:
-  - local: ../
-  - local: ../../shopify_source
-  - package: fishtown-analytics/dbt_utils
-    version: [">=0.6.0", "<0.7.0"]
