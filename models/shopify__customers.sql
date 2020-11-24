@@ -1,7 +1,7 @@
 with customers as (
 
     select *
-    from {{ ref('stg_shopify__customer') }}
+    from {{ var('shopify_customer') }}
 
 ), orders as (
 

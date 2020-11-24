@@ -15,3 +15,11 @@ models:
     materialized: table
     intermediate:
       materialized: table
+
+vars:
+  shopify:
+    shopify_customer: "{{ ref('stg_shopify__customer') }}"
+    shopify_order: "{{ ref('stg_shopify__order') }}"
+    shopify_order_line: "{{ ref('stg_shopify__order_line') }}"
+    shopify_order_line_refund: "{{ ref('stg_shopify__order_line_refund') }}"
+    shopify_product: "{{ ref('stg_shopify__product') }}"

@@ -1,7 +1,7 @@
 with products as (
 
     select *
-    from {{ ref('stg_shopify__product') }}
+    from {{ var('shopify_product') }}
 
 ), order_lines as (
 
