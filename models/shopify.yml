@@ -203,7 +203,7 @@ models:
         description: The number of orders associated with this customer.
       - name: phone
         description: The unique phone number (E.164 format) for this customer. Attempting to assign the same phone number to multiple customers returns an error.
-      - name: state
+      - name: account_state
         description: The state of the customer's account with a shop.
       - name: is_tax_exempt
         description: Whether the customer is exempt from paying taxes on their order. If true, then taxes won't be applied to an order at checkout. If false, then taxes will be applied at checkout.
