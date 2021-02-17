@@ -9,7 +9,7 @@ models:
   shopify:
     materialized: table
     intermediate:
-      materialized: table
+      materialized: view
 
 vars:
   shopify:
