@@ -1,6 +1,6 @@
 # Shopify
 
-This package models Shopify data from [Fivetran's connector](https://fivetran.com/docs/applications/shopify). It uses data in the format described by [this ERD](https://docs.google.com/presentation/d/1UCoU_g3skvRD1f8qbBLsaqG_ADpcbT45sS3CCE5jzfA/view).
+This package models Shopify data from [Fivetran's connector](https://fivetran.com/docs/applications/shopify). It uses data in the format described by [this ERD](https://fivetran.com/docs/applications/shopify#schemainformation).
 
 The main focus of the package is to transform the core object tables into analytics-ready models, including a cohort model to understand how your customers are behaving over time.
 
@@ -29,8 +29,8 @@ By default, this package looks for your Shopify data in the `shopify` schema of 
 config-version: 2
 
 vars:
-    shopify_schema: your_database_name
-    shopify_database: your_schema_name
+    shopify_database: your_database_name
+    shopify_schema: your_schema_name
 ```
 
 For additional configurations for the source models, visit the [Shopify source package](https://github.com/fivetran/dbt_shopify_source).
