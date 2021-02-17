@@ -13,6 +13,7 @@ with orders as (
         sum(total_price) as lifetime_total_price,
         avg(total_price)  as average_order_value
     from orders
+    where customer_id is not null
     group by 1
 
 )
