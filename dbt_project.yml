@@ -18,4 +18,5 @@ vars:
     shopify_order_line: "{{ ref('stg_shopify__order_line') }}"
     shopify_order_line_refund: "{{ ref('stg_shopify__order_line_refund') }}"
     shopify_product: "{{ ref('stg_shopify__product') }}"
+    shopify_product_variant: "{{ ref('stg_shopify__product_variant') }}"
 
