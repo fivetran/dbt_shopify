@@ -309,7 +309,7 @@ models:
         description: Quantity of the item that has been refunded.
       - name: quantity_net_refunds
         description: Quantity ordered, excluding refunds.
- - name: shopify__product_variants
+  - name: shopify__product_variants
     description: Each record represents a product variant in Shopify
     columns:
       - name: barcode	
