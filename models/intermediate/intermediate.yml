@@ -13,3 +13,15 @@ models:
         tests:
           - unique
           - not_null
+  - name: shopify__transaction__refund_aggregates
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+  - name: shopify__transaction__refund_line_aggregates
+    columns:
+      - name: refund_id
+        tests:
+          - unique
+          - not_null

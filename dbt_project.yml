@@ -5,7 +5,7 @@ config-version: 2
 
 require-dbt-version: [">=0.18.0", "<0.20.0"]
 
-models: 
+models:
   shopify:
     materialized: table
     intermediate:
@@ -18,4 +18,4 @@ vars:
     shopify_order_line: "{{ ref('stg_shopify__order_line') }}"
     shopify_order_line_refund: "{{ ref('stg_shopify__order_line_refund') }}"
     shopify_product: "{{ ref('stg_shopify__product') }}"
-
+    shopify_transaction: "{{ ref('stg_shopify__transaction') }}"

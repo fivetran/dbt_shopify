@@ -176,7 +176,9 @@ models:
         description: The sequential number of the order as it relates to the customer
       - name: new_vs_repeat
         description: Whether the order was a new or repeat order for the customer.
-  
+      - name: refunded_amount
+        description: The total amount refunded within an order.
+
   - name: shopify__customers
     description: Each record represents a customer in Shopify.
     columns:
@@ -187,7 +189,7 @@ models:
       - name: created_timestamp
         description: The date and time when the customer was created.
       - name: default_address_id
-        description: The default address for the customer. 
+        description: The default address for the customer.
       - name: email
         description: The unique email address of the customer. Attempting to assign the same email address to multiple customers returns an error.
       - name: first_name
@@ -303,9 +305,13 @@ models:
         description: The total amount of the discount allocated to the line item in the shop currency.
       - name: variant_id
         description: The ID of the product variant.
+      - name: refund_id
+        description: The ID associated with a refund.
       - name: vendor
         description: The name of the item's supplier.
       - name: refunded_quantity
         description: Quantity of the item that has been refunded.
       - name: quantity_net_refunds
         description: Quantity ordered, excluding refunds.
+      - name: refunded_amount
+        description: The total amount refunded per line item.
