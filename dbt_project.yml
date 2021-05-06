@@ -1,6 +1,6 @@
 
 name: 'shopify'
-version: '1.0.0'
+version: '1.2.0'
 config-version: 2
 
 require-dbt-version: [">=0.18.0", "<0.20.0"]
@@ -13,9 +13,12 @@ models:
 
 vars:
   shopify:
-    shopify_customer: "{{ ref('stg_shopify__customer') }}"
-    shopify_order: "{{ ref('stg_shopify__order') }}"
-    shopify_order_line: "{{ ref('stg_shopify__order_line') }}"
-    shopify_order_line_refund: "{{ ref('stg_shopify__order_line_refund') }}"
-    shopify_product: "{{ ref('stg_shopify__product') }}"
-
+    shopify_customer:           "{{ ref('stg_shopify__customer') }}"
+    shopify_order:              "{{ ref('stg_shopify__order') }}"
+    shopify_order_line:         "{{ ref('stg_shopify__order_line') }}"
+    shopify_order_line_refund:  "{{ ref('stg_shopify__order_line_refund') }}"
+    shopify_product:            "{{ ref('stg_shopify__product') }}"
+    product_variant_source:     "{{ ref('stg_shopify__product_variant') }}"
+    transaction_source:         "{{ ref('stg_shopify__transaction') }}"
+    refund_source:              "{{ ref('stg_shopify__refund') }}"
+    order_adjustment_source:    "{{ ref('stg_shopify__order_adjustment') }}"
