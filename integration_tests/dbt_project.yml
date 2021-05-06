@@ -1,19 +1,24 @@
 name: 'shopify_integration_tests'
-version: '1.0.0'
+version: '0.2.1'
 profile: 'integration_tests'
 config-version: 2
 
 
 vars:
   shopify_source:
-    customer_source: "{{ ref('shopify_customer_data') }}"
+    customer_source:          "{{ ref('shopify_customer_data') }}"
     order_line_refund_source: "{{ ref('shopify_order_line_refund_data') }}"
-    order_line_source: "{{ ref('shopify_order_line_data') }}"
-    order_source: "{{ ref('shopify_order_data') }}"
-    product_source: "{{ ref('shopify_product_data') }}"
+    order_line_source:        "{{ ref('shopify_order_line_data') }}"
+    order_source:             "{{ ref('shopify_order_data') }}"
+    product_source:           "{{ ref('shopify_product_data') }}"
+    order_adjustment_source:  "{{ ref('shopify_order_adjustment_data') }}"
+    product_variant_source:   "{{ ref('shopify_product_variant_data') }}"
+    refund_source:            "{{ ref('shopify_refund_data') }}"
+    transaction_source:       "{{ ref('shopify_transaction_data') }}"
 
 seeds:
   shopify_integration_tests:
+    +quote_columns: "{{ true if target.type in ('redshift', 'postgres') else false }}"
     shopify_customer_data:
       +column_types:
         created_at: timestamp
@@ -53,3 +58,23 @@ seeds:
         published_at: timestamp
         _fivetran_synced: timestamp
         id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+    shopify_order_adjustment_data:
+      +column_types:
+        id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        order_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        refund_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+    shopify_product_variant_data:
+      +column_types:
+        id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        product_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        inventory_item_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+    shopify_transaction_data:
+      +column_types:
+        id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        order_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        refund_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+    shopify_refund_data:
+      +column_types:
+        id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        order_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        user_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"

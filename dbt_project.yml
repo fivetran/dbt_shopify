@@ -1,6 +1,6 @@
 
 name: 'shopify'
-version: '1.0.0'
+version: '1.2.0'
 config-version: 2
 
 require-dbt-version: [">=0.18.0", "<0.20.0"]
@@ -19,4 +19,3 @@ vars:
     shopify_order_line_refund: "{{ ref('stg_shopify__order_line_refund') }}"
     shopify_product: "{{ ref('stg_shopify__product') }}"
     shopify_product_variant: "{{ ref('stg_shopify__product_variant') }}"
-
