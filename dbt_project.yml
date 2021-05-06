@@ -18,10 +18,10 @@ vars:
     shopify_order_line:         "{{ ref('stg_shopify__order_line') }}"
     shopify_order_line_refund:  "{{ ref('stg_shopify__order_line_refund') }}"
     shopify_product:            "{{ ref('stg_shopify__product') }}"
-    shopify_product_variant:            "{{ ref('stg_shopify__product_variant') }}"
-    shopify_transaction:                "{{ ref('stg_shopify__transaction') }}"
-    shopify_refund:                     "{{ ref('stg_shopify__refund') }}"
-    shopify_order_adjustment:           "{{ ref('stg_shopify__order_adjustment') }}"
+    shopify_product_variant:    "{{ ref('stg_shopify__product_variant') }}"
+    shopify_transaction:        "{{ ref('stg_shopify__transaction') }}"
+    shopify_refund:             "{{ ref('stg_shopify__refund') }}"
+    shopify_order_adjustment:   "{{ ref('stg_shopify__order_adjustment') }}"
   
   dbt_utils_dispatch_list: [spark_utils, fivetran_utils]
   fivetran_utils_dispatch_list: [spark_utils]
