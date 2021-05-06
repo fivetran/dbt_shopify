@@ -22,7 +22,7 @@ jobs:
             pip install -r integration_tests/requirements.txt
             mkdir -p ~/.dbt
             cp integration_tests/ci/sample.profiles.yml ~/.dbt/profiles.yml
-     - run:
+      - run:
           name: "Run Tests - Spark"
           command: |
             . venv/bin/activate
