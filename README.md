@@ -8,13 +8,15 @@ The main focus of the package is to transform the core object tables into analyt
 
 This package contains transformation models, designed to work simultaneously with our [Shopify source package](https://github.com/fivetran/dbt_shopify_source). A dependency on the source package is declared in this package's `packages.yml` file, so it will automatically download when you run `dbt deps`. The primary outputs of this package are described below.
 
-| **model**                 | **description**                                                                                                 |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| shopify__customer_cohorts | Each record represents the monthly performance of a customer, including fields for the month of their 'cohort'. |
-| shopify__customers        | Each record represents a customer, with additional dimensions like lifetime value and number of orders.         |
-| shopify__orders           | Each record represents an order, with additional dimensions like whether it is a new or repeat purchase.        |
-| shopify__order_lines      | Each record represents an order line item, with additional dimensions like how many items were refunded.        |
-| shopify__products         | Each record represents an product, with additional dimensions like most recent order date and order volume.     |
+| **model**                 | **description**                                                                                                    |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| shopify__customer_cohorts | Each record represents the monthly performance of a customer, including fields for the month of their 'cohort'.    |
+| shopify__customers        | Each record represents a customer, with additional dimensions like lifetime value and number of orders.            |
+| shopify__orders           | Each record represents an order, with additional dimensions like whether it is a new or repeat purchase.           |
+| shopify__order_lines      | Each record represents an order line item, with additional dimensions like how many items were refunded.           |
+| shopify__products         | Each record represents a product, with additional dimensions like most recent order date and order volume.         |
+| shopify__product_variants | Each record represents a product variant                                                                           |
+
 
 ## Installation Instructions
 Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
