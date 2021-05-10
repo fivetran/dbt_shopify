@@ -7,9 +7,10 @@ require-dbt-version: [">=0.18.0", "<0.20.0"]
 
 models: 
   shopify:
-    materialized: table
+    +schema: shopify
+    +materialized: table
     intermediate:
-      materialized: view
+      +materialized: ephemeral
 
 vars:
   shopify:

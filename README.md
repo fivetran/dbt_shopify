@@ -10,12 +10,12 @@ This package contains transformation models, designed to work simultaneously wit
 
 | **model**                 | **description**                                                                                                    |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| shopify__customer_cohorts | Each record represents the monthly performance of a customer, including fields for the month of their 'cohort'.    |
-| shopify__customers        | Each record represents a customer, with additional dimensions like lifetime value and number of orders.            |
-| shopify__orders           | Each record represents an order, with additional dimensions like whether it is a new or repeat purchase.           |
-| shopify__order_lines      | Each record represents an order line item, with additional dimensions like how many items were refunded.           |
-| shopify__products         | Each record represents a product, with additional dimensions like most recent order date and order volume.         |
-| shopify__product_variants | Each record represents a product variant                                                                           |
+| [shopify__customer_cohorts](models/shopify__customer_cohorts.sql)  | Each record represents the monthly performance of a customer, including fields for the month of their 'cohort'.    |
+| [shopify__customers](models/shopify__customers.sql)        | Each record represents a customer, with additional dimensions like lifetime value and number of orders.            |
+| [shopify__orders](models/shopify__orders.sql)           | Each record represents an order, with additional dimensions like whether it is a new or repeat purchase.           |
+| [shopify__order_lines](models/shopify__order_lines.sql)     | Each record represents an order line item, with additional dimensions like how many items were refunded.           |
+| [shopify__products](models/shopify__products.sql)         | Each record represents a product, with additional dimensions like most recent order date and order volume.         |
+| [shopify__transactions](models/shopify__transactions.sql)     | Each record represents a transaction with additional calculations to handle exchange rates.                        |
 
 
 ## Installation Instructions
@@ -35,6 +35,20 @@ vars:
     shopify_schema: your_schema_name
 ```
 
+### Changing the Build Schema
+By default this package will build the Shopify staging models within a schema titled (<target_schema> + `_stg_shopify`) and the Shopify final models within a schema titled (<target_schema> + `_shopify`) in your target database. If this is not where you would like your modeled Shopify data to be written to, add the following configuration to your `dbt_project.yml` file:
+
+```yml
+# dbt_project.yml
+
+...
+models:
+  shopify:
+    +schema: my_new_schema_name # leave blank for just the target_schema
+  shopify_source:
+    +schema: my_new_schema_name # leave blank for just the target_schema
+```
+
 For additional configurations for the source models, visit the [Shopify source package](https://github.com/fivetran/dbt_shopify_source).
 
 ## Contributions
@@ -44,10 +58,15 @@ or open PRs against `master`. Check out
 [this post](https://discourse.getdbt.com/t/contributing-to-a-dbt-package/657) 
 on the best workflow for contributing to a package.
 
+## Database support
+This package has been tested on BigQuery, Snowflake, Redshift, Postgres, and Databricks.
+
 ## Resources:
 - Provide [feedback](https://www.surveymonkey.com/r/DQ7K7WW) on our existing dbt packages or what you'd like to see next
+- Have questions, feedback, or need help? Book a time during our office hours [using Calendly](https://calendly.com/fivetran-solutions-team/fivetran-solutions-team-office-hours) or email us at solutions@fivetran.com
 - Find all of Fivetran's pre-built dbt packages in our [dbt hub](https://hub.getdbt.com/fivetran/)
-- Learn more about Fivetran [in the Fivetran docs](https://fivetran.com/docs)
+- Learn how to orchestrate [dbt transformations with Fivetran](https://fivetran.com/docs/transformations/dbt)
+- Learn more about Fivetran overall [in our docs](https://fivetran.com/docs)
 - Check out [Fivetran's blog](https://fivetran.com/blog)
 - Learn more about dbt [in the dbt docs](https://docs.getdbt.com/docs/introduction)
 - Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
