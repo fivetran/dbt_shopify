@@ -242,10 +242,6 @@ models:
         description: The timestamp the customer completed their most recent order.
       - name: average_order_value
         description: The average order value for the customer.
-      - name: number_of_orders
-        description: The total number of orders for the customer.
-      - name: lifetime_total_price
-        description: The total amount (in currency) purchased by the customer.
 
   - name: shopify__products
     description: Each record represents a product in Shopify.
