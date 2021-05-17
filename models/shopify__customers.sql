@@ -14,7 +14,9 @@ with customers as (
         customers.*,
         orders.first_order_timestamp,
         orders.most_recent_order_timestamp,
-        orders.average_order_value
+        orders.average_order_value,
+        orders.lifetime_total_amount,
+        orders.lifetime_count_orders
     from customers
     left join orders
         using (customer_id)
