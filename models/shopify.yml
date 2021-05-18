@@ -222,7 +222,7 @@ models:
         description: A unique identifier for the customer.
       - name: last_name
         description: The customer's last name.
-      - name: orders_count
+      - name: lifetime_count_orders
         description: The number of orders associated with this customer.
       - name: phone
         description: The unique phone number (E.164 format) for this customer. Attempting to assign the same phone number to multiple customers returns an error.
@@ -230,8 +230,6 @@ models:
         description: The state of the customer's account with a shop.
       - name: is_tax_exempt
         description: Whether the customer is exempt from paying taxes on their order. If true, then taxes won't be applied to an order at checkout. If false, then taxes will be applied at checkout.
-      - name: total_spent
-        description: The total amount of money that the customer has spent across their order history.
       - name: updated_timestamp
         description: The date and time when the customer information was last updated.
       - name: is_verified_email
@@ -242,6 +240,12 @@ models:
         description: The timestamp the customer completed their most recent order.
       - name: average_order_value
         description: The average order value for the customer.
+      - name: lifetime_total_spent
+        description: The total amount of money that the customer has spent on orders across their order history.
+      - name: lifetime_total_refunded
+        description: The total amount of money that the customer has been refunded on orders across their order history.
+      - name: lifetime_total_amount
+        description: The total amount of money (minus refunds) that the customer has spent across their order history.
 
   - name: shopify__products
     description: Each record represents a product in Shopify.
