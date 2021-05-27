@@ -49,7 +49,7 @@ with orders as (
     left join order_lines
         on orders.order_id = order_lines.order_id
     left join refund_aggregates
-        using (order_id)
+        on orders.order_id = refund_aggregates.order_id
     left join order_adjustments_aggregates
         on orders.order_id = order_adjustments_aggregates.order_id
 
