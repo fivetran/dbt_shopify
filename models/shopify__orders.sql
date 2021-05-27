@@ -47,7 +47,7 @@ with orders as (
         order_lines.line_item_count
     from orders
     left join order_lines
-        using (order_id)
+        on orders.order_id = order_lines.order_id
     left join refund_aggregates
         using (order_id)
     left join order_adjustments_aggregates
