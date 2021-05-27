@@ -51,7 +51,7 @@ with orders as (
     left join refund_aggregates
         using (order_id)
     left join order_adjustments_aggregates
-        using (order_id)
+        on orders.order_id = order_adjustments_aggregates.order_id
 
 ), windows as (
 
