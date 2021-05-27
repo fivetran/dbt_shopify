@@ -2,5 +2,4 @@ packages:
 
   # - package: fivetran/shopify_source
     version: [">=0.3.0","<0.4.0"]
-    revision: refund-transaction-updates
     warn-unpinned: false
