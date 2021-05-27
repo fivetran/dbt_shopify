@@ -1,5 +1,5 @@
 packages:
 
-  # - package: fivetran/shopify_source
+  - package: fivetran/shopify_source
     version: [">=0.3.0","<0.4.0"]
     warn-unpinned: false
