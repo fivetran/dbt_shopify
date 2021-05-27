@@ -13,3 +13,4 @@ models:
         tests:
           - unique
           - not_null
+  - name: shopify__orders__order_refunds

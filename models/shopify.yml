@@ -71,7 +71,7 @@ models:
         description: The postal code (zip, postcode, Eircode, …) of the billing address.
       - name: browser_ip
         description: The IP address of the browser used by the customer when they placed the order.
-      - name: buyer_accepts_marketing
+      - name: has_buyer_accepted_marketing
         description: Whether the customer consented to receive email updates from the shop.
       - name: cancel_reason
         description: The reason why the order was canceled.
@@ -150,9 +150,9 @@ models:
         description: Where the order originated. Can be set only during order creation, and is not writeable afterwards.
       - name: subtotal_price
         description: The price of the order in the shop currency after discounts but before shipping, taxes, and tips.
-      - name: taxes_included
+      - name: has_taxes_included
         description: Whether taxes are included in the order subtotal.
-      - name: test
+      - name: is_test_order
         description: Whether this is a test order.
       - name: token
         description: A unique token for the order.
@@ -176,13 +176,36 @@ models:
         description: The sequential number of the order as it relates to the customer
       - name: new_vs_repeat
         description: Whether the order was a new or repeat order for the customer.
+      - name: shipping_cost
+        description: The shipping cost of the order.
+      - name: order_adjustment_amount
+        description: Total adjustment amount applied to the order.
+      - name: order_adjustment_tax_amount
+        description: Total tax applied to the adjustment on the order.
+      - name: refund_subtotal
+        description: Total refund amount applied to the order.
+      - name: refund_total_tax
+        description: Total tax applied to the refund on the order.
+      - name: order_adjusted_total
+        description: >
+          Order total adjusted for refunds and other adjustments. The calculation used for this field is as follows:
+          total price listed on the original order (including shipping costs and discounts) + adjustments + adjustments tax - total refunds - refunds tax
+          The order_adjusted_total will equate to the total sales - refunds listed within the transactions table for the order (after currency exchange).
+      - name: index
+        description: Field representing the index of the order line in relation to the order.
+      - name: pre_tax_price
+        description: The pre tax price of the order line.
+      - name: checkout_token
+        description: The checkout token applied to the order.
+      - name: total_shipping_price_set
+        description: The total shipping price set to the order.
   
   - name: shopify__customers
     description: Each record represents a customer in Shopify.
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
-      - name: accepts_marketing
+      - name: has_accepted_marketing
         description: Whether the customer has consented to receive marketing material via email.
       - name: created_timestamp
         description: The date and time when the customer was created.
@@ -199,7 +222,7 @@ models:
         description: A unique identifier for the customer.
       - name: last_name
         description: The customer's last name.
-      - name: orders_count
+      - name: lifetime_count_orders
         description: The number of orders associated with this customer.
       - name: phone
         description: The unique phone number (E.164 format) for this customer. Attempting to assign the same phone number to multiple customers returns an error.
@@ -207,8 +230,6 @@ models:
         description: The state of the customer's account with a shop.
       - name: is_tax_exempt
         description: Whether the customer is exempt from paying taxes on their order. If true, then taxes won't be applied to an order at checkout. If false, then taxes will be applied at checkout.
-      - name: total_spent
-        description: The total amount of money that the customer has spent across their order history.
       - name: updated_timestamp
         description: The date and time when the customer information was last updated.
       - name: is_verified_email
@@ -219,10 +240,12 @@ models:
         description: The timestamp the customer completed their most recent order.
       - name: average_order_value
         description: The average order value for the customer.
-      - name: number_of_orders
-        description: The total number of orders for the customer.
-      - name: lifetime_total_price
-        description: The total amount (in currency) purchased by the customer.
+      - name: lifetime_total_spent
+        description: The total amount of money that the customer has spent on orders across their order history.
+      - name: lifetime_total_refunded
+        description: The total amount of money that the customer has been refunded on orders across their order history.
+      - name: lifetime_total_amount
+        description: The total amount of money (minus refunds) that the customer has spent across their order history.
 
   - name: shopify__products
     description: Each record represents a product in Shopify.
@@ -254,8 +277,12 @@ models:
         description: The name of the product's vendor.
       - name: quantity_sold
         description: Quantity of the product sold.
+      - name: subtotal_sold
+        description: Total amount of the product sold.
       - name: quantity_sold_net_refunds
         description: Quantity of the product sold, excluding refunds.
+      - name: subtotal_sold_net_refunds
+        description: Total amount of the product sold, excluding refunds.
       - name: first_order_timestamp
         description: The timestamp the product was first ordered.
       - name: most_recent_order_timestamp
@@ -272,7 +299,7 @@ models:
         description: The service provider that's fulfilling the item.
       - name: fulfillment_status
         description: How far along an order is in terms line items fulfilled.
-      - name: gift_card
+      - name: is_gift_card
         description: Whether the item is a gift card. If true, then the item is not taxed or considered for shipping charges.
       - name: grams
         description: The weight of the item in grams.
@@ -291,7 +318,7 @@ models:
         description: The ID of the product that the line item belongs to. Can be null if the original product associated with the order is deleted at a later date.
       - name: quantity
         description: The number of items that were purchased.
-      - name: requires_shipping
+      - name: is_requiring_shipping
         description: Whether the item requires shipping.
       - name: sku
         description: The item's SKU (stock keeping unit).
@@ -309,3 +336,126 @@ models:
         description: Quantity of the item that has been refunded.
       - name: quantity_net_refunds
         description: Quantity ordered, excluding refunds.
+      - name: variant_barcode
+        description: The barcode, UPC, or ISBN number for the product.
+      - name: variant_compare_at_price
+        description: The original price of the item before an adjustment or a sale.
+      - name: variant_created_at
+        description: The date and time (ISO 8601 format) when the product variant was created.
+      - name: variant_fulfillment_service
+        description: The fulfillment service associated with the product variant.
+      - name: variant_grams
+        description: The weight of the product variant in grams.
+      - name: variant_image_id
+        description: The unique numeric identifier for a product's image. The image must be associated to the same product as the variant.
+      - name: inventory_item_id
+        description: The unique identifier for the inventory item, which is used in the Inventory API to query for inventory information.
+      - name: variant_inventory_management
+        description: The fulfillment service that tracks the number of items in stock for the product variant.
+      - name: variant_inventory_policy
+        description: Whether customers are allowed to place an order for the product variant when it's out of stock.
+      - name: variant_inventory_quantity
+        description: An aggregate of inventory across all locations. To adjust inventory at a specific location, use the InventoryLevel resource.
+      - name: variant_option_1
+        description: "The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3."
+      - name: variant_option_2
+        description: "The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3."
+      - name: variant_option_3
+        description: "The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3."
+      - name: variant_position
+        description: The order of the product variant in the list of product variants. The first position in the list is 1. The position of variants is indicated by the order in which they are listed.
+      - name: variant_price
+        description: The price of the product variant.
+      - name: variant_is_requiring_shipping
+        description: This property is deprecated. Use the `requires_shipping` property on the InventoryItem resource instead.
+      - name: variant_sku
+        description: A unique identifier for the product variant in the shop. Required in order to connect to a FulfillmentService.
+      - name: variant_is_taxable
+        description: Whether a tax is charged when the product variant is sold.
+      - name: variant_title
+        description: The title of the product variant. The title field is a concatenation of the option1, option2, and option3 fields. You can only update title indirectly using the option fields.
+      - name: variant_updated_at
+        description: The date and time when the product variant was last modified. Gets returned in ISO 8601 format.
+      - name: variant_weight
+        description: The weight of the product variant in the unit system specified with weight_unit.
+      - name: variant_weight_unit
+        description: "The unit of measurement that applies to the product variant's weight. If you don't specify a value for weight_unit, then the shop's default unit of measurement is applied. Valid values: g, kg, oz, and lb."
+      - name: refunded_subtotal
+        description: Subtotal amount of the refund applied to the order line.
+      - name: subtotal_net_refunds
+        description: Subtotal of the order line with refunds subtracted.
+      - name: image_id
+        description: Image id of the product variant associated with the order line.
+  
+  - name: shopify__transactions
+    description: Each record represents a transaction in Shopify.
+    columns:
+      - name: transaction_id
+        tests:
+         - unique
+         - not_null
+        description: The ID for the transaction.
+      - name: order_id
+        description: The ID for the order that the transaction is associated with.
+      - name: refund_id
+        description: The ID associated with a refund in the refund table.
+      - name: amount
+        description: The amount of money included in the transaction.
+      - name: authorization
+        description: The authorization code associated with the transaction.
+      - name: created_timestamp
+        description: The date and time when the transaction was created.
+      - name: processed_timestamp
+        description: The date and time when a transaction was processed.
+      - name: device_id
+        description: The ID for the device.
+      - name: gateway
+        description: The name of the gateway the transaction was issued through.
+      - name: source_name
+        description: The origin of the transaction.
+      - name: message
+        description: A string generated by the payment provider with additional information about why the transaction succeeded or failed.
+      - name: currency
+        description: The three-letter code (ISO 4217 format) for the currency used for the payment.
+      - name: location_id
+        description: The ID of the physical location where the transaction was processed.
+      - name: parent_id
+        description: The ID of an associated transaction.
+      - name: payment_avs_result_code
+        description: The response code from the address verification system.
+      - name: payment_credit_card_bin
+        description: The issuer identification number (IIN), formerly known as bank identification number (BIN) of the customer's credit card.
+      - name: payment_cvv_result_code
+        description: The response code from the credit card company indicating whether the customer entered the card security code, or card verification value, correctly.
+      - name: payment_credit_card_number
+        description: The customer's credit card number, with most of the leading digits redacted.
+      - name: payment_credit_card_company
+        description: The name of the company that issued the customer's credit card.
+      - name: kind
+        description: The transaction's type.
+      - name: receipt
+        description: A transaction receipt attached to the transaction by the gateway.
+      - name: currency_exchange_id
+        description: The ID of the adjustment.
+      - name: currency_exchange_adjustment
+        description: The difference between the amounts on the associated transaction and the parent transaction.
+      - name: currency_exchange_original_amount
+        description: The amount of the parent transaction in the shop currency.
+      - name: currency_exchange_final_amount
+        description: The amount of the associated transaction in the shop currency.
+      - name: currency_exchange_currency
+        description: The shop currency.
+      - name: error_code
+        description: A standardized error code, independent of the payment provider.
+      - name: status
+        description: The status of the transaction.
+      - name: test
+        description: Whether the transaction is a test transaction.
+      - name: user_id
+        description: The ID for the user who was logged into the Shopify POS device when the order was processed, if applicable.
+      - name: _fivetran_synced
+        description: Timestamp of the date the record was synced by Fivetran.
+      - name: exchange_rate
+        description: The exchange rate between the home currency and the currency of sale at the time of the transaction.
+      - name: currency_exchange_calculated_amount
+        description: The total amount of the transaction with the currency exchange rate applied.

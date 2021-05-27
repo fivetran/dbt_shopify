@@ -32,8 +32,8 @@ with calendar as (
         customer_calendar.customer_id, 
         customer_calendar.first_order_timestamp,
         customer_calendar.cohort_month,
-        coalesce(count(orders.order_id), 0) as order_count_in_month,
-        coalesce(sum(orders.total_price), 0) as total_price_in_month,
+        coalesce(count(distinct orders.order_id), 0) as order_count_in_month,
+        coalesce(sum(orders.order_adjusted_total), 0) as total_price_in_month,
         coalesce(sum(orders.line_item_count), 0) as line_item_count_in_month
     from customer_calendar
     left join orders
