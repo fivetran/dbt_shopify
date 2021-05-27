@@ -2,7 +2,6 @@ packages:
 
   # - package: fivetran/shopify_source
   #   version: [">=0.2.0","<0.3.0"]
-  
   - git: https://github.com/fivetran/dbt_shopify_source.git
     revision: refund-transaction-updates
     warn-unpinned: false
