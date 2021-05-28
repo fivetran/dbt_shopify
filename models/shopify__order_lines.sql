@@ -57,7 +57,7 @@ with order_lines as (
     from order_lines
     left join refunds_aggregated
         on refunds_aggregated.order_line_id = order_lines.order_line_id
-        and refunds_aggregated.source_relation = refunds_aggregated.source_relation
+        and refunds_aggregated.source_relation = order_lines.source_relation
     left join product_variants
         on product_variants.variant_id = order_lines.variant_id
         and product_variants.source_relation = order_lines.source_relation
