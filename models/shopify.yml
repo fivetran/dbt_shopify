@@ -34,6 +34,11 @@ models:
 
   - name: shopify__orders
     description: Each record represents an order in Shopify.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - order_id
+            - source_relation
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -94,9 +99,6 @@ models:
       - name: fulfillment_status
         description: The order's status in terms of fulfilled line items.
       - name: order_id
-        tests:
-          - unique
-          - not_null
         description: The ID of the order, used for API purposes. This is different from the order_number property, which is the ID used by the shop owner and customer.
       - name: landing_site_base_url
         description: The URL for the page where the buyer landed when they entered the shop.
@@ -202,6 +204,11 @@ models:
   
   - name: shopify__customers
     description: Each record represents a customer in Shopify.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - customer_id
+            - source_relation
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -216,9 +223,6 @@ models:
       - name: first_name
         description: The customer's first name.
       - name: customer_id
-        tests:
-          - unique
-          - not_null
         description: A unique identifier for the customer.
       - name: last_name
         description: The customer's last name.
@@ -249,6 +253,11 @@ models:
 
   - name: shopify__products
     description: Each record represents a product in Shopify.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - product_id
+            - source_relation
     columns:
       - name: _fivetran_deleted
         description: Whether the record has been deleted in the source system.
@@ -259,9 +268,6 @@ models:
       - name: handle
         description: A unique human-friendly string for the product. Automatically generated from the product's title.
       - name: product_id
-        tests:
-          - unique
-          - not_null
         description: An unsigned 64-bit integer that's used as a unique identifier for the product. Each id is unique across the Shopify system. No two products will have the same id, even if they're from different shops.
       - name: product_type
         description: A categorization for the product used for filtering and searching products.
@@ -290,6 +296,11 @@ models:
 
   - name: shopify__order_lines
     description: Each record represents a line item of an order in Shopify.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - order_line_id
+            - source_relation
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -304,9 +315,6 @@ models:
       - name: grams
         description: The weight of the item in grams.
       - name: order_line_id
-        tests:
-          - unique
-          - not_null
         description: The ID of the line item.
       - name: name
         description: The name of the product variant.
@@ -389,11 +397,13 @@ models:
   
   - name: shopify__transactions
     description: Each record represents a transaction in Shopify.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - transaction_id
+            - source_relation
     columns:
       - name: transaction_id
-        tests:
-         - unique
-         - not_null
         description: The ID for the transaction.
       - name: order_id
         description: The ID for the order that the transaction is associated with.
