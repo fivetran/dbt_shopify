@@ -10,7 +10,7 @@ with checkout as (
         created_at as event_timestamp,
         email,
         'checkout_abandoned' as event_type,
-        null as revenue_impact,
+        cast(null as {{ dbt_utils.type_float() }}) as revenue_impact,
         source_name as feature_1,
         cast(null as {{ dbt_utils.type_string() }}) as feature_2,
         cast(null as {{ dbt_utils.type_string() }}) as feature_3
