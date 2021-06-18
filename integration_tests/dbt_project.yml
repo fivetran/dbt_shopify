@@ -15,18 +15,15 @@ vars:
     product_variant_source:   "{{ ref('shopify_product_variant_data') }}"
     refund_source:            "{{ ref('shopify_refund_data') }}"
     transaction_source:       "{{ ref('shopify_transaction_data') }}"
-    checkout_source:            "{{ ref('shopify_checkout_data') }}"
     abandoned_checkout_source:  "{{ ref('shopify_abandoned_checkout_data') }}"
 
 seeds:
   shopify_integration_tests:
     +quote_columns: "{{ true if target.type in ('redshift', 'postgres') else false }}"
-    shopify_checkout_data:
-      +column_types:
-        id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
     shopify_abandoned_checkout_data:
       +column_types:
         id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        completed_at: timestamp
     shopify_customer_data:
       +column_types:
         created_at: timestamp

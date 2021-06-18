@@ -7,7 +7,7 @@ with checkout as (
 
     select
         {{ dbt_utils.surrogate_key(['id',"'checkout_abandoned'"]) }} as event_id,
-        created_at as event_timestamp,
+        {{ dbt_utils.dateadd('second',1,'created_at') }} as event_timestamp,
         email,
         'checkout_abandoned' as event_type,
         cast(null as {{ dbt_utils.type_float() }}) as revenue_impact,
@@ -15,7 +15,7 @@ with checkout as (
         cast(null as {{ dbt_utils.type_string() }}) as feature_2,
         cast(null as {{ dbt_utils.type_string() }}) as feature_3
     from checkout
-    where created_at is not null
+    where completed_at is null
 
 )
 

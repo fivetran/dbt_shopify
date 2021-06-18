@@ -1,7 +1,7 @@
 with checkout as (
 
     select *
-    from {{ var('shopify_checkout') }}
+    from {{ var('shopify_abandoned_checkout') }}
 
 ), fields as (
 
