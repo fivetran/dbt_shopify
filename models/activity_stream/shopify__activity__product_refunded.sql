@@ -23,7 +23,9 @@ with order_lines as (
         refunds.subtotal * -1.0 as revenue_impact,
         order_lines.sku as feature_1,
         order_lines.name as feature_2,
-        cast(refunds.quantity as {{ dbt_utils.type_string() }}) as feature_3
+        cast(refunds.quantity as {{ dbt_utils.type_string() }}) as feature_3,
+        'shopify' as source,
+        orders.customer_id as source_id
     from orders
     inner join order_lines
         on orders.order_id = order_lines.order_id

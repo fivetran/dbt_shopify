@@ -13,7 +13,9 @@ with orders as (
         total_price * -1.0 as revenue_impact,
         cancel_reason as feature_1,
         customer_order_seq_number as feature_2,
-        cast(new_vs_repeat as {{ dbt_utils.type_string() }}) as feature_3
+        cast(new_vs_repeat as {{ dbt_utils.type_string() }}) as feature_3,
+        'shopify' as source,
+        customer_id as source_id
     from orders
     where cancelled_timestamp is not null
 

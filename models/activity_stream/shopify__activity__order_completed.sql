@@ -13,7 +13,9 @@ with orders as (
         total_price as revenue_impact,
         fulfillment_status as feature_1,
         financial_status as feature_2,
-        cast(new_vs_repeat as {{ dbt_utils.type_string() }}) as feature_3
+        cast(new_vs_repeat as {{ dbt_utils.type_string() }}) as feature_3,
+        'shopify' as source,
+        customer_id as source_id
     from orders
     where created_timestamp is not null
 
