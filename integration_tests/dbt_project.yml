@@ -24,6 +24,7 @@ seeds:
       +column_types:
         id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         completed_at: timestamp
+        created_at: timestamp
     shopify_customer_data:
       +column_types:
         created_at: timestamp
