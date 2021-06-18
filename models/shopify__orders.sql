@@ -18,6 +18,11 @@ with orders as (
     select *
     from {{ var('shopify_order_adjustment') }}
 
+), customers as (
+
+    select *
+    from {{ var('shopify_customer') }}
+
 ), refund_aggregates as (
     select
         order_id,
@@ -44,7 +49,8 @@ with orders as (
         refund_aggregates.refund_subtotal,
         refund_aggregates.refund_total_tax,
         (orders.total_price + coalesce(order_adjustments_aggregates.order_adjustment_amount,0) + coalesce(order_adjustments_aggregates.order_adjustment_tax_amount,0) - coalesce(refund_aggregates.refund_subtotal,0) - coalesce(refund_aggregates.refund_total_tax,0)) as order_adjusted_total,
-        order_lines.line_item_count
+        order_lines.line_item_count,
+        customers.email as customer_email
     from orders
     left join order_lines
         on orders.order_id = order_lines.order_id
@@ -52,6 +58,8 @@ with orders as (
         on orders.order_id = refund_aggregates.order_id
     left join order_adjustments_aggregates
         on orders.order_id = order_adjustments_aggregates.order_id
+    left join customers
+        on orders.customer_id = customers.customer_id
 
 ), windows as (
 
