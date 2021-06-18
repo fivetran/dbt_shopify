@@ -15,7 +15,8 @@ with orders as (
         financial_status as feature_2,
         cast(new_vs_repeat as {{ dbt_utils.type_string() }}) as feature_3,
         'shopify' as source,
-        customer_id as source_id
+        customer_id as source_id,
+        cast(null as {{ dbt_utils.type_string() }}) as link
     from orders
     where created_timestamp is not null
 

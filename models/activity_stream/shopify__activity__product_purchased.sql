@@ -20,7 +20,8 @@ with order_lines as (
         order_lines.name as feature_2,
         cast(order_lines.quantity as {{ dbt_utils.type_string() }}) as feature_3,
         'shopify' as source,
-        orders.customer_id as source_id
+        orders.customer_id as source_id,
+        cast(null as {{ dbt_utils.type_string() }}) as link
     from orders
     inner join order_lines
         on orders.order_id = order_lines.order_id

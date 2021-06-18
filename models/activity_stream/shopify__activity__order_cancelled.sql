@@ -15,7 +15,8 @@ with orders as (
         customer_order_seq_number as feature_2,
         cast(new_vs_repeat as {{ dbt_utils.type_string() }}) as feature_3,
         'shopify' as source,
-        customer_id as source_id
+        customer_id as source_id,
+        cast(null as {{ dbt_utils.type_string() }}) as link
     from orders
     where cancelled_timestamp is not null
 

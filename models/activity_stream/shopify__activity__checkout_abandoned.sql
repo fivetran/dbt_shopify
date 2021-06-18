@@ -15,7 +15,8 @@ with checkout as (
         cast(null as {{ dbt_utils.type_string() }}) as feature_2,
         cast(null as {{ dbt_utils.type_string() }}) as feature_3,
         'shopify' as source,
-        customer_id as source_id
+        customer_id as source_id,
+        abandoned_checkout_url as link
     from checkout
     where completed_at is null
 
