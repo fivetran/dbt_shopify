@@ -18,7 +18,7 @@ with checkout as (
         customer_id as source_id,
         abandoned_checkout_url as link
     from checkout
-    where completed_at is null
+    where completed_at is null and created_at is not null
 
 )
 
