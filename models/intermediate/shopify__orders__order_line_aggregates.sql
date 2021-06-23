@@ -7,9 +7,10 @@ with order_line as (
 
     select 
         order_id,
+        source_relation,
         count(*) as line_item_count
     from order_line
-    group by 1
+    group by 1,2
 
 )
 

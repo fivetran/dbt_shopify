@@ -21,18 +21,20 @@ with orders as (
 ), refund_aggregates as (
     select
         order_id,
+        source_relation,
         sum(subtotal) as refund_subtotal,
         sum(total_tax) as refund_total_tax
     from refunds
-    group by 1
+    group by 1,2
 
 ), order_adjustments_aggregates as (
     select
         order_id,
+        source_relation,
         sum(amount) as order_adjustment_amount,
         sum(tax_amount) as order_adjustment_tax_amount
     from order_adjustments
-    group by 1
+    group by 1,2
 
 ), joined as (
 
@@ -48,16 +50,19 @@ with orders as (
     from orders
     left join order_lines
         on orders.order_id = order_lines.order_id
+        and orders.source_relation = order_lines.source_relation
     left join refund_aggregates
         on orders.order_id = refund_aggregates.order_id
+        and orders.source_relation = refund_aggregates.source_relation
     left join order_adjustments_aggregates
         on orders.order_id = order_adjustments_aggregates.order_id
+        and orders.source_relation = order_adjustments_aggregates.source_relation
 
 ), windows as (
 
     select 
         *,
-        row_number() over (partition by customer_id order by created_timestamp) as customer_order_seq_number
+        row_number() over (partition by customer_id, source_relation order by created_timestamp) as customer_order_seq_number
     from joined
 
 ), new_vs_repeat as (

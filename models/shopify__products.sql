@@ -17,6 +17,7 @@ with products as (
 
     select 
         order_lines.product_id, 
+        order_lines.source_relation,
         sum(order_lines.quantity) as quantity_sold,
         sum(order_lines.pre_tax_price) as subtotal_sold,
         sum(order_lines.quantity_net_refunds) as quantity_sold_net_refunds,
@@ -25,8 +26,8 @@ with products as (
         max(orders.created_timestamp) as most_recent_order_timestamp
     from order_lines
     left join orders
-        using (order_id)
-    group by 1
+        using (order_id, source_relation)
+    group by 1,2
 
 ), joined as (
 
@@ -40,7 +41,7 @@ with products as (
         order_lines_aggregated.most_recent_order_timestamp
     from products
     left join order_lines_aggregated
-        using (product_id)
+        using (product_id, source_relation)
 
 )
 

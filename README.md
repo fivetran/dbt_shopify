@@ -35,6 +35,19 @@ vars:
     shopify_schema: your_schema_name
 ```
 
+If you have multiple Shopify connectors in Fivetran and would like to use this package on all of them simultaneously, we have provided functionality to do so. The package will union all of the data together and pass the unioned table into the transformations. You will be able to see which source it came from in the `source_relation` column of each model. To use this functionality, you will need to set either the `union_schemas` or `union_databases` variables:
+
+```yml
+# dbt_project.yml
+
+...
+config-version: 2
+
+vars:
+    union_schema: ['shopify_usa','shopify_canada'] # use this if the data is in different schemas/datasets of the same database/project
+    union_databases: ['shopify_usa','shopify_canada'] # use this if the data is in different databases/projects but uses the same schema name
+```
+
 ### Changing the Build Schema
 By default this package will build the Shopify staging models within a schema titled (<target_schema> + `_stg_shopify`) and the Shopify final models within a schema titled (<target_schema> + `_shopify`) in your target database. If this is not where you would like your modeled Shopify data to be written to, add the following configuration to your `dbt_project.yml` file:
 

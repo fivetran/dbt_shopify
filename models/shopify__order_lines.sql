@@ -17,10 +17,11 @@ with order_lines as (
     
     select
         order_line_id,
+        source_relation,
         sum(quantity) as quantity,
         sum(coalesce(subtotal, 0)) as subtotal
     from refunds
-    group by 1
+    group by 1,2
 
 ), joined as (
 
@@ -56,8 +57,10 @@ with order_lines as (
     from order_lines
     left join refunds_aggregated
         on refunds_aggregated.order_line_id = order_lines.order_line_id
+        and refunds_aggregated.source_relation = order_lines.source_relation
     left join product_variants
         on product_variants.variant_id = order_lines.variant_id
+        and product_variants.source_relation = order_lines.source_relation
 
 )
 
