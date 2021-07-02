@@ -1,6 +1,6 @@
 
 name: 'shopify'
-version: '0.4.1'
+version: '0.4.2'
 config-version: 2
 
 require-dbt-version: [">=0.18.0", "<0.20.0"]
