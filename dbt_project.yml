@@ -19,5 +19,3 @@ vars:
     shopify_transaction: "{{ ref('stg_shopify__transaction') }}"
     shopify_refund: "{{ ref('stg_shopify__refund') }}"
     shopify_order_adjustment: "{{ ref('stg_shopify__order_adjustment') }}"
-  dbt_utils_dispatch_list: [spark_utils, fivetran_utils]
-  fivetran_utils_dispatch_list: [spark_utils]

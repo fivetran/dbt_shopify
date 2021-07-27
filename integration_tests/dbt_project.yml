@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '0.4.2'
+version: '0.5.0'
 profile: 'integration_tests'
 config-version: 2
 
@@ -16,6 +16,10 @@ vars:
     refund_source:            "{{ ref('shopify_refund_data') }}"
     transaction_source:       "{{ ref('shopify_transaction_data') }}"
 
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['spark_utils', 'dbt_utils']
+    
 seeds:
   shopify_integration_tests:
     +quote_columns: "{{ true if target.type in ('redshift', 'postgres') else false }}"
