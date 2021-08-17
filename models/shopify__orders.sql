@@ -12,7 +12,7 @@ with orders as (
 ), order_adjustments as (
 
     select *
-    from {{ var('shopify_order_adjustment') }}
+    from {{ var('shopify_order_adjustment', true) }}
 
 ), order_adjustments_aggregates as (
     select
@@ -28,7 +28,7 @@ with orders as (
 ), refunds as (
 
     select *
-    from {{ ref('shopify__orders__order_refunds') }}
+    from {{ ref('shopify__orders__order_refunds', true) }}
 
 ), refund_aggregates as (
     select
@@ -56,7 +56,7 @@ with orders as (
         refund_aggregates.refund_total_tax,
         {% endif %}
         (orders.total_price
-            {% if var('shopify__using_order_adjustment') %}
+            {% if var('shopify__using_order_adjustment', true) %}
             + coalesce(order_adjustments_aggregates.order_adjustment_amount,0) + coalesce(order_adjustments_aggregates.order_adjustment_tax_amount,0) 
             {% endif %}
             {% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_order_refund"]) %}
@@ -73,7 +73,7 @@ with orders as (
         on orders.order_id = refund_aggregates.order_id
         and orders.source_relation = refund_aggregates.source_relation
     {% endif %}
-    {% if var('shopify__using_order_adjustment') %}
+    {% if var('shopify__using_order_adjustment', true) %}
     left join order_adjustments_aggregates
         on orders.order_id = order_adjustments_aggregates.order_id
         and orders.source_relation = order_adjustments_aggregates.source_relation
