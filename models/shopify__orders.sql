@@ -46,7 +46,7 @@ with orders as (
         orders.*,
         coalesce(cast({{ fivetran_utils.json_parse("total_shipping_price_set",["shop_money","amount"]) }} as {{ dbt_utils.type_float() }}) ,0) as shipping_cost,
         
-        {% if var('shopify__using_order_adjustment') %}
+        {% if var('shopify__using_order_adjustment', true) %}
         order_adjustments_aggregates.order_adjustment_amount,
         order_adjustments_aggregates.order_adjustment_tax_amount,
         {% endif %}
