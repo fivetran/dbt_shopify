@@ -57,6 +57,20 @@ vars:
     union_databases: ['shopify_usa','shopify_canada'] # use this if the data is in different databases/projects but uses the same schema name
 ```
 
+### Disable Models
+This package was designed with the intention that users have all relevant Shopify tables being synced by Fivetran. However, if you are Shopify user that does not operate on returns or adjustments then you will not have the related source tables. As such, you may use the below variable configurations to disable the respective downstream models. All variables are `true` by default, only add the below configuration if you are wishing to disable the models:
+
+```yml
+# dbt_project.yml
+
+...
+vars:
+  shopify_source:
+    shopify__using_order_adjustment:  false  # true by default
+    shopify__using_order_line_refund: false  # true by default
+    shopify__using_order_refund:      false  # true by default
+```
+
 ### Changing the Build Schema
 By default this package will build the Shopify staging models within a schema titled (<target_schema> + `_stg_shopify`) and the Shopify final models within a schema titled (<target_schema> + `_shopify`) in your target database. If this is not where you would like your modeled Shopify data to be written to, add the following configuration to your `dbt_project.yml` file:
 

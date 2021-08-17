@@ -8,11 +8,11 @@ with orders as (
     select *
     from {{ ref('shopify__orders__order_line_aggregates') }}
 
-{% if var('shopify__using_order_adjustment') %}
+{% if var('shopify__using_order_adjustment', true) %}
 ), order_adjustments as (
 
     select *
-    from {{ var('shopify_order_adjustment', true) }}
+    from {{ var('shopify_order_adjustment') }}
 
 ), order_adjustments_aggregates as (
     select
@@ -28,7 +28,7 @@ with orders as (
 ), refunds as (
 
     select *
-    from {{ ref('shopify__orders__order_refunds', true) }}
+    from {{ ref('shopify__orders__order_refunds') }}
 
 ), refund_aggregates as (
     select
