@@ -58,7 +58,7 @@ vars:
 ```
 
 ### Disable Models
-This package was designed with the intention that users have all relevant Shopify tables being synced by Fivetran. However, if you are Shopify user that does not operate on returns or adjustments then you will not have the related source tables. As such, you may use the below variable configurations to disable the respective downstream models. All variables are `true` by default, only add the below configuration if you are wishing to disable the models:
+This package was designed with the intention that users have all relevant Shopify tables being synced by Fivetran. However, if you are a Shopify user that does not operate on returns or adjustments then you will not have the related source tables. As such, you may use the below variable configurations to disable the respective downstream models. All variables are `true` by default. Only add the below configuration if you are wishing to disable the models:
 
 ```yml
 # dbt_project.yml
