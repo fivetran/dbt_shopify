@@ -67,7 +67,7 @@ This package was designed with the intention that users have all relevant Shopif
 vars:
   shopify__using_order_adjustment:  false  # true by default
   shopify__using_order_line_refund: false  # true by default
-  shopify__using_refund:      false  # true by default
+  shopify__using_refund:            false  # true by default
 ```
 
 ### Changing the Build Schema
