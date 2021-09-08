@@ -32,8 +32,11 @@ jobs:
             dbt seed --target redshift --full-refresh
             dbt run --target redshift --full-refresh
             dbt test --target redshift
-            dbt run --vars '{shopify__using_order_adjustment: false, shopify__using_order_line_refund: false, shopify__using_order_refund: false}' --target redshift --full-refresh
+            dbt run --vars '{shopify__using_order_adjustment: false, shopify__using_order_line_refund: false, shopify__using_refund: false}' --target redshift --full-refresh
             dbt test --target redshift
+            dbt run --vars '{shopify__using_order_adjustment: false}' --target redshift --full-refresh
+            dbt run --vars '{shopify__using_order_line_refund: false}' --target redshift --full-refresh
+            dbt run --vars '{shopify__using_refund: false}' --target redshift --full-refresh
       - run:
           name: "Run Tests - Snowflake"
           command: |
@@ -44,8 +47,11 @@ jobs:
             dbt seed --target snowflake --full-refresh
             dbt run --target snowflake --full-refresh
             dbt test --target snowflake
-            dbt run --vars '{shopify__using_order_adjustment: false, shopify__using_order_line_refund: false, shopify__using_order_refund: false}' --target snowflake --full-refresh
+            dbt run --vars '{shopify__using_order_adjustment: false, shopify__using_order_line_refund: false, shopify__using_refund: false}' --target snowflake --full-refresh
             dbt test --target snowflake
+            dbt run --vars '{shopify__using_order_adjustment: false}' --target snowflake --full-refresh
+            dbt run --vars '{shopify__using_order_line_refund: false}' --target snowflake --full-refresh
+            dbt run --vars '{shopify__using_refund: false}' --target snowflake --full-refresh
       - run:
           name: "Run Tests - BigQuery"
           environment:
@@ -59,8 +65,11 @@ jobs:
             dbt seed --target bigquery --full-refresh
             dbt run --target bigquery --full-refresh
             dbt test --target bigquery
-            dbt run --vars '{shopify__using_order_adjustment: false, shopify__using_order_line_refund: false, shopify__using_order_refund: false}' --target bigquery --full-refresh
+            dbt run --vars '{shopify__using_order_adjustment: false, shopify__using_order_line_refund: false, shopify__using_refund: false}' --target bigquery --full-refresh
             dbt test --target bigquery
+            dbt run --vars '{shopify__using_order_adjustment: false}' --target bigquery --full-refresh
+            dbt run --vars '{shopify__using_order_line_refund: false}' --target bigquery --full-refresh
+            dbt run --vars '{shopify__using_refund: false}' --target bigquery --full-refresh
       - run:
           name: "Run Tests - Spark"
           command: |
@@ -71,5 +80,8 @@ jobs:
             dbt seed --target spark --full-refresh
             dbt run --target spark --full-refresh
             dbt test --target spark
-            dbt run --vars '{shopify__using_order_adjustment: false, shopify__using_order_line_refund: false, shopify__using_order_refund: false}' --target spark --full-refresh
+            dbt run --vars '{shopify__using_order_adjustment: false, shopify__using_order_line_refund: false, shopify__using_refund: false}' --target spark --full-refresh
             dbt test --target spark
+            dbt run --vars '{shopify__using_order_adjustment: false}' --target spark --full-refresh
+            dbt run --vars '{shopify__using_order_line_refund: false}' --target spark --full-refresh
+            dbt run --vars '{shopify__using_refund: false}' --target spark --full-refresh

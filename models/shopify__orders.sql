@@ -24,7 +24,7 @@ with orders as (
     group by 1,2
 {% endif %}
 
-{% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_order_refund"]) %}
+{% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) %}
 ), refunds as (
 
     select *
@@ -51,7 +51,7 @@ with orders as (
         order_adjustments_aggregates.order_adjustment_tax_amount,
         {% endif %}
 
-        {% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_order_refund"]) %}
+        {% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) %}
         refund_aggregates.refund_subtotal,
         refund_aggregates.refund_total_tax,
         {% endif %}
@@ -59,7 +59,7 @@ with orders as (
             {% if var('shopify__using_order_adjustment', true) %}
             + coalesce(order_adjustments_aggregates.order_adjustment_amount,0) + coalesce(order_adjustments_aggregates.order_adjustment_tax_amount,0) 
             {% endif %}
-            {% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_order_refund"]) %}
+            {% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) %}
             - coalesce(refund_aggregates.refund_subtotal,0) - coalesce(refund_aggregates.refund_total_tax,0)
             {% endif %} ) as order_adjusted_total,
         order_lines.line_item_count
@@ -68,7 +68,7 @@ with orders as (
         on orders.order_id = order_lines.order_id
         and orders.source_relation = order_lines.source_relation
 
-    {% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_order_refund"]) %}
+    {% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) %}
     left join refund_aggregates
         on orders.order_id = refund_aggregates.order_id
         and orders.source_relation = refund_aggregates.source_relation
