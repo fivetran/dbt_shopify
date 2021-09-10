@@ -18,6 +18,7 @@ with refunds as (
         refunds.order_id,
         refunds.user_id,
         refunds.source_relation,
+        order_line_refunds.order_line_refund_id,
         order_line_refunds.order_line_id,
         order_line_refunds.restock_type,
         order_line_refunds.quantity,
