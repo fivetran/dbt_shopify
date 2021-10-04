@@ -57,6 +57,25 @@ vars:
     union_databases: ['shopify_usa','shopify_canada'] # use this if the data is in different databases/projects but uses the same schema name
 ```
 
+### Add Passthrough Columns
+This package includes all source columns defined in the [staging_columns.sql](https://github.com/fivetran/dbt_shopify_source/blob/master/macros/staging_columns.sql) macro. To add additional columns to this package, do so using our pass-through column variables. This is extremely useful if you'd like to include custom fields to the package.
+
+```yml
+# dbt_project.yml
+
+...
+config-version: 2
+
+vars:
+  shopify_source:
+    customer_pass_through_columns: []
+    order_line_refund_pass_through_columns: []
+    order_line_pass_through_columns: []
+    order_pass_through_columns: []
+    product_pass_through_columns: []
+    product_variant_pass_through_columns: []
+```
+
 ### Disable Models
 This package was designed with the intention that users have all relevant Shopify tables being synced by Fivetran. However, if you are a Shopify user that does not operate on returns or adjustments then you will not have the related source tables. As such, you may use the below variable configurations to disable the respective downstream models. All variables are `true` by default. Only add the below configuration if you are wishing to disable the models:
 
