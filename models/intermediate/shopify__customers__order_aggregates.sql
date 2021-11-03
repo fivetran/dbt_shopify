@@ -8,17 +8,6 @@ with orders as (
     select *
     from {{ ref('shopify__transactions' )}}
     where lower(status) = 'success'
-/*
-), transaction_refund_adjustment as (
-
-    select
-        *,
-        case when lower(kind) = 'refund'
-            then currency_exchange_calculated_amount * -1
-            else currency_exchange_calculated_amount
-                end as adjusted_amount
-    from transactions
-*/
 
 ), aggregated as (
 
