@@ -210,7 +210,7 @@ models:
             - customer_id
             - source_relation
       - unique:
-          column_name: "email || '-' || cast(source_relation as {{ dbt_utils.type_string() }}"
+          column_name: "email || '-' || cast(source_relation as {{ dbt_utils.type_string() }})"
           severity: warn
     columns:
       - name: _fivetran_synced
