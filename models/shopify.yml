@@ -209,12 +209,9 @@ models:
           combination_of_columns:
             - customer_id
             - source_relation
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - email
-            - source_relation
-          config:
-            severity: warn
+      - unique:
+          column_name: "email || '-' || source_relation"
+          severity: warn
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
