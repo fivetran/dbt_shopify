@@ -209,9 +209,6 @@ models:
           combination_of_columns:
             - customer_id
             - source_relation
-      - unique:
-          column_name: "email || '-' || cast(source_relation as {{ dbt_utils.type_string() }})"
-          severity: warn
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -253,6 +250,14 @@ models:
         description: The total amount of money that the customer has been refunded on orders across their order history.
       - name: lifetime_total_amount
         description: The total amount of money (minus refunds) that the customer has spent across their order history.
+      - name: unique_customer_key
+        description: Surrogate key hashed on email and source_relation. This was necessary to create in order to alter the severity of the test on these two columns to `warn`.
+        tests:
+          - unique:
+              config:
+                severity: warn
+          - not_null
+
 
   - name: shopify__products
     description: Each record represents a product in Shopify.

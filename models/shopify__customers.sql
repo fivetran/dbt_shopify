@@ -19,7 +19,8 @@ with customers as (
         coalesce(orders.lifetime_total_spent, 0) as lifetime_total_spent,
         coalesce(orders.lifetime_total_refunded, 0) as lifetime_total_refunded,
         (coalesce(orders.lifetime_total_spent, 0) - coalesce(orders.lifetime_total_refunded, 0)) as lifetime_total_amount,
-        coalesce(orders.lifetime_count_orders, 0) as lifetime_count_orders
+        coalesce(orders.lifetime_count_orders, 0) as lifetime_count_orders,
+        {{ dbt_utils.surrogate_key(['email', 'source_relation']) }} as unique_customer_key
     from customers
     left join orders
         using (customer_id, source_relation)
