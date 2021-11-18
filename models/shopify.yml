@@ -254,8 +254,7 @@ models:
         description: Surrogate key hashed on email and source_relation. This was necessary to create in order to alter the severity of the test on these two columns to `warn`.
         tests:
           - unique:
-              config:
-                severity: warn
+              severity: warn
           - not_null
 
 
