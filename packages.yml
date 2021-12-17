@@ -1,3 +1,6 @@
 packages:
-- package: fivetran/shopify_source
-  version: [">=0.6.0", "<0.7.0"]
+# - package: fivetran/shopify_source
+  # version: [">=0.6.0", "<0.7.0"]
+  - git: https://github.com/fivetran/dbt_shopify_source.git
+    revision: MagicBot_9c88de9af8 ##dbt v1 PR branch
+    warn-unpinned: false
