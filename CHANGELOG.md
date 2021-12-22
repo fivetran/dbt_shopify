@@ -7,5 +7,7 @@
 - Upgrades the package dependency to refer to the latest `dbt_shopify_source`. Additionally, the latest `dbt_shopify_source` package has a dependency on the latest `dbt_fivetran_utils`. Further, the latest `dbt_fivetran_utils` package also has a dependency on `dbt_utils` [">=0.8.0", "<0.9.0"].
   - Please note, if you are installing a version of `dbt_utils` in your `packages.yml` that is not in the range above then you will encounter a package dependency error.
 
+- The `union_schemas` and `union_databases` variables have been replaced with `shopify_union_schemas` and `shopify_union_databases` respectively. This allows for multiple packages with the union ability to be used and not locked to a single variable that is used across packages.
+
 # dbt_shopify v0.1.0 -> v0.5.2
 Refer to the relevant release notes on the Github repository for specific details for the previous releases. Thank you!
