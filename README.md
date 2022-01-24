@@ -54,7 +54,7 @@ config-version: 2
 
 vars:
     shopify_union_schemas: ['shopify_usa','shopify_canada'] # use this if the data is in different schemas/datasets of the same database/project
-    shopify_union_databasesv: ['shopify_usa','shopify_canada'] # use this if the data is in different databases/projects but uses the same schema name
+    shopify_union_databases: ['shopify_usa','shopify_canada'] # use this if the data is in different databases/projects but uses the same schema name
 ```
 
 ### Add Passthrough Columns
