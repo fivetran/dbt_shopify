@@ -1,3 +1,6 @@
+# dbt_shopify v0.7.0
+🎉 Applying Package Standardization 🎉
+We are applying standardization updates to be more consistent across our documentation.
 # dbt_shopify v0.6.0
 🎉 dbt v1.0.0 Compatibility 🎉
 ## 🚨 Breaking Changes 🚨
