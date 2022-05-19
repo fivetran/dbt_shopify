@@ -9,7 +9,7 @@ vars:
     shopify_customer_source_identifier:          "shopify_customer_data"
     shopify_order_line_refund_source_identifier: "shopify_order_line_refund_data"
     shopify_order_line_source_identifier:        "shopify_order_line_data"
-    shopify_order_source_identifier:             "shopify_order_data"
+    order_source:                         "{{ ref('shopify_order_data') }}"
     shopify_product_source_identifier:           "shopify_product_data"
     shopify_order_adjustment_source_identifier:  "shopify_order_adjustment_data"
     shopify_product_variant_source_identifier:   "shopify_product_variant_data"
