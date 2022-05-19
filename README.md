@@ -73,7 +73,7 @@ vars:
   shopify__using_order_line_refund: false  # true by default
   shopify__using_refund:            false  # true by default
 ```
-## (Optional) Step 6: Additional configurations
+## (Optional) Step 5: Additional configurations
 <details><summary>Expand for configurations</summary>
     
 ### Add Passthrough Columns
