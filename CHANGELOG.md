@@ -1,6 +1,7 @@
 # dbt_shopify v0.7.0
-🎉 Applying Package Standardization 🎉
-We are applying standardization updates to be more consistent across our documentation.
+## 🎉 Documentation and Feature Updates
+- Updated README documentation updates for easier navigation and setup of the dbt package
+- Included `shopify_[source_table_name]_identifier` variable within the Shopify source package for additional flexibility within the package when source tables are named differently.
 # dbt_shopify v0.6.0
 🎉 dbt v1.0.0 Compatibility 🎉
 ## 🚨 Breaking Changes 🚨
