@@ -3,7 +3,7 @@
 
 This package models Shopify data from [Fivetran's connector](https://fivetran.com/docs/applications/shopify). It uses data in the format described by [this ERD](https://fivetran.com/docs/applications/shopify#schemainformation).
 
-The main focus of the package is to transform the core object tables into analytics-ready models, including a cohort model to understand how your customers are behaving over time. 
+The main focus of the package is to transform the core object tables into analytics-ready models, including a cohort model to understand how your customers are behaving over time.
 
 ## Models
 
