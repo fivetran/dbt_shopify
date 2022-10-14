@@ -18,7 +18,7 @@ vars:
 
 dispatch:
   - macro_namespace: dbt_utils
-    search_order: ['spark_utils', 'dbt_utils']
+    search_order: ['!!!!!!! REPLACE 'spark' WITH 'spark','databricks' OR EQUIV !!!!!!!_utils', 'dbt_utils']
     
 seeds:
   shopify_integration_tests:
