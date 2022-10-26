@@ -1,19 +1,4 @@
 steps:
-  - label: ":postgres: Run Tests - Postgres"
-    key: "run-dbt-postgres"
-    plugins:
-      - docker#v3.13.0:
-          image: "python:3.8"
-          shell: [ "/bin/bash", "-e", "-c" ]
-          environment:
-            - "BASH_ENV=/tmp/.bashrc"
-            - "CI_POSTGRES_DBT_DBNAME"
-            - "CI_POSTGRES_DBT_HOST"
-            - "CI_POSTGRES_DBT_PASS"
-            - "CI_POSTGRES_DBT_USER"
-    commands: |
-      bash .buildkite/scripts/run_models.sh postgres 
-
   - label: ":snowflake-db: Run Tests - Snowflake"
     key: "run_dbt_snowflake"
     plugins:
@@ -58,7 +43,7 @@ steps:
     commands: |
       bash .buildkite/scripts/run_models.sh redshift
 
-  - label: ":upside_down_face: Run Tests - Databricks"
+  - label: ":bricks: Run Tests - Databricks"
     key: "run_dbt_databricks"
     plugins:
       - docker#v3.13.0:
