@@ -1,4 +1,4 @@
-# package v0.7.0
+# dbt_shopify v0.7.0
 
 ## 🚨 Breaking Changes 🚨:
 [PR #40](https://github.com/fivetran/dbt_shopify/pull/40) includes the following breaking changes:
