@@ -1,12 +1,9 @@
 <p align="center">
     <a alt="License"
-        href="https://github.com/fivetran/dbt_shopify/blob/main/LICENSE">
+        href="https://github.com/fivetran/dbt_twitter_source/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" /></a>
-    <a alt="Fivetran-Release"
-        href="https://fivetran.com/docs/getting-started/core-concepts#releasephases">
-        <img src="https://img.shields.io/badge/Fivetran Release Phase-_Beta-orange.svg" /></a>
     <a alt="dbt-core">
-        <img src="https://img.shields.io/badge/dbt_Core™_version->=1.0.0_,<2.0.0-orange.svg" /></a>
+        <img src="https://img.shields.io/badge/dbt_Core™_version->=1.3.0_<2.0.0-orange.svg" /></a>
     <a alt="Maintained?">
         <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /></a>
     <a alt="PRs">
@@ -26,7 +23,7 @@ The following table provides a detailed list of all models materialized within t
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | [shopify__customer_cohorts](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__customer_cohorts.sql)  | Each record represents the monthly performance of a customer, including fields for the month of their 'cohort'.    |
 | [shopify__customers](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__customers.sql)        | Each record represents a customer, with additional dimensions like lifetime value and number of orders.            |
-| [shopify__orders](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__orders.sq)           | Each record represents an order, with additional dimensions like whether it is a new or repeat purchase.           |
+| [shopify__orders](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__orders.sql)           | Each record represents an order, with additional dimensions like whether it is a new or repeat purchase.           |
 | [shopify__order_lines](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__order_lines.sql)     | Each record represents an order line item, with additional dimensions like how many items were refunded.           |
 | [shopify__products](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__products.sql)         | Each record represents a product, with additional dimensions like most recent order date and order volume.         |
 | [shopify__transactions](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__transactions.sql)     | Each record represents a transaction with additional calculations to handle exchange rates.                        |
@@ -42,11 +39,10 @@ To use this dbt package, you must have the following:
 ## Step 2: Install the package
 Include the following shopify package version in your `packages.yml` file:
 > TIP: Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
-```yaml
+```yml
 packages:
   - package: fivetran/shopify
     version: [">=0.7.0", "<0.8.0"]
-
 ```
 ## Step 3: Define database and schema variables
 By default, this package runs using your destination and the `shopify` schema. If this is not where your Shopify data is (for example, if your Shopify schema is named `shopify_fivetran`), add the following configuration to your root `dbt_project.yml` file:
