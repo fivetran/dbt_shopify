@@ -48,6 +48,8 @@ packages:
 By default, this package runs using your destination and the `shopify` schema. If this is not where your Shopify data is (for example, if your Shopify schema is named `shopify_fivetran`), add the following configuration to your root `dbt_project.yml` file:
 
 ```yml
+# dbt_project.yml
+
 vars:
     shopify_database: your_database_name
     shopify_schema: your_schema_name
@@ -56,6 +58,8 @@ vars:
 If you have multiple Shopify connectors in Fivetran and would like to use this package on all of them simultaneously, we have provided functionality to do so. The package will union all of the data together and pass the unioned table into the transformations. You will be able to see which source it came from in the `source_relation` column of each model. To use this functionality, you will need to set either the `shopify_union_schemas` or `shopify_union_databases` variables in your root `dbt_project.yml` file:
 
 ```yml
+# dbt_project.yml
+
 vars:
     shopify_union_schemas: ['shopify_usa','shopify_canada'] # use this if the data is in different schemas/datasets of the same database/project
     shopify_union_databases: ['shopify_usa','shopify_canada'] # use this if the data is in different databases/projects but uses the same schema name
@@ -64,6 +68,8 @@ vars:
 This package was designed with the intention that users have all relevant Shopify tables being synced by Fivetran. However, if you are a Shopify user that does not operate on returns or adjustments then you will not have the related source tables. As such, you may use the below variable configurations to disable the respective downstream models. All variables are `true` by default. Only add the below configuration to your root `dbt_project.yml` if you are wishing to disable the models:
 
 ```yml
+# dbt_project.yml
+
 vars:
   shopify__using_order_adjustment:  false  # true by default
   shopify__using_order_line_refund: false  # true by default
@@ -76,6 +82,8 @@ vars:
 This package includes all source columns defined in the [staging_columns.sql](https://github.com/fivetran/dbt_shopify_source/blob/master/macros/staging_columns.sql) macro. To add additional columns to this package, do so using our pass-through column variables in your root `dbt_project.yml`. This is extremely useful if you'd like to include custom fields to the package.
 
 ```yml
+# dbt_project.yml
+
 vars:
   shopify_source:
     customer_pass_through_columns: []
@@ -90,6 +98,8 @@ vars:
 By default this package will build the Shopify staging models within a schema titled (<target_schema> + `_stg_shopify`) and the Shopify final models within a schema titled (<target_schema> + `_shopify`) in your target database. If this is not where you would like your modeled Shopify data to be written to, add the following configuration to your `dbt_project.yml` file:
 
 ```yml
+# dbt_project.yml
+
 models:
   shopify:
     +schema: my_new_schema_name # leave blank for just the target_schema
@@ -103,6 +113,8 @@ If an individual source table has a different name than the package expects, add
 > IMPORTANT: See this project's [`dbt_project.yml`](https://github.com/fivetran/dbt_shopify_source/blob/main/dbt_project.yml) variable declarations to see the expected names.
 
 ```yml
+# dbt_project.yml
+
 vars:
     shopify_<default_source_table_name>_identifier: your_table_name 
 ```
@@ -126,10 +138,10 @@ packages:
       version: [">=0.7.0", "<0.8.0"]
 
     - package: fivetran/fivetran_utils
-      version: [">=0.3.0", "<0.4.0"]
+      version: [">=0.4.0", "<0.5.0"]
 
     - package: dbt-labs/dbt_utils
-      version: [">=0.8.0", "<0.9.0"]
+      version: [">=1.0.0", "<2.0.0"]
 ```
 # 🙌 How is this package maintained and can I contribute?
 ## Package Maintenance
