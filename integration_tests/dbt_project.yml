@@ -5,16 +5,17 @@ config-version: 2
 
 
 vars:
+  shopify_schema: shopify_integration_tests_1
   shopify_source:
-    customer_source:          "{{ ref('shopify_customer_data') }}"
-    order_line_refund_source: "{{ ref('shopify_order_line_refund_data') }}"
-    order_line_source:        "{{ ref('shopify_order_line_data') }}"
-    order_source:             "{{ ref('shopify_order_data') }}"
-    product_source:           "{{ ref('shopify_product_data') }}"
-    order_adjustment_source:  "{{ ref('shopify_order_adjustment_data') }}"
-    product_variant_source:   "{{ ref('shopify_product_variant_data') }}"
-    refund_source:            "{{ ref('shopify_refund_data') }}"
-    transaction_source:       "{{ ref('shopify_transaction_data') }}"
+    shopify_customer_identifier:          "shopify_customer_data"
+    shopify_order_line_refund_identifier: "shopify_order_line_refund_data"
+    shopify_order_line_identifier:        "shopify_order_line_data"
+    order_source:                         "{{ ref('shopify_order_data') }}"
+    shopify_product_identifier:           "shopify_product_data"
+    shopify_order_adjustment_identifier:  "shopify_order_adjustment_data"
+    shopify_product_variant_identifier:   "shopify_product_variant_data"
+    shopify_refund_identifier:            "shopify_refund_data"
+    shopify_transaction_identifier:       "shopify_transaction_data"
 
 dispatch:
   - macro_namespace: dbt_utils
