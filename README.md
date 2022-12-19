@@ -1,6 +1,6 @@
 <p align="center">
     <a alt="License"
-        href="https://github.com/fivetran/dbt_twitter_source/blob/main/LICENSE">
+        href="https://github.com/fivetran/dbt_shopify/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" /></a>
     <a alt="dbt-core">
         <img src="https://img.shields.io/badge/dbt_Core™_version->=1.3.0_<2.0.0-orange.svg" /></a>
@@ -124,7 +124,7 @@ or open PRs against `main`. Check out
 on the best workflow for contributing to a package.
 
 ## Database support
-This package has been tested on BigQuery, Snowflake, Redshift and Databricks.
+This package has been tested on BigQuery, Snowflake, Redshift, Postgres, and Databricks.
 
 ### Databricks Dispatch Configuration
 dbt `v0.20.0` introduced a new project-level dispatch configuration that enables an "override" setting for all dispatched macros. If you are using a Databricks destination with this package you will need to add the below (or a variation of the below) dispatch configuration within your `dbt_project.yml`. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
