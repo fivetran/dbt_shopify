@@ -1,6 +1,4 @@
 packages:
-# - package: fivetran/shopify_source
-#   version: [">=0.7.0", "<0.8.0"]
-  - git: https://github.com/fivetran/dbt_shopify_source.git
-    revision: MagicBot/dbt-utils-cross-db-migration
-    warn-unpinned: false
+- package: fivetran/shopify_source
+  version: [">=0.7.0", "<0.8.0"]
+
