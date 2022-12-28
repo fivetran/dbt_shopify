@@ -2,6 +2,7 @@ with orders as (
 
     select *
     from {{ var('shopify_order') }}
+    where email is not null
 
 ), transactions as (
 
@@ -24,7 +25,6 @@ with orders as (
     left join transactions
         on orders.order_id = transactions.order_id 
         and orders.source_relation = transactions.source_relation
-    where email is not null
     group by 1,2
 
 )
