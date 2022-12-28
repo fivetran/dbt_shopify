@@ -290,7 +290,7 @@ models:
             - email
             - source_relation
     columns:
-      - name: _fivetran_synced
+      - name: last_fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: has_accepted_marketing
         description: Whether the customer has consented to receive marketing material via email.
@@ -308,13 +308,13 @@ models:
         description: The customer's last name.
       - name: lifetime_count_orders
         description: The number of orders associated with this customer.
-      - name: phone
-        description: The unique phone number (E.164 format) for this customer. Attempting to assign the same phone number to multiple customers returns an error.
+      - name: phone_numbers
+        description: Comma-separated list of phone numbers associated with this email.
       - name: account_state
         description: The state of the customer's account with a shop.
       - name: is_tax_exempt
         description: Whether the customer is exempt from paying taxes on their order. If true, then taxes won't be applied to an order at checkout. If false, then taxes will be applied at checkout.
-      - name: updated_timestamp
+      - name: last_updated_at
         description: The date and time when the customer information was last updated.
       - name: is_verified_email
         description: Whether the customer has verified their email address.
@@ -330,6 +330,12 @@ models:
         description: The total amount of money that the customer has been refunded on orders across their order history.
       - name: lifetime_total_amount
         description: The total amount of money (minus refunds) that the customer has spent across their order history.
+      - name: first_account_created_at
+        description: Timestamp of when the first account associated with this email was created.
+      - name: last_account_created_at
+        description: Timestamp of when the last account associated with this email was created.
+      - name: accepts_marketing_last_updated_at
+        description: When the customer consented or objected to receiving marketing material by email. 
 
   - name: shopify__products
     description: Each record represents a product in Shopify.
