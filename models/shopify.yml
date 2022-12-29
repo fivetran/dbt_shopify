@@ -9,11 +9,42 @@ models:
       - name: cohort_month_number
         description: The 'number' of the `date_month` of the record, i.e. how many months from their start month this cohort occurred
       - name: customer_cohort_id
-        description: Unique key representing a customer in a given month.
+        description: Unique key representing a customer in a given month. Hashed on 'date_month', 'customer_id', and 'source_relation'.
         tests:
           - unique
           - not_null
       - name: customer_id
+        description: The ID of the related customer.
+      - name: date_month
+        description: The calendar month the customer stats relate to.
+      - name: first_order_timestamp
+        description: The timestamp of the customer's first order.
+      - name: line_item_count_in_month
+        description: Number of line items purchased in the `date_month`
+      - name: line_item_count_lifetime
+        description: Number of line items purchased up until and including this `date_month`.
+      - name: order_count_in_month
+        description: Number of orders purchased in the `date_month`
+      - name: order_count_lifetime
+        description: Number of orders purchased up until and including this `date_month`.
+      - name: total_price_in_month
+        description: Total amount (in currency) purchased in the `date_month`
+      - name: total_price_lifetime
+        description: Total amount (in currency) up until and including this `date_month`.
+
+  - name: shopify__customer_email_cohorts
+    description: Each record represents a customer's (on the EMAIL grain) performance in a calendar month.
+    columns:
+      - name: cohort_month
+        description: The month the cohort belongs to, i.e the first month the customer had an order.
+      - name: cohort_month_number
+        description: The 'number' of the `date_month` of the record, i.e. how many months from their start month this cohort occurred
+      - name: customer_cohort_id
+        description: Unique key representing a customer in a given month. Hashed on 'date_month','email', and 'source_relation'.
+        tests:
+          - unique
+          - not_null
+      - name: email
         description: The ID of the related customer.
       - name: date_month
         description: The calendar month the customer stats relate to.
@@ -250,6 +281,61 @@ models:
         description: The total amount of money that the customer has been refunded on orders across their order history.
       - name: lifetime_total_amount
         description: The total amount of money (minus refunds) that the customer has spent across their order history.
+
+  - name: shopify__customer_emails
+    description: Each record represents a customer email in Shopify.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - email
+            - source_relation
+    columns:
+      - name: last_fivetran_synced
+        description: "{{ doc('_fivetran_synced') }}"
+      - name: has_accepted_marketing
+        description: Whether the customer has consented to receive marketing material via email.
+      - name: created_timestamp
+        description: The date and time when the customer was created.
+      - name: default_address_id
+        description: The default address for the customer. 
+      - name: email
+        description: The unique email address of the customer.
+      - name: first_name
+        description: The customer's first name.
+      - name: customer_ids
+        description: Comma-separated list of customer IDs associated with the email.
+      - name: last_name
+        description: The customer's last name.
+      - name: lifetime_count_orders
+        description: The number of orders associated with this customer.
+      - name: phone_numbers
+        description: Comma-separated list of phone numbers associated with this email.
+      - name: account_state
+        description: The state of the customer's account with a shop.
+      - name: is_tax_exempt
+        description: Whether the customer is exempt from paying taxes on their order. If true, then taxes won't be applied to an order at checkout. If false, then taxes will be applied at checkout.
+      - name: last_updated_at
+        description: The date and time when the customer information was last updated.
+      - name: is_verified_email
+        description: Whether the customer has verified their email address.
+      - name: first_order_timestamp
+        description: The timestamp the customer completed their first order.
+      - name: most_recent_order_timestamp
+        description: The timestamp the customer completed their most recent order.
+      - name: average_order_value
+        description: The average order value for the customer.
+      - name: lifetime_total_spent
+        description: The total amount of money that the customer has spent on orders across their order history.
+      - name: lifetime_total_refunded
+        description: The total amount of money that the customer has been refunded on orders across their order history.
+      - name: lifetime_total_amount
+        description: The total amount of money (minus refunds) that the customer has spent across their order history.
+      - name: first_account_created_at
+        description: Timestamp of when the first account associated with this email was created.
+      - name: last_account_created_at
+        description: Timestamp of when the last account associated with this email was created.
+      - name: accepts_marketing_last_updated_at
+        description: When the customer consented or objected to receiving marketing material by email. 
 
   - name: shopify__products
     description: Each record represents a product in Shopify.

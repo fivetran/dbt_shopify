@@ -58,8 +58,10 @@ with order_lines as (
         product_variants.option_1 as variant_option_1,
         product_variants.option_2 as variant_option_2,
         product_variants.option_3 as variant_option_3,
-        product_variants.tax_code as variant_tax_code,
-        product_variants.is_requiring_shipping as variant_is_requiring_shipping
+        product_variants.tax_code as variant_tax_code
+        {# ,
+        use inventoryitem or order line itself
+        product_variants.is_requiring_shipping as variant_is_requiring_shipping #}
     from order_lines
     {% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) %}
     left join refunds_aggregated
