@@ -9,7 +9,7 @@ models:
       - name: cohort_month_number
         description: The 'number' of the `date_month` of the record, i.e. how many months from their start month this cohort occurred
       - name: customer_cohort_id
-        description: Unique key representing a customer in a given month.
+        description: Unique key representing a customer in a given month. Hashed on 'date_month', 'customer_id', and 'source_relation'.
         tests:
           - unique
           - not_null
@@ -40,7 +40,7 @@ models:
       - name: cohort_month_number
         description: The 'number' of the `date_month` of the record, i.e. how many months from their start month this cohort occurred
       - name: customer_cohort_id
-        description: Unique key representing a customer in a given month.
+        description: Unique key representing a customer in a given month. Hashed on 'date_month','email', and 'source_relation'.
         tests:
           - unique
           - not_null

@@ -5,7 +5,9 @@
 - **New model alert**: The package now includes customer models that are based on _email_ rather than _customer_id_ ([PR #45](https://github.com/fivetran/dbt_shopify/pull/45)):
   - `shopify__customer_emails`
   - `shopify__customer_email_cohorts`
-  - Intermediate models that roll customer_ids up to emails
+  - Intermediate models that roll customer_ids up to emails:
+    - `shopify__customer_email_rollup`
+    - `shopify__emails__order_aggregates`
 
 ## 🚨 Breaking Changes 🚨:
 [PR #40](https://github.com/fivetran/dbt_shopify/pull/40) includes the following breaking changes:
