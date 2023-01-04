@@ -143,6 +143,7 @@ seeds:
         disjunctive: boolean
         published_at: timestamp
         updated_at: timestamp
+        title: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
     shopify_metafield_data:
       +column_types:
         value_type: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
