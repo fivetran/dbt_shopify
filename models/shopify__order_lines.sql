@@ -41,14 +41,14 @@ with order_lines as (
         product_variants.updated_timestamp as variant_updated_at,
         product_variants.inventory_item_id,
         product_variants.image_id,
-        product_variants.title as variant_title,
+
         product_variants.price as variant_price,
         product_variants.sku as variant_sku,
         product_variants.position as variant_position,
         product_variants.inventory_policy as variant_inventory_policy,
         product_variants.compare_at_price as variant_compare_at_price,
         product_variants.fulfillment_service as variant_fulfillment_service,
-        product_variants.inventory_management as variant_inventory_management,
+
         product_variants.is_taxable as variant_is_taxable,
         product_variants.barcode as variant_barcode,
         product_variants.grams as variant_grams,

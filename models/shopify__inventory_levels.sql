@@ -31,7 +31,7 @@ product as (
 inventory_level_aggregated as (
 
     select *
-    from {{ ref('shopify__inventory_lvel__aggregates') }}
+    from {{ ref('shopify__inventory_level__aggregates') }}
 ),
 
 joined as (
@@ -90,8 +90,8 @@ joined as (
         inventory_level_aggregated.first_order_timestamp,
         inventory_level_aggregated.last_order_timestamp
         {%- if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) -%}
-        , inventory_level_aggregated.subtotal_sold_refunds
-        , inventory_level_aggregated.quantity_sold_refunds
+        , coalesce(inventory_level_aggregated.subtotal_sold_refunds, 0) as subtotal_sold_refunds
+        , coalesce(inventory_level_aggregated.quantity_sold_refunds, 0) as quantity_sold_refunds
         {% endif %}
 
         {{ fivetran_utils.persist_pass_through_columns('product_variant_pass_through_columns', identifier='product_variant') }}

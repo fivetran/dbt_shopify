@@ -46,7 +46,7 @@ product_variant as (
 product_image as (
 
     select *
-    from {{ var('product_image') }}
+    from {{ var('shopify_product_image') }}
 ),
 
 order_lines_aggregated as (
@@ -71,12 +71,12 @@ order_lines_aggregated as (
 
 ), 
 
-cellections_aggregated as (
+collections_aggregated as (
 
     select
         collection_product.product_id,
         collection_product.source_relation,
-        {{ fivetran_utils.string_agg(field_to_agg='collection.title', delimiter=', ') }} as collections
+        {{ fivetran_utils.string_agg(field_to_agg='collection.title', delimiter='", "') }} as collections
     from collection_product 
     join collection 
         on collection_product.collection_id = collection.collection_id
@@ -89,7 +89,7 @@ tags_aggregated as (
     select 
         product_id,
         source_relation,
-        {{ fivetran_utils.string_agg(field_to_agg='value', delimiter=', ') }} as tags
+        {{ fivetran_utils.string_agg(field_to_agg='value', delimiter='", "') }} as tags
     
     from product_tag
     group by 1,2
@@ -99,10 +99,11 @@ variants_aggregated as (
 
     select 
         product_id,
+        source_relation,
         count(variant_id) as count_variants
 
     from product_variant
-    group by 1
+    group by 1,2
 
 ),
 
@@ -110,9 +111,10 @@ images_aggregated as (
 
     select 
         product_id,
+        source_relation,
         count(*) as count_images
     from product_image
-    group by 1
+    group by 1,2
 ),
 
 joined as (
