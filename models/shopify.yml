@@ -555,3 +555,11 @@ models:
         description: The exchange rate between the home currency and the currency of sale at the time of the transaction.
       - name: currency_exchange_calculated_amount
         description: The total amount of the transaction with the currency exchange rate applied.
+
+  - name: shopify__inventory_levels
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - inventory_item_id
+            - location_id
+            - source_relation

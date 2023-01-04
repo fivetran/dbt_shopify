@@ -26,3 +26,10 @@ models:
           combination_of_columns:
             - email
             - source_relation
+  - name: shopify__inventory_level__aggregates
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - variant_id
+            - location_id
+            - source_relation

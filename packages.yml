@@ -2,8 +2,8 @@ packages:
 # - package: fivetran/shopify_source
 #   version: [">=0.7.0", "<0.8.0"]
 
-  - git: https://github.com/fivetran/dbt_shopify_source.git
-    revision: feature/package-revamp
-    warn-unpinned: false
+  # - git: https://github.com/fivetran/dbt_shopify_source.git
+  #   revision: feature/revamp/transform-enhancements
+  #   warn-unpinned: false
 
-# - local: ../Shopify/dbt_shopify_source
+- local: ../Shopify/dbt_shopify_source

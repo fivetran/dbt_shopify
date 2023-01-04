@@ -4,6 +4,12 @@ with order_lines as (
     from {{ var('shopify_order_line') }}
 ),
 
+fulfillment as (
+
+    select *
+    from {{ var('shopify_fulfillment') }}
+),
+
 orders as (
 
     select *
@@ -36,13 +42,14 @@ joined as (
         order_lines.order_line_id,
         order_lines.variant_id,
         order_lines.source_relation,
-        orders.location_id,
+        coalesce(fulfillment.location_id, orders.location_id) as location_id,
         orders.order_id,
         orders.customer_id,
         lower(orders.email) as email,
         order_lines.pre_tax_price,
         order_lines.quantity,
-        orders.created_timestamp as order_created_timestamp
+        orders.created_timestamp as order_created_timestamp,
+        fulfillment.status as fulfillment_status
 
         {%- if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) -%}
         , refunds_aggregated.subtotal as subtotal_sold_refunds
@@ -53,6 +60,9 @@ joined as (
     join orders
         on order_lines.order_id = orders.order_id
         and order_lines.source_relation = orders.source_relation
+    join fulfillment
+        on orders.order_id = fulfillment.order_id
+        and orders.source_relation = fulfillment.source_relation
 
     {% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) %}
     left join refunds_aggregated
@@ -74,6 +84,10 @@ aggregated as (
         count(distinct email) as count_distinct_customer_emails,
         min(order_created_timestamp) as first_order_timestamp,
         max(order_created_timestamp) as last_order_timestamp
+
+        {% for status in ['pending', 'open', 'success', 'cancelled', 'error', 'failure'] %}
+        , sum(case when fulfillment_status = '{{ status }}' then 1 else 0 end) as count_fulfillment_{{ status }}
+        {% endfor %}
 
         {%- if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) -%}
         , sum(coalesce(subtotal_sold_refunds, 0)) as subtotal_sold_refunds

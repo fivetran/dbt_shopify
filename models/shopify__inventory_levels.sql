@@ -17,7 +17,7 @@ location as (
 ),
 
 product_variant as (
--- join on sku
+
     select *
     from {{ var('shopify_product_variant') }}
 ),
@@ -34,13 +34,13 @@ inventory_level_aggregated as (
     from {{ ref('shopify__inventory_level__aggregates') }}
 ),
 
-joined as (
+joined_info as (
 
     select 
         inventory_level.*,
         inventory_item.sku,
         inventory_item.is_deleted as is_inventory_item_deleted,
-        inventory_item.cost, -- 
+        inventory_item.cost,
         inventory_item.country_code_of_origin,
         inventory_item.province_code_of_origin,
         inventory_item.is_shipping_required,
@@ -63,6 +63,7 @@ joined as (
         location.zip,
         location.created_at as location_created_at,
 
+        product_variant.variant_id,
         product_variant.title as variant_title,
         product_variant.inventory_policy as variant_inventory_policy,
         product_variant.price as variant_price,
@@ -80,19 +81,7 @@ joined as (
         product_variant.option_3 as variant_option_3,
         product_variant.tax_code as variant_tax_code,
         product_variant.created_timestamp as variant_created_at,
-        product_variant.updated_timestamp as variant_updated_at,
-
-        coalesce(inventory_level_aggregated.subtotal_sold, 0) as subtotal_sold,
-        coalesce(inventory_level_aggregated.quantity_sold, 0) as quantity_sold,
-        coalesce(inventory_level_aggregated.count_distinct_orders, 0) as count_distinct_orders,
-        coalesce(inventory_level_aggregated.count_distinct_customers, 0) as count_distinct_customers,
-        coalesce(inventory_level_aggregated.count_distinct_customer_emails, 0) as count_distinct_customer_emails,
-        inventory_level_aggregated.first_order_timestamp,
-        inventory_level_aggregated.last_order_timestamp
-        {%- if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) -%}
-        , coalesce(inventory_level_aggregated.subtotal_sold_refunds, 0) as subtotal_sold_refunds
-        , coalesce(inventory_level_aggregated.quantity_sold_refunds, 0) as quantity_sold_refunds
-        {% endif %}
+        product_variant.updated_timestamp as variant_updated_at
 
         {{ fivetran_utils.persist_pass_through_columns('product_variant_pass_through_columns', identifier='product_variant') }}
 
@@ -106,9 +95,36 @@ joined as (
     join product_variant 
         on inventory_item.inventory_item_id = product_variant.inventory_item_id 
         and inventory_item.source_relation = product_variant.source_relation
+
+),
+
+joined_aggregates as (
+
+    select 
+        joined_info.*,
+        coalesce(inventory_level_aggregated.subtotal_sold, 0) as subtotal_sold,
+        coalesce(inventory_level_aggregated.quantity_sold, 0) as quantity_sold,
+        coalesce(inventory_level_aggregated.count_distinct_orders, 0) as count_distinct_orders,
+        coalesce(inventory_level_aggregated.count_distinct_customers, 0) as count_distinct_customers,
+        coalesce(inventory_level_aggregated.count_distinct_customer_emails, 0) as count_distinct_customer_emails,
+        inventory_level_aggregated.first_order_timestamp,
+        inventory_level_aggregated.last_order_timestamp
+
+        {% for status in ['pending', 'open', 'success', 'cancelled', 'error', 'failure'] %}
+        , coalesce(count_fulfillment_{{ status }}, 0) as count_fulfillment_{{ status }}
+        {% endfor %}
+
+        {%- if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) -%}
+        , coalesce(inventory_level_aggregated.subtotal_sold_refunds, 0) as subtotal_sold_refunds
+        , coalesce(inventory_level_aggregated.quantity_sold_refunds, 0) as quantity_sold_refunds
+        {% endif %}
+
+    from joined_info
     left join inventory_level_aggregated
-        on inventory_level.location_id = inventory_level_aggregated.location_id
-        and product_variant.variant_id = inventory_level_aggregated.variant_id
+        on joined_info.location_id = inventory_level_aggregated.location_id
+        and joined_info.variant_id = inventory_level_aggregated.variant_id
+        and joined_info.source_relation = inventory_level_aggregated.source_relation
 )
 
-select * from joined
+select * 
+from joined_aggregates
