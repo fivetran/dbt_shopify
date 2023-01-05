@@ -26,9 +26,7 @@ collection as (
 
     select *
     from {{ var('shopify_collection') }}
-
-    -- limit to only active collections
-    where not coalesce(is_deleted, false)
+    where not coalesce(is_deleted, false) -- limit to only active collections
 ),
 
 product_tag as (
