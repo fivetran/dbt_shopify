@@ -62,20 +62,22 @@ joined_info as (
         location.phone,
         location.zip,
         location.created_at as location_created_at,
+        location.updated_at as location_updated_at,
 
         product_variant.variant_id,
+        product_variant.product_id,
         product_variant.title as variant_title,
         product_variant.inventory_policy as variant_inventory_policy,
         product_variant.price as variant_price,
         product_variant.image_id as variant_image_id,
         product_variant.fulfillment_service as variant_fulfillment_service,
         product_variant.inventory_management as variant_inventory_management,
-        product_variant.is_taxable as is_product_variant_taxable,
+        product_variant.is_taxable as is_variant_taxable,
         product_variant.barcode as variant_barcode,
         product_variant.grams as variant_grams, 
         product_variant.inventory_quantity as variant_inventory_quantity,
         product_variant.weight as variant_weight,
-        product_variant.weight_unit as weight_unit,
+        product_variant.weight_unit as variant_weight_unit,
         product_variant.option_1 as variant_option_1,
         product_variant.option_2 as variant_option_2,
         product_variant.option_3 as variant_option_3,
@@ -108,23 +110,29 @@ joined_aggregates as (
         coalesce(inventory_level_aggregated.count_distinct_customers, 0) as count_distinct_customers,
         coalesce(inventory_level_aggregated.count_distinct_customer_emails, 0) as count_distinct_customer_emails,
         inventory_level_aggregated.first_order_timestamp,
-        inventory_level_aggregated.last_order_timestamp
+        inventory_level_aggregated.last_order_timestamp,
+        coalesce(inventory_level_aggregated.subtotal_sold_refunds, 0) as subtotal_sold_refunds,
+        coalesce(inventory_level_aggregated.quantity_sold_refunds, 0) as quantity_sold_refunds
 
         {% for status in ['pending', 'open', 'success', 'cancelled', 'error', 'failure'] %}
         , coalesce(count_fulfillment_{{ status }}, 0) as count_fulfillment_{{ status }}
         {% endfor %}
-
-        {%- if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) -%}
-        , coalesce(inventory_level_aggregated.subtotal_sold_refunds, 0) as subtotal_sold_refunds
-        , coalesce(inventory_level_aggregated.quantity_sold_refunds, 0) as quantity_sold_refunds
-        {% endif %}
 
     from joined_info
     left join inventory_level_aggregated
         on joined_info.location_id = inventory_level_aggregated.location_id
         and joined_info.variant_id = inventory_level_aggregated.variant_id
         and joined_info.source_relation = inventory_level_aggregated.source_relation
+),
+
+final as (
+
+    select 
+        *,
+        subtotal_sold - subtotal_sold_refunds as net_subtotal_sold,
+        quantity_sold - quantity_sold_refunds as net_quantity_sold
+    from joined_aggregates
 )
 
 select * 
-from joined_aggregates
+from final

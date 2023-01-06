@@ -17,7 +17,6 @@ orders as (
     where not coalesce(is_deleted, false)
 ), 
 
-{% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) %}
 refunds as (
 
     select *
@@ -34,7 +33,6 @@ refunds as (
     from refunds
     group by 1,2
 ),
-{% endif %}
 
 joined as (
 
@@ -49,12 +47,9 @@ joined as (
         order_lines.pre_tax_price,
         order_lines.quantity,
         orders.created_timestamp as order_created_timestamp,
-        fulfillment.status as fulfillment_status
-
-        {%- if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) -%}
-        , refunds_aggregated.subtotal as subtotal_sold_refunds
-        , refunds_aggregated.quantity as quantity_sold_refunds
-        {% endif %}
+        fulfillment.status as fulfillment_status, 
+        refunds_aggregated.subtotal as subtotal_sold_refunds, 
+        refunds_aggregated.quantity as quantity_sold_refunds
 
     from order_lines
     join orders
@@ -64,11 +59,9 @@ joined as (
         on orders.order_id = fulfillment.order_id
         and orders.source_relation = fulfillment.source_relation
 
-    {% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) %}
     left join refunds_aggregated
         on refunds_aggregated.order_line_id = order_lines.order_line_id
         and refunds_aggregated.source_relation = order_lines.source_relation
-    {% endif %}
 ),
 
 aggregated as (
@@ -89,10 +82,8 @@ aggregated as (
         , sum(case when fulfillment_status = '{{ status }}' then 1 else 0 end) as count_fulfillment_{{ status }}
         {% endfor %}
 
-        {%- if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) -%}
         , sum(coalesce(subtotal_sold_refunds, 0)) as subtotal_sold_refunds
         , sum(coalesce(quantity_sold_refunds, 0)) as quantity_sold_refunds
-        {% endif %}
 
     from joined
 

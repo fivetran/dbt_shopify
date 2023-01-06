@@ -12,6 +12,8 @@ models:
         +materialized: view # so we can use the dbt_utils.star macro
       shopify__inventory_level__aggregates:
         +materialized: table # just for testing. remove later
+      shopify__products__with_aggregates:
+        +materialized: table # just for testing. remove later
 vars:
   shopify:
     shopify_customer: "{{ ref('stg_shopify__customer') }}"

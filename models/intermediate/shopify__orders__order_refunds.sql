@@ -1,5 +1,3 @@
-{{ config(enabled=fivetran_utils.enabled_vars(['shopify__using_order_line_refund','shopify__using_refund'])) }}
-
 with refunds as (
 
     select *

@@ -24,7 +24,6 @@ with orders as (
     group by 1,2
 {% endif %}
 
-{% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) %}
 ), refunds as (
 
     select *
@@ -38,7 +37,6 @@ with orders as (
         sum(total_tax) as refund_total_tax
     from refunds
     group by 1,2
-{% endif %}
 
 ), joined as (
 
@@ -51,28 +49,23 @@ with orders as (
         order_adjustments_aggregates.order_adjustment_tax_amount,
         {% endif %}
 
-        {% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) %}
         refund_aggregates.refund_subtotal,
         refund_aggregates.refund_total_tax,
-        {% endif %}
+
         (orders.total_price
             {% if var('shopify__using_order_adjustment', true) %}
             + coalesce(order_adjustments_aggregates.order_adjustment_amount,0) + coalesce(order_adjustments_aggregates.order_adjustment_tax_amount,0) 
             {% endif %}
-            {% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) %}
-            - coalesce(refund_aggregates.refund_subtotal,0) - coalesce(refund_aggregates.refund_total_tax,0)
-            {% endif %} ) as order_adjusted_total,
+            - coalesce(refund_aggregates.refund_subtotal,0) - coalesce(refund_aggregates.refund_total_tax,0)) as order_adjusted_total,
         order_lines.line_item_count
     from orders
     left join order_lines
         on orders.order_id = order_lines.order_id
         and orders.source_relation = order_lines.source_relation
 
-    {% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) %}
     left join refund_aggregates
         on orders.order_id = refund_aggregates.order_id
         and orders.source_relation = refund_aggregates.source_relation
-    {% endif %}
     {% if var('shopify__using_order_adjustment', true) %}
     left join order_adjustments_aggregates
         on orders.order_id = order_adjustments_aggregates.order_id
