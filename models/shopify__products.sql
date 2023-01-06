@@ -1,7 +1,7 @@
 with products as (
 
     select *
-    from {{ ref('shopify__products__with_aggregates') }}
+    from {{ ref('int_shopify__products_with_aggregates') }}
 ), 
 
 order_lines as (

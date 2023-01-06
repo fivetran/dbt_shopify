@@ -31,7 +31,7 @@ product as (
 inventory_level_aggregated as (
 
     select *
-    from {{ ref('shopify__inventory_level__aggregates') }}
+    from {{ ref('int_shopify__inventory_level__aggregates') }}
 ),
 
 joined_info as (

@@ -19,7 +19,5 @@ dbt deps
 dbt seed --target "$db" --full-refresh
 dbt run --target "$db" --full-refresh
 dbt test --target "$db"
-dbt run --vars '{shopify__using_order_adjustment: false, shopify__using_order_line_refund: false, shopify__using_refund: false}' --target "$db" --full-refresh
+dbt run --vars '{shopify_timezone: "America/New_York"}' --target "$db" --full-refresh
 dbt test --target "$db"
-dbt run --vars '{shopify__using_order_line_refund: false}' --target "$db" --full-refresh
-dbt run --vars '{shopify__using_refund: false}' --target "$db" --full-refresh

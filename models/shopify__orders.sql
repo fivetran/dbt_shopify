@@ -8,7 +8,6 @@ with orders as (
     select *
     from {{ ref('shopify__orders__order_line_aggregates') }}
 
-{% if var('shopify__using_order_adjustment', true) %}
 ), order_adjustments as (
 
     select *
@@ -22,7 +21,6 @@ with orders as (
         sum(tax_amount) as order_adjustment_tax_amount
     from order_adjustments
     group by 1,2
-{% endif %}
 
 ), refunds as (
 
@@ -44,18 +42,14 @@ with orders as (
         orders.*,
         coalesce(cast({{ fivetran_utils.json_parse("total_shipping_price_set",["shop_money","amount"]) }} as {{ dbt.type_float() }}) ,0) as shipping_cost,
         
-        {% if var('shopify__using_order_adjustment', true) %}
         order_adjustments_aggregates.order_adjustment_amount,
         order_adjustments_aggregates.order_adjustment_tax_amount,
-        {% endif %}
 
         refund_aggregates.refund_subtotal,
         refund_aggregates.refund_total_tax,
 
         (orders.total_price
-            {% if var('shopify__using_order_adjustment', true) %}
             + coalesce(order_adjustments_aggregates.order_adjustment_amount,0) + coalesce(order_adjustments_aggregates.order_adjustment_tax_amount,0) 
-            {% endif %}
             - coalesce(refund_aggregates.refund_subtotal,0) - coalesce(refund_aggregates.refund_total_tax,0)) as order_adjusted_total,
         order_lines.line_item_count
     from orders
@@ -66,11 +60,9 @@ with orders as (
     left join refund_aggregates
         on orders.order_id = refund_aggregates.order_id
         and orders.source_relation = refund_aggregates.source_relation
-    {% if var('shopify__using_order_adjustment', true) %}
     left join order_adjustments_aggregates
         on orders.order_id = order_adjustments_aggregates.order_id
         and orders.source_relation = order_adjustments_aggregates.source_relation
-    {% endif %}
 
 ), windows as (
 

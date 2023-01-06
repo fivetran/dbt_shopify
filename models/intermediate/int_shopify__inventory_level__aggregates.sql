@@ -40,7 +40,7 @@ joined as (
         order_lines.order_line_id,
         order_lines.variant_id,
         order_lines.source_relation,
-        coalesce(fulfillment.location_id, orders.location_id) as location_id,
+        fulfillment.location_id, -- location id is stored in fulfillment rather than order
         orders.order_id,
         orders.customer_id,
         lower(orders.email) as email,

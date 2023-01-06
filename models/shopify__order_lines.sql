@@ -8,7 +8,6 @@ with order_lines as (
     select *
     from {{ var('shopify_product_variant') }}
 
-{% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) %}
 ), refunds as (
 
     select *
@@ -23,19 +22,16 @@ with order_lines as (
         sum(coalesce(subtotal, 0)) as subtotal
     from refunds
     group by 1,2
-{% endif %}
 
 ), joined as (
 
     select
         order_lines.*,
 
-        {% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) %}
         coalesce(refunds_aggregated.quantity,0) as refunded_quantity,
         coalesce(refunds_aggregated.subtotal,0) as refunded_subtotal,
         order_lines.quantity - coalesce(refunds_aggregated.quantity,0) as quantity_net_refunds,
         order_lines.pre_tax_price  - coalesce(refunds_aggregated.subtotal,0) as subtotal_net_refunds,
-        {% endif %}
         
         product_variants.created_timestamp as variant_created_at,
         product_variants.updated_timestamp as variant_updated_at,
@@ -60,14 +56,12 @@ with order_lines as (
         product_variants.option_3 as variant_option_3,
         product_variants.tax_code as variant_tax_code
         {# ,
-        use inventoryitem or order line itself
+        use inventoryitem or order line itself -- add later TODO
         product_variants.is_requiring_shipping as variant_is_requiring_shipping #}
     from order_lines
-    {% if fivetran_utils.enabled_vars(vars=["shopify__using_order_line_refund", "shopify__using_refund"]) %}
     left join refunds_aggregated
         on refunds_aggregated.order_line_id = order_lines.order_line_id
         and refunds_aggregated.source_relation = order_lines.source_relation
-    {% endif %}
     left join product_variants
         on product_variants.variant_id = order_lines.variant_id
         and product_variants.source_relation = order_lines.source_relation
