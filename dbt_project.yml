@@ -45,3 +45,4 @@ vars:
     shopify_tender_transaction: "{{ ref('stg_shopify__tender_transaction') }}"
     shopify_abandoned_checkout_discount_code: "{{ ref('stg_shopify__abandoned_checkout_discount_code') }}"
     shopify_order_discount_code: "{{ ref('stg_shopify__order_discount_code') }}"
+    shopify_abandoned_checkout_shipping_line: "{{ ref('stg_shopify__abandoned_checkout_shipping_line') }}"
