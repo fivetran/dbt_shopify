@@ -10,10 +10,7 @@ models:
       +materialized: ephemeral
       int_shopify__customer_email_rollup:
         +materialized: view # so we can use the dbt_utils.star macro
-      int_shopify__inventory_level__aggregates:
-        +materialized: table # just for testing. remove later
-      int_shopify__products_with_aggregates:
-        +materialized: table # just for testing. remove later
+        
 vars:
   shopify:
     shopify_customer: "{{ ref('stg_shopify__customer') }}"
