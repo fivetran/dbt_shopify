@@ -10,3 +10,4 @@ price_rule as (
     from {{ var('shopify_price_rule') }}
 ),
 
+select * from discounts
