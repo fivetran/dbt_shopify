@@ -66,17 +66,7 @@ vars:
     shopify_union_databases: ['shopify_usa','shopify_canada'] # use this if the data is in different databases/projects but uses the same schema name
 ```
 
-## Step 4: Disable models for non-existent sources
-This package was designed with the intention that users have all relevant Shopify tables being synced by Fivetran. However, if you are a Shopify user that does not operate on `returns` or `adjustments` then you will not have the related source tables. As such, you may use the below variable configurations to disable the respective downstream models. All variables are `true` by default. Only add the below configuration to your root `dbt_project.yml` if you are wishing to disable the models:
-
-```yml
-# dbt_project.yml
-
-vars:
-  shopify__using_order_adjustment:  false  # true by default
-  shopify__using_order_line_refund: false  # true by default
-  shopify__using_refund:            false  # true by default
-```
+## Step 4: TODO - timezone converting, maybe should be optional
 
 ## (Optional) Step 5: Additional configurations
 <details><summary>Expand for configurations</summary>

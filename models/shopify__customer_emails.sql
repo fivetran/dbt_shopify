@@ -1,13 +1,13 @@
 with customer_emails as (
 
     select 
-        {{ dbt_utils.star(from=ref('shopify__customer_email_rollup'), except=["orders_count", "total_spent"]) }}
-    from {{ ref('shopify__customer_email_rollup') }}
+        {{ dbt_utils.star(from=ref('int_shopify__customer_email_rollup'), except=["orders_count", "total_spent"]) }}
+    from {{ ref('int_shopify__customer_email_rollup') }}
 
 ), orders as (
 
     select *
-    from {{ ref('shopify__emails__order_aggregates' )}}
+    from {{ ref('int_shopify__emails__order_aggregates' )}}
 
 ), joined as (
 
