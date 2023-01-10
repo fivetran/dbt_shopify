@@ -72,15 +72,15 @@ aggregates_joined as (
     left join orders_aggregated
         on discount_price_rule_joined.code = orders_aggregated.code
         and discount_price_rule_joined.source_relation = orders_aggregated.source_relation
-        -- in case one CODE can apply to both shipping and line items
+        -- in case one CODE can apply to both shipping and line items, percentages and fixed_amounts
         and (case 
                 when discount_price_rule_joined.target_type = 'shipping_line' then 'shipping' -- when target_type = 'shipping', value_type = 'percentage'
-                else discount_price_rule_joined.value_type end) = orders_aggregated.type 
+                else discount_price_rule_joined.value_type end) = orders_aggregated.type
         
     left join abandoned_checkouts_aggregated
         on discount_price_rule_joined.code = abandoned_checkouts_aggregated.code
         and discount_price_rule_joined.source_relation = abandoned_checkouts_aggregated.source_relation
-        -- in case one CODE can apply to both shipping and line items
+        -- in case one CODE can apply to both shipping and line items, percentages and fixed_amounts
         and (case 
                 when discount_price_rule_joined.target_type = 'shipping_line' then 'shipping' -- when target_type = 'shipping', value_type = 'percentage'
                 else discount_price_rule_joined.value_type end) = abandoned_checkouts_aggregated.type 
