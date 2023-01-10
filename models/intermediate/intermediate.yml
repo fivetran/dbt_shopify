@@ -26,10 +26,24 @@ models:
           combination_of_columns:
             - email
             - source_relation
-  - name: int_hopify__inventory_level__aggregates
+  - name: int_shopify__inventory_level__aggregates
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
             - variant_id
             - location_id
+            - source_relation
+  - name: int_shopify__discounts__order_aggregates
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - code
+            - type
+            - source_relation
+  - name: int_shopify__discounts__abandoned_checkouts
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - code
+            - type
             - source_relation

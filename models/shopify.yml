@@ -722,3 +722,10 @@ models:
           "Failure" = The fulfillment request failed.
       - name: source_relation
         description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+
+  - name: shopify__discounts
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - discount_code_id
+            - source_relation
