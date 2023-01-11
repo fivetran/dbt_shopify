@@ -725,7 +725,7 @@ models:
 
   - name: shopify__discounts
     description: >
-      Each record represents a unique discount, enriched with information about its assoicated `price_rule`
+      Each record represents a unique discount, enriched with information about its associated `price_rule`
       and metrics regarding orders and abandoned checkouts.
     tests:
       - dbt_utils.unique_combination_of_columns:
