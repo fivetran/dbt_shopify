@@ -160,3 +160,9 @@ seeds:
       +column_types:
         updated_at: timestamp
         created_at: timestamp
+    shopify_abandoned_checkout_shipping_line_data:
+      +column_types:
+        markup: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+        price: float
+        original_shop_markup: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+        original_shop_price: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
