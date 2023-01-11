@@ -58,7 +58,6 @@ joined as (
     join fulfillment
         on orders.order_id = fulfillment.order_id
         and orders.source_relation = fulfillment.source_relation
-
     left join refunds_aggregated
         on refunds_aggregated.order_line_id = order_lines.order_line_id
         and refunds_aggregated.source_relation = order_lines.source_relation

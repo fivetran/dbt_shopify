@@ -725,13 +725,21 @@ models:
 
   - name: shopify__discounts
     description: >
-      Each record represents a unique discount, enriched with information about its assoicated `price_rule`
+      Each record represents a unique discount, enriched with information about its associated `price_rule`
       and metrics regarding orders and abandoned checkouts.
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
+            - code
+            - source_relation
+          config:
+            severity: warn # best practice for codes to be unique
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
             - discount_code_id
             - source_relation
+          config:
+            severity: error # something is really up
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -749,7 +757,6 @@ models:
         description: The date and time (ISO 8601 format) when the discount code was updated.
       - name: usage_count
         description: The number of times that the discount code has been redeemed.
-
       - name: allocation_limit
         description: >
           The number of times the discount can be allocated on the cart - if eligible. For example a Buy 1 hat Get 1 hat for free discount can be applied 3 times on a cart having more than 6 hats, 
@@ -824,3 +831,5 @@ models:
         description: Count of distinct customers who placed orders using this discount.
       - name: count_distinct_customer_emails
         description: Count of distinct customer emails who placed orders using this discount.
+      - name: avg_order_discount_amount
+        description: Average amount of discount taken off orders.

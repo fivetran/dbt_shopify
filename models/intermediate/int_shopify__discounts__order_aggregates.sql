@@ -16,6 +16,7 @@ orders_aggregated as (
         order_discount_code.code,
         order_discount_code.type,
         order_discount_code.source_relation,
+        avg(order_discount_code.amount) as avg_order_discount_amount,
         sum(order_discount_code.amount) as total_order_discount_amount,
         sum(orders.total_line_items_price) as total_order_line_items_price,
         sum(orders.shipping_cost) as total_order_shipping_cost,

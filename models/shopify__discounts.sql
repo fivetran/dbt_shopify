@@ -58,6 +58,7 @@ aggregates_joined as (
 
     select 
         discount_price_rule_joined.*,
+        orders_aggregated.avg_order_discount_amount,
         coalesce(orders_aggregated.total_order_discount_amount, 0) as total_order_discount_amount,
         coalesce(abandoned_checkouts_aggregated.total_abandoned_checkout_discount_amount, 0) as total_abandoned_checkout_discount_amount,
         coalesce(orders_aggregated.total_order_line_items_price, 0) as total_order_line_items_price,
