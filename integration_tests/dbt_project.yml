@@ -120,6 +120,7 @@ seeds:
         closed_at: timestamp
         created_at: timestamp
         updated_at: timestamp
+        _fivetran_deleted: boolean
     shopify_discount_code_data:
       +column_types:
         usage_count: float
