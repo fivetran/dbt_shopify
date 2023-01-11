@@ -22,20 +22,19 @@ with customers as (
         min(created_timestamp) as first_account_created_at,
         max(created_timestamp) as last_account_created_at,
         max(updated_timestamp) as last_updated_at,
-        max(accepts_marketing_updated_at) as accepts_marketing_last_updated_at,
+        max(marketing_consent_updated_at) as marketing_consent_updated_at,
         max(_fivetran_synced) as last_fivetran_synced,
         sum(orders_count) as orders_count,
         sum(total_spent) as total_spent,
 
         -- take true if ever given for boolean fields
-        {{ fivetran_utils.max_bool("has_accepted_marketing") }} as has_accepted_marketing,
         {{ fivetran_utils.max_bool("case when customer_index = 1 then is_tax_exempt else null end") }} as is_tax_exempt, -- since this changes every year
         {{ fivetran_utils.max_bool("is_verified_email") }} as is_verified_email
 
         -- for all other fields, just take the latest value
         {% set cols = adapter.get_columns_in_relation(ref('stg_shopify__customer')) %}
         {% set except_cols = ['_fivetran_synced', 'email', 'source_relation', 'customer_id', 'phone', 'created_at', 
-                                'updated_at', 'has_accepted_marketing', 'accepts_marketing_updated_at', 'orders_count', 'total_spent',
+                                'updated_at', 'marketing_consent_updated_at', 'orders_count', 'total_spent',
                                 'is_tax_exempt', 'is_verified_email'] %}
         {% for col in cols %}
             {% if col.column|lower not in except_cols %}

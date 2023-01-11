@@ -36,6 +36,24 @@ with orders as (
     from refunds
     group by 1,2
 
+), order_discount_code as (
+    
+    select *
+    from {{ var('shopify_order_discount_code') }}
+
+), discount_aggregates as (
+
+    select 
+        order_id,
+        source_relation,
+        sum(case when type = 'shipping' then amount else 0 end) as shipping_discount_amount,
+        sum(case when type = 'percentage' then amount else 0 end) as percentage_calc_discount_amount,
+        sum(case when type = 'shipping' then amount else 0 end) as fixed_amount_discount_amount,
+        count(distinct code) as count_discount_codes_applied
+
+    from order_discount_code
+    group by 1,2
+
 ), joined as (
 
     select
@@ -51,7 +69,13 @@ with orders as (
         (orders.total_price
             + coalesce(order_adjustments_aggregates.order_adjustment_amount,0) + coalesce(order_adjustments_aggregates.order_adjustment_tax_amount,0) 
             - coalesce(refund_aggregates.refund_subtotal,0) - coalesce(refund_aggregates.refund_total_tax,0)) as order_adjusted_total,
-        order_lines.line_item_count
+        order_lines.line_item_count,
+
+        coalesce(discount_aggregates.shipping_discount_amount, 0) as shipping_discount_amount,
+        coalesce(discount_aggregates.percentage_calc_discount_amount, 0) as percentage_calc_discount_amount,
+        coalesce(discount_aggregates.fixed_amount_discount_amount, 0) as fixed_amount_discount_amount,
+        coalesce(discount_aggregates.count_discount_codes_applied, 0) as count_discount_codes_applied
+
     from orders
     left join order_lines
         on orders.order_id = order_lines.order_id
@@ -63,6 +87,9 @@ with orders as (
     left join order_adjustments_aggregates
         on orders.order_id = order_adjustments_aggregates.order_id
         and orders.source_relation = order_adjustments_aggregates.source_relation
+    left join discount_aggregates
+        on orders.order_id = discount_aggregates.order_id 
+        and orders.source_relation = discount_aggregates.source_relation
 
 ), windows as (
 
