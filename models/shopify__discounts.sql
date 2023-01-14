@@ -58,6 +58,8 @@ aggregates_joined as (
 
     select 
         discount_price_rule_joined.*,
+        coalesce(orders_aggregated.count_orders, 0) as count_orders,
+        coalesce(abandoned_checkouts_aggregated.count_abandoned_checkouts, 0) as count_abandoned_checkouts,
         orders_aggregated.avg_order_discount_amount,
         coalesce(orders_aggregated.total_order_discount_amount, 0) as total_order_discount_amount,
         coalesce(abandoned_checkouts_aggregated.total_abandoned_checkout_discount_amount, 0) as total_abandoned_checkout_discount_amount,
@@ -66,8 +68,10 @@ aggregates_joined as (
         coalesce(orders_aggregated.total_order_shipping_cost, 0) as total_order_shipping_cost,
         coalesce(abandoned_checkouts_aggregated.total_abandoned_checkout_shipping_price, 0) as total_abandoned_checkout_shipping_price,
         coalesce(orders_aggregated.total_order_refund_amount, 0) as total_order_refund_amount,
-        coalesce(orders_aggregated.count_distinct_customers, 0) as count_distinct_customers,
-        coalesce(orders_aggregated.count_distinct_customer_emails, 0) as count_distinct_customer_emails
+        coalesce(orders_aggregated.count_customers, 0) as count_customers,
+        coalesce(orders_aggregated.count_customer_emails, 0) as count_customer_emails,
+        coalesce(abandoned_checkouts_aggregated.count_abandoned_checkout_customers, 0) as count_abandoned_checkout_customers,
+        coalesce(abandoned_checkouts_aggregated.count_abandoned_checkout_customer_emails, 0) as count_abandoned_checkout_customer_emails
 
     from discount_price_rule_joined
     left join orders_aggregated

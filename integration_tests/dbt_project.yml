@@ -22,6 +22,7 @@ vars:
     shopify_customer_tag_identifier: "shopify_customer_tag_data"
     shopify_discount_code_identifier: "shopify_discount_code_data"
     shopify_fulfillment_identifier: "shopify_fulfillment_data"
+    shopify_fulfillment_event_identifier: "shopify_fulfillment_event_data"
     shopify_inventory_item_identifier: "shopify_inventory_item_data"
     shopify_inventory_level_identifier: "shopify_inventory_level_data"
     shopify_location_identifier: "shopify_location_data"
