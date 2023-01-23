@@ -19,8 +19,8 @@ shop_calendar as (
         shop.*
 
     from calendar
-    join shop on
-        cast(shop.created_at as date) <= calendar.date_day
+   join shop 
+        on cast(shop.created_at as date) <= calendar.date_day
 ),
 
 orders as (
