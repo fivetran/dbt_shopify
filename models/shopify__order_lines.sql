@@ -21,13 +21,13 @@ with order_lines as (
         sum(quantity) as quantity,
         sum(coalesce(subtotal, 0)) as subtotal
     from refunds
-    group by 1,2
+    group by 1,2,3
 
 ), joined as (
 
     select
         order_lines.*,
-
+        coalesce(refunds_aggregated.restock_type,'none') as restock_type, 
         coalesce(refunds_aggregated.quantity,0) as refunded_quantity,
         coalesce(refunds_aggregated.subtotal,0) as refunded_subtotal,
         order_lines.quantity - coalesce(refunds_aggregated.quantity,0) as quantity_net_refunds,
@@ -58,6 +58,7 @@ with order_lines as (
         {# ,
         use inventoryitem or order line itself -- add later TODO
         product_variants.is_requiring_shipping as variant_is_requiring_shipping #}
+
     from order_lines
     left join refunds_aggregated
         on refunds_aggregated.order_line_id = order_lines.order_line_id

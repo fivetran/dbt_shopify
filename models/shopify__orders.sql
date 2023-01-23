@@ -54,6 +54,29 @@ with orders as (
     from order_discount_code
     group by 1,2
 
+), order_tag as (
+
+    select
+        order_id,
+        source_relation,
+        value as order_tag
+    
+    from {{ var('shopify_order_tag') }}
+
+), order_url_tag as (
+
+    select
+        order_id,
+        source_relation,
+        value as order_url_tag
+    
+    from {{ var('shopify_order_url_tag') }}
+
+), fulfillments as (
+
+    select *
+    from {{ var('shopify_fulfillment') }}
+
 ), joined as (
 
     select
@@ -74,13 +97,25 @@ with orders as (
         coalesce(discount_aggregates.shipping_discount_amount, 0) as shipping_discount_amount,
         coalesce(discount_aggregates.percentage_calc_discount_amount, 0) as percentage_calc_discount_amount,
         coalesce(discount_aggregates.fixed_amount_discount_amount, 0) as fixed_amount_discount_amount,
-        coalesce(discount_aggregates.count_discount_codes_applied, 0) as count_discount_codes_applied
+        coalesce(discount_aggregates.count_discount_codes_applied, 0) as count_discount_codes_applied,
+
+        -- start new columns
+        coalesce(order_lines.order_total_shipping_tax, 0) as order_total_shipping_tax,
+        order_tag.order_tag,
+        order_url_tag.order_url_tag,
+        fulfillments.name as fulfullment_name,
+        fulfillments.shipment_status,
+        fulfillments.status as fulfullment_status,
+        fulfillments.service as fulfullment_service,
+        fulfillments.tracking_company,
+        fulfillments.tracking_numbers,
+        fulfillments.tracking_urls
+
 
     from orders
     left join order_lines
         on orders.order_id = order_lines.order_id
         and orders.source_relation = order_lines.source_relation
-
     left join refund_aggregates
         on orders.order_id = refund_aggregates.order_id
         and orders.source_relation = refund_aggregates.source_relation
@@ -90,6 +125,15 @@ with orders as (
     left join discount_aggregates
         on orders.order_id = discount_aggregates.order_id 
         and orders.source_relation = discount_aggregates.source_relation
+    left join order_tag
+        on orders.order_id = order_tag.order_id
+        and orders.source_relation = order_tag.source_relation
+    left join order_url_tag
+        on orders.order_id = order_url_tag.order_id
+        and orders.source_relation = order_url_tag.source_relation
+    left join fulfillments
+        on orders.order_id = fulfillments.order_id
+        and orders.source_relation = fulfillments.source_relation
 
 ), windows as (
 

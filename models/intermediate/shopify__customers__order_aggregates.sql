@@ -6,8 +6,26 @@ with orders as (
 ), transactions as (
 
     select *
-    from {{ ref('shopify__transactions' )}}
+    from {{ ref('shopify__transactions')}}
     where lower(status) = 'success'
+
+), order_line as (
+
+    select
+        *
+    from {{ ref('shopify__orders__order_line_aggregates')}}
+
+), customer_tags as (
+
+    select 
+        *
+    from {{ var('shopify_customer_tag' )}}
+
+), abandoned as (
+
+    select 
+        *
+    from {{ var('shopify_abandoned_checkout' )}}
 
 ), aggregated as (
 
@@ -19,11 +37,30 @@ with orders as (
         avg(case when lower(transactions.kind) in ('sale','capture') then transactions.currency_exchange_calculated_amount end) as average_order_value,
         sum(case when lower(transactions.kind) in ('sale','capture') then transactions.currency_exchange_calculated_amount end) as lifetime_total_spent,
         sum(case when lower(transactions.kind) in ('refund') then transactions.currency_exchange_calculated_amount end) as lifetime_total_refunded,
-        count(distinct orders.order_id) as lifetime_count_orders
+        count(distinct orders.order_id) as lifetime_count_orders,
+        -- start new columns
+        avg(order_line.order_total_quantity) as average_quantity_per_order,
+        sum(order_line.order_total_discount) as lifetime_total_discount,
+        sum(order_line.order_total_shipping) as lifetime_total_shipping,
+        sum(order_line.order_total_shipping_with_discounts) as lifetime_total_shipping_with_discounts,
+        sum(order_line.order_total_shipping_tax) as lifetime_total_shipping_tax,
+        {{ fivetran_utils.string_agg("distinct cast(customer_tags.value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags,
+        count(abandoned.customer_id) as lifetime_abandoned_checkouts
+
     from orders
     left join transactions
-        using (order_id, source_relation)
-    where customer_id is not null
+        on orders.order_id = transactions.order_id
+        and orders.source_relation = transactions.source_relation
+    left join order_line
+        on orders.order_id = order_line.order_id
+        and orders.source_relation = order_line.source_relation
+    left join customer_tags
+        on orders.customer_id = customer_tags.customer_id
+        and orders.source_relation = customer_tags.source_relation
+    left join abandoned
+        on orders.customer_id = abandoned.customer_id
+        and orders.source_relation = abandoned.source_relation
+    where orders.customer_id is not null
     group by 1,2
 
 )
