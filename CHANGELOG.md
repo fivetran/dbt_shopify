@@ -8,7 +8,7 @@
   - Intermediate models that roll customer_ids up to emails:
     - `shopify__customer_email_rollup`
     - `shopify__emails__order_aggregates`
-- Metafield support! This package now supports metafields for the collection, customer, order, product_image, product, product_variant, and shop objects. If enabled (see the README for more details), respective `shopify__[object]_metafields` models will materialize with **all** metafields defined within the `metafield` source table appended to the object.
+- Metafield support! This package now supports metafields for the collection, customer, order, product_image, product, product_variant, and shop objects. If enabled (see the [README](https://github.com/fivetran/dbt_shopify#adding-metafields) for more details), respective `shopify__[object]_metafields` models will materialize with **all** metafields defined within the `metafield` source table appended to the object.
 
 ## Under the Hood
 - Addition of the calogica/dbt_expectations package for more robust testing.
