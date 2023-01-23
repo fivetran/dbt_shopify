@@ -15,8 +15,16 @@ calendar as (
 shop_calendar as (
 
     select
-        calendar.date_day,
-        shop.*
+        cast({{ dbt.date_trunc('day','calendar.date_day') }} as date) as date_day,
+        shop.shop_id,
+        shop.name,
+        shop.domain,
+        shop.is_deleted,
+        shopify.currency,
+        shop.enabled_presentment_currencies,
+        shop.iana_timezone,
+        shop.created_at,
+        shop.source_relation
 
     from calendar
     join shop on
