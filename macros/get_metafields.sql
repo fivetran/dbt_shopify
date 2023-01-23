@@ -8,8 +8,9 @@
 with source_table as (
     select *
     from {{ ref(source_object) }}
-),
+)
 
+{% if pivot_fields is not none %},
 lookup_object as (
     select 
         *,
@@ -34,11 +35,15 @@ final as (
     from source_table
     left join lookup_object 
         on lookup_object.{{ reference_field }}_id = source_table.{{ reference_value }}_id
-        and lookup_object.{{ reference_field }} = "{{ reference_value }}"
+        and lookup_object.{{ reference_field }} = '{{ reference_value }}'
     {{ dbt_utils.group_by(source_column_count) }}
 )
 
 select *
 from final
+{% else %}
 
+select *
+from source_table
+{% endif %}
 {% endmacro %}
