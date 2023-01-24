@@ -94,11 +94,11 @@ In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) 
 vars:
   shopify_using_all_metafields: True ## False by default. Will enable ALL metafield models. FYI - This will override all other metafield variables.
   shopify_using_collection_metafields: True ## False by default. Will enable ONLY the collection metafield model.
-  shopify_using_customer_metafields: True ## False by default. Will enable ONLY the collection metafield model.
-  shopify_using_order_metafields: True ## False by default. Will enable ONLY the collection metafield model.
-  shopify_using_product_metafields: True ## False by default. Will enable ONLY the collection metafield model.
-  shopify_using_product_image_metafields: True ## False by default. Will enable ONLY the collection metafield model.
-  shopify_using_product_variant_metafields: True ## False by default. Will enable ONLY the collection metafield model.
+  shopify_using_customer_metafields: True ## False by default. Will enable ONLY the customer metafield model.
+  shopify_using_order_metafields: True ## False by default. Will enable ONLY the order metafield model.
+  shopify_using_product_metafields: True ## False by default. Will enable ONLY the product metafield model.
+  shopify_using_product_image_metafields: True ## False by default. Will enable ONLY the product image metafield model.
+  shopify_using_product_variant_metafields: True ## False by default. Will enable ONLY the product variant metafield model.
 ```
 
 ### Changing the Build Schema
