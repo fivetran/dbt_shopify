@@ -28,7 +28,9 @@ lookup_object as (
 
 final as (
     select
-        source_table.*
+        {% for column in source_columns %}
+            source_table.{{ column.name }}{% if not loop.last %},{% endif %}
+        {% endfor %}
         {% for fields in pivot_fields %}
             , max(replace(replace(lookup_object.{{ dbt_utils.slugify(fields) }},'["',''),'"]','')) as metafield_{{ dbt_utils.slugify(fields) }}
         {% endfor %}
