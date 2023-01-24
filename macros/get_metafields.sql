@@ -24,6 +24,7 @@ lookup_object as (
                 ) 
         }}
     from {{ ref(lookup_object) }}
+    where is_most_recent_record
 ),
 
 final as (
