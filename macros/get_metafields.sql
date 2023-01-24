@@ -33,7 +33,7 @@ final as (
             source_table.{{ column.name }}{% if not loop.last %},{% endif %}
         {% endfor %}
         {% for fields in pivot_fields %}
-            , max(replace(replace(lookup_object.{{ dbt_utils.slugify(fields) }},'["',''),'"]','')) as metafield_{{ dbt_utils.slugify(fields) }}
+            , max(lookup_object.{{ dbt_utils.slugify(fields) }}) as metafield_{{ dbt_utils.slugify(fields) }}
         {% endfor %}
     from source_table
     left join lookup_object 
