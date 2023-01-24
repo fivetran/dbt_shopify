@@ -20,14 +20,14 @@ shop_calendar as (
         shop.name,
         shop.domain,
         shop.is_deleted,
-        shopify.currency,
+        shop.currency,
         shop.enabled_presentment_currencies,
         shop.iana_timezone,
         shop.created_at,
         shop.source_relation
 
     from calendar
-   join shop 
+    join shop 
         on cast(shop.created_at as date) <= calendar.date_day
 ),
 
@@ -91,7 +91,7 @@ order_line_aggregates as (
         sum(case when order_lines.is_shipping_required then order_lines.quantity_net_refunds else 0 end) as quantity_requiring_shipping
 
     from order_lines
-    join orders
+    left join orders
         on order_lines.order_id = orders.order_id
         and order_lines.source_relation = orders.source_relation
 
@@ -127,8 +127,7 @@ abandoned_checkout_aggregates as (
     group by 1,2
 ),
 
--- 61% of people have this table. it can be pretty big, so i imagine this is more of a MAR thing than waitin for fulfillment events to occur 
-{% if var('shopify__using_fulfillment_event', true) %}
+{% if var('shopify_using_fulfillment_event', false) %}
 
 fulfillment_event as (
 
@@ -192,7 +191,7 @@ final as (
         coalesce(abandoned_checkout_aggregates.count_customer_emails_abandoned_checkout, 0) as count_customer_emails_abandoned_checkout,
         coalesce(abandoned_checkout_aggregates.total_abandoned_checkout_line_items_price, 0) as total_abandoned_checkout_line_items_price
 
-        {% if var('shopify__using_fulfillment_event', true) %}
+        {% if var('shopify_using_fulfillment_event', false) %}
             {% for status in ['attempted_delivery', 'delivered', 'failure', 'in_transit', 'out_for_delivery', 'ready_for_pickup', 'label_printed', 'label_purchased', 'confirmed']%}
         , coalesce(count_fulfillment_{{ status }}, 0) as count_fulfillment_{{ status }}
             {% endfor %}
@@ -208,7 +207,7 @@ final as (
     left join abandoned_checkout_aggregates 
         on shop_calendar.source_relation = abandoned_checkout_aggregates.source_relation
         and shop_calendar.date_day = abandoned_checkout_aggregates.date_day
-    {% if var('shopify__using_fulfillment_event', true) %}
+    {% if var('shopify_using_fulfillment_event', false) %}
     left join fulfillment_aggregates 
         on shop_calendar.source_relation = fulfillment_aggregates.source_relation
         and shop_calendar.date_day = fulfillment_aggregates.date_day
