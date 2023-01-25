@@ -5,5 +5,3 @@ packages:
   - git: https://github.com/fivetran/dbt_shopify_source.git
     revision: feature/revamp/upstream-daily-shop-model
     warn-unpinned: false
-
-# - local: ../Shopify/dbt_shopify_source
