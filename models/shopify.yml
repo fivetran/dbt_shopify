@@ -922,23 +922,23 @@ models:
       - name: count_customer_emails_abandoned_checkout
         description: Count of distinct customer emails who abandoned checkouts on this day.
       - name: count_fulfillment_attempted_delivery
-        description: Count of attempted deliveries on this day. 
+        description: Count of distinct fulfillments that attempted deliveries on this day. 
       - name: count_fulfillment_delivered
-        description: Count of successful fulfillments delivered on this day.
+        description: Count of successful distinct fulfillments delivered on this day.
       - name: count_fulfillment_failure
-        description: Count of failed fulfillment requests on this day.
+        description: Count of failed distinct fulfillment requests on this day.
       - name: count_fulfillment_in_transit
-        description: Count of fulfillments in transit.
+        description: Count of distinct fulfillments in transit.
       - name: count_fulfillment_out_for_delivery
-        description: Count of fulfillments out for delivery.
+        description: Count of distinct fulfillments out for delivery.
       - name: count_fulfillment_ready_for_pickup
-        description: Count of fulfillments ready for pickup.
+        description: Count of distinct fulfillments ready for pickup.
       - name: count_fulfillment_label_printed
-        description: Count of fulfillments for which a purchased shipping label has been printed on this day.
+        description: Count of distinct fulfillments for which a purchased shipping label has been printed on this day.
       - name: count_fulfillment_label_purchased
-        description: Count of fulfillments for which a shipping label has been purchased on this day.
+        description: Count of distinct fulfillments for which a shipping label has been purchased on this day.
       - name: count_fulfillment_confirmed
-        description: Count of confirmed fulfillents. This is the default status when no other information is available about a fulfillment.
+        description: Count of confirmed distinct fulfillents. This is the default status when no other information is available about a fulfillment.
       - name: avg_line_item_count
         description: Average line item count for orders placed on this day.
       - name: avg_discount

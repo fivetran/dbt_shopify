@@ -13,7 +13,7 @@ fulfillment_aggregates as (
         cast({{ dbt.date_trunc('day','happened_at') }} as date) as date_day
 
         {% for status in ['attempted_delivery', 'delivered', 'failure', 'in_transit', 'out_for_delivery', 'ready_for_pickup', 'label_printed', 'label_purchased', 'confirmed']%}
-        , sum(case when lower(status) = '{{ status }}' then 1 else 0 end) as count_fulfillment_{{ status }}
+        , count(case when lower(status) = '{{ status }}' then distinct fulfillment_id else null end) as count_fulfillment_{{ status }}
         {% endfor %}
     
     from fulfillment_event
