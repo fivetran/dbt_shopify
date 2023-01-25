@@ -39,7 +39,7 @@ vars:
     shopify_abandoned_checkout_discount_code_identifier: "shopify_abandoned_checkout_discount_code_data"
     shopify_order_discount_code_identifier: "shopify_order_discount_code_data"
     shopify_abandoned_checkout_shipping_line_identifier: "shopify_abandoned_checkout_shipping_line_data"
-    
+
 dispatch:
   - macro_namespace: dbt_utils
     search_order: ['spark_utils', 'dbt_utils']
