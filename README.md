@@ -21,12 +21,13 @@ The following table provides a detailed list of all models materialized within t
 
 | **model**                 | **description**                                                                                                    |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| [shopify__customer_cohorts](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__customer_cohorts.sql)  | Each record represents the monthly performance of a customer, including fields for the month of their 'cohort'.    |
-| [shopify__customers](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__customers.sql)        | Each record represents a customer, with additional dimensions like lifetime value and number of orders.            |
-| [shopify__orders](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__orders.sql)           | Each record represents an order, with additional dimensions like whether it is a new or repeat purchase.           |
-| [shopify__order_lines](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__order_lines.sql)     | Each record represents an order line item, with additional dimensions like how many items were refunded.           |
-| [shopify__products](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__products.sql)         | Each record represents a product, with additional dimensions like most recent order date and order volume.         |
-| [shopify__transactions](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__transactions.sql)     | Each record represents a transaction with additional calculations to handle exchange rates.                        |
+| [shopify__customer_cohorts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_cohorts.sql)  | Each record represents the monthly performance of a customer, including fields for the month of their 'cohort'.    |
+| [shopify__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customers.sql)        | Each record represents a customer, with additional dimensions like lifetime value and number of orders.            |
+| [shopify__orders](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__orders.sql)           | Each record represents an order, with additional dimensions like whether it is a new or repeat purchase.           |
+| [shopify__order_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__order_lines.sql)     | Each record represents an order line item, with additional dimensions like how many items were refunded.           |
+| [shopify__products](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__products.sql)         | Each record represents a product, with additional dimensions like most recent order date and order volume.         |
+| [shopify__transactions](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__transactions)     | Each record represents a transaction with additional calculations to handle exchange rates.                        |
+| [shopify__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__daily_shop.sql)     | Each record represents a day of activity for each of your shops, conveyed by a suite of daily metrics.                        |
 
 # 🎯 How do I use the dbt package?
 

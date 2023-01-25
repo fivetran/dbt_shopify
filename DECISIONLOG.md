@@ -8,6 +8,10 @@ In validating metrics with the Sales over Time reports in the Shopify UI, you ma
 
 We felt that reporting on the order date made more sense in reality, but, if you feel differently, please reach out and create a Feature Request. To align with the Shopify method yourself, this would most likely involve aggregating `transactions` data (relying on the `kind` column to determine sales vs returns) instead of `orders`.
 
+## Using an Order's `created_timestamp` Instead of `processed_timestamp` 
+
+In a similar vein to the above, in the customer cohort and daily shop models, we aggregate orders on a daily grain. To do so, we truncate the timestamp at which the order was _created_. In contrast, Shopify in-app reports truncate the timestamp at which the order was _processed_. This may also contribute to discrepancies when comparing the package models to in-app reports. We felt that the creation timestamp makes more sense to use in reality, but please reach out if you have other thoughts by opening an [issue](https://github.com/fivetran/dbt_shopify/issues/new?assignees=&labels=enhancement&template=feature-request.yml&title=%5BFeature%5D+%3Ctitle%3E).
+
 ## Creating Empty Tables for Refunds, Order Line Refunds, Order Adjustments, and Discount Codes
 
 Source tables related to `refunds`, `order_line_refunds`, `order_adjustments`, and `discount_codes` are created in the Shopify schema dyanmically. For example, if your shop has not incurred any refunds, you will not have a `refund` table yet until you do refund an order. 

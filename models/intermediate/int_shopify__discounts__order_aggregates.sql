@@ -21,8 +21,9 @@ orders_aggregated as (
         sum(orders.total_line_items_price) as total_order_line_items_price,
         sum(orders.shipping_cost) as total_order_shipping_cost,
         sum(orders.refund_subtotal + orders.refund_total_tax) as total_order_refund_amount,
-        count(distinct customer_id) as count_distinct_customers,
-        count(distinct email) as count_distinct_customer_emails
+        count(distinct customer_id) as count_customers,
+        count(distinct email) as count_customer_emails,
+        count(distinct order_discount_code.order_id) as count_orders
 
     from order_discount_code
     join orders 
