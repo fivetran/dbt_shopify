@@ -31,13 +31,6 @@ abandoned_checkouts_aggregated as (
         abandoned_checkout_discount_code.type,
         abandoned_checkout_discount_code.source_relation,
         sum(abandoned_checkout_discount_code.amount) as total_abandoned_checkout_discount_amount,
-        sum(coalesce(
-            case 
-                -- prices are reported in presentment (customer's) currency so let's only take the data where
-                -- the presentment currency is the same as the shop's (or maybe we should not have this field...)
-                when abandoned_checkout.presentment_currency = abandoned_checkout.shop_currency  
-                then abandoned_checkout.total_line_items_price 
-            else null end, 0)) as total_abandoned_checkout_line_items_price,
         sum(coalesce(abandoned_checkout_shipping_line.price, 0)) as total_abandoned_checkout_shipping_price,
         count(distinct customer_id) as count_abandoned_checkout_customers,
         count(distinct email) as count_abandoned_checkout_customer_emails,

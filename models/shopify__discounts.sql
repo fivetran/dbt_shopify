@@ -64,7 +64,6 @@ aggregates_joined as (
         coalesce(orders_aggregated.total_order_discount_amount, 0) as total_order_discount_amount,
         coalesce(abandoned_checkouts_aggregated.total_abandoned_checkout_discount_amount, 0) as total_abandoned_checkout_discount_amount,
         coalesce(orders_aggregated.total_order_line_items_price, 0) as total_order_line_items_price,
-        coalesce(abandoned_checkouts_aggregated.total_abandoned_checkout_line_items_price, 0) as total_abandoned_checkout_line_items_price,
         coalesce(orders_aggregated.total_order_shipping_cost, 0) as total_order_shipping_cost,
         coalesce(abandoned_checkouts_aggregated.total_abandoned_checkout_shipping_price, 0) as total_abandoned_checkout_shipping_price,
         coalesce(orders_aggregated.total_order_refund_amount, 0) as total_order_refund_amount,
