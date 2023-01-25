@@ -87,6 +87,21 @@ vars:
     product_variant_pass_through_columns: []
 ```
 
+### Adding Metafields
+In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) the Shopify connector included support for the [metafield resource](https://shopify.dev/api/admin-rest/2023-01/resources/metafield). If you would like to take advantage of these metafields, this package offers corresponding mapping models which append these metafields to the respective source object for the following tables: collection, customer, order, product_image, product, product_variant, shop. If enabled, these models will materialize as `shopify__[object]_metafields` for each respective supported object. To enable these metafield mapping models, you may use the following configurations within your `dbt_project.yml`.
+>**Note**: These metafield models will contain all the same records as the corresponding staging models with the exception of the metafield columns being added. To ensure there is no fanout, this package takes advantage of the `dbt_expectations.expect_table_row_count_to_equal_other_table` test to ensure the metafield models contain the same row count as the staging model.
+
+```yml
+vars:
+  shopify_using_all_metafields: True ## False by default. Will enable ALL metafield models. FYI - This will override all other metafield variables.
+  shopify_using_collection_metafields: True ## False by default. Will enable ONLY the collection metafield model.
+  shopify_using_customer_metafields: True ## False by default. Will enable ONLY the customer metafield model.
+  shopify_using_order_metafields: True ## False by default. Will enable ONLY the order metafield model.
+  shopify_using_product_metafields: True ## False by default. Will enable ONLY the product metafield model.
+  shopify_using_product_image_metafields: True ## False by default. Will enable ONLY the product image metafield model.
+  shopify_using_product_variant_metafields: True ## False by default. Will enable ONLY the product variant metafield model.
+```
+
 ### Changing the Build Schema
 By default this package will build the Shopify staging models within a schema titled (<target_schema> + `_stg_shopify`) and the Shopify final models within a schema titled (<target_schema> + `_shopify`) in your target database. If this is not where you would like your modeled Shopify data to be written to, add the following configuration to your `dbt_project.yml` file:
 
