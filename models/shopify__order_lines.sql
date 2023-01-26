@@ -19,15 +19,33 @@ with order_lines as (
         order_line_id,
         source_relation,
         sum(quantity) as quantity,
-        sum(coalesce(subtotal, 0)) as subtotal
+        sum(coalesce(subtotal, 0)) as subtotal,
+        {{ fivetran_utils.string_agg("distinct cast(refunds.restock_type as " ~ dbt.type_string() ~ ")", "', '") }} as restock_types
     from refunds
-    group by 1,2,3
+    group by 1,2
+
+), tax_lines as (
+
+    select *
+    from {{ var('shopify_tax_line')}}
+
+), tax_lines_aggregated as (
+
+    select
+        tax_lines.order_line_id,
+        tax_lines.source_relation,
+        sum(tax_lines.price) as order_line_tax
+
+    from tax_lines
+    group by 1,2
 
 ), joined as (
 
     select
         order_lines.*,
-        coalesce(refunds_aggregated.restock_type,'none') as restock_type, 
+        
+        refunds_aggregated.restock_types,
+
         coalesce(refunds_aggregated.quantity,0) as refunded_quantity,
         coalesce(refunds_aggregated.subtotal,0) as refunded_subtotal,
         order_lines.quantity - coalesce(refunds_aggregated.quantity,0) as quantity_net_refunds,
@@ -54,10 +72,9 @@ with order_lines as (
         product_variants.option_1 as variant_option_1,
         product_variants.option_2 as variant_option_2,
         product_variants.option_3 as variant_option_3,
-        product_variants.tax_code as variant_tax_code
-        {# ,
-        use inventoryitem or order line itself -- add later TODO
-        product_variants.is_requiring_shipping as variant_is_requiring_shipping #}
+        product_variants.tax_code as variant_tax_code,
+
+        tax_lines_aggregated.order_line_tax
 
     from order_lines
     left join refunds_aggregated
@@ -66,6 +83,10 @@ with order_lines as (
     left join product_variants
         on product_variants.variant_id = order_lines.variant_id
         and product_variants.source_relation = order_lines.source_relation
+    left join tax_lines_aggregated
+        on tax_lines_aggregated.order_line_id = order_lines.order_line_id
+        and tax_lines_aggregated.source_relation = order_lines.source_relation
+
 
 )
 

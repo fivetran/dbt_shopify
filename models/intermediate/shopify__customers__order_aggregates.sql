@@ -21,12 +21,6 @@ with orders as (
         *
     from {{ var('shopify_customer_tag' )}}
 
-), abandoned as (
-
-    select 
-        *
-    from {{ var('shopify_abandoned_checkout' )}}
-
 ), aggregated as (
 
     select
@@ -37,15 +31,21 @@ with orders as (
         avg(case when lower(transactions.kind) in ('sale','capture') then transactions.currency_exchange_calculated_amount end) as average_order_value,
         sum(case when lower(transactions.kind) in ('sale','capture') then transactions.currency_exchange_calculated_amount end) as lifetime_total_spent,
         sum(case when lower(transactions.kind) in ('refund') then transactions.currency_exchange_calculated_amount end) as lifetime_total_refunded,
-        count(distinct orders.order_id) as lifetime_count_orders,
+
         -- start new columns
         avg(order_line.order_total_quantity) as average_quantity_per_order,
+        sum(order_line.order_total_tax) as lifetime_total_tax,
+        avg(order_line.order_total_tax) as average_tax_per_order,
         sum(order_line.order_total_discount) as lifetime_total_discount,
+        avg(order_line.order_total_discount) as average_discount_per_order,
         sum(order_line.order_total_shipping) as lifetime_total_shipping,
+        avg(order_line.order_total_shipping) as average_shipping_per_order,
         sum(order_line.order_total_shipping_with_discounts) as lifetime_total_shipping_with_discounts,
+        avg(order_line.order_total_shipping_with_discounts) as average_shipping_with_discounts_per_order,
         sum(order_line.order_total_shipping_tax) as lifetime_total_shipping_tax,
+        avg(order_line.order_total_shipping_tax) as average_shipping_tax_per_order,
         {{ fivetran_utils.string_agg("distinct cast(customer_tags.value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags,
-        count(abandoned.customer_id) as lifetime_abandoned_checkouts
+        {# sum(abandoned.abandoned_checkouts) as lifetime_abandoned_checkouts  #}
 
     from orders
     left join transactions
@@ -57,9 +57,6 @@ with orders as (
     left join customer_tags
         on orders.customer_id = customer_tags.customer_id
         and orders.source_relation = customer_tags.source_relation
-    left join abandoned
-        on orders.customer_id = abandoned.customer_id
-        and orders.source_relation = abandoned.source_relation
     where orders.customer_id is not null
     group by 1,2
 

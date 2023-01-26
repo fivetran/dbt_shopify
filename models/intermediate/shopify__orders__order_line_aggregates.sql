@@ -3,19 +3,17 @@ with order_line as (
     select *
     from {{ var('shopify_order_line') }}
 
-), order_shipping_line as (
+), tax as (
 
     select
         *
-    from {{ var('shopify_order_shipping_line')}}
+    from {{ var('shopify_tax_line') }}
 
-), order_shipping_tax_line as (
+), shipping as (
 
     select
         *
-    from {{ var('shopify_order_shipping_tax_line')}} 
-
-
+    from {{ ref('int_shopify__order_shipping_aggregates')}}
 
 ), aggregated as (
 
@@ -25,18 +23,19 @@ with order_line as (
         count(*) as line_item_count,
         -- start new columns QUESTION: do I need to consider currency for the below?
         sum(order_line.quantity) as order_total_quantity,
+        sum(tax.price) as order_total_tax,
         sum(order_line.total_discount) as order_total_discount,
-        sum(order_shipping_line.price) as order_total_shipping,
-        sum(order_shipping_line.discounted_price) as order_total_shipping_with_discounts,
-        sum(order_shipping_tax_line.price) as order_total_shipping_tax
+        sum(shipping.shipping_price) as order_total_shipping,
+        sum(shipping.discounted_shipping_price) as order_total_shipping_with_discounts,
+        sum(shipping.shipping_tax) as order_total_shipping_tax
 
     from order_line
-    left join order_shipping_line
-        on order_line.order_id = order_shipping_line.order_id
-        and order_line.source_relation = order_shipping_line.source_relation
-    left join order_shipping_tax_line
-        on order_shipping_line.order_shipping_line_id = order_shipping_tax_line.order_shipping_line_id
-        and order_shipping_line.source_relation = order_shipping_tax_line.source_relation
+    left join tax
+        on tax.order_line_id = order_line.order_line_id
+        and tax.source_relation = order_line.source_relation
+    left join shipping
+        on shipping.order_id = order_line.order_id
+        and shipping.source_relation = order_line.source_relation
     group by 1,2
 
 )

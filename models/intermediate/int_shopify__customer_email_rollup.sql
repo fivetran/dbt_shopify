@@ -13,13 +13,6 @@ with customers as (
         *
     from {{ var('shopify_customer_tag' )}}
 
-), abandoned as (
-
-    select 
-        *
-    from {{ var('shopify_abandoned_checkout' )}}
-    where email is not null
-
 ), rollup_customers as (
 
     select
@@ -27,9 +20,8 @@ with customers as (
         lower(customers.email) as email,
         customers.source_relation,
 
-        --new columns************************
+        --new************************
         {{ fivetran_utils.string_agg("distinct cast(customer_tags.value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags,
-        count(abandoned.email) as abandoned_checkouts_count,
         --*********************************** 
 
         -- fields to string agg together
@@ -64,9 +56,6 @@ with customers as (
     left join customer_tags
         on customers.customer_id = customer_tags.customer_id
         and customers.source_relation = customer_tags.source_relation
-    left join abandoned
-        on lower(customers.email) = lower(abandoned.email)
-        and customers.source_relation = abandoned.source_relation
 
     group by 1,2
 

@@ -11,13 +11,16 @@ with transactions as (
     select 
         transactions.*,
         tender_transactions.payment_method,
-        parent_transactions.created_timestamp as parent_created_timestamp
+        parent_transactions.created_timestamp as parent_created_timestamp,
+        parent_transactions.kind as parent_kind,
+        parent_transactions.amount as parent_amount,
+        parent_transactions.status as parent_status
     from transactions
     left join tender_transactions
         on transactions.transaction_id = tender_transactions.transaction_id
         and transactions.source_relation = tender_transactions.source_relation
     left join transactions as parent_transactions
-        on transactions.transaction_id = parent_transactions.parent_id
+        on transactions.parent_id = parent_transactions.transaction_id
         and transactions.source_relation = parent_transactions.source_relation
 
 ), exchange_rate as (

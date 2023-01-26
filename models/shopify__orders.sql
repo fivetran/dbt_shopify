@@ -59,23 +59,33 @@ with orders as (
     select
         order_id,
         source_relation,
-        value as order_tag
+        {{ fivetran_utils.string_agg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as order_tags
     
     from {{ var('shopify_order_tag') }}
+    group by 1,2
 
 ), order_url_tag as (
 
     select
         order_id,
         source_relation,
-        value as order_url_tag
+        {{ fivetran_utils.string_agg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as order_url_tags
     
     from {{ var('shopify_order_url_tag') }}
+    group by 1,2
 
 ), fulfillments as (
 
-    select *
+    select 
+        order_id,
+        source_relation,
+        count(order_id) as number_of_fulfillments,
+        {{ fivetran_utils.string_agg("distinct cast(service as " ~ dbt.type_string() ~ ")", "', '") }} as fulfillment_services,
+        {{ fivetran_utils.string_agg("distinct cast(tracking_company as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_companies,
+        {{ fivetran_utils.string_agg("distinct cast(tracking_number as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_numbers
+
     from {{ var('shopify_fulfillment') }}
+    group by 1,2
 
 ), joined as (
 
@@ -101,15 +111,12 @@ with orders as (
 
         -- start new columns
         coalesce(order_lines.order_total_shipping_tax, 0) as order_total_shipping_tax,
-        order_tag.order_tag,
-        order_url_tag.order_url_tag,
-        fulfillments.name as fulfullment_name,
-        fulfillments.shipment_status,
-        fulfillments.status as fulfullment_status,
-        fulfillments.service as fulfullment_service,
-        fulfillments.tracking_company,
-        fulfillments.tracking_numbers,
-        fulfillments.tracking_urls
+        order_tag.order_tags,
+        order_url_tag.order_url_tags,
+        fulfillments.number_of_fulfillments,
+        fulfillments.fulfillment_services,
+        fulfillments.tracking_companies,
+        fulfillments.tracking_numbers
 
 
     from orders

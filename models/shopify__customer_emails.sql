@@ -9,6 +9,16 @@ with customer_emails as (
     select *
     from {{ ref('int_shopify__emails__order_aggregates' )}}
 
+), abandoned as (
+
+    select 
+        lower(email) as email,
+        source_relation,
+        count(customer_id) as lifetime_abandoned_checkouts
+    from {{ var('shopify_abandoned_checkout' )}}
+    where email is not null
+    group by 1,2
+
 ), joined as (
 
     select 
@@ -22,6 +32,7 @@ with customer_emails as (
         coalesce(orders.lifetime_count_orders, 0) as lifetime_count_orders,
 
         --new columns************************
+        coalesce(abandoned.lifetime_abandoned_checkouts, 0) as lifetime_abandoned_checkouts,
         coalesce(orders.average_quantity_per_order, 0) as average_quantity_per_order,
         coalesce(orders.lifetime_total_discount, 0) as lifetime_total_discount,
         coalesce(orders.lifetime_total_shipping, 0) as lifetime_total_shipping,
@@ -32,7 +43,9 @@ with customer_emails as (
     left join orders
         on customer_emails.email = orders.email
         and customer_emails.source_relation = orders.source_relation
-
+    left join abandoned
+        on customers.email = abandoned.email)
+        and customers.source_relation = abandoned.source_relation
 )
 
 select *
