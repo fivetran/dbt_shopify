@@ -24,6 +24,17 @@ abandoned_checkout_shipping_line as (
     from {{ var('shopify_abandoned_checkout_shipping_line') }}
 ),
 
+roll_up_shipping_line as (
+
+    select 
+        checkout_id,
+        source_relation,
+        sum(price) as price
+
+    from abandoned_checkout_shipping_line
+    group by 1,2
+),
+
 abandoned_checkouts_aggregated as (
 
     select 
@@ -32,15 +43,15 @@ abandoned_checkouts_aggregated as (
         abandoned_checkout_discount_code.source_relation,
         sum(abandoned_checkout_discount_code.amount) as total_abandoned_checkout_discount_amount,
         sum(coalesce(abandoned_checkout.total_line_items_price, 0)) as total_abandoned_checkout_line_items_price,
-        sum(coalesce(abandoned_checkout_shipping_line.price, 0)) as total_abandoned_checkout_shipping_price 
+        sum(coalesce(roll_up_shipping_line.price, 0)) as total_abandoned_checkout_shipping_price 
 
     from abandoned_checkout_discount_code
     left join abandoned_checkout
         on abandoned_checkout_discount_code.checkout_id = abandoned_checkout.checkout_id
         and abandoned_checkout_discount_code.source_relation = abandoned_checkout.source_relation
-    left join abandoned_checkout_shipping_line
-        on abandoned_checkout_shipping_line.checkout_id = abandoned_checkout_discount_code.checkout_id 
-        and abandoned_checkout_shipping_line.source_relation = abandoned_checkout_discount_code.source_relation
+    left join roll_up_shipping_line
+        on roll_up_shipping_line.checkout_id = abandoned_checkout_discount_code.checkout_id 
+        and roll_up_shipping_line.source_relation = abandoned_checkout_discount_code.source_relation
 
     group by 1,2,3
 )

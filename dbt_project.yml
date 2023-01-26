@@ -7,7 +7,7 @@ models:
     +schema: shopify
     +materialized: table
     intermediate:
-      +materialized: ephemeral
+      +materialized: table # testing for now - switch to ephemeral
       int_shopify__customer_email_rollup:
         +materialized: view # so we can use the dbt_utils.star macro
         
