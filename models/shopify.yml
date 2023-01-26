@@ -698,27 +698,27 @@ models:
         description: Net quantity sold from this inventory level. Excludes refunds.
       - name: count_fulfillment_pending
         description: >
-          Count of currently pending fulfillments for this inventory level.
+          Count of currently pending distinct fulfillments for this inventory level.
           "Pending" = Shopify has created the fulfillment and is waiting for the third-party fulfillment service to transition it to 'open' or 'success'.
       - name: count_fulfillment_open
         description: >
-          Count of currently open fulfillments for this inventory level.
+          Count of currently open distinct fulfillments for this inventory level.
           "Open" = The fulfillment has been acknowledged by the service and is in processing.
       - name: count_fulfillment_success
         description: >
-          Count of successful fulfillments for this inventory level.
+          Count of successful distinct fulfillments for this inventory level.
           "Success" = The fulfillment was successful.
       - name: count_fulfillment_cancelled
         description: >
-          Count of cancelled fulfillments for this inventory level.
+          Count of cancelled distinct fulfillments for this inventory level.
           "Cancelled" = The fulfillment was cancelled.
       - name: count_fulfillment_error
         description: >
-          Count of fulfillments for this inventory level that encountered an error.
+          Count of distinct fulfillments for this inventory level that encountered an error.
           "Error" = There was an error with the fulfillment request.
       - name: count_fulfillment_failure
         description: >
-          Count of fulfillments for this inventory level that failed.
+          Count of distinct fulfillments for this inventory level that failed.
           "Failure" = The fulfillment request failed.
       - name: source_relation
         description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
@@ -922,21 +922,23 @@ models:
       - name: count_customer_emails_abandoned_checkout
         description: Count of distinct customer emails who abandoned checkouts on this day.
       - name: count_fulfillment_attempted_delivery
-        description: Count of distinct fulfillments that attempted deliveries on this day. 
+        description: Count of distinct fulfillments on this day where the delivery of the shipment was attempted, but unable to be completed.
       - name: count_fulfillment_delivered
-        description: Count of successful distinct fulfillments delivered on this day.
+        description: Count of successful distinct fulfillments successfully delivered on this day.
       - name: count_fulfillment_failure
-        description: Count of failed distinct fulfillment requests on this day.
+        description: Count of failed distinct fulfillments on this day. Something went wrong when pulling tracking information for the shipment, such as the tracking number was invalid or the shipment was canceled.
       - name: count_fulfillment_in_transit
-        description: Count of distinct fulfillments in transit.
+        description: Count of distinct fulfillments in transit on this day. Each shipment is being transported between shipping facilities on the way to its destination.
       - name: count_fulfillment_out_for_delivery
-        description: Count of distinct fulfillments out for delivery.
+        description: Count of distinct fulfillments being delivered to their final destination.
       - name: count_fulfillment_ready_for_pickup
-        description: Count of distinct fulfillments ready for pickup.
+        description: Count of distinct fulfillments ready for pickup at a shipping depot.
+      - name: count_fulfillment_picked_up
+        description: Count of distinct fulfillments successfully picked up on this day.
       - name: count_fulfillment_label_printed
         description: Count of distinct fulfillments for which a purchased shipping label has been printed on this day.
       - name: count_fulfillment_label_purchased
-        description: Count of distinct fulfillments for which a shipping label has been purchased on this day.
+        description: Count of distinct fulfillments for which a shipping label has been purchased (but not printed yet) on this day.
       - name: count_fulfillment_confirmed
         description: Count of confirmed distinct fulfillents. This is the default status when no other information is available about a fulfillment.
       - name: avg_line_item_count

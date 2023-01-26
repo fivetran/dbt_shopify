@@ -43,6 +43,7 @@ joined as (
         fulfillment.location_id, -- location id is stored in fulfillment rather than order
         orders.order_id,
         orders.customer_id,
+        fulfillment.fulfillment_id,
         lower(orders.email) as email,
         order_lines.pre_tax_price,
         order_lines.quantity,
@@ -78,7 +79,7 @@ aggregated as (
         max(order_created_timestamp) as last_order_timestamp
 
         {% for status in ['pending', 'open', 'success', 'cancelled', 'error', 'failure'] %}
-        , sum(case when fulfillment_status = '{{ status }}' then 1 else 0 end) as count_fulfillment_{{ status }}
+        , count(distinct case when fulfillment_status = '{{ status }}' then fulfillment_id end) as count_fulfillment_{{ status }}
         {% endfor %}
 
         , sum(coalesce(subtotal_sold_refunds, 0)) as subtotal_sold_refunds
