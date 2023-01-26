@@ -35,6 +35,7 @@ vars:
     shopify_product_image_identifier: "shopify_product_image_data"
     shopify_product_tag_identifier: "shopify_product_tag_data"
     shopify_shop_identifier: "shopify_shop_data"
+    shopify_tax_line_identifier: "shopify_tax_line_data"
     shopify_tender_transaction_identifier: "shopify_tender_transaction_data"
     shopify_abandoned_checkout_discount_code_identifier: "shopify_abandoned_checkout_discount_code_data"
     shopify_order_discount_code_identifier: "shopify_order_discount_code_data"
