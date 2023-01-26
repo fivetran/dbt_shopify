@@ -15,30 +15,50 @@ with order_line as (
         *
     from {{ ref('int_shopify__order_shipping_aggregates')}}
 
-), aggregated as (
+), tax_aggregates as (
+
+    select
+        order_line_id,
+        source_relation,
+        sum(price) price
+
+    from tax
+    group by 1,2
+
+), order_line_aggregates as (
 
     select 
         order_line.order_id,
         order_line.source_relation,
         count(*) as line_item_count,
-        -- start new columns QUESTION: do I need to consider currency for the below?
         sum(order_line.quantity) as order_total_quantity,
-        sum(tax.price) as order_total_tax,
-        sum(order_line.total_discount) as order_total_discount,
-        sum(shipping.shipping_price) as order_total_shipping,
-        sum(shipping.discounted_shipping_price) as order_total_shipping_with_discounts,
-        sum(shipping.shipping_tax) as order_total_shipping_tax
+        sum(tax_aggregates.price) as order_total_tax,
+        sum(order_line.total_discount) as order_total_discount
 
     from order_line
-    left join tax
-        on tax.order_line_id = order_line.order_line_id
-        and tax.source_relation = order_line.source_relation
-    left join shipping
-        on shipping.order_id = order_line.order_id
-        and shipping.source_relation = order_line.source_relation
+    left join tax_aggregates
+        on tax_aggregates.order_line_id = order_line.order_line_id
+        and tax_aggregates.source_relation = order_line.source_relation
     group by 1,2
 
+), final as (
+
+    select
+        order_line_aggregates.order_id,
+        order_line_aggregates.source_relation,
+        order_line_aggregates.line_item_count,
+        order_line_aggregates.order_total_quantity,
+        order_line_aggregates.order_total_tax,
+        order_line_aggregates.order_total_discount,
+        shipping.shipping_price as order_total_shipping,
+        shipping.discounted_shipping_price as order_total_shipping_with_discounts,
+        shipping.shipping_tax as order_total_shipping_tax
+
+    from order_line_aggregates
+    left join shipping
+        on shipping.order_id = order_line_aggregates.order_id
+        and shipping.source_relation = order_line_aggregates.source_relation
 )
 
 select *
-from aggregated
+from final
