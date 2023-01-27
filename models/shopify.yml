@@ -28,7 +28,7 @@ models:
       - name: order_count_lifetime
         description: Number of orders purchased up until and including this `date_month`.
       - name: source_relation
-        description: "{{ doc('source_relation') }}"
+        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
       - name: total_price_in_month
         description: Total amount (in currency) purchased in the `date_month`
       - name: total_price_lifetime
@@ -60,6 +60,8 @@ models:
         description: Number of orders purchased in the `date_month`
       - name: order_count_lifetime
         description: Number of orders purchased up until and including this `date_month`.
+      - name: source_relation
+        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
       - name: total_price_in_month
         description: Total amount (in currency) purchased in the `date_month`
       - name: total_price_lifetime
@@ -183,6 +185,8 @@ models:
         description: The postal code (zip, postcode, Eircode, …) of the shipping address.
       - name: source_name
         description: Where the order originated. Can be set only during order creation, and is not writeable afterwards.
+      - name: source_relation
+        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
       - name: subtotal_price
         description: The price of the order in the shop currency after discounts but before shipping, taxes, and tips.
       - name: has_taxes_included
@@ -283,6 +287,8 @@ models:
         description: The total amount of money that the customer has been refunded on orders across their order history.
       - name: lifetime_total_amount
         description: The total amount of money (minus refunds) that the customer has spent across their order history.
+      - name: source_relation
+        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
 
   - name: shopify__customer_emails
     description: Each record represents a customer email in Shopify.
@@ -338,6 +344,8 @@ models:
         description: Timestamp of when the last account associated with this email was created.
       - name: accepts_marketing_last_updated_at
         description: When the customer consented or objected to receiving marketing material by email. 
+      - name: source_relation
+        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
 
   - name: shopify__products
     description: Each record represents a product in Shopify.
@@ -381,6 +389,8 @@ models:
         description: The timestamp the product was first ordered.
       - name: most_recent_order_timestamp
         description: The timestamp the product was most recently ordered.
+      - name: source_relation
+        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
 
   - name: shopify__order_lines
     description: Each record represents a line item of an order in Shopify.
@@ -482,6 +492,8 @@ models:
         description: Subtotal of the order line with refunds subtracted.
       - name: image_id
         description: Image id of the product variant associated with the order line.
+      - name: source_relation
+        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
   
   - name: shopify__transactions
     description: Each record represents a transaction in Shopify.
@@ -557,6 +569,8 @@ models:
         description: The exchange rate between the home currency and the currency of sale at the time of the transaction.
       - name: currency_exchange_calculated_amount
         description: The total amount of the transaction with the currency exchange rate applied.
+      - name: source_relation
+        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
 
   - name: shopify__inventory_levels
     description: >
@@ -835,3 +849,6 @@ models:
         description: Count of distinct customer emails who placed orders using this discount.
       - name: avg_order_discount_amount
         description: Average amount of discount taken off orders.
+      - name: source_relation
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+      
