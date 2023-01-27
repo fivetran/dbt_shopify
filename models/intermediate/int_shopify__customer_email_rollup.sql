@@ -1,3 +1,4 @@
+{{ config(materialized = 'table') }}
 with customers as (
 
     select 
@@ -17,7 +18,7 @@ with customers as (
 
     select
         -- fields to group by
-        cast(lower(customers.email) as {{ dbt_utils.type_string() }}) as email,
+        lower(customers.email) as email,
         customers.source_relation,
 
         --new************************
