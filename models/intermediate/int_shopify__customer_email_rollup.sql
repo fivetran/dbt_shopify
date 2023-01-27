@@ -17,7 +17,7 @@ with customers as (
 
     select
         -- fields to group by
-        lower(customers.email) as email,
+        cast(lower(customers.email) as {{ dbt_utils.type_string() }}) as email,
         customers.source_relation,
 
         --new************************

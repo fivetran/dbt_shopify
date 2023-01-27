@@ -8,6 +8,7 @@ with customer_emails as (
 
     select *
     from {{ ref('int_shopify__emails__order_aggregates' )}}
+    where email is not null
 
 ), abandoned as (
 
