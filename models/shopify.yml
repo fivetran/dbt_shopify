@@ -27,6 +27,8 @@ models:
         description: Number of orders purchased in the `date_month`
       - name: order_count_lifetime
         description: Number of orders purchased up until and including this `date_month`.
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
       - name: total_price_in_month
         description: Total amount (in currency) purchased in the `date_month`
       - name: total_price_lifetime

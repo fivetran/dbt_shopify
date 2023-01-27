@@ -13,7 +13,7 @@ with order_line as (
 
     select
         *
-    from {{ ref('int_shopify__order_shipping_aggregates')}}
+    from {{ ref('int_shopify__order__shipping_aggregates')}}
 
 ), tax_aggregates as (
 
