@@ -167,3 +167,7 @@ seeds:
         price: float
         original_shop_markup: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
         original_shop_price: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+    shopify_tax_line_data:
+      +column_types:
+        price: float
+        rate: float
