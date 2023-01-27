@@ -18,12 +18,11 @@ with products as (
         coalesce(product_order_lines.subtotal_sold_net_refunds,0) as subtotal_sold_net_refunds,
         product_order_lines.first_order_timestamp,
         product_order_lines.most_recent_order_timestamp,
-        -- start new columns
-        product_order_lines.average_quantity_per_order_line as average_quantity_per_order_line,
+        product_order_lines.avg_quantity_per_order_line as avg_quantity_per_order_line,
         coalesce(product_order_lines.product_total_discount,0) as product_total_discount,
-        product_order_lines.product_average_discount_per_order_line as product_average_discount_per_order_line,
+        product_order_lines.product_avg_discount_per_order_line as product_avg_discount_per_order_line,
         coalesce(product_order_lines.product_total_tax,0) as product_total_tax,
-        product_order_lines.product_average_tax_per_order_line as product_average_tax_per_order_line
+        product_order_lines.product_avg_tax_per_order_line as product_avg_tax_per_order_line
 
     from products
     left join product_order_lines

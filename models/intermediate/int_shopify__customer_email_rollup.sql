@@ -21,13 +21,10 @@ with customers as (
         lower(customers.email) as email,
         customers.source_relation,
 
-        --new************************
-        {{ fivetran_utils.string_agg("distinct cast(customer_tags.value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags,
-        --*********************************** 
-
         -- fields to string agg together
         {{ fivetran_utils.string_agg("cast(customers.customer_id as " ~ dbt.type_string() ~ ")", "', '") }} as customer_ids,
         {{ fivetran_utils.string_agg("distinct cast(customers.phone as " ~ dbt.type_string() ~ ")", "', '") }} as phone_numbers,
+        {{ fivetran_utils.string_agg("distinct cast(customer_tags.value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags,
 
         -- fields to take aggregates of
         min(customers.created_timestamp) as first_account_created_at,

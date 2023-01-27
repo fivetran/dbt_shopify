@@ -28,7 +28,7 @@ models:
       - name: order_count_lifetime
         description: Number of orders purchased up until and including this `date_month`.
       - name: source_relation
-        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
       - name: total_price_in_month
         description: Total amount (in currency) purchased in the `date_month`
       - name: total_price_lifetime
@@ -61,7 +61,7 @@ models:
       - name: order_count_lifetime
         description: Number of orders purchased up until and including this `date_month`.
       - name: source_relation
-        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
       - name: total_price_in_month
         description: Total amount (in currency) purchased in the `date_month`
       - name: total_price_lifetime
@@ -186,7 +186,7 @@ models:
       - name: source_name
         description: Where the order originated. Can be set only during order creation, and is not writeable afterwards.
       - name: source_relation
-        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
       - name: subtotal_price
         description: The price of the order in the shop currency after discounts but before shipping, taxes, and tips.
       - name: has_taxes_included
@@ -238,6 +238,20 @@ models:
         description: The checkout token applied to the order.
       - name: total_shipping_price_set
         description: The total shipping price set to the order.
+      - name: order_total_shipping_tax
+        description: Total shipping tax attributed to the order.
+      - name: order_tags
+        description: List of tags associated with the order.
+      - name: order_url_tags
+        description: List of url tags associated with the order.
+      - name: number_of_fulfillments
+        description: Total fulfillments for the order.
+      - name: fulfillment_services
+        description: List of fulfillment services for the order.
+      - name: tracking_companies
+        description: List of tracking companies for the order.
+      - name: tracking_numbers
+        description: List of tracking numbers for the order.
   
   - name: shopify__customers
     description: Each record represents a customer in Shopify.
@@ -279,16 +293,42 @@ models:
         description: The timestamp the customer completed their first order.
       - name: most_recent_order_timestamp
         description: The timestamp the customer completed their most recent order.
-      - name: average_order_value
+      - name: avg_order_value
         description: The average order value for the customer.
       - name: lifetime_total_spent
         description: The total amount of money that the customer has spent on orders across their order history.
       - name: lifetime_total_refunded
         description: The total amount of money that the customer has been refunded on orders across their order history.
-      - name: lifetime_total_amount
+      - name: lifetime_total_net
         description: The total amount of money (minus refunds) that the customer has spent across their order history.
       - name: source_relation
-        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+      - name: lifetime_abandoned_checkouts
+        description: Total number of abandoned checkouts abandoned by the customer.
+      - name: customer_tags
+        description: A string aggregated list of all tags associated with a customer. 
+      - name: avg_quantity_per_order
+        description: Average quantity of items per order customer orders.
+      - name: lifetime_total_tax
+        description: Total amount of tax attributed to the customer.
+      - name: avg_tax_per_order
+        description: Average tax per order attributed to the customer.
+      - name: lifetime_total_discount
+        description: Total discounts attributed to the customer.
+      - name: avg_discount_per_order
+        description: Average discount per order attributed to the customer.
+      - name: lifetime_total_shipping
+        description: Total shipping costs attributed to the customer.
+      - name: avg_shipping_per_order
+        description: Average shipping cost per order attributed to the customer.
+      - name: lifetime_total_shipping_with_discounts
+        description: Total shipping costs after discounts attributed to the customer.
+      - name: avg_shipping_with_discounts_per_order
+        description: Average shipping costs after discounts per order attributed to the customer.
+      - name: lifetime_total_shipping_tax
+        description: Total shipping tax attributed to the customer.
+      - name: avg_shipping_tax_per_order
+        description: Average shipping tax per order attributed to the customer.
 
   - name: shopify__customer_emails
     description: Each record represents a customer email in Shopify.
@@ -330,13 +370,13 @@ models:
         description: The timestamp the customer completed their first order.
       - name: most_recent_order_timestamp
         description: The timestamp the customer completed their most recent order.
-      - name: average_order_value
+      - name: avg_order_value
         description: The average order value for the customer.
       - name: lifetime_total_spent
         description: The total amount of money that the customer has spent on orders across their order history.
       - name: lifetime_total_refunded
         description: The total amount of money that the customer has been refunded on orders across their order history.
-      - name: lifetime_total_amount
+      - name: lifetime_total_net
         description: The total amount of money (minus refunds) that the customer has spent across their order history.
       - name: first_account_created_at
         description: Timestamp of when the first account associated with this email was created.
@@ -345,7 +385,33 @@ models:
       - name: accepts_marketing_last_updated_at
         description: When the customer consented or objected to receiving marketing material by email. 
       - name: source_relation
-        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+      - name: lifetime_abandoned_checkouts
+        description: Total number of abandoned checkouts abandoned by the customer.
+      - name: customer_tags
+        description: A string aggregated list of all tags associated with a customer. 
+      - name: avg_quantity_per_order
+        description: Average quantity of items per order customer orders.
+      - name: lifetime_total_tax
+        description: Total amount of tax attributed to the customer.
+      - name: avg_tax_per_order
+        description: Average tax per order attributed to the customer.
+      - name: lifetime_total_discount
+        description: Total discounts attributed to the customer.
+      - name: avg_discount_per_order
+        description: Average discount per order attributed to the customer.
+      - name: lifetime_total_shipping
+        description: Total shipping costs attributed to the customer.
+      - name: avg_shipping_per_order
+        description: Average shipping cost per order attributed to the customer.
+      - name: lifetime_total_shipping_with_discounts
+        description: Total shipping costs after discounts attributed to the customer.
+      - name: avg_shipping_with_discounts_per_order
+        description: Average shipping costs after discounts per order attributed to the customer.
+      - name: lifetime_total_shipping_tax
+        description: Total shipping tax attributed to the customer.
+      - name: avg_shipping_tax_per_order
+        description: Average shipping tax per order attributed to the customer.
 
   - name: shopify__products
     description: Each record represents a product in Shopify.
@@ -377,7 +443,7 @@ models:
         description: The date and time when the product was last modified.
       - name: vendor
         description: The name of the product's vendor.
-      - name: quantity_sold
+      - name: total_quantity_sold
         description: Quantity of the product sold.
       - name: subtotal_sold
         description: Total amount of the product sold.
@@ -390,7 +456,17 @@ models:
       - name: most_recent_order_timestamp
         description: The timestamp the product was most recently ordered.
       - name: source_relation
-        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+      - name: avg_quantity_per_order_line
+        description: Average quantity per order line with this product.
+      - name: product_total_discount
+        description: Total discounts associated with the product.
+      - name: product_avg_discount_per_order_line
+        description: Average discount per order line with this product.
+      - name: product_total_tax
+        description: Total taxes associated with the product.
+      - name: product_avg_tax_per_order_line
+        description: Average taxes per order line with this product.
 
   - name: shopify__order_lines
     description: Each record represents a line item of an order in Shopify.
@@ -493,7 +569,11 @@ models:
       - name: image_id
         description: Image id of the product variant associated with the order line.
       - name: source_relation
-        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+      - name: restock_types
+        description: List of restock types for the line item.
+      - name: order_line_tax
+        description: Total taxes for the line item.
   
   - name: shopify__transactions
     description: Each record represents a transaction in Shopify.
@@ -511,7 +591,7 @@ models:
         description: The ID associated with a refund in the refund table.
       - name: amount
         description: The amount of money included in the transaction.
-      - name: authorization
+      - name: authorization_code
         description: The authorization code associated with the transaction.
       - name: created_timestamp
         description: The date and time when the transaction was created.
@@ -570,7 +650,17 @@ models:
       - name: currency_exchange_calculated_amount
         description: The total amount of the transaction with the currency exchange rate applied.
       - name: source_relation
-        description: the schema or database this record came from, if you are unioning multiple connectors. null if not.
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+      - name: payment_method
+        description: Method of payment.
+      - name: parent_created_timestamp
+        description: Created on timestamp of the parent transaction.
+      - name: parent_kind
+        description: Kind of the parent transaction.
+      - name: parent_amount
+        description: Amount of the parent transaction.
+      - name: parent_status
+        description: Status of the parent transaction.
 
   - name: shopify__inventory_levels
     description: >
@@ -817,7 +907,7 @@ models:
         description: >
           The title of the price rule. This is used by the Shopify admin search to retrieve discounts. It is also displayed on the Discounts page of the Shopify admin for bulk discounts. 
           Shopify recommends that this map onto the associated `discount_code.code`.
-      - name: pirce_rule_updated_at
+      - name: price_rule_updated_at
         description: The date and time (ISO 8601 format) when the price rule was updated.
       - name: usage_limit
         description: The maximum number of times the price rule can be used, per discount code.

@@ -108,8 +108,6 @@ with orders as (
         coalesce(discount_aggregates.percentage_calc_discount_amount, 0) as percentage_calc_discount_amount,
         coalesce(discount_aggregates.fixed_amount_discount_amount, 0) as fixed_amount_discount_amount,
         coalesce(discount_aggregates.count_discount_codes_applied, 0) as count_discount_codes_applied,
-
-        -- start new columns
         coalesce(order_lines.order_total_shipping_tax, 0) as order_total_shipping_tax,
         order_tag.order_tags,
         order_url_tag.order_url_tags,

@@ -24,9 +24,9 @@ with order_lines as (
         -- new columns
         sum(order_lines.total_discount) as product_total_discount,
         sum(order_lines.order_line_tax) as product_total_tax,
-        avg(order_lines.quantity) as average_quantity_per_order_line,
-        avg(order_lines.total_discount) as product_average_discount_per_order_line,
-        avg(order_lines.order_line_tax) as product_average_tax_per_order_line
+        avg(order_lines.quantity) as avg_quantity_per_order_line,
+        avg(order_lines.total_discount) as product_avg_discount_per_order_line,
+        avg(order_lines.order_line_tax) as product_avg_tax_per_order_line
 
     from order_lines
     left join orders

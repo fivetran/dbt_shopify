@@ -1,8 +1,7 @@
 with customers as (
 
     select 
-        {# {{ dbt_utils.star(from=ref('stg_shopify__customer'), except=["orders_count", "total_spent"]) }} #}
-        {{ dbt_utils.star(from=ref('stg_shopify__customer'), except=["total_spent"]) }}
+        {{ dbt_utils.star(from=ref('stg_shopify__customer'), except=["orders_count", "total_spent"]) }}
     from {{ var('shopify_customer') }}
 
 ), orders as (
@@ -31,6 +30,7 @@ with customers as (
         orders.avg_order_value,
         coalesce(orders.lifetime_total_spent, 0) as lifetime_total_spent,
         coalesce(orders.lifetime_total_refunded, 0) as lifetime_total_refunded,
+        (coalesce(orders.lifetime_total_spent, 0) - coalesce(orders.lifetime_total_refunded, 0)) as lifetime_total_net,
         coalesce(orders.lifetime_count_orders, 0) as lifetime_count_orders,
         orders.avg_quantity_per_order,
         coalesce(orders.lifetime_total_tax, 0) as lifetime_total_tax,
