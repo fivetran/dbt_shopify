@@ -22,7 +22,8 @@ orders_aggregated as (
         max(orders.shipping_cost) as total_order_shipping_cost, -- summing would multiply the total by the # of discount codes applied to an order
         max(orders.refund_subtotal + orders.refund_total_tax) as total_order_refund_amount, -- summing would multiply the total by the # of discount codes applied to an order
         count(distinct customer_id) as count_distinct_customers,
-        count(distinct email) as count_distinct_customer_emails
+        count(distinct email) as count_distinct_customer_emails,
+        count(distinct order_discount_code.order_id) as count_orders
 
     from order_discount_code
     join orders 

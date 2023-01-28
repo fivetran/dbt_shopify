@@ -21,12 +21,13 @@ The following table provides a detailed list of all models materialized within t
 
 | **model**                 | **description**                                                                                                    |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| [shopify__customer_cohorts](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__customer_cohorts.sql)  | Each record represents the monthly performance of a customer, including fields for the month of their 'cohort'.    |
-| [shopify__customers](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__customers.sql)        | Each record represents a customer, with additional dimensions like lifetime value and number of orders.            |
-| [shopify__orders](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__orders.sql)           | Each record represents an order, with additional dimensions like whether it is a new or repeat purchase.           |
-| [shopify__order_lines](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__order_lines.sql)     | Each record represents an order line item, with additional dimensions like how many items were refunded.           |
-| [shopify__products](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__products.sql)         | Each record represents a product, with additional dimensions like most recent order date and order volume.         |
-| [shopify__transactions](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__transactions.sql)     | Each record represents a transaction with additional calculations to handle exchange rates.                        |
+| [shopify__customer_cohorts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_cohorts.sql)  | Each record represents the monthly performance of a customer, including fields for the month of their 'cohort'.    |
+| [shopify__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customers.sql)        | Each record represents a customer, with additional dimensions like lifetime value and number of orders.            |
+| [shopify__orders](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__orders.sql)           | Each record represents an order, with additional dimensions like whether it is a new or repeat purchase.           |
+| [shopify__order_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__order_lines.sql)     | Each record represents an order line item, with additional dimensions like how many items were refunded.           |
+| [shopify__products](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__products.sql)         | Each record represents a product, with additional dimensions like most recent order date and order volume.         |
+| [shopify__transactions](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__transactions)     | Each record represents a transaction with additional calculations to handle exchange rates.                        |
+| [shopify__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__daily_shop.sql)     | Each record represents a day of activity for each of your shops, conveyed by a suite of daily metrics.                        |
 
 # 🎯 How do I use the dbt package?
 
@@ -85,6 +86,21 @@ vars:
     order_pass_through_columns: []
     product_pass_through_columns: []
     product_variant_pass_through_columns: []
+```
+
+### Adding Metafields
+In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) the Shopify connector included support for the [metafield resource](https://shopify.dev/api/admin-rest/2023-01/resources/metafield). If you would like to take advantage of these metafields, this package offers corresponding mapping models which append these metafields to the respective source object for the following tables: collection, customer, order, product_image, product, product_variant, shop. If enabled, these models will materialize as `shopify__[object]_metafields` for each respective supported object. To enable these metafield mapping models, you may use the following configurations within your `dbt_project.yml`.
+>**Note**: These metafield models will contain all the same records as the corresponding staging models with the exception of the metafield columns being added. To ensure there is no fanout, this package takes advantage of the `dbt_expectations.expect_table_row_count_to_equal_other_table` test to ensure the metafield models contain the same row count as the staging model.
+
+```yml
+vars:
+  shopify_using_all_metafields: True ## False by default. Will enable ALL metafield models. FYI - This will override all other metafield variables.
+  shopify_using_collection_metafields: True ## False by default. Will enable ONLY the collection metafield model.
+  shopify_using_customer_metafields: True ## False by default. Will enable ONLY the customer metafield model.
+  shopify_using_order_metafields: True ## False by default. Will enable ONLY the order metafield model.
+  shopify_using_product_metafields: True ## False by default. Will enable ONLY the product metafield model.
+  shopify_using_product_image_metafields: True ## False by default. Will enable ONLY the product image metafield model.
+  shopify_using_product_variant_metafields: True ## False by default. Will enable ONLY the product variant metafield model.
 ```
 
 ### Changing the Build Schema

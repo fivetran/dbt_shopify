@@ -1,4 +1,4 @@
-# dbt_shopify v0.7.0
+# dbt_shopify v0.8.0
 ## 🎉 Documentation and Feature Updates
 - Updated README documentation updates for easier navigation and setup of the dbt package
 - Included `shopify_[source_table_name]_identifier` variable within the Shopify source package for additional flexibility within the package when source tables are named differently.
@@ -8,7 +8,12 @@
   - Intermediate models that roll customer_ids up to emails:
     - `shopify__customer_email_rollup`
     - `shopify__emails__order_aggregates`
+- Metafield support! This package now supports metafields for the collection, customer, order, product_image, product, product_variant, and shop objects. If enabled (see the [README](https://github.com/fivetran/dbt_shopify#adding-metafields) for more details), respective `shopify__[object]_metafields` models will materialize with **all** metafields defined within the `metafield` source table appended to the object. ([#50](https://github.com/fivetran/dbt_shopify/pull/50))
 
+## Under the Hood
+- Addition of the calogica/dbt_expectations package for more robust testing.
+
+## dbt_shopify v0.7.0
 ## 🚨 Breaking Changes 🚨:
 [PR #40](https://github.com/fivetran/dbt_shopify/pull/40) includes the following breaking changes:
 - Dispatch update for dbt-utils to dbt-core cross-db macros migration. Specifically `{{ dbt_utils.<macro> }}` have been updated to `{{ dbt.<macro> }}` for the below macros:
