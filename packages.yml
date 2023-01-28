@@ -5,5 +5,3 @@ packages:
   - git: https://github.com/fivetran/dbt_shopify_source.git
     revision: feature/revamp/add-tax-line
     warn-unpinned: false
-
-# - local: ../dbt_shopify_source
