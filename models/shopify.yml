@@ -230,10 +230,6 @@ models:
           Order total adjusted for refunds and other adjustments. The calculation used for this field is as follows:
           total price listed on the original order (including shipping costs and discounts) + adjustments + adjustments tax - total refunds - refunds tax
           The order_adjusted_total will equate to the total sales - refunds listed within the transactions table for the order (after currency exchange).
-      - name: index
-        description: Field representing the index of the order line in relation to the order.
-      - name: pre_tax_price
-        description: The pre tax price of the order line.
       - name: checkout_token
         description: The checkout token applied to the order.
       - name: total_shipping_price_set
@@ -252,6 +248,42 @@ models:
         description: List of tracking companies for the order.
       - name: tracking_numbers
         description: List of tracking numbers for the order.
+      - name: total_tip_received
+        description: The sum of all the tips in the order in the shop currency.
+      - name: checkout_id
+        description: The ID for the checkout.
+      - name: client_details_user_agent
+        description: Details of the browsing client, including software and operating versions.
+      - name: customer_locale
+        description: The two or three-letter language code, optionally followed by a region modifier. Example values - en, en-CA.  
+      - name: order_status_url
+        description: The URL pointing to the order status web page, if applicable.
+      - name: presentment_currency
+        description: The three-letter code (ISO 4217 format) of the currency that the customer used at checkout. For the shop's default currency, see `currency`.
+      - name: is_deleted
+        description: "{{ doc('_fivetran_deleted') }}"
+      - name: tracking_numbers
+        description: List of tracking numbers for the order.
+      - name: total_discounts_set
+        description: __FILL_IN_DESCRIPTION
+      - name: total_line_items_price_set
+        description: __FILL_IN_DESCRIPTION
+      - name: total_price_set
+        description: __FILL_IN_DESCRIPTION
+      - name: total_price_usd
+        description: Total price in USD.
+      - name: total_tax_set
+        description: __FILL_IN_DESCRIPTION
+      - name: is_confirmed
+        description: __FILL_IN_DESCRIPTION
+      - name: shipping_discount_amount
+        description: Shipping portion of the discount.
+      - name: percentage_calc_discount_amount
+        description: __FILL_IN_DESCRIPTION
+      - name: fixed_amount_discount_amount
+        description: __FILL_IN_DESCRIPTION
+      - name: count_discount_codes_applied
+        description: __FILL_IN_DESCRIPTION
   
   - name: shopify__customers
     description: Each record represents a customer in Shopify.
@@ -263,8 +295,14 @@ models:
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
-      - name: has_accepted_marketing
-        description: Whether the customer has consented to receive marketing material via email.
+      - name: marketing_consent_state
+        description: The current email marketing state for the customer. New version of `accepts_marketing` field.
+      - name: marketing_opt_in_level
+        description: Deprecated. The package will coalesce with `email_marketing_consent_opt_in_level`.
+      - name: lifetime_duration
+        description: The amount of time since the customer was first added to the store.
+      - name: marketing_consent_updated_at
+        description: Timestamp when marketing consent was updated.
       - name: created_timestamp
         description: The date and time when the customer was created.
       - name: default_address_id
@@ -329,6 +367,10 @@ models:
         description: Total shipping tax attributed to the customer.
       - name: avg_shipping_tax_per_order
         description: Average shipping tax per order attributed to the customer.
+      - name: currency
+        description: The three-letter code (ISO 4217 format) for the currency that the customer used when they paid for their last order. Defaults to the shop currency. Returns the shop currency for test orders.
+      - name: note
+        description: __FILL_IN_DESCRIPTION
 
   - name: shopify__customer_emails
     description: Each record represents a customer email in Shopify.
@@ -340,8 +382,6 @@ models:
     columns:
       - name: last_fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
-      - name: has_accepted_marketing
-        description: Whether the customer has consented to receive marketing material via email.
       - name: created_timestamp
         description: The date and time when the customer was created.
       - name: default_address_id
@@ -382,8 +422,6 @@ models:
         description: Timestamp of when the first account associated with this email was created.
       - name: last_account_created_at
         description: Timestamp of when the last account associated with this email was created.
-      - name: accepts_marketing_last_updated_at
-        description: When the customer consented or objected to receiving marketing material by email. 
       - name: source_relation
         description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
       - name: lifetime_abandoned_checkouts
@@ -412,6 +450,20 @@ models:
         description: Total shipping tax attributed to the customer.
       - name: avg_shipping_tax_per_order
         description: Average shipping tax per order attributed to the customer.
+      - name: marketing_consent_updated_at
+        description: Timestamp when marketing consent was updated.
+      - name: lifetime_duration
+        description: The amount of time since the customer was first added to the store.
+      - name: currency
+        description: The three-letter code (ISO 4217 format) for the currency that the customer used when they paid for their last order. Defaults to the shop currency. Returns the shop currency for test orders.
+      - name: marketing_consent_state
+        description: The current email marketing state for the customer. New version of `accepts_marketing` field.
+      - name: marketing_opt_in_level
+        description: Deprecated. The package will coalesce with `email_marketing_consent_opt_in_level`.
+      - name: updated_timestamp
+        description: The date and time when the customer information was last updated.
+      - name: note
+        description: __FILL_IN_DESCRIPTION
 
   - name: shopify__products
     description: Each record represents a product in Shopify.
@@ -421,7 +473,7 @@ models:
             - product_id
             - source_relation
     columns:
-      - name: _fivetran_deleted
+      - name: is_deleted
         description: Whether the record has been deleted in the source system.
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -467,6 +519,16 @@ models:
         description: Total taxes associated with the product.
       - name: product_avg_tax_per_order_line
         description: Average taxes per order line with this product.
+      - name: count_variants
+        description: Count of product variants.
+      - name: has_product_image
+        description: If the product has an image.
+      - name: status
+        description: __FILL_IN_DESCRIPTION
+      - name: collections
+        description: __FILL_IN_DESCRIPTION
+      - name: tags
+        description: __FILL_IN_DESCRIPTION
 
   - name: shopify__order_lines
     description: Each record represents a line item of an order in Shopify.
@@ -500,7 +562,7 @@ models:
         description: The ID of the product that the line item belongs to. Can be null if the original product associated with the order is deleted at a later date.
       - name: quantity
         description: The number of items that were purchased.
-      - name: is_requiring_shipping
+      - name: is_shipping_required
         description: Whether the item requires shipping.
       - name: sku
         description: The item's SKU (stock keeping unit).
@@ -528,8 +590,6 @@ models:
         description: The fulfillment service associated with the product variant.
       - name: variant_grams
         description: The weight of the product variant in grams.
-      - name: variant_image_id
-        description: The unique numeric identifier for a product's image. The image must be associated to the same product as the variant.
       - name: inventory_item_id
         description: The unique identifier for the inventory item, which is used in the Inventory API to query for inventory information.
       - name: variant_inventory_management
@@ -548,12 +608,12 @@ models:
         description: The order of the product variant in the list of product variants. The first position in the list is 1. The position of variants is indicated by the order in which they are listed.
       - name: variant_price
         description: The price of the product variant.
-      - name: variant_is_requiring_shipping
-        description: This property is deprecated. Use the `requires_shipping` property on the InventoryItem resource instead.
       - name: variant_sku
         description: A unique identifier for the product variant in the shop. Required in order to connect to a FulfillmentService.
       - name: variant_is_taxable
         description: Whether a tax is charged when the product variant is sold.
+      - name: variant_tax_code
+        description: This parameter applies only to the stores that have the Avalara AvaTax app installed. Specifies the Avalara tax code for the product variant.
       - name: variant_title
         description: The title of the product variant. The title field is a concatenation of the option1, option2, and option3 fields. You can only update title indirectly using the option fields.
       - name: variant_updated_at
@@ -574,7 +634,63 @@ models:
         description: List of restock types for the line item.
       - name: order_line_tax
         description: Total taxes for the line item.
-  
+      - name: index
+        description: The index associated with the order.
+      - name: pre_tax_price
+        description: The total pre tax price of the order.
+      - name: tax_code
+        description: This parameter applies only to the stores that have the Avalara AvaTax app installed. Specifies the Avalara tax code for the product variant.
+      - name: pre_tax_price_set
+        description: __FILL_IN_DESCRIPTION
+      - name: price_set
+        description: __FILL_IN_DESCRIPTION
+      - name: property_charge_interval_frequency
+        description: __FILL_IN_DESCRIPTION
+      - name: property_for_shipping_jan_3_rd_2020
+        description: __FILL_IN_DESCRIPTION
+      - name: property_shipping_interval_frequency
+        description: __FILL_IN_DESCRIPTION
+      - name: property_shipping_interval_unit_type
+        description: __FILL_IN_DESCRIPTION
+      - name: property_subscription_id
+        description: __FILL_IN_DESCRIPTION
+      - name: total_discount_set
+        description: __FILL_IN_DESCRIPTION
+      - name: properties
+        description: __FILL_IN_DESCRIPTION
+      - name: destination_location_address_1
+        description: Destination location's street address.
+      - name: destination_location_address_2
+        description: The optional second line of the destination location's street address.
+      - name: destination_location_city
+        description: The city the destination location is in.
+      - name: destination_location_country_code
+        description: The country code of the destination location.
+      - name: destination_location_id
+        description: The ID of the destination location.
+      - name: destination_location_name
+        description: The name of the destination location.
+      - name: destination_location_province_code
+        description: The province, state, or district code (ISO 3166-2 alpha-2 format) of the destination location.
+      - name: destination_location_zip
+        description: The zip or postal code.
+      - name: origin_location_address_1
+        description: Origin location's street address.
+      - name: origin_location_address_2
+        description: The optional second line of the origin location's street address.
+      - name: origin_location_city
+        description: The city the origin location is in.
+      - name: origin_location_country_code
+        description: The country code of the origin location.
+      - name: origin_location_id
+        description: The ID of the origin location.
+      - name: origin_location_name
+        description: The name of the origin location.
+      - name: origin_location_province_code
+        description: The province, state, or district code (ISO 3166-2 alpha-2 format) of the origin location.
+      - name: origin_location_zip
+        description: The zip or postal code.
+
   - name: shopify__transactions
     description: Each record represents a transaction in Shopify.
     tests:
@@ -639,8 +755,6 @@ models:
         description: A standardized error code, independent of the payment provider.
       - name: status
         description: The status of the transaction.
-      - name: test
-        description: Whether the transaction is a test transaction.
       - name: user_id
         description: The ID for the user who was logged into the Shopify POS device when the order was processed, if applicable.
       - name: _fivetran_synced
@@ -661,6 +775,8 @@ models:
         description: Amount of the parent transaction.
       - name: parent_status
         description: Status of the parent transaction.
+      - name: authorization_expires_at
+        description: Timestamp when the authorization expires.
 
   - name: shopify__inventory_levels
     description: >
