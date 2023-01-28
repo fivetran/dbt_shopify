@@ -28,9 +28,9 @@ models:
       - name: order_count_lifetime
         description: Number of orders purchased up until and including this `date_month`.
       - name: total_price_in_month
-        description: Total amount (in currency) purchased in the `date_month`
+        description: Total amount (in shop currency) purchased in the `date_month`
       - name: total_price_lifetime
-        description: Total amount (in currency) up until and including this `date_month`.
+        description: Total amount (in shop currency) up until and including this `date_month`.
 
   - name: shopify__customer_email_cohorts
     description: Each record represents a customer's (on the EMAIL grain) performance in a calendar month.
@@ -59,9 +59,9 @@ models:
       - name: order_count_lifetime
         description: Number of orders purchased up until and including this `date_month`.
       - name: total_price_in_month
-        description: Total amount (in currency) purchased in the `date_month`
+        description: Total amount (in shop currency) purchased in the `date_month`
       - name: total_price_lifetime
-        description: Total amount (in currency) up until and including this `date_month`.
+        description: Total amount (in shop currency) up until and including this `date_month`.
 
   - name: shopify__orders
     description: Each record represents an order in Shopify.
@@ -196,7 +196,7 @@ models:
       - name: total_price
         description: The sum of all line item prices, discounts, shipping, taxes, and tips in the shop currency. Must be positive.
       - name: total_tax
-        description: The sum of all the taxes applied to the order in th shop currency. Must be positive).
+        description: The sum of all the taxes applied to the order in th shop currency. Must be positive.
       - name: total_weight
         description: The sum of all line item weights in grams.
       - name: updated_timestamp
@@ -212,13 +212,13 @@ models:
       - name: shipping_cost
         description: The shipping cost of the order.
       - name: order_adjustment_amount
-        description: Total adjustment amount applied to the order.
+        description: Total adjustment amount applied to the order in shop currency.
       - name: order_adjustment_tax_amount
-        description: Total tax applied to the adjustment on the order.
+        description: Total tax applied to the adjustment on the order in shop currency.
       - name: refund_subtotal
-        description: Total refund amount applied to the order.
+        description: Total refund amount applied to the order in shop currency.
       - name: refund_total_tax
-        description: Total tax applied to the refund on the order.
+        description: Total tax applied to the refund on the order in shop currency.
       - name: order_adjusted_total
         description: >
           Order total adjusted for refunds and other adjustments. The calculation used for this field is as follows:
@@ -227,11 +227,11 @@ models:
       - name: index
         description: Field representing the index of the order line in relation to the order.
       - name: pre_tax_price
-        description: The pre tax price of the order line.
+        description: The pre tax price of the order line in shop currency.
       - name: checkout_token
         description: The checkout token applied to the order.
       - name: total_shipping_price_set
-        description: The total shipping price set to the order.
+        description: The total shipping price set to the order in presentment and shop currencies.
   
   - name: shopify__customers
     description: Each record represents a customer in Shopify.
@@ -276,11 +276,11 @@ models:
       - name: average_order_value
         description: The average order value for the customer.
       - name: lifetime_total_spent
-        description: The total amount of money that the customer has spent on orders across their order history.
+        description: The total amount of money in shop currency that the customer has spent on orders across their order history.
       - name: lifetime_total_refunded
-        description: The total amount of money that the customer has been refunded on orders across their order history.
+        description: The total amount of money in shop currency that the customer has been refunded on orders across their order history.
       - name: lifetime_total_amount
-        description: The total amount of money (minus refunds) that the customer has spent across their order history.
+        description: The total amount of money in shop currency (minus refunds) that the customer has spent across their order history.
 
   - name: shopify__customer_emails
     description: Each record represents a customer email in Shopify.
@@ -325,11 +325,11 @@ models:
       - name: average_order_value
         description: The average order value for the customer.
       - name: lifetime_total_spent
-        description: The total amount of money that the customer has spent on orders across their order history.
+        description: The total amount of money that the customer has spent on orders across their order history (in shop currency).
       - name: lifetime_total_refunded
-        description: The total amount of money that the customer has been refunded on orders across their order history.
+        description: The total amount of money that the customer has been refunded on orders across their order history (in shop currency).
       - name: lifetime_total_amount
-        description: The total amount of money (minus refunds) that the customer has spent across their order history.
+        description: The total amount of money (minus refunds) that the customer has spent across their order history (in shop currency).
       - name: first_account_created_at
         description: Timestamp of when the first account associated with this email was created.
       - name: last_account_created_at
@@ -370,11 +370,11 @@ models:
       - name: quantity_sold
         description: Quantity of the product sold.
       - name: subtotal_sold
-        description: Total amount of the product sold.
+        description: Total amount (in shop currency) of the product sold.
       - name: quantity_sold_net_refunds
         description: Quantity of the product sold, excluding refunds.
       - name: subtotal_sold_net_refunds
-        description: Total amount of the product sold, excluding refunds.
+        description: Total amount (in shop currency) of the product sold, excluding refunds.
       - name: first_order_timestamp
         description: The timestamp the product was first ordered.
       - name: most_recent_order_timestamp
@@ -391,7 +391,8 @@ models:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: fulfillable_quantity
-        description: "The amount available to fulfill, calculated as follows: quantity - max(refunded_quantity, fulfilled_quantity) - pending_fulfilled_quantity - open_fulfilled_quantity"
+        description: >
+          The amount available to fulfill, calculated as follows: quantity - max(refunded_quantity, fulfilled_quantity) - pending_fulfilled_quantity - open_fulfilled_quantity
       - name: fulfillment_service
         description: The service provider that's fulfilling the item.
       - name: fulfillment_status
@@ -433,7 +434,7 @@ models:
       - name: variant_barcode
         description: The barcode, UPC, or ISBN number for the product.
       - name: variant_compare_at_price
-        description: The original price of the item before an adjustment or a sale.
+        description: The original price of the item before an adjustment or a sale in shop currency.
       - name: variant_created_at
         description: The date and time (ISO 8601 format) when the product variant was created.
       - name: variant_fulfillment_service
@@ -459,7 +460,7 @@ models:
       - name: variant_position
         description: The order of the product variant in the list of product variants. The first position in the list is 1. The position of variants is indicated by the order in which they are listed.
       - name: variant_price
-        description: The price of the product variant.
+        description: The price of the product variant in shop currency.
       - name: variant_is_requiring_shipping
         description: This property is deprecated. Use the `requires_shipping` property on the InventoryItem resource instead.
       - name: variant_sku
@@ -475,9 +476,9 @@ models:
       - name: variant_weight_unit
         description: "The unit of measurement that applies to the product variant's weight. If you don't specify a value for weight_unit, then the shop's default unit of measurement is applied. Valid values: g, kg, oz, and lb."
       - name: refunded_subtotal
-        description: Subtotal amount of the refund applied to the order line.
+        description: Subtotal amount of the refund applied to the order line in shop currency.
       - name: subtotal_net_refunds
-        description: Subtotal of the order line with refunds subtracted.
+        description: Subtotal of the order line with refunds subtracted in shop currency.
       - name: image_id
         description: Image id of the product variant associated with the order line.
   
@@ -496,7 +497,7 @@ models:
       - name: refund_id
         description: The ID associated with a refund in the refund table.
       - name: amount
-        description: The amount of money included in the transaction.
+        description: The amount of money included in the transaction in shop currency.
       - name: authorization
         description: The authorization code associated with the transaction.
       - name: created_timestamp
@@ -659,7 +660,7 @@ models:
       - name: variant_option_3
         description: "The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3."
       - name: variant_price
-        description: The price of the product variant.
+        description: The price of the product variant in shop currency.
       - name: product_id
         description: The unique numeric identifier for the product.
       - name: is_variant_taxable
@@ -675,7 +676,7 @@ models:
       - name: variant_weight_unit
         description: "The unit of measurement that applies to the product variant's weight. If you don't specify a value for weight_unit, then the shop's default unit of measurement is applied. Valid values: g, kg, oz, and lb."
       - name: subtotal_sold
-        description: Total amount (monetary) sold from the inventory level. Includes refunds.
+        description: Total amount (monetary, in shop currency) sold from the inventory level. Includes refunds.
       - name: quantity_sold
         description: Total quantity sold from the inventory level. Includes refunds.
       - name: count_distinct_orders
@@ -689,11 +690,11 @@ models:
       - name: last_order_timestamp
         description: The timetamp of the first order against this inventory level.
       - name: subtotal_sold_refunds
-        description: The monetary amount of inventory level goods that have been refunded.
+        description: The monetary amount (in shop currency) of inventory level goods that have been refunded.
       - name: quantity_sold_refunds 
         description: The quantity of inventory level goods that have been refunded.
       - name: net_subtotal_sold
-        description: Net monetary amount sold from the inventory level. Excludes refunds.
+        description: Net monetary amount sold (in shop currency) from the inventory level. Excludes refunds.
       - name: net_quantity_sold
         description: Net quantity sold from this inventory level. Excludes refunds.
       - name: count_fulfillment_pending
@@ -814,23 +815,23 @@ models:
 
           If `target_type` is `shipping_line`, then only `percentage` is accepted.
       - name: total_order_discount_amount
-        description: Total monetary amount of discounts taken off of orders. 
+        description: Total monetary amount (in shop currency) of discounts taken off of orders. 
       - name: total_abandoned_checkout_discount_amount
-        description: Total monetary amount of discounts taken off abanadoned checkout orders.
+        description: Total monetary amount (in shop currency) of discounts taken off abanadoned checkout orders.
       - name: total_order_line_items_price
-        description: Total monetary amount of line items for orders that have used this discount.
+        description: Total monetary amount (in shop currency) of line items for orders that have used this discount.
       - name: total_order_shipping_cost
         description: Total shipping costs for orders that used this discount.
       - name: total_abandoned_checkout_shipping_price
         description: Total projected shipping costs for abandoned checkouts that applied this discount first.
       - name: total_order_refund_amount
-        description: Total refunded amount for orders that used this discount code. 
+        description: Total refunded amount (in shop currency) for orders that used this discount code. 
       - name: count_customers
         description: Count of distinct customers who placed orders using this discount.
       - name: count_customer_emails
         description: Count of distinct customer emails who placed orders using this discount.
       - name: avg_order_discount_amount
-        description: Average amount of discount taken off orders.
+        description: Average amount (in shop currency) of discount taken off orders.
 
   - name: shopify__daily_shop
     description: >
@@ -870,25 +871,25 @@ models:
           total price listed on the original order (including shipping costs and discounts) + adjustments + adjustments tax - total refunds - refunds tax
           The order_adjusted_total will equate to the total sales - refunds listed within the transactions table for the order (after currency exchange).
       - name: avg_order_value
-        description: Average adjusted total per order placed on this day.
+        description: Average adjusted total per order placed on this day (in shop currency).
       - name: shipping_cost
-        description: The shipping cost of the orders placed on this day.
+        description: The shipping cost of the orders placed on this day (in shop currency).
       - name: order_adjustment_amount
-        description: Total adjustment amount applied to the orders placed on this day.
+        description: Total adjustment amount (in shop currency) applied to the orders placed on this day.
       - name: order_adjustment_tax_amount
-        description: Total tax applied to the adjustment on the orders placed on this day.
+        description: Total tax applied to adjustments (in shop currency) on the orders placed on this day.
       - name: refund_subtotal
         description: Total refund amount applied to the orders placed on this day.
       - name: refund_total_tax
-        description: Total tax applied to the refund on the orders placed on this day.
+        description: Total tax applied to the refund on the orders placed on this day (in shop currency).
       - name: total_discounts
         description: The total amount of the discount allocated to this day's orders in the shop's currency.
       - name: shipping_discount_amount
-        description: The total amount of discount allocated toward shipping for orders placed on this day.
+        description: The total amount of discount (in shop currency) allocated toward shipping for orders placed on this day.
       - name: percentage_calc_discount_amount
-        description: The total amount of discount allocated via a percentage-based discount for orders placed on this day.
+        description: The total amount of discount (in shop currency) allocated via a percentage-based discount for orders placed on this day.
       - name: fixed_amount_discount_amount
-        description: The total amount of discount allocated via a fixed-amount discount for orders placed on this day.
+        description: The total amount of discount (in shop currency) allocated via a fixed-amount discount for orders placed on this day.
       - name: count_discount_codes_applied
         description: Distinct discount codes applied by customers on orders for this day.
       - name: count_locations_ordered_from
@@ -944,14 +945,14 @@ models:
       - name: avg_line_item_count
         description: Average line item count for orders placed on this day.
       - name: avg_discount
-        description: Average total discount placed on orders on this day.
+        description: Average total discount placed on orders on this day (in shop currency).
       - name: avg_shipping_discount_amount
-        description: Average discount amount allocated toward shipping on orders placed on this day.
+        description: Average discount amount (in shop currency) allocated toward shipping on orders placed on this day.
       - name: avg_percentage_calc_discount_amount
-        description: Average discount amount allocated via a percentage-based-discount on orders placed on this day.
+        description: Average discount amount (in shop currency) allocated via a percentage-based-discount on orders placed on this day.
       - name: avg_fixed_amount_discount_amount
-        description: Average discount amount allocated via a fixed-amount-discount on orders placed on this day.
+        description: Average discount amount (in shop currency) allocated via a fixed-amount-discount on orders placed on this day.
       - name: avg_quantity_sold
-        description: Average quantity sold per order on this day. Includes refunds.
+        description: Average quantity sold per order on this day. Includes refunds. (in shop currency)
       - name: avg_quantity_net
-        description: Average net quantity sold per order on this day. Excludes refunds.
+        description: Average net quantity sold per order on this day. Excludes refunds. (in shop currency)
