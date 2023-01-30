@@ -47,3 +47,21 @@ models:
             - code
             - type
             - source_relation
+  - name: int_shopify__order__shipping_aggregates
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - order_id
+            - source_relation
+  - name: int_shopify__product__order_line_aggregates
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - product_id
+            - source_relation
+  - name: int_shopify__products_with_aggregates
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - product_id
+            - source_relation

@@ -7,29 +7,36 @@ with customers as (
     from {{ var('shopify_customer') }}
     where email is not null -- nonsensical to include any null emails here
 
+), customer_tags as (
+
+    select 
+        *
+    from {{ var('shopify_customer_tag' )}}
+
 ), rollup_customers as (
 
     select
         -- fields to group by
-        lower(email) as email,
-        source_relation,
+        lower(customers.email) as email,
+        customers.source_relation,
 
         -- fields to string agg together
-        {{ fivetran_utils.string_agg("cast(customer_id as " ~ dbt.type_string() ~ ")", "', '") }} as customer_ids,
-        {{ fivetran_utils.string_agg("distinct cast(phone as " ~ dbt.type_string() ~ ")", "', '") }} as phone_numbers,
+        {{ fivetran_utils.string_agg("cast(customers.customer_id as " ~ dbt.type_string() ~ ")", "', '") }} as customer_ids,
+        {{ fivetran_utils.string_agg("distinct cast(customers.phone as " ~ dbt.type_string() ~ ")", "', '") }} as phone_numbers,
+        {{ fivetran_utils.string_agg("distinct cast(customer_tags.value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags,
 
         -- fields to take aggregates of
-        min(created_timestamp) as first_account_created_at,
-        max(created_timestamp) as last_account_created_at,
-        max(updated_timestamp) as last_updated_at,
-        max(marketing_consent_updated_at) as marketing_consent_updated_at,
-        max(_fivetran_synced) as last_fivetran_synced,
-        sum(orders_count) as orders_count,
-        sum(total_spent) as total_spent,
+        min(customers.created_timestamp) as first_account_created_at,
+        max(customers.created_timestamp) as last_account_created_at,
+        max(customers.updated_timestamp) as last_updated_at,
+        max(customers.marketing_consent_updated_at) as marketing_consent_updated_at,
+        max(customers._fivetran_synced) as last_fivetran_synced,
+        sum(customers.orders_count) as orders_count,
+        sum(customers.total_spent) as total_spent,
 
         -- take true if ever given for boolean fields
-        {{ fivetran_utils.max_bool("case when customer_index = 1 then is_tax_exempt else null end") }} as is_tax_exempt, -- since this changes every year
-        {{ fivetran_utils.max_bool("is_verified_email") }} as is_verified_email
+        {{ fivetran_utils.max_bool("case when customers.customer_index = 1 then customers.is_tax_exempt else null end") }} as is_tax_exempt, -- since this changes every year
+        {{ fivetran_utils.max_bool("customers.is_verified_email") }} as is_verified_email
 
         -- for all other fields, just take the latest value
         {% set cols = adapter.get_columns_in_relation(ref('stg_shopify__customer')) %}
@@ -38,11 +45,14 @@ with customers as (
                                 'is_tax_exempt', 'is_verified_email'] %}
         {% for col in cols %}
             {% if col.column|lower not in except_cols %}
-            , max(case when customer_index = 1 then {{ col.column }} else null end) as {{ col.column }}
+            , max(case when customers.customer_index = 1 then customers.{{ col.column }} else null end) as {{ col.column }}
             {% endif %}
         {% endfor %}
 
     from customers 
+    left join customer_tags
+        on customers.customer_id = customer_tags.customer_id
+        and customers.source_relation = customer_tags.source_relation
 
     group by 1,2
 
