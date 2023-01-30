@@ -27,6 +27,8 @@ models:
         description: Number of orders purchased in the `date_month`
       - name: order_count_lifetime
         description: Number of orders purchased up until and including this `date_month`.
+      - name: source_relation
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
       - name: total_price_in_month
         description: Total amount (in shop currency) purchased in the `date_month`
       - name: total_price_lifetime
@@ -60,6 +62,8 @@ models:
         description: Number of orders purchased in the `date_month`
       - name: order_count_lifetime
         description: Number of orders purchased up until and including this `date_month`.
+      - name: source_relation
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
       - name: total_price_in_month
         description: Total amount (in shop currency) purchased in the `date_month`
       - name: total_price_lifetime
@@ -185,6 +189,8 @@ models:
         description: The postal code (zip, postcode, Eircode, …) of the shipping address.
       - name: source_name
         description: Where the order originated. Can be set only during order creation, and is not writeable afterwards.
+      - name: source_relation
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
       - name: subtotal_price
         description: The price of the order in the shop currency after discounts but before shipping, taxes, and tips.
       - name: has_taxes_included
@@ -228,16 +234,40 @@ models:
           Order total adjusted for refunds and other adjustments. The calculation used for this field is as follows:
           total price listed on the original order (including shipping costs and discounts) + adjustments + adjustments tax - total refunds - refunds tax
           The order_adjusted_total will equate to the total sales - refunds listed within the transactions table for the order (after currency exchange).
-      - name: index
-        description: Field representing the index of the order line in relation to the order.
-      - name: pre_tax_price
-        description: The pre tax price of the order line in shop currency.
       - name: checkout_token
         description: The checkout token applied to the order.
       - name: total_shipping_price_set
-        description: The total shipping price set to the order in presentment and shop currencies.
-      - name: source_relation
-        description: "{{ doc('source_relation') }}"
+        description: The total shipping price set to the order.
+      - name: order_total_shipping_tax
+        description: Total shipping tax attributed to the order.
+      - name: order_tags
+        description: List of tags associated with the order.
+      - name: order_url_tags
+        description: List of url tags associated with the order.
+      - name: number_of_fulfillments
+        description: Total fulfillments for the order.
+      - name: fulfillment_services
+        description: List of fulfillment services for the order.
+      - name: tracking_companies
+        description: List of tracking companies for the order.
+      - name: tracking_numbers
+        description: List of tracking numbers for the order.
+      - name: total_tip_received
+        description: The sum of all the tips in the order in the shop currency.
+      - name: checkout_id
+        description: The ID for the checkout.
+      - name: client_details_user_agent
+        description: Details of the browsing client, including software and operating versions.
+      - name: customer_locale
+        description: The two or three-letter language code, optionally followed by a region modifier. Example values - en, en-CA.  
+      - name: order_status_url
+        description: The URL pointing to the order status web page, if applicable.
+      - name: presentment_currency
+        description: The three-letter code (ISO 4217 format) of the currency that the customer used at checkout. For the shop's default currency, see `currency`.
+      - name: is_deleted
+        description: "{{ doc('_fivetran_deleted') }}"
+      - name: tracking_numbers
+        description: List of tracking numbers for the order.
       - name: total_discounts_set
         description: The total discounts applied to the price of the order in shop and presentment currencies.
       - name: total_line_items_price_set
@@ -250,11 +280,18 @@ models:
         description: The total tax applied to the order in shop and presentment currencies.
       - name: is_confirmed
         description: Whether the order is confirmed.
+      - name: shipping_discount_amount
+        description: The total amount of discount (in shop currency) allocated toward shipping.
+      - name: percentage_calc_discount_amount
+        description: The total amount of discount (in shop currency) allocated via a percentage-based discount
+      - name: fixed_amount_discount_amount
+        description: The total amount of discount (in shop currency) allocated via a fixed-amount discount
+      - name: count_discount_codes_applied
+        description: Distinct discount codes applied on the order
       - name: source_identifier
         description: The ID of the order placed on the originating platform. This value doesn't correspond to the Shopify ID that's generated from a completed draft.
       - name: current_total_price
         description: The current total price of the order in the shop currency. The value of this field reflects order edits, returns, and refunds.
-
   - name: shopify__customers
     description: Each record represents a customer in Shopify.
     tests:
@@ -293,14 +330,44 @@ models:
         description: The timestamp the customer completed their first order.
       - name: most_recent_order_timestamp
         description: The timestamp the customer completed their most recent order.
-      - name: average_order_value
+      - name: avg_order_value
         description: The average order value for the customer.
       - name: lifetime_total_spent
         description: The total amount of money in shop currency that the customer has spent on orders across their order history.
       - name: lifetime_total_refunded
-        description: The total amount of money in shop currency that the customer has been refunded on orders across their order history.
-      - name: lifetime_total_amount
-        description: The total amount of money in shop currency (minus refunds) that the customer has spent across their order history.
+        description: The total amount of money that the customer has been refunded on orders across their order history.
+      - name: lifetime_total_net
+        description: The total amount of money (minus refunds) that the customer has spent across their order history.
+      - name: source_relation
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+      - name: lifetime_abandoned_checkouts
+        description: Total number of abandoned checkouts abandoned by the customer.
+      - name: customer_tags
+        description: A string aggregated list of all tags associated with a customer. 
+      - name: avg_quantity_per_order
+        description: Average quantity of items per order customer orders.
+      - name: lifetime_total_tax
+        description: Total amount of tax attributed to the customer.
+      - name: avg_tax_per_order
+        description: Average tax per order attributed to the customer.
+      - name: lifetime_total_discount
+        description: Total discounts attributed to the customer.
+      - name: avg_discount_per_order
+        description: Average discount per order attributed to the customer.
+      - name: lifetime_total_shipping
+        description: Total shipping costs attributed to the customer.
+      - name: avg_shipping_per_order
+        description: Average shipping cost per order attributed to the customer.
+      - name: lifetime_total_shipping_with_discounts
+        description: Total shipping costs after discounts attributed to the customer.
+      - name: avg_shipping_with_discounts_per_order
+        description: Average shipping costs after discounts per order attributed to the customer.
+      - name: lifetime_total_shipping_tax
+        description: Total shipping tax attributed to the customer.
+      - name: avg_shipping_tax_per_order
+        description: Average shipping tax per order attributed to the customer.
+      - name: currency
+        description: The three-letter code (ISO 4217 format) for the currency that the customer used when they paid for their last order. Defaults to the shop currency. Returns the shop currency for test orders.
       - name: note
         description: A note about the customer.
       - name: marketing_consent_updated_at
@@ -311,8 +378,6 @@ models:
         description: >
           Field indicating if the customer has consented to receive marketing material via email. Coalescing of the new `email_marketing_consent_state`
           field and the deprected `accepts_marketing` field. Records with the old field will be marked with '(legacy)'.
-      - name: source_relation
-        description: "{{ doc('source_relation') }}"
 
   - name: shopify__customer_emails
     description: Each record represents a customer email in Shopify.
@@ -352,18 +417,58 @@ models:
         description: The timestamp the customer completed their first order.
       - name: most_recent_order_timestamp
         description: The timestamp the customer completed their most recent order.
-      - name: average_order_value
+      - name: avg_order_value
         description: The average order value for the customer.
       - name: lifetime_total_spent
         description: The total amount of money that the customer has spent on orders across their order history (in shop currency).
       - name: lifetime_total_refunded
-        description: The total amount of money that the customer has been refunded on orders across their order history (in shop currency).
-      - name: lifetime_total_amount
-        description: The total amount of money (minus refunds) that the customer has spent across their order history (in shop currency).
+        description: The total amount of money that the customer has been refunded on orders across their order history.
+      - name: lifetime_total_net
+        description: The total amount of money (minus refunds) that the customer has spent across their order history.
       - name: first_account_created_at
         description: Timestamp of when the first account associated with this email was created.
       - name: last_account_created_at
         description: Timestamp of when the last account associated with this email was created.
+      - name: source_relation
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+      - name: lifetime_abandoned_checkouts
+        description: Total number of abandoned checkouts abandoned by the customer.
+      - name: customer_tags
+        description: A string aggregated list of all tags associated with a customer. 
+      - name: avg_quantity_per_order
+        description: Average quantity of items per order customer orders.
+      - name: lifetime_total_tax
+        description: Total amount of tax attributed to the customer.
+      - name: avg_tax_per_order
+        description: Average tax per order attributed to the customer.
+      - name: lifetime_total_discount
+        description: Total discounts attributed to the customer.
+      - name: avg_discount_per_order
+        description: Average discount per order attributed to the customer.
+      - name: lifetime_total_shipping
+        description: Total shipping costs attributed to the customer.
+      - name: avg_shipping_per_order
+        description: Average shipping cost per order attributed to the customer.
+      - name: lifetime_total_shipping_with_discounts
+        description: Total shipping costs after discounts attributed to the customer.
+      - name: avg_shipping_with_discounts_per_order
+        description: Average shipping costs after discounts per order attributed to the customer.
+      - name: lifetime_total_shipping_tax
+        description: Total shipping tax attributed to the customer.
+      - name: avg_shipping_tax_per_order
+        description: Average shipping tax per order attributed to the customer.
+      - name: marketing_consent_updated_at
+        description: Timestamp when marketing consent was updated.
+      - name: lifetime_duration
+        description: The amount of time since the customer was first added to the store.
+      - name: currency
+        description: The three-letter code (ISO 4217 format) for the currency that the customer used when they paid for their last order. Defaults to the shop currency. Returns the shop currency for test orders.
+      - name: marketing_consent_state
+        description: The current email marketing state for the customer. New version of `accepts_marketing` field.
+      - name: marketing_opt_in_level
+        description: Deprecated. The package will coalesce with `email_marketing_consent_opt_in_level`.
+      - name: updated_timestamp
+        description: The date and time when the customer information was last updated.
       - name: note
         description: A note about the customer.
       - name: marketing_consent_updated_at
@@ -374,8 +479,6 @@ models:
         description: >
           Field indicating if the customer has consented to receive marketing material via email. Coalescing of the new `email_marketing_consent_state`
           field and the deprected `accepts_marketing` field. Records with the old field will be marked with '(legacy)'.
-      - name: source_relation
-        description: "{{ doc('source_relation') }}"
 
   - name: shopify__products
     description: Each record represents a product in Shopify.
@@ -385,7 +488,7 @@ models:
             - product_id
             - source_relation
     columns:
-      - name: _fivetran_deleted
+      - name: is_deleted
         description: Whether the record has been deleted in the source system.
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -407,7 +510,7 @@ models:
         description: The date and time when the product was last modified.
       - name: vendor
         description: The name of the product's vendor.
-      - name: quantity_sold
+      - name: total_quantity_sold
         description: Quantity of the product sold.
       - name: subtotal_sold
         description: Total amount (in shop currency) of the product sold.
@@ -420,7 +523,21 @@ models:
       - name: most_recent_order_timestamp
         description: The timestamp the product was most recently ordered.
       - name: source_relation
-        description: "{{ doc('source_relation') }}"
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+      - name: avg_quantity_per_order_line
+        description: Average quantity per order line with this product.
+      - name: product_total_discount
+        description: Total discounts associated with the product.
+      - name: product_avg_discount_per_order_line
+        description: Average discount per order line with this product.
+      - name: product_total_tax
+        description: Total taxes associated with the product.
+      - name: product_avg_tax_per_order_line
+        description: Average taxes per order line with this product.
+      - name: count_variants
+        description: Count of product variants.
+      - name: has_product_image
+        description: If the product has an image.
       - name: status
         description: >
           The status of the product. Valid values:
@@ -465,7 +582,7 @@ models:
         description: The ID of the product that the line item belongs to. Can be null if the original product associated with the order is deleted at a later date.
       - name: quantity
         description: The number of items that were purchased.
-      - name: is_requiring_shipping
+      - name: is_shipping_required
         description: Whether the item requires shipping.
       - name: sku
         description: The item's SKU (stock keeping unit).
@@ -493,8 +610,6 @@ models:
         description: The fulfillment service associated with the product variant.
       - name: variant_grams
         description: The weight of the product variant in grams.
-      - name: variant_image_id
-        description: The unique numeric identifier for a product's image. The image must be associated to the same product as the variant.
       - name: inventory_item_id
         description: The unique identifier for the inventory item, which is used in the Inventory API to query for inventory information.
       - name: variant_inventory_management
@@ -512,13 +627,13 @@ models:
       - name: variant_position
         description: The order of the product variant in the list of product variants. The first position in the list is 1. The position of variants is indicated by the order in which they are listed.
       - name: variant_price
-        description: The price of the product variant in shop currency.
-      - name: variant_is_requiring_shipping
-        description: This property is deprecated. Use the `requires_shipping` property on the InventoryItem resource instead.
+        description: The price of the product variant.
       - name: variant_sku
         description: A unique identifier for the product variant in the shop. Required in order to connect to a FulfillmentService.
       - name: variant_is_taxable
         description: Whether a tax is charged when the product variant is sold.
+      - name: variant_tax_code
+        description: This parameter applies only to the stores that have the Avalara AvaTax app installed. Specifies the Avalara tax code for the product variant.
       - name: variant_title
         description: The title of the product variant. The title field is a concatenation of the option1, option2, and option3 fields. You can only update title indirectly using the option fields.
       - name: variant_updated_at
@@ -534,11 +649,57 @@ models:
       - name: image_id
         description: Image id of the product variant associated with the order line.
       - name: source_relation
-        description: "{{ doc('source_relation') }}"
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+      - name: restock_types
+        description: List of how this refund line item affects inventory levels.
+      - name: order_line_tax
+        description: Total taxes for the line item.
+      - name: index
+        description: The index associated with the order.
+      - name: pre_tax_price
+        description: The total pre tax price of the order.
+      - name: tax_code
+        description: This parameter applies only to the stores that have the Avalara AvaTax app installed. Specifies the Avalara tax code for the product variant.
+      - name: pre_tax_price_set
+        description: The pre tax preice of the line item in shop currency and presentment currency.
+      - name: price_set
+        description: The price of the line item in shop and presentment currencies.
+      - name: total_discount_set
+        description: The total amount allocated to the line item in the presentment currency.
       - name: properties
         description: Line item properties.
-      - name: restock_types
-        description:  How this refund line item affects inventory levels.
+      - name: destination_location_address_1
+        description: Destination location's street address.
+      - name: destination_location_address_2
+        description: The optional second line of the destination location's street address.
+      - name: destination_location_city
+        description: The city the destination location is in.
+      - name: destination_location_country_code
+        description: The country code of the destination location.
+      - name: destination_location_id
+        description: The ID of the destination location.
+      - name: destination_location_name
+        description: The name of the destination location.
+      - name: destination_location_province_code
+        description: The province, state, or district code (ISO 3166-2 alpha-2 format) of the destination location.
+      - name: destination_location_zip
+        description: The zip or postal code.
+      - name: origin_location_address_1
+        description: Origin location's street address.
+      - name: origin_location_address_2
+        description: The optional second line of the origin location's street address.
+      - name: origin_location_city
+        description: The city the origin location is in.
+      - name: origin_location_country_code
+        description: The country code of the origin location.
+      - name: origin_location_id
+        description: The ID of the origin location.
+      - name: origin_location_name
+        description: The name of the origin location.
+      - name: origin_location_province_code
+        description: The province, state, or district code (ISO 3166-2 alpha-2 format) of the origin location.
+      - name: origin_location_zip
+        description: The zip or postal code.
 
   - name: shopify__transactions
     description: Each record represents a transaction in Shopify.
@@ -604,8 +765,6 @@ models:
         description: A standardized error code, independent of the payment provider.
       - name: status
         description: The status of the transaction.
-      - name: test
-        description: Whether the transaction is a test transaction.
       - name: user_id
         description: The ID for the user who was logged into the Shopify POS device when the order was processed, if applicable.
       - name: _fivetran_synced
@@ -615,7 +774,19 @@ models:
       - name: currency_exchange_calculated_amount
         description: The total amount of the transaction with the currency exchange rate applied.
       - name: source_relation
-        description: "{{ doc('source_relation') }}"
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+      - name: payment_method
+        description: Method of payment.
+      - name: parent_created_timestamp
+        description: Created on timestamp of the parent transaction.
+      - name: parent_kind
+        description: Kind of the parent transaction.
+      - name: parent_amount
+        description: Amount of the parent transaction.
+      - name: parent_status
+        description: Status of the parent transaction.
+      - name: authorization_expires_at
+        description: Timestamp when the authorization expires.
 
   - name: shopify__inventory_levels
     description: >
@@ -862,7 +1033,7 @@ models:
         description: >
           The title of the price rule. This is used by the Shopify admin search to retrieve discounts. It is also displayed on the Discounts page of the Shopify admin for bulk discounts. 
           Shopify recommends that this map onto the associated `discount_code.code`.
-      - name: pirce_rule_updated_at
+      - name: price_rule_updated_at
         description: The date and time (ISO 8601 format) when the price rule was updated.
       - name: usage_limit
         description: The maximum number of times the price rule can be used, per discount code.

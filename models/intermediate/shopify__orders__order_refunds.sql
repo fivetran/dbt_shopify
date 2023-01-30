@@ -22,6 +22,7 @@ with refunds as (
         order_line_refunds.quantity,
         order_line_refunds.subtotal,
         order_line_refunds.total_tax
+
     from refunds
     left join order_line_refunds
         on refunds.refund_id = order_line_refunds.refund_id
