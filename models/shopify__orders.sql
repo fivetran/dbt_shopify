@@ -79,7 +79,7 @@ with orders as (
     select 
         order_id,
         source_relation,
-        count(distinct fulfillment_id) as number_of_fulfillments,
+        count(fulfillment_id) as number_of_fulfillments,
         {{ fivetran_utils.string_agg("distinct cast(service as " ~ dbt.type_string() ~ ")", "', '") }} as fulfillment_services,
         {{ fivetran_utils.string_agg("distinct cast(tracking_company as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_companies,
         {{ fivetran_utils.string_agg("distinct cast(tracking_number as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_numbers
