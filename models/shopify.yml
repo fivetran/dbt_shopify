@@ -292,6 +292,7 @@ models:
         description: The ID of the order placed on the originating platform. This value doesn't correspond to the Shopify ID that's generated from a completed draft.
       - name: current_total_price
         description: The current total price of the order in the shop currency. The value of this field reflects order edits, returns, and refunds.
+  
   - name: shopify__customers
     description: Each record represents a customer in Shopify.
     tests:
@@ -378,6 +379,8 @@ models:
         description: >
           Field indicating if the customer has consented to receive marketing material via email. Coalescing of the new `email_marketing_consent_state`
           field and the deprected `accepts_marketing` field. Records with the old field will be marked with '(legacy)'.
+      - name: lifetime_duration
+        description: The amount of time since the customer was first added to the store.
 
   - name: shopify__customer_emails
     description: Each record represents a customer email in Shopify.
@@ -787,7 +790,9 @@ models:
         description: Status of the parent transaction.
       - name: authorization_expires_at
         description: Timestamp when the authorization expires.
-
+      - name: authorization_code
+        description: The authorization code associated with the transaction.
+        
   - name: shopify__inventory_levels
     description: >
       Model representing the current status of an inventory level in Shopify. Inventory Levels are unique pairings of 
