@@ -31,6 +31,8 @@ models:
         description: Total amount (in shop currency) purchased in the `date_month`
       - name: total_price_lifetime
         description: Total amount (in shop currency) up until and including this `date_month`.
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
 
   - name: shopify__customer_email_cohorts
     description: Each record represents a customer's (on the EMAIL grain) performance in a calendar month.
@@ -62,7 +64,9 @@ models:
         description: Total amount (in shop currency) purchased in the `date_month`
       - name: total_price_lifetime
         description: Total amount (in shop currency) up until and including this `date_month`.
-
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+        
   - name: shopify__orders
     description: Each record represents an order in Shopify.
     tests:
@@ -232,7 +236,25 @@ models:
         description: The checkout token applied to the order.
       - name: total_shipping_price_set
         description: The total shipping price set to the order in presentment and shop currencies.
-  
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+      - name: total_discounts_set
+        description: The total discounts applied to the price of the order in shop and presentment currencies.
+      - name: total_line_items_price_set
+        description: The total of all line item prices in shop and presentment currencies.
+      - name: total_price_set
+        description: The total price of the order in shop and presentment currencies.
+      - name: total_price_usd
+        description: The sum of all line item prices, discounts, shipping, taxes, and tips in USD. Must be positive.
+      - name: total_tax_set
+        description: The total tax applied to the order in shop and presentment currencies.
+      - name: is_confirmed
+        description: Whether the order is confirmed.
+      - name: source_identifier
+        description: The ID of the order placed on the originating platform. This value doesn't correspond to the Shopify ID that's generated from a completed draft.
+      - name: current_total_price
+        description: The current total price of the order in the shop currency. The value of this field reflects order edits, returns, and refunds.
+
   - name: shopify__customers
     description: Each record represents a customer in Shopify.
     tests:
@@ -243,8 +265,6 @@ models:
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
-      - name: has_accepted_marketing
-        description: Whether the customer has consented to receive marketing material via email.
       - name: created_timestamp
         description: The date and time when the customer was created.
       - name: default_address_id
@@ -281,6 +301,18 @@ models:
         description: The total amount of money in shop currency that the customer has been refunded on orders across their order history.
       - name: lifetime_total_amount
         description: The total amount of money in shop currency (minus refunds) that the customer has spent across their order history.
+      - name: note
+        description: A note about the customer.
+      - name: marketing_consent_updated_at
+        description: The date and time when the customer consented to receive marketing material by email. If no date is provided, then the date and time when the consent information was sent is used.
+      - name: marketing_opt_in_level
+        description: The marketing subscription opt-in level, as described in the M3AAWG Sender Best Common Practices, that the customer gave when they consented to receive marketing material by email.
+      - name: marketing_consent_state
+        description: >
+          Field indicating if the customer has consented to receive marketing material via email. Coalescing of the new `email_marketing_consent_state`
+          field and the deprected `accepts_marketing` field. Records with the old field will be marked with '(legacy)'.
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
 
   - name: shopify__customer_emails
     description: Each record represents a customer email in Shopify.
@@ -292,8 +324,6 @@ models:
     columns:
       - name: last_fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
-      - name: has_accepted_marketing
-        description: Whether the customer has consented to receive marketing material via email.
       - name: created_timestamp
         description: The date and time when the customer was created.
       - name: default_address_id
@@ -334,8 +364,18 @@ models:
         description: Timestamp of when the first account associated with this email was created.
       - name: last_account_created_at
         description: Timestamp of when the last account associated with this email was created.
-      - name: accepts_marketing_last_updated_at
-        description: When the customer consented or objected to receiving marketing material by email. 
+      - name: note
+        description: A note about the customer.
+      - name: marketing_consent_updated_at
+        description: The date and time when the customer consented to receive marketing material by email. If no date is provided, then the date and time when the consent information was sent is used.
+      - name: marketing_opt_in_level
+        description: The marketing subscription opt-in level, as described in the M3AAWG Sender Best Common Practices, that the customer gave when they consented to receive marketing material by email.
+      - name: marketing_consent_state
+        description: >
+          Field indicating if the customer has consented to receive marketing material via email. Coalescing of the new `email_marketing_consent_state`
+          field and the deprected `accepts_marketing` field. Records with the old field will be marked with '(legacy)'.
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
 
   - name: shopify__products
     description: Each record represents a product in Shopify.
@@ -379,6 +419,18 @@ models:
         description: The timestamp the product was first ordered.
       - name: most_recent_order_timestamp
         description: The timestamp the product was most recently ordered.
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+      - name: status
+        description: >
+          The status of the product. Valid values:
+          - active: The product is ready to sell and is available to customers on the online store, sales channels, and apps. By default, existing products are set to active.
+          - archived: The product is no longer being sold and isn't available to customers on sales channels and apps.
+          - draft: The product isn't ready to sell and is unavailable to customers on sales channels and apps. By default, duplicated and unarchived products are set to draft.
+      - name: collections
+        description: Comma-separated list of collections associated with the product.
+      - name: tags
+        description: Comma-separated list of tags associated with the product.
 
   - name: shopify__order_lines
     description: Each record represents a line item of an order in Shopify.
@@ -481,7 +533,13 @@ models:
         description: Subtotal of the order line with refunds subtracted in shop currency.
       - name: image_id
         description: Image id of the product variant associated with the order line.
-  
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+      - name: properties
+        description: Line item properties.
+      - name: restock_types
+        description:  How this refund line item affects inventory levels.
+
   - name: shopify__transactions
     description: Each record represents a transaction in Shopify.
     tests:
@@ -556,6 +614,8 @@ models:
         description: The exchange rate between the home currency and the currency of sale at the time of the transaction.
       - name: currency_exchange_calculated_amount
         description: The total amount of the transaction with the currency exchange rate applied.
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
 
   - name: shopify__inventory_levels
     description: >
@@ -722,7 +782,7 @@ models:
           Count of distinct fulfillments for this inventory level that failed.
           "Failure" = The fulfillment request failed.
       - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+        description: "{{ doc('source_relation') }}"
 
   - name: shopify__discounts
     description: >
@@ -832,6 +892,16 @@ models:
         description: Count of distinct customer emails who placed orders using this discount.
       - name: avg_order_discount_amount
         description: Average amount (in shop currency) of discount taken off orders.
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+      - name: count_orders 
+        description: Count of orders in which this discount code was applied.
+      - name: count_abandoned_checkouts
+        description: Count of abandoned checkouts in which this discount code was applied.
+      - name: count_abandoned_checkout_customers
+        description: Distinct count of customers who applied this discount in a checkout that they abandoned.
+      - name: count_abandoned_checkout_customer_emails
+        description: Distinct count of customer emails who applied this discount in a checkout that they abandoned.
 
   - name: shopify__daily_shop
     description: >
@@ -956,3 +1026,5 @@ models:
         description: Average quantity sold per order on this day. Includes refunds. (in shop currency)
       - name: avg_quantity_net
         description: Average net quantity sold per order on this day. Excludes refunds. (in shop currency)
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"

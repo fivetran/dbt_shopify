@@ -34,7 +34,7 @@ vars:
       alias: "field_alias" # Optional: If you wish to alias the field within the staging model.
       transform_sql: "cast(field_alias as string)" # Optional: If you wish to define the datatype or apply a light transformation.
 ```
-- The following source fields have been added to (➕) or removed from (➖) their respective models ([PR #39](https://github.com/fivetran/dbt_shopify_source/pull/39), [PR #40](https://github.com/fivetran/dbt_shopify_source/pull/40)):
+- The following *source* fields have been added to (➕) or removed from (➖) their respective models ([PR #39](https://github.com/fivetran/dbt_shopify_source/pull/39), [PR #40](https://github.com/fivetran/dbt_shopify_source/pull/40)):
   - `shopify__orders`:
     ➕ `total_discounts_set`
     ➕ `total_line_items_price_set`
@@ -49,7 +49,7 @@ vars:
     ➕ `customer_locale`
     ➕ `order_status_url`
     ➕ `presentment_currency`
-    ➕ `is_inventory_confirmed`
+    ➕ `is_confirmed`
   - `shopify__customers`:
     ➕ `note`
     ➕ `lifetime_duration`
@@ -71,17 +71,54 @@ vars:
     ( ) `is_requiring_shipping` is renamed to `is_shipping_required`
   - `shopify__products`:
     ➕ `status`
-- The following transformed fields have been added to their respective models:
-  - `shopify__orders` ([PR #47](https://github.com/fivetran/dbt_shopify/pull/47))
-    - `shipping_discount_amount`
-    - `percentage_calc_discount_amount`
-    - `fixed_amount_discount_amount`
-    - `count_discount_codes_applied` 
-  - `shopify__products` ([PR #46](https://github.com/fivetran/dbt_shopify/pull/46))
-    - `collections`
-    - `tags`
-    - `count_variants`
-    - `has_product_image`
+- The following *transformed* fields have been added to their respective models:
+  - `shopify__orders` 
+    - `shipping_discount_amount` ([PR #47](https://github.com/fivetran/dbt_shopify/pull/47))
+    - `percentage_calc_discount_amount` ([PR #47](https://github.com/fivetran/dbt_shopify/pull/47))
+    - `fixed_amount_discount_amount` ([PR #47](https://github.com/fivetran/dbt_shopify/pull/47))
+    - `count_discount_codes_applied` ([PR #47](https://github.com/fivetran/dbt_shopify/pull/47))
+    - `order_tags` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `order_url_tags` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `number_of_fulfillments` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `fulfilmment_services` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `tracking_companies` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `tracking_numbers` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+  - `shopify__products` 
+    - `collections` ([PR #46](https://github.com/fivetran/dbt_shopify/pull/46))
+    - `tags` ([PR #46](https://github.com/fivetran/dbt_shopify/pull/46))
+    - `count_variants` ([PR #46](https://github.com/fivetran/dbt_shopify/pull/46))
+    - `has_product_image` ([PR #46](https://github.com/fivetran/dbt_shopify/pull/46))
+    - `quantity_sold` renamed to `total_quantity_sold` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `avg_quantity_per_order_line` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `product_total_discount` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `product_avg_discount_per_order_line` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `product_total_tax` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `product_avg_tax_per_order_line` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+  `shopify__customers` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `lifetime_abandoned_checkouts`
+    - `customer_tags`
+    - `average_order_value` renamed to `avg_order_value`
+    - `lifetime_total_amount` renamed to `lifetime_total_net`
+    - `avg_quantity_per_order`
+    - `lifetime_total_tax`
+    - `avg_tax_per_order`
+    - `lifetime_total_discount`
+    - `avg_discount_per_order`
+    - `lifetime_total_shipping`
+    - `avg_shipping_per_order`
+    - `lifetime_total_shipping_with_discounts`
+    - `lifetime_total_shipping_tax`
+    - `avg_shipping_tax_per_order`
+    - `avg_shipping_with_discounts_per_order`
+  - `shopify__order_lines` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `restock_types`
+    - `order_line_tax`
+  - `shopify__transactions` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `payment_method`
+    - `parent_kind`
+    - `parent_created_timestamp`
+    - `parent_amount`
+    - `parent_status`
 
 ## dbt_shopify v0.7.0
 ## 🚨 Breaking Changes 🚨:
