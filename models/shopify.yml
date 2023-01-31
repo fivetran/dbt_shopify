@@ -924,7 +924,7 @@ models:
       - name: first_order_timestamp
         description: The timetamp of the first order against this inventory level.
       - name: last_order_timestamp
-        description: The timetamp of the first order against this inventory level.
+        description: The timestamp of the first order against this inventory level.
       - name: subtotal_sold_refunds
         description: The monetary amount (in shop currency) of inventory level goods that have been refunded.
       - name: quantity_sold_refunds 
