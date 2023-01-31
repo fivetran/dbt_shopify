@@ -10,94 +10,136 @@
         <img src="https://img.shields.io/badge/Contributions-welcome-blueviolet" /></a>
 </p>
 
-# Shopify
+# Shopify Transformation dbt Package ([Docs](https://fivetran.github.io/dbt_shopify/))
 
-This package models Shopify data from [Fivetran's connector](https://fivetran.com/docs/applications/shopify). It uses data in the format described by [this ERD](https://fivetran.com/docs/applications/shopify#schemainformation).
+This package models Shopify data from [Fivetran's connector](https://fivetran.com/docs/applications/shopify). It uses data in the format described by [this ERD](https://fivetran.com/docs/applications/shopify#schemainformation) and builds off the output of our [Shopify source package](https://github.com/fivetran/dbt_shopify_source).
 
 The main focus of the package is to transform the core object tables into analytics-ready models, including a cohort model to understand how your customers are behaving over time.
 
-## Models
-
-This package contains transformation models, designed to work simultaneously with our [Shopify source package](https://github.com/fivetran/dbt_shopify_source). A dependency on the source package is declared in this package's `packages.yml` file, so it will automatically download when you run `dbt deps`. The primary outputs of this package are described below.
+The following table provides a detailed list of all models materialized within this package by default. 
+> TIP: See more details about these models in the package's [dbt docs site](https://fivetran.github.io/dbt_shopify/#!/overview/shopify).
 
 | **model**                 | **description**                                                                                                    |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| [shopify__customer_cohorts](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__customer_cohorts.sql)  | Each record represents the monthly performance of a customer, including fields for the month of their 'cohort'.    |
-| [shopify__customers](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__customers.sql)        | Each record represents a customer, with additional dimensions like lifetime value and number of orders.            |
-| [shopify__orders](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__orders.sql)           | Each record represents an order, with additional dimensions like whether it is a new or repeat purchase.           |
-| [shopify__order_lines](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__order_lines.sql)     | Each record represents an order line item, with additional dimensions like how many items were refunded.           |
-| [shopify__products](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__products.sql)         | Each record represents a product, with additional dimensions like most recent order date and order volume.         |
-| [shopify__transactions](https://github.com/fivetran/dbt_shopify/blob/main/models/shopify__transactions.sql)     | Each record represents a transaction with additional calculations to handle exchange rates.                        |
+| [shopify__customer_cohorts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_cohorts.sql)  | Each record represents the monthly performance of a customer (based on `customer_id`), including fields for the month of their 'cohort'.    |
+| [shopify__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customers.sql)        | Each record represents a distinct `customer_id`, with additional dimensions like lifetime value and number of orders.            |
+| [shopify__customer_email_cohorts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_email_cohorts.sql)  | Each record represents the monthly performance of a customer (based on `email`), including fields for the month of their 'cohort'.    |
+| [shopify__customer_emails](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_emails.sql)        | Each record represents a distinct customer `email`, with additional dimensions like lifetime value and number of orders.            |
+| [shopify__orders](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__orders.sql)           | Each record represents an order, with additional dimensions like whether it is a new or repeat purchase.           |
+| [shopify__order_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__order_lines.sql)     | Each record represents an order line item, with additional dimensions like how many items were refunded.           |
+| [shopify__products](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__products.sql)         | Each record represents a product, with additional dimensions like most recent order date and order volume.         |
+| [shopify__transactions](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__transactions)     | Each record represents a transaction with additional calculations to handle exchange rates.                        |
+| [shopify__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__daily_shop.sql)     | Each record represents a day of activity for each of your shops, conveyed by a suite of daily metrics about customers, orders, abandoned checkouts, fulfillment events, and more.                        |
+| [shopify__discounts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__discounts.sql)     | Each record represents a unique discount, enriched with information about its associated `price_rule`and metrics regarding orders and abandoned checkouts.                        |
+| [shopify__inventory_levels](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__inventory_levels.sql)     | Each record represents an inventory level (unique pairing of inventory items and locations), enriched with information about its products, orders, and fulfillments.                        |
 
+# 🎯 How do I use the dbt package?
 
-## Installation Instructions
-Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions, or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+## Step 1: Prerequisites
+To use this dbt package, you must have the following:
 
-Include in your `packages.yml`
+- At least one Fivetran Shopify connector syncing data into your destination.
+- A **BigQuery**, **Snowflake**, **Redshift**, **Databricks**, or **PostgreSQL** destination.
 
-```yaml
+## Step 2: Install the package
+Include the following shopify package version in your `packages.yml` file:
+> TIP: Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+```yml
 packages:
   - package: fivetran/shopify
-    version: [">=0.7.0", "<0.8.0"]
+    version: [">=0.8.0", "<0.9.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
-## Configuration
-By default, this package looks for your Shopify data in the `shopify` schema of your [target database](https://docs.getdbt.com/docs/running-a-dbt-project/using-the-command-line-interface/configure-your-profile). If this is not where your Shopify data is, add the following configuration to your `dbt_project.yml` file:
+Do **NOT** include the `shopify_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well. 
+
+## Step 3: Define database and schema variables
+### Single connector
+By default, this package runs using your destination and the `shopify` schema. If this is not where your Shopify data is (for example, if your Shopify schema is named `shopify_fivetran`), add the following configuration to your root `dbt_project.yml` file:
 
 ```yml
 # dbt_project.yml
-
-...
-config-version: 2
 
 vars:
     shopify_database: your_database_name
     shopify_schema: your_schema_name
 ```
-
-If you have multiple Shopify connectors in Fivetran and would like to use this package on all of them simultaneously, we have provided functionality to do so. The package will union all of the data together and pass the unioned table into the transformations. You will be able to see which source it came from in the `source_relation` column of each model. To use this functionality, you will need to set either the `shopify_union_schemas` or `shopify_union_databases` variables:
+### Union multiple connectors
+If you have multiple Shopify connectors in Fivetran and would like to use this package on all of them simultaneously, we have provided functionality to do so. The package will union all of the data together and pass the unioned table into the transformations. You will be able to see which source it came from in the `source_relation` column of each model. To use this functionality, you will need to set either the `shopify_union_schemas` OR `shopify_union_databases` variables (cannot do both) in your root `dbt_project.yml` file:
 
 ```yml
 # dbt_project.yml
-
-...
-config-version: 2
 
 vars:
     shopify_union_schemas: ['shopify_usa','shopify_canada'] # use this if the data is in different schemas/datasets of the same database/project
     shopify_union_databases: ['shopify_usa','shopify_canada'] # use this if the data is in different databases/projects but uses the same schema name
 ```
 
-### Add Passthrough Columns
-This package includes all source columns defined in the [staging_columns.sql](https://github.com/fivetran/dbt_shopify_source/blob/master/macros/staging_columns.sql) macro. To add additional columns to this package, do so using our pass-through column variables. This is extremely useful if you'd like to include custom fields to the package.
+## Step 4: Enable `fulfillment_event` data
 
+The package takes into consideration that not every Shopify connector may have `fulfillment_event` data enabled. However, this table does hold valuable information that is leveraged in the `shopify__daily_shop` model. `fulfillment_event` data is **disabled by default**. 
+
+Add the following variable to your `dbt_project.yml` file to enable the modeling of fulfillment events: 
 ```yml
 # dbt_project.yml
 
-...
-config-version: 2
+vars:
+    shopify_using_fulfillment_event: true # false by default
+```
+
+## Step 5: Setting your timezone
+By default, the data in your Shopify schema is in UTC. However, you may want reporting to reflect a specific timezone for more realistic analysis or data validation. 
+
+To convert the timezone of **all** timestamps in the package, update the `shopify_timezone` variable to your target zone in [IANA tz Database format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones):
+```yml
+# dbt_project.yml
+
+vars:
+    shopify_timezone: "America/New_York" # Replace with your timezone
+```
+
+## (Optional) Step 6: Additional configurations
+<details><summary>Expand for configurations</summary>
+    
+### Passing Through Additional Fields
+This package includes all source columns defined in the macros folder. You can add more columns using our pass-through column variables. These variables allow for the pass-through fields to be aliased (`alias`) and casted (`transform_sql`) if desired, but not required. Datatype casting is configured via a sql snippet within the `transform_sql` key. You may add the desired sql while omitting the `as field_name` at the end and your custom pass-though fields will be casted accordingly. Use the below format for declaring the respective pass-through variables:
+
+```yml
+# dbt_project.yml
 
 vars:
   shopify_source:
-    customer_pass_through_columns: []
-    order_line_refund_pass_through_columns: []
-    order_line_pass_through_columns: []
-    order_pass_through_columns: []
-    product_pass_through_columns: []
-    product_variant_pass_through_columns: []
+    customer_pass_through_columns:
+      - name: "customer_custom_field"
+        alias: "customer_field"
+    order_line_refund_pass_through_columns:
+      - name: "unique_string_field"
+        alias: "field_id"
+        transform_sql: "cast(field_id as string)"
+    order_line_pass_through_columns:
+      - name: "that_field"
+    order_pass_through_columns:
+      - name: "sub_field"
+        alias: "subsidiary_field"
+    product_pass_through_columns:
+      - name: "this_field"
+    product_variant_pass_through_columns:
+      - name: "new_custom_field"
+        alias: "custom_field"
 ```
 
-### Disable Models
-This package was designed with the intention that users have all relevant Shopify tables being synced by Fivetran. However, if you are a Shopify user that does not operate on returns or adjustments then you will not have the related source tables. As such, you may use the below variable configurations to disable the respective downstream models. All variables are `true` by default. Only add the below configuration if you are wishing to disable the models:
+### Adding Metafields
+In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) the Shopify connector included support for the [metafield resource](https://shopify.dev/api/admin-rest/2023-01/resources/metafield). If you would like to take advantage of these metafields, this package offers corresponding mapping models which append these metafields to the respective source object for the following tables: collection, customer, order, product_image, product, product_variant, shop. If enabled, these models will materialize as `shopify__[object]_metafields` for each respective supported object. To enable these metafield mapping models, you may use the following configurations within your `dbt_project.yml`.
+>**Note**: These metafield models will contain all the same records as the corresponding staging models with the exception of the metafield columns being added. To ensure there is no fanout, this package takes advantage of the `dbt_expectations.expect_table_row_count_to_equal_other_table` test to ensure the metafield models contain the same row count as the staging model.
 
 ```yml
-# dbt_project.yml
-
-...
 vars:
-  shopify__using_order_adjustment:  false  # true by default
-  shopify__using_order_line_refund: false  # true by default
-  shopify__using_refund:            false  # true by default
+  shopify_using_all_metafields: True ## False by default. Will enable ALL metafield models. FYI - This will override all other metafield variables.
+  shopify_using_collection_metafields: True ## False by default. Will enable ONLY the collection metafield model.
+  shopify_using_customer_metafields: True ## False by default. Will enable ONLY the customer metafield model.
+  shopify_using_order_metafields: True ## False by default. Will enable ONLY the order metafield model.
+  shopify_using_product_metafields: True ## False by default. Will enable ONLY the product metafield model.
+  shopify_using_product_image_metafields: True ## False by default. Will enable ONLY the product image metafield model.
+  shopify_using_product_variant_metafields: True ## False by default. Will enable ONLY the product variant metafield model.
 ```
 
 ### Changing the Build Schema
@@ -106,7 +148,6 @@ By default this package will build the Shopify staging models within a schema ti
 ```yml
 # dbt_project.yml
 
-...
 models:
   shopify:
     +schema: my_new_schema_name # leave blank for just the target_schema
@@ -114,37 +155,59 @@ models:
     +schema: my_new_schema_name # leave blank for just the target_schema
 ```
 
-For additional configurations for the source models, visit the [Shopify source package](https://github.com/fivetran/dbt_shopify_source).
+### Change the source table references
+If an individual source table has a different name than the package expects, add the table name as it appears in your destination to the respective variable:
 
-## Contributions
+> IMPORTANT: See this project's [`dbt_project.yml`](https://github.com/fivetran/dbt_shopify_source/blob/main/dbt_project.yml) variable declarations to see the expected names.
 
-Additional contributions to this package are very welcome! Please create issues
-or open PRs against `main`. Check out 
-[this post](https://discourse.getdbt.com/t/contributing-to-a-dbt-package/657) 
-on the best workflow for contributing to a package.
-
-## Database support
-This package has been tested on BigQuery, Snowflake, Redshift, Postgres, and Databricks.
-
-### Databricks Dispatch Configuration
-dbt `v0.20.0` introduced a new project-level dispatch configuration that enables an "override" setting for all dispatched macros. If you are using a Databricks destination with this package you will need to add the below (or a variation of the below) dispatch configuration within your `dbt_project.yml`. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
 ```yml
 # dbt_project.yml
 
-dispatch:
-  - macro_namespace: dbt_utils
-    search_order: ['spark_utils', 'dbt_utils']
+vars:
+    shopify_<default_source_table_name>_identifier: your_table_name 
 ```
+</details>
 
-## Resources:
-- Provide [feedback](https://www.surveymonkey.com/r/DQ7K7WW) on our existing dbt packages or what you'd like to see next
-- Have questions, feedback, or need help? Book a time during our office hours [using Calendly](https://calendly.com/fivetran-solutions-team/fivetran-solutions-team-office-hours) or email us at solutions@fivetran.com
-- Find all of Fivetran's pre-built dbt packages in our [dbt hub](https://hub.getdbt.com/fivetran/)
-- Learn how to orchestrate your models with [Fivetran Transformations for dbt Core™](https://fivetran.com/docs/transformations/dbt)
-- Learn more about Fivetran overall [in our docs](https://fivetran.com/docs)
-- Check out [Fivetran's blog](https://fivetran.com/blog)
-- Learn more about dbt [in the dbt docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](http://slack.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the dbt blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+
+## (Optional) Step 7: Orchestrate your models with Fivetran Transformations for dbt Core™
+<details><summary>Expand for details</summary>
+<br>
+    
+Fivetran offers the ability for you to orchestrate your dbt project through [Fivetran Transformations for dbt Core™](https://fivetran.com/docs/transformations/dbt). Learn how to set up your project for orchestration through Fivetran in our [Transformations for dbt Core setup guides](https://fivetran.com/docs/transformations/dbt#setupguide).
+</details>
+
+
+# 🔍 Does this package have dependencies?
+This dbt package is dependent on the following dbt packages. Please be aware that these dependencies are installed by default within this package. For more information on the following packages, refer to the [dbt hub](https://hub.getdbt.com/) site.
+> IMPORTANT: If you have any of these dependent packages in your own `packages.yml` file, we highly recommend that you remove them from your root `packages.yml` to avoid package version conflicts.
+    
+```yml
+packages:
+    - package: fivetran/shopify_source
+      version: [">=0.8.0", "<0.9.0"]
+
+    - package: fivetran/fivetran_utils
+      version: [">=0.4.0", "<0.5.0"]
+
+    - package: dbt-labs/dbt_utils
+      version: [">=1.0.0", "<2.0.0"]
+
+    - package: calogica/dbt_expectations
+      version: [">=0.8.0", "<0.9.0"]
+
+    - package: calogica/dbt_date
+      version: [">=0.7.0", "<0.8.0"]
+```
+# 🙌 How is this package maintained and can I contribute?
+## Package Maintenance
+The Fivetran team maintaining this package _only_ maintains the latest version of the package. We highly recommend you stay consistent with the [latest version](https://hub.getdbt.com/fivetran/shopify/latest/) of the package and refer to the [CHANGELOG](https://github.com/fivetran/dbt_shopify/blob/main/CHANGELOG.md) and release notes for more information on changes across versions.
+
+## Contributions
+A small team of analytics engineers at Fivetran develops these dbt packages. However, the packages are made better by community contributions! 
+
+We highly encourage and welcome contributions to this package. Check out [this dbt Discourse article](https://discourse.getdbt.com/t/contributing-to-a-dbt-package/657) on the best workflow for contributing to a package!
+
+# 🏪 Are there any resources available?
+- If you have questions or want to reach out for help, please refer to the [GitHub Issue](https://github.com/fivetran/dbt_shopify/issues/new/choose) section to find the right avenue of support for you.
+- If you would like to provide feedback to the dbt package team at Fivetran or would like to request a new dbt package, fill out our [Feedback Form](https://www.surveymonkey.com/r/DQ7K7WW).
+- Have questions or want to just say hi? Book a time during our office hours [on Calendly](https://calendly.com/fivetran-solutions-team/fivetran-solutions-team-office-hours) or email us at solutions@fivetran.com.

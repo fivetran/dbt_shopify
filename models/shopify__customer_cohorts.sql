@@ -42,7 +42,7 @@ with calendar as (
         on customer_calendar.customer_id = orders.customer_id
         and customer_calendar.source_relation = orders.source_relation
         and customer_calendar.date_month = cast({{ dbt.date_trunc('month', 'created_timestamp') }} as date)
-    group by 1,2,3,4,5
+    {{ dbt_utils.group_by(n=5) }}
 
 ), windows as (
 
