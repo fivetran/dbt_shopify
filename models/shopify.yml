@@ -664,7 +664,7 @@ models:
       - name: tax_code
         description: This parameter applies only to the stores that have the Avalara AvaTax app installed. Specifies the Avalara tax code for the product variant.
       - name: pre_tax_price_set
-        description: The pre tax preice of the line item in shop currency and presentment currency.
+        description: The pre tax price of the line item in shop currency and presentment currency.
       - name: price_set
         description: The price of the line item in shop and presentment currencies.
       - name: total_discount_set
