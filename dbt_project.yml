@@ -1,5 +1,5 @@
 name: 'shopify'
-version: '0.7.0'
+version: '0.8.0'
 config-version: 2
 require-dbt-version: [">=1.3.0", "<2.0.0"]
 models:
@@ -42,6 +42,7 @@ vars:
     shopify_product_image: "{{ ref('stg_shopify__product_image') }}"
     shopify_product_tag: "{{ ref('stg_shopify__product_tag') }}"
     shopify_shop: "{{ ref('stg_shopify__shop') }}"
+    shopify_tax_line: "{{ ref('stg_shopify__tax_line') }}"
     shopify_tender_transaction: "{{ ref('stg_shopify__tender_transaction') }}"
     shopify_abandoned_checkout_discount_code: "{{ ref('stg_shopify__abandoned_checkout_discount_code') }}"
     shopify_order_discount_code: "{{ ref('stg_shopify__order_discount_code') }}"
