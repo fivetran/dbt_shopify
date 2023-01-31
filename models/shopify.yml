@@ -481,7 +481,7 @@ models:
       - name: marketing_consent_state
         description: >
           Field indicating if the customer has consented to receive marketing material via email. Coalescing of the new `email_marketing_consent_state`
-          field and the deprected `accepts_marketing` field. Records with the old field will be marked with '(legacy)'.
+          field and the deprecated `accepts_marketing` field. Records with the old field will be marked with '(legacy)'.
 
   - name: shopify__products
     description: Each record represents a product in Shopify.
