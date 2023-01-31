@@ -1053,7 +1053,7 @@ models:
       - name: total_order_discount_amount
         description: Total monetary amount (in shop currency) of discounts taken off of orders. 
       - name: total_abandoned_checkout_discount_amount
-        description: Total monetary amount (in shop currency) of discounts taken off abanadoned checkout orders.
+        description: Total monetary amount (in shop currency) of discounts taken off abandoned checkout orders.
       - name: total_order_line_items_price
         description: Total monetary amount (in shop currency) of line items for orders that have used this discount.
       - name: total_order_shipping_cost
