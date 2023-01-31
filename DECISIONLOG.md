@@ -8,11 +8,11 @@ In validating metrics with the Sales over Time reports in the Shopify UI, you ma
 
 We felt that reporting on the order date made more sense in reality, but, if you feel differently, please reach out and create a Feature Request. To align with the Shopify method yourself, this would most likely involve aggregating `transactions` data (relying on the `kind` column to determine sales vs returns) instead of `orders`.
 
-## Using an Order's `created_timestamp` Instead of `processed_timestamp` 
+### Using an Order's `created_timestamp` Instead of `processed_timestamp` 
 
 In a similar vein to the above, in the customer cohort and daily shop models, we aggregate orders on a daily grain. To do so, we truncate the timestamp at which the order was _created_. In contrast, Shopify in-app reports truncate the timestamp at which the order was _processed_. This may also contribute to discrepancies when comparing the package models to in-app reports. We felt that the creation timestamp makes more sense to use in reality, but please reach out if you have other thoughts by opening an [issue](https://github.com/fivetran/dbt_shopify/issues/new?assignees=&labels=enhancement&template=feature-request.yml&title=%5BFeature%5D+%3Ctitle%3E).
 
-## Creating Empty Tables for Refunds, Order Line Refunds, Order Adjustments, and Discount Codes
+### Creating Empty Tables for Refunds, Order Line Refunds, Order Adjustments, and Discount Codes
 
 Source tables related to `refunds`, `order_line_refunds`, `order_adjustments`, and `discount_codes` are created in the Shopify schema dyanmically. For example, if your shop has not incurred any refunds, you will not have a `refund` table yet until you do refund an order. 
 
@@ -20,11 +20,11 @@ Thus, the source package will create empty (1 row of all `NULL` fields) staging 
 
 > In previous versions of the package, you had to manually enable or disable transforms of `refund`, `order_line_refund`, or `order_adjustment` through variables. Because this required you to monitor your Shopify account/schema and update the variable(s) accordingly, we decided to pursue a more automated solution.
 
-## Keeping Deleted Entities 
+### Keeping Deleted Entities 
 
-todo - not filtering out _fivetran_deleted in staging models. when joining these tables together in the transform package, bring in _fivetran_deleted as is_<foreign key table>_deleted
+Instead of automatically filtering out records where `_fivetran_deleted` is `true`, the Shopify package keeps these soft-deleted records, as they may persist as foreign keys in other tables. The package merely renames the deleted-flag to `is_deleted`, which you can filter out if you choose.
 
-## Accepted Value Test Severity
+### Accepted Value Test Severity
 
 We test the following columns for accepted values because their values are hard-coded to be pivoted out into columns and/or used as `JOIN` conditions in downstream models.
 - `stg_shopify__price_rule.target_type`: accepted values are `line_item`, `shipping_line`
@@ -32,3 +32,7 @@ We test the following columns for accepted values because their values are hard-
 - `stg_shopify__fulfillment.status`: accepted values are `pending`, `open`, `success`, `cancelled`, `error`, `failure`
 
 We have chosen to make the severity of these tests `warn`, as non-accepted values will be filtered out in the transformation models. They will not introduce erroneous data.
+
+### Currency
+
+All monetary values reported in the Shopify end models are in the default currency of your Shop.

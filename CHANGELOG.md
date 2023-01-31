@@ -1,17 +1,126 @@
 # dbt_shopify v0.8.0
-## 🎉 Documentation and Feature Updates
-- Updated README documentation updates for easier navigation and setup of the dbt package
-- Included `shopify_[source_table_name]_identifier` variable within the Shopify source package for additional flexibility within the package when source tables are named differently.
-- **New model alert**: The package now includes customer models that are based on _email_ rather than _customer_id_ ([PR #45](https://github.com/fivetran/dbt_shopify/pull/45)):
-  - `shopify__customer_emails`
-  - `shopify__customer_email_cohorts`
-  - Intermediate models that roll customer_ids up to emails:
-    - `shopify__customer_email_rollup`
-    - `shopify__emails__order_aggregates`
-- Metafield support! This package now supports metafields for the collection, customer, order, product_image, product, product_variant, and shop objects. If enabled (see the [README](https://github.com/fivetran/dbt_shopify#adding-metafields) for more details), respective `shopify__[object]_metafields` models will materialize with **all** metafields defined within the `metafield` source table appended to the object. ([#50](https://github.com/fivetran/dbt_shopify/pull/50))
+
+Lots of new features ahead!! We've revamped the package to keep up-to-date with new additions to the Shopify connector and feedback from the community. 
+
+This release does include 🚨 **Breaking Changes** 🚨.
+
+## Documentation 
+- Updated README documentation updates for easier navigation and setup of the dbt package ([PR #44](https://github.com/fivetran/dbt_shopify/pull/44)).
+- Created the [DECISIONLOG](https://github.com/fivetran/dbt_shopify/blob/main/DECISIONLOG.md) to log discussions and opinionated stances we took in designing the package ([PR #43](https://github.com/fivetran/dbt_shopify/pull/43/files)).
 
 ## Under the Hood
-- Addition of the calogica/dbt_expectations package for more robust testing.
+- Ensured Postgres compatibility! ([PR #44](https://github.com/fivetran/dbt_shopify/pull/44))
+- Addition of the calogica/dbt_expectations package for more robust testing ([PR #50](https://github.com/fivetran/dbt_shopify/pull/50)).
+- Got rid of the `shopify__using_order_adjustment`, `shopify__using_order_line_refund`, and `shopify__using_refund` variables. Instead, the package will automatically create empty versions of the related models until the source `refund`, `order_line_refund`, and `order_adjustment` tables exist in your schema. See DECISIONLOG for more details ([Source PR #45](https://github.com/fivetran/dbt_shopify_source/pull/45), [PR #46](https://github.com/fivetran/dbt_shopify/pull/46)).
+
+## Bug Fixes
+- In the intermediate models, we aggregate a lot of metrics and join them together. In previous versions of the package, some order line aggregates were being doubled if their parent order had multiple kinds of transactions, ie a customer used a gift card for part of the purchase ([PR #51](https://github.com/fivetran/dbt_shopify/pull/51)).
+
+## Feature Updates
+- **New end model alert**: 
+  - The package now includes customer models that are based on _email_ rather than _customer_id_ ([PR #45](https://github.com/fivetran/dbt_shopify/pull/45)):
+    - [`shopify__customer_emails`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_emails)
+    - [`shopify__customer_email_cohorts`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_email_cohorts)
+  - [`shopify__daily_shop`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__daily_shop)  ([PR #48](https://github.com/fivetran/dbt_shopify/pull/48))
+  - [`shopify__inventory_levels`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__inventory_levels) ([PR #46](https://github.com/fivetran/dbt_shopify/pull/46))
+  - [`shopify__discounts`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__discounts) ([PR #47](https://github.com/fivetran/dbt_shopify/pull/47), [PR #48](https://github.com/fivetran/dbt_shopify/pull/48))
+- Metafield support! This package now supports metafields for the collection, customer, order, product_image, product, product_variant, and shop objects. If enabled (see the [README](https://github.com/fivetran/dbt_shopify#adding-metafields) for more details), respective `shopify__[object]_metafields` models will materialize with **all** metafields defined within the `metafield` source table appended to the object. ([PR #50](https://github.com/fivetran/dbt_shopify/pull/50))
+- `shopify_<default_source_table_name>_identifier` variables added if an individual source table has a different name than the package expects ([PR #38](https://github.com/fivetran/dbt_shopify_source/pull/38)).
+- Addition of the `shopify_timezone` variable, which converts ALL timestamps included in the package (including `_fivetran_synced`) to a single target timezone in IANA Database format, ie "America/Los_Angeles" ([PR #41](https://github.com/fivetran/dbt_shopify_source/pull/41)).
+- The declaration of passthrough variables within your root `dbt_project.yml` has changed (but is backwards compatible). To allow for more flexibility and better tracking of passthrough columns, you will now want to define passthrough columns in the following format ([PR #40](https://github.com/fivetran/dbt_shopify_source/pull/40)):
+> This applies to all passthrough columns within the `dbt_shopify_source` package and not just the `customer_pass_through_columns` example. See the README for which models have passthrough columns.
+```yml
+vars:
+  customer_pass_through_columns:
+    - name: "my_field_to_include" # Required: Name of the field within the source.
+      alias: "field_alias" # Optional: If you wish to alias the field within the staging model.
+      transform_sql: "cast(field_alias as string)" # Optional: If you wish to define the datatype or apply a light transformation.
+```
+- The following *source* fields have been added to (➕) or removed from (➖) their respective models ([PR #39](https://github.com/fivetran/dbt_shopify_source/pull/39), [PR #40](https://github.com/fivetran/dbt_shopify_source/pull/40)):
+  - `shopify__orders`:
+    - ➕ `total_discounts_set`
+    - ➕ `total_line_items_price_set`
+    - ➕ `total_price_usd`
+    - ➕ `total_price_set`
+    - ➕ `total_tax_set`
+    - ➕ `total_tip_received`
+    - ➕ `is_deleted`
+    - ➕ `app_id`
+    - ➕ `checkout_id`
+    - ➕ `client_details_user_agent`
+    - ➕ `customer_locale`
+    - ➕ `order_status_url`
+    - ➕ `presentment_currency`
+    - ➕ `is_confirmed`
+  - `shopify__customers`:
+    - ➕ `note`
+    - ➕ `lifetime_duration`
+    - ➕ `currency`
+    - ➕ `marketing_consent_state` (coalescing of `email_marketing_consent_state` and deprecated `accepts_marketing` field)
+    - ➕ `marketing_opt_in_level` (coalescing of `email_marketing_consent_opt_in_level` and deprecated `marketing_opt_in_level` field)
+    - ➕ `marketing_consent_updated_at` (coalescing of `email_marketing_consent_consent_updated_at` and deprecated `accepts_marketing_updated_at` field)
+    - ➖ `accepts_marketing`/`has_accepted_marketing`
+    - ➖ `accepts_marketing_updated_at`
+    - ➖ `marketing_opt_in_level`
+  - `shopify__order_lines`:
+    - ➕ `pre_tax_price_set`
+    - ➕ `price_set`
+    - ➕ `tax_code`
+    - ➕ `total_discount_set`
+    - ➕ `variant_title`
+    - ➕ `variant_inventory_management`
+    - ➕ `properties`
+    - ( ) `is_requiring_shipping` is renamed to `is_shipping_required`
+  - `shopify__products`:
+    - ➕ `status`
+- The following *transformed* fields have been added to their respective models:
+  - `shopify__orders` 
+    - `shipping_discount_amount` ([PR #47](https://github.com/fivetran/dbt_shopify/pull/47))
+    - `percentage_calc_discount_amount` ([PR #47](https://github.com/fivetran/dbt_shopify/pull/47))
+    - `fixed_amount_discount_amount` ([PR #47](https://github.com/fivetran/dbt_shopify/pull/47))
+    - `count_discount_codes_applied` ([PR #47](https://github.com/fivetran/dbt_shopify/pull/47))
+    - `order_tags` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `order_url_tags` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `number_of_fulfillments` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `fulfilmment_services` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `tracking_companies` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `tracking_numbers` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+  - `shopify__products` 
+    - `collections` ([PR #46](https://github.com/fivetran/dbt_shopify/pull/46))
+    - `tags` ([PR #46](https://github.com/fivetran/dbt_shopify/pull/46))
+    - `count_variants` ([PR #46](https://github.com/fivetran/dbt_shopify/pull/46))
+    - `has_product_image` ([PR #46](https://github.com/fivetran/dbt_shopify/pull/46))
+    - `quantity_sold` renamed to `total_quantity_sold` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `avg_quantity_per_order_line` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `product_total_discount` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `product_avg_discount_per_order_line` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `product_total_tax` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `product_avg_tax_per_order_line` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+  `shopify__customers` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `lifetime_abandoned_checkouts`
+    - `customer_tags`
+    - `average_order_value` renamed to `avg_order_value`
+    - `lifetime_total_amount` renamed to `lifetime_total_net`
+    - `avg_quantity_per_order`
+    - `lifetime_total_tax`
+    - `avg_tax_per_order`
+    - `lifetime_total_discount`
+    - `avg_discount_per_order`
+    - `lifetime_total_shipping`
+    - `avg_shipping_per_order`
+    - `lifetime_total_shipping_with_discounts`
+    - `lifetime_total_shipping_tax`
+    - `avg_shipping_tax_per_order`
+    - `avg_shipping_with_discounts_per_order`
+  - `shopify__order_lines` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `restock_types`
+    - `order_line_tax`
+  - `shopify__transactions` ([PR #49](https://github.com/fivetran/dbt_shopify/pull/49))
+    - `payment_method`
+    - `parent_kind`
+    - `parent_created_timestamp`
+    - `parent_amount`
+    - `parent_status`
 
 ## dbt_shopify v0.7.0
 ## 🚨 Breaking Changes 🚨:
