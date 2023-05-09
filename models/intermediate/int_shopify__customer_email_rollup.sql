@@ -21,7 +21,7 @@ with customers as (
         customers.source_relation,
 
         -- fields to string agg together
-        {{ fivetran_utils.string_agg("cast(customers.customer_id as " ~ dbt.type_string() ~ ")", "', '") }} as customer_ids,
+        {{ fivetran_utils.string_agg("distinct cast(customers.customer_id as " ~ dbt.type_string() ~ ")", "', '") }} as customer_ids,
         {{ fivetran_utils.string_agg("distinct cast(customers.phone as " ~ dbt.type_string() ~ ")", "', '") }} as phone_numbers,
         {{ fivetran_utils.string_agg("distinct cast(customer_tags.value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags,
 

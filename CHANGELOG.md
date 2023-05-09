@@ -1,3 +1,11 @@
+# dbt_shopify v0.8.1
+
+Tiny release here! 
+
+## Bug Fixes
+- Adjusts the `int_shopify__customer_email_rollup` model to aggregate _distinct_ `customer_ids`.
+
+
 # dbt_shopify v0.8.0
 
 Lots of new features ahead!! We've revamped the package to keep up-to-date with new additions to the Shopify connector and feedback from the community. 
