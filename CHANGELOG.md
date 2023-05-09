@@ -1,10 +1,12 @@
 # dbt_shopify v0.8.1
 
-Tiny release here! 
+Tiny release here! [PR #58](https://github.com/fivetran/dbt_shopify/pull/58) applies the following change:
 
 ## Bug Fixes
 - Adjusts the `int_shopify__customer_email_rollup` model to aggregate _distinct_ `customer_ids`.
 
+## Related Releases:
+- https://github.com/fivetran/dbt_shopify_holistic_reporting/releases/tag/v0.4.0
 
 # dbt_shopify v0.8.0
 
