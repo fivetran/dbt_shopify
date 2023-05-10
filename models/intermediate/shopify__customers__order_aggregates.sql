@@ -34,12 +34,22 @@ with orders as (
     select *
     from {{ var('shopify_customer_tag' )}}
 
+), customer_tags_aggregated as (
+
+    select 
+        customer_id,
+        source_relation,
+        {{ fivetran_utils.string_agg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags
+
+    from customer_tags
+    group by 1,2
+
 ), aggregated as (
 
     select
         orders.customer_id,
         orders.source_relation,
-        {{ fivetran_utils.string_agg("distinct cast(customer_tags.value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags,
+        customer_tags_aggregated.customer_tags,
         min(orders.created_timestamp) as first_order_timestamp,
         max(orders.created_timestamp) as most_recent_order_timestamp,
         avg(transaction_aggregates.currency_exchange_calculated_amount) as avg_order_value,
@@ -70,11 +80,11 @@ with orders as (
     left join order_aggregates
         on orders.order_id = order_aggregates.order_id
         and orders.source_relation = order_aggregates.source_relation
-    left join customer_tags
-        on orders.customer_id = customer_tags.customer_id
-        and orders.source_relation = customer_tags.source_relation
+    left join customer_tags_aggregated
+        on orders.customer_id = customer_tags_aggregated.customer_id
+        and orders.source_relation = customer_tags_aggregated.source_relation
     
-    {{ dbt_utils.group_by(n=2) }}
+    {{ dbt_utils.group_by(n=3) }}
 )
 
 select *

@@ -8,7 +8,6 @@
 
 ## Under the Hood
 - Ensures transaction `kinds` are being read correctly by applying a `lower()` function. 
-- Reorganizes CTEs in `int_shopify__emails__order_aggregates` and `shopify__customers__order_aggregates`. 
 
 ## Related Releases:
 - https://github.com/fivetran/dbt_shopify_holistic_reporting/releases/tag/v0.4.0
