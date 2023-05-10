@@ -1,9 +1,14 @@
 # dbt_shopify v0.8.1
 
-Tiny release here! [PR #58](https://github.com/fivetran/dbt_shopify/pull/58) applies the following change:
+[PR #58](https://github.com/fivetran/dbt_shopify/pull/58) applies the following changes:
 
 ## Bug Fixes
 - Adjusts the `int_shopify__customer_email_rollup` model to aggregate _distinct_ `customer_ids`.
+- Ensures that each order is tagged with the orderer's `email` before aggregating order metrics in `int_shopify__emails__order_aggregates`.
+
+## Under the Hood
+- Ensures transaction `kinds` are being read correctly by applying a `lower()` function. 
+- Reorganizes CTEs in `int_shopify__emails__order_aggregates` and `shopify__customers__order_aggregates`. 
 
 ## Related Releases:
 - https://github.com/fivetran/dbt_shopify_holistic_reporting/releases/tag/v0.4.0
