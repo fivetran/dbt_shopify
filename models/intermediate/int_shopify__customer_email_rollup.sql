@@ -31,8 +31,6 @@ with customers as (
         max(customers.updated_timestamp) as last_updated_at,
         max(customers.marketing_consent_updated_at) as marketing_consent_updated_at,
         max(customers._fivetran_synced) as last_fivetran_synced,
-        sum(customers.orders_count) as orders_count,
-        sum(customers.total_spent) as total_spent,
 
         -- take true if ever given for boolean fields
         {{ fivetran_utils.max_bool("case when customers.customer_index = 1 then customers.is_tax_exempt else null end") }} as is_tax_exempt, -- since this changes every year
