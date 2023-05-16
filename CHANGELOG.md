@@ -9,6 +9,10 @@
 ## Under the Hood
 - Ensures transaction `kinds` are being read correctly by applying a `lower()` function. 
 - Removes unused and potentially problematic fields from `int_shopify__customer_email_rollup`.
+- Removes `updated_timestamp` and `created_timestamp` from `shopify__customer_emails`. Refer to the following fields instead:
+  - `first_account_created_at`
+  - `last_account_created_at`
+  - `last_updated_at`
 
 ## Related-Package Releases:
 - https://github.com/fivetran/dbt_shopify_holistic_reporting/releases/tag/v0.4.0
