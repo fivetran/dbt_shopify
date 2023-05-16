@@ -49,7 +49,7 @@ To use this dbt package, you must have the following:
 - A **BigQuery**, **Snowflake**, **Redshift**, **Databricks**, or **PostgreSQL** destination.
 
 ## Step 2: Install the package (skip if also using the `shopify_holistic_reporting` package)
-If you  are **not** using the [Shopify holistic reporting package](https://github.com/fivetran/dbt_shopify_holistic_reporting), include the following shopify package version in your `packages.yml` file:
+If you are **not** using the [Shopify Holistic reporting package](https://github.com/fivetran/dbt_shopify_holistic_reporting), include the following shopify package version in your `packages.yml` file:
 > TIP: Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 ```yml
 packages:
