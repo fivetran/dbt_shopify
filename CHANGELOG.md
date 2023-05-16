@@ -10,7 +10,7 @@
 - Ensures transaction `kinds` are being read correctly by applying a `lower()` function. 
 - Removes unused and potentially problematic fields from `int_shopify__customer_email_rollup`.
 
-## Related Releases:
+## Related-Package Releases:
 - https://github.com/fivetran/dbt_shopify_holistic_reporting/releases/tag/v0.4.0
 
 # dbt_shopify v0.8.0
