@@ -392,8 +392,6 @@ models:
     columns:
       - name: last_fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
-      - name: created_timestamp
-        description: The date and time when the customer was created.
       - name: default_address_id
         description: The default address for the customer. 
       - name: email
@@ -470,8 +468,6 @@ models:
         description: The current email marketing state for the customer. New version of `accepts_marketing` field.
       - name: marketing_opt_in_level
         description: Deprecated. The package will coalesce with `email_marketing_consent_opt_in_level`.
-      - name: updated_timestamp
-        description: The date and time when the customer information was last updated.
       - name: note
         description: A note about the customer.
       - name: marketing_consent_updated_at

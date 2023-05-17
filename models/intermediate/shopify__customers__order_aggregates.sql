@@ -23,7 +23,7 @@ with orders as (
     select 
         order_id,
         source_relation,
-        kind,
+        lower(kind) as kind,
         sum(currency_exchange_calculated_amount) as currency_exchange_calculated_amount
 
     from transactions
@@ -35,7 +35,7 @@ with orders as (
     from {{ var('shopify_customer_tag' )}}
 
 ), customer_tags_aggregated as (
-    
+
     select 
         customer_id,
         source_relation,
