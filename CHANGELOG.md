@@ -8,11 +8,13 @@
 
 ## Under the Hood
 - Ensures transaction `kinds` are being read correctly by applying a `lower()` function. 
-- Removes unused and potentially problematic fields from `int_shopify__customer_email_rollup`.
+- Removes unused and potentially problematic fields from `int_shopify__customer_email_rollup`. The removed fields include `orders_count` and `total_spent`, which are actually calculated in `int_shopify__emails__order_aggregates` before being passed to `shopify__customer_emails` (which is unaffected by this change).
 - Removes `updated_timestamp` and `created_timestamp` from `shopify__customer_emails`. Refer to the following fields instead:
   - `first_account_created_at`
   - `last_account_created_at`
   - `last_updated_at`
+- Incorporates the new `fivetran_utils.drop_schemas_automation` macro into the end of each Buildkite integration test job ([PR #57](https://github.com/fivetran/dbt_shopify/pull/57)).
+- Updates the pull request [templates](/.github) ([PR #57](https://github.com/fivetran/dbt_shopify/pull/57)).
 
 ## Related-Package Releases:
 - https://github.com/fivetran/dbt_shopify_holistic_reporting/releases/tag/v0.4.0
