@@ -157,6 +157,7 @@ vars:
   shopify_using_product_metafields: True ## False by default. Will enable ONLY the product metafield model.
   shopify_using_product_image_metafields: True ## False by default. Will enable ONLY the product image metafield model.
   shopify_using_product_variant_metafields: True ## False by default. Will enable ONLY the product variant metafield model.
+  shopify_using_shop_metafields: True ## False by default. Will enable ONLY the shop metafield model.
 ```
 
 ### Changing the Build Schema
