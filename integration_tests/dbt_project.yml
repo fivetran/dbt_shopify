@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '0.8.1'
+version: '0.9.0'
 profile: 'integration_tests'
 config-version: 2
 
@@ -9,6 +9,7 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "dbt_modules"
 
 vars:
+  shopify_using_fulfillment_event: true
   shopify_schema: shopify_integration_tests_6
   shopify_source:
     shopify_customer_identifier:          "shopify_customer_data"

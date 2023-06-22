@@ -1,3 +1,22 @@
+# dbt_shopify v0.9.0
+## Breaking Changes
+These changes are made breaking due to changes in the source.
+
+- In [June 2023](https://fivetran.com/docs/applications/shopify/changelog#june2023) the Shopify connector received an update which upgraded the connector to be compatible with the new [2023-04 Shopify API](https://shopify.dev/docs/api). As a result, the following fields have been removed as they were deprecated in the API upgrade: ([PR #70](https://github.com/fivetran/dbt_shopify_source/pull/70))
+
+| **model** | **field removed** |
+|-------|--------------|
+| [stg_shopify__customer](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify_source.stg_shopify__customer) | `lifetime_duration` |
+| [stg_shopify__order_line](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify_source.stg_shopify__order_line) | `fulfillment_service` |
+| [stg_shopify__order_line](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify_source.stg_shopify__order_line) | `destination_location_*` fields |
+| [stg_shopify__order_line](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify_source.stg_shopify__order_line) | `origin_location_*` fields |
+| [stg_shopify__order](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify_source.stg_shopify__order) | `total_price_usd` |
+| [stg_shopify__order](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify_source.stg_shopify__order) | `processing_method` |
+
+## Documentation Updates
+- The `shopify_using_shop_metafields` variable was added to the Adding Metafields of the README. It was erroneously omitted in a previous release.
+- Documentation provided in the README for how to connect sources when leveraging the union schema/database feature.
+
 # dbt_shopify v0.8.1
 
 [PR #58](https://github.com/fivetran/dbt_shopify/pull/58) applies the following changes:

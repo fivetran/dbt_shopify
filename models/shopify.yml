@@ -153,8 +153,6 @@ models:
         description: The order 's position in the shop's count of orders starting at 1001. Order numbers are sequential and start at 1001.
       - name: processed_timestamp
         description: The date and time when an order was processed. This value is the date that appears on your orders and that's used in the analytic reports.
-      - name: processing_method
-        description: How the payment was processed.
       - name: referring_site
         description: The website where the customer clicked a link to the shop.
       - name: shipping_address_address_1
@@ -274,8 +272,6 @@ models:
         description: The total of all line item prices in shop and presentment currencies.
       - name: total_price_set
         description: The total price of the order in shop and presentment currencies.
-      - name: total_price_usd
-        description: The sum of all line item prices, discounts, shipping, taxes, and tips in USD. Must be positive.
       - name: total_tax_set
         description: The total tax applied to the order in shop and presentment currencies.
       - name: is_confirmed
@@ -288,10 +284,8 @@ models:
         description: The total amount of discount (in shop currency) allocated via a fixed-amount discount
       - name: count_discount_codes_applied
         description: Distinct discount codes applied on the order
-      - name: source_identifier
+      - name: source_relation
         description: The ID of the order placed on the originating platform. This value doesn't correspond to the Shopify ID that's generated from a completed draft.
-      - name: current_total_price
-        description: The current total price of the order in the shop currency. The value of this field reflects order edits, returns, and refunds.
   
   - name: shopify__customers
     description: Each record represents a customer in Shopify.
@@ -379,8 +373,6 @@ models:
         description: >
           Field indicating if the customer has consented to receive marketing material via email. Coalescing of the new `email_marketing_consent_state`
           field and the deprecated `accepts_marketing` field. Records with the old field will be marked with '(legacy)'.
-      - name: lifetime_duration
-        description: The amount of time since the customer was first added to the store.
 
   - name: shopify__customer_emails
     description: Each record represents a customer email in Shopify.
@@ -460,8 +452,6 @@ models:
         description: Average shipping tax per order attributed to the customer.
       - name: marketing_consent_updated_at
         description: Timestamp when marketing consent was updated.
-      - name: lifetime_duration
-        description: The amount of time since the customer was first added to the store.
       - name: currency
         description: The three-letter code (ISO 4217 format) for the currency that the customer used when they paid for their last order. Defaults to the shop currency. Returns the shop currency for test orders.
       - name: marketing_consent_state
@@ -561,8 +551,6 @@ models:
       - name: fulfillable_quantity
         description: >
           The amount available to fulfill, calculated as follows: quantity - max(refunded_quantity, fulfilled_quantity) - pending_fulfilled_quantity - open_fulfilled_quantity
-      - name: fulfillment_service
-        description: The service provider that's fulfilling the item.
       - name: fulfillment_status
         description: How far along an order is in terms line items fulfilled.
       - name: is_gift_card
@@ -667,38 +655,6 @@ models:
         description: The total amount allocated to the line item in the presentment currency.
       - name: properties
         description: Line item properties.
-      - name: destination_location_address_1
-        description: Destination location's street address.
-      - name: destination_location_address_2
-        description: The optional second line of the destination location's street address.
-      - name: destination_location_city
-        description: The city the destination location is in.
-      - name: destination_location_country_code
-        description: The country code of the destination location.
-      - name: destination_location_id
-        description: The ID of the destination location.
-      - name: destination_location_name
-        description: The name of the destination location.
-      - name: destination_location_province_code
-        description: The province, state, or district code (ISO 3166-2 alpha-2 format) of the destination location.
-      - name: destination_location_zip
-        description: The zip or postal code.
-      - name: origin_location_address_1
-        description: Origin location's street address.
-      - name: origin_location_address_2
-        description: The optional second line of the origin location's street address.
-      - name: origin_location_city
-        description: The city the origin location is in.
-      - name: origin_location_country_code
-        description: The country code of the origin location.
-      - name: origin_location_id
-        description: The ID of the origin location.
-      - name: origin_location_name
-        description: The name of the origin location.
-      - name: origin_location_province_code
-        description: The province, state, or district code (ISO 3166-2 alpha-2 format) of the origin location.
-      - name: origin_location_zip
-        description: The zip or postal code.
 
   - name: shopify__transactions
     description: Each record represents a transaction in Shopify.
