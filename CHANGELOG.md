@@ -14,7 +14,8 @@ These changes are made breaking due to changes in the source.
 | [stg_shopify__order](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify_source.stg_shopify__order) | `total_price_usd` |
 | [stg_shopify__order](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify_source.stg_shopify__order) | `processing_method` |
 
-- Please be aware that the removal of the fields from the staging models results in the removal of the fields in the relevant downstream models: 
+- Please be aware that the removal of the fields from the staging models results in the removal of the fields in the relevant downstream models:
+
 | **model** | **field removed** |
 |-------|--------------|
 | [shopify__customer](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer) | `lifetime_duration` |
