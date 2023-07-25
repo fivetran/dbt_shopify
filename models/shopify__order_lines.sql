@@ -39,7 +39,13 @@ with order_lines as (
     from tax_lines
     group by 1,2
 
-), joined as (
+), discount_allocation as (
+
+    select *
+    from {{ var('shopify_discount_allocation') }}
+
+),
+joined as (
 
     select
         order_lines.*,
@@ -74,7 +80,8 @@ with order_lines as (
         product_variants.option_3 as variant_option_3,
         product_variants.tax_code as variant_tax_code,
 
-        tax_lines_aggregated.order_line_tax
+        tax_lines_aggregated.order_line_tax,
+        discount_allocation.amount AS order_line_discount_allocation
 
     from order_lines
     left join refunds_aggregated
@@ -86,8 +93,9 @@ with order_lines as (
     left join tax_lines_aggregated
         on tax_lines_aggregated.order_line_id = order_lines.order_line_id
         and tax_lines_aggregated.source_relation = order_lines.source_relation
-
-
+    left join discount_allocation
+        ON discount_allocation.order_line_id = order_lines.order_line_id
+        AND discount_allocation.source_relation = order_lines.source_relation
 )
 
 select *
