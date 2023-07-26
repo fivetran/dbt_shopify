@@ -1,3 +1,4 @@
 packages:
   - git: https://github.com/graze/dbt-shopify-source.git
     revision: 1.0.0
+  
