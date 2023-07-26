@@ -655,6 +655,8 @@ models:
         description: The total amount allocated to the line item in the presentment currency.
       - name: properties
         description: Line item properties.
+      - name: order_line_discount_allocation
+        description: discount allocation for line item
 
   - name: shopify__transactions
     description: Each record represents a transaction in Shopify.
@@ -1156,3 +1158,123 @@ models:
         description: Average net quantity sold per order on this day. Excludes refunds. (in shop currency)
       - name: source_relation
         description: "{{ doc('source_relation') }}"
+
+  - name: shopify__order_shipping_lines
+    description: Each record represents a line item of an order in Shopify.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - order_shipping_line_id
+            - source_relation
+    columns:
+      - name: _fivetran_synced
+        description: "{{ doc('_fivetran_synced') }}"
+      - name: fulfillable_quantity
+        description: >
+          The amount available to fulfill, calculated as follows: quantity - max(refunded_quantity, fulfilled_quantity) - pending_fulfilled_quantity - open_fulfilled_quantity
+      - name: fulfillment_status
+        description: How far along an order is in terms line items fulfilled.
+      - name: is_gift_card
+        description: Whether the item is a gift card. If true, then the item is not taxed or considered for shipping charges.
+      - name: grams
+        description: The weight of the item in grams.
+      - name: order_line_id
+        description: The ID of the line item.
+      - name: name
+        description: The name of the product variant.
+      - name: order_id
+        description: The ID of the related order.
+      - name: price
+        description: The price of the item before discounts have been applied in the shop currency.
+      - name: product_id
+        description: The ID of the product that the line item belongs to. Can be null if the original product associated with the order is deleted at a later date.
+      - name: quantity
+        description: The number of items that were purchased.
+      - name: is_shipping_required
+        description: Whether the item requires shipping.
+      - name: sku
+        description: The item's SKU (stock keeping unit).
+      - name: is_taxable
+        description: Whether the item was taxable.
+      - name: title
+        description: The title of the product.
+      - name: total_discount
+        description: The total amount of the discount allocated to the line item in the shop currency.
+      - name: variant_id
+        description: The ID of the product variant.
+      - name: vendor
+        description: The name of the item's supplier.
+      - name: refunded_quantity
+        description: Quantity of the item that has been refunded.
+      - name: quantity_net_refunds
+        description: Quantity ordered, excluding refunds.
+      - name: variant_barcode
+        description: The barcode, UPC, or ISBN number for the product.
+      - name: variant_compare_at_price
+        description: The original price of the item before an adjustment or a sale in shop currency.
+      - name: variant_created_at
+        description: The date and time (ISO 8601 format) when the product variant was created.
+      - name: variant_fulfillment_service
+        description: The fulfillment service associated with the product variant.
+      - name: variant_grams
+        description: The weight of the product variant in grams.
+      - name: inventory_item_id
+        description: The unique identifier for the inventory item, which is used in the Inventory API to query for inventory information.
+      - name: variant_inventory_management
+        description: The fulfillment service that tracks the number of items in stock for the product variant.
+      - name: variant_inventory_policy
+        description: Whether customers are allowed to place an order for the product variant when it's out of stock.
+      - name: variant_inventory_quantity
+        description: An aggregate of inventory across all locations. To adjust inventory at a specific location, use the InventoryLevel resource.
+      - name: variant_option_1
+        description: "The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3."
+      - name: variant_option_2
+        description: "The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3."
+      - name: variant_option_3
+        description: "The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3."
+      - name: variant_position
+        description: The order of the product variant in the list of product variants. The first position in the list is 1. The position of variants is indicated by the order in which they are listed.
+      - name: variant_price
+        description: The price of the product variant.
+      - name: variant_sku
+        description: A unique identifier for the product variant in the shop. Required in order to connect to a FulfillmentService.
+      - name: variant_is_taxable
+        description: Whether a tax is charged when the product variant is sold.
+      - name: variant_tax_code
+        description: This parameter applies only to the stores that have the Avalara AvaTax app installed. Specifies the Avalara tax code for the product variant.
+      - name: variant_title
+        description: The title of the product variant. The title field is a concatenation of the option1, option2, and option3 fields. You can only update title indirectly using the option fields.
+      - name: variant_updated_at
+        description: The date and time when the product variant was last modified. Gets returned in ISO 8601 format.
+      - name: variant_weight
+        description: The weight of the product variant in the unit system specified with weight_unit.
+      - name: variant_weight_unit
+        description: "The unit of measurement that applies to the product variant's weight. If you don't specify a value for weight_unit, then the shop's default unit of measurement is applied. Valid values: g, kg, oz, and lb."
+      - name: refunded_subtotal
+        description: Subtotal amount of the refund applied to the order line in shop currency.
+      - name: subtotal_net_refunds
+        description: Subtotal of the order line with refunds subtracted in shop currency.
+      - name: image_id
+        description: Image id of the product variant associated with the order line.
+      - name: source_relation
+        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+      - name: restock_types
+        description: List of how this refund line item affects inventory levels.
+      - name: order_line_tax
+        description: Total taxes for the line item.
+      - name: index
+        description: The index associated with the order.
+      - name: pre_tax_price
+        description: The total pre tax price of the order.
+      - name: tax_code
+        description: This parameter applies only to the stores that have the Avalara AvaTax app installed. Specifies the Avalara tax code for the product variant.
+      - name: pre_tax_price_set
+        description: The pre tax price of the line item in shop currency and presentment currency.
+      - name: price_set
+        description: The price of the line item in shop and presentment currencies.
+      - name: total_discount_set
+        description: The total amount allocated to the line item in the presentment currency.
+      - name: properties
+        description: Line item properties.
+      - name: order_line_discount_allocation
+        description: discount allocation for line item

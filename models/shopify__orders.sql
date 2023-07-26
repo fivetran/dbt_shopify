@@ -45,6 +45,7 @@ with orders as (
 
     select 
         order_id,
+        code,
         source_relation,
         sum(case when type = 'shipping' then amount else 0 end) as shipping_discount_amount,
         sum(case when type = 'percentage' then amount else 0 end) as percentage_calc_discount_amount,
@@ -52,7 +53,7 @@ with orders as (
         count(distinct code) as count_discount_codes_applied
 
     from order_discount_code
-    group by 1,2
+    group by 1,2,3
 
 ), order_tag as (
 
@@ -114,7 +115,8 @@ with orders as (
         fulfillments.number_of_fulfillments,
         fulfillments.fulfillment_services,
         fulfillments.tracking_companies,
-        fulfillments.tracking_numbers
+        fulfillments.tracking_numbers,
+        discount_aggregates.code AS discount_code
 
 
     from orders
