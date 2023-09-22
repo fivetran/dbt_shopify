@@ -1,3 +1,6 @@
+# dbt_shopify v0.10.0
+- Updates the [dbt-expectations](https://github.com/calogica/dbt-expectations/releases) and [dbt-date](https://github.com/calogica/dbt-date/releases) dependencies to the latest versions. ([PR #]())
+
 # dbt_shopify v0.9.0
 ([PR #61](https://github.com/fivetran/dbt_shopify/pull/61)) includes the following updates:
 ## Breaking Changes
