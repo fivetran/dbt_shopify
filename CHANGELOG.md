@@ -1,5 +1,7 @@
 # dbt_shopify v0.10.0
+## Dependency Updates
 - Removes the dependency on [dbt-expectations](https://github.com/calogica/dbt-expectations/releases) and updates [dbt-date](https://github.com/calogica/dbt-date/releases) dependencies to the latest version. ([PR #66](https://github.com/fivetran/dbt_shopify/pull/66/))
+- Specifically we removed the `dbt_expectations.expect_table_row_count_to_equal_other_table` test that ensured no fanouts in the metafield models. We will be working to replace this with a similar test.
 
 # dbt_shopify v0.9.0
 ([PR #61](https://github.com/fivetran/dbt_shopify/pull/61)) includes the following updates:
