@@ -149,7 +149,7 @@ vars:
 
 ### Adding Metafields
 In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) the Shopify connector included support for the [metafield resource](https://shopify.dev/api/admin-rest/2023-01/resources/metafield). If you would like to take advantage of these metafields, this package offers corresponding mapping models which append these metafields to the respective source object for the following tables: collection, customer, order, product_image, product, product_variant, shop. If enabled, these models will materialize as `shopify__[object]_metafields` for each respective supported object. To enable these metafield mapping models, you may use the following configurations within your `dbt_project.yml`.
->**Note**: These metafield models will contain all the same records as the corresponding staging models with the exception of the metafield columns being added. To ensure there is no fanout, this package takes advantage of the `dbt_expectations.expect_table_row_count_to_equal_other_table` test to ensure the metafield models contain the same row count as the staging model.
+>**Note**: These metafield models will contain all the same records as the corresponding staging models with the exception of the metafield columns being added. 
 
 ```yml
 vars:
@@ -213,11 +213,8 @@ packages:
     - package: dbt-labs/dbt_utils
       version: [">=1.0.0", "<2.0.0"]
 
-    - package: calogica/dbt_expectations
-      version: [">=0.10.0", "<0.11.0"]
-
     - package: calogica/dbt_date
-      version: [">=0.9.0", "<0.10.0"]
+      version: [">=0.9.0", "<1.0.0"]
       
     - package: dbt-labs/spark_utils
       version: [">=0.3.0", "<0.4.0"]
