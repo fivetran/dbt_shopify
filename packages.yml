@@ -1,3 +1,7 @@
 packages:
-- package: fivetran/shopify_source
-  version: [">=0.10.0", "<0.11.0"]
+# - package: fivetran/shopify_source
+#   version: [">=0.10.0", "<0.11.0"]
+
+  - git: https://github.com/fivetran/dbt_shopify_source.git
+    revision: patch/to-json-string
+    warn-unpinned: false 
