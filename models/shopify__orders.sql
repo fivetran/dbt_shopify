@@ -37,7 +37,7 @@ with orders as (
     group by 1,2
 
 ), order_discount_code as (
-    
+
     select *
     from {{ var('shopify_order_discount_code') }}
 
@@ -60,7 +60,7 @@ with orders as (
         order_id,
         source_relation,
         {{ fivetran_utils.string_agg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as order_tags
-    
+
     from {{ var('shopify_order_tag') }}
     group by 1,2
 
@@ -70,7 +70,7 @@ with orders as (
         order_id,
         source_relation,
         {{ fivetran_utils.string_agg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as order_url_tags
-    
+
     from {{ var('shopify_order_url_tag') }}
     group by 1,2
 
@@ -92,16 +92,21 @@ with orders as (
     select
         orders.*,
         coalesce(cast({{ fivetran_utils.json_parse("total_shipping_price_set",["shop_money","amount"]) }} as {{ dbt.type_float() }}) ,0) as shipping_cost,
-        
+
         order_adjustments_aggregates.order_adjustment_amount,
         order_adjustments_aggregates.order_adjustment_tax_amount,
 
         refund_aggregates.refund_subtotal,
         refund_aggregates.refund_total_tax,
 
+        -- (orders.total_price
+        --     + coalesce(order_adjustments_aggregates.order_adjustment_amount,0) + coalesce(order_adjustments_aggregates.order_adjustment_tax_amount,0) 
+        --     - coalesce(refund_aggregates.refund_subtotal,0) - coalesce(refund_aggregates.refund_total_tax,0)) as order_adjusted_total,
+        -- order_lines.line_item_count,
+
         (orders.total_price
-            + coalesce(order_adjustments_aggregates.order_adjustment_amount,0) + coalesce(order_adjustments_aggregates.order_adjustment_tax_amount,0) 
-            - coalesce(refund_aggregates.refund_subtotal,0) - coalesce(refund_aggregates.refund_total_tax,0)) as order_adjusted_total,
+            + coalesce(order_adjustments_aggregates.order_adjustment_amount,0) + 
+            - coalesce(refund_aggregates.refund_subtotal,0) ) as order_adjusted_total,
         order_lines.line_item_count,
 
         coalesce(discount_aggregates.shipping_discount_amount, 0) as shipping_discount_amount,

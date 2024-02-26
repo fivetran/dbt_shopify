@@ -35,7 +35,10 @@ with calendar as (
         customer_calendar.cohort_month,
         customer_calendar.source_relation,
         coalesce(count(distinct orders.order_id), 0) as order_count_in_month,
+        coalesce(count(distinct orders.email), 0) as shopped_in_months,
         coalesce(sum(orders.order_adjusted_total), 0) as total_price_in_month,
+        coalesce(sum(orders.subtotal_price), 0) as subtotal_price_in_month,
+        coalesce(sum(case when new_vs_repeat = 'new' then orders.subtotal_price end), 0) as new_subtotal_price_in_month,
         coalesce(sum(orders.line_item_count), 0) as line_item_count_in_month
     from customer_calendar
     left join orders
@@ -51,11 +54,13 @@ with calendar as (
     select
         *,
         sum(total_price_in_month) over ({{ partition_string }}) as total_price_lifetime,
+        sum(subtotal_price_in_month) over ({{ partition_string }}) as subtotal_price_lifetime,
+        sum(new_subtotal_price_in_month) over ({{ partition_string }}) as new_subtotal_price_lifetime,
         sum(order_count_in_month) over ({{ partition_string }}) as order_count_lifetime,
         sum(line_item_count_in_month) over ({{ partition_string }}) as line_item_count_lifetime,
         row_number() over (partition by email, source_relation order by date_month asc) as cohort_month_number
     from orders_joined
-        
+
 ), surrogate_key as (
 
     select 

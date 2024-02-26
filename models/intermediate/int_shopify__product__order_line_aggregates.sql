@@ -1,40 +1,65 @@
-with order_lines as (
+
+with order_line as (
 
     select *
-    from {{ ref('shopify__order_lines') }}
+    from {{ var('shopify_order_line') }}
 
-), orders as (
+), tax as (
 
-    select *
-    from {{ ref('shopify__orders')}}
+    select
+        *
+    from {{ var('shopify_tax_line') }}
 
-), product_aggregated as (
-    select 
-        order_lines.product_id,
-        order_lines.source_relation,
+), shipping as (
 
-        -- moved over from shopify__products
-        sum(order_lines.quantity) as quantity_sold,
-        sum(order_lines.pre_tax_price) as subtotal_sold,
-        sum(order_lines.quantity_net_refunds) as quantity_sold_net_refunds,
-        sum(order_lines.subtotal_net_refunds) as subtotal_sold_net_refunds,
-        min(orders.created_timestamp) as first_order_timestamp,
-        max(orders.created_timestamp) as most_recent_order_timestamp,
+    select
+        *
+    from {{ ref('int_shopify__order__shipping_aggregates')}}
 
-        -- new columns
-        sum(order_lines.total_discount) as product_total_discount,
-        sum(order_lines.order_line_tax) as product_total_tax,
-        avg(order_lines.quantity) as avg_quantity_per_order_line,
-        avg(order_lines.total_discount) as product_avg_discount_per_order_line,
-        avg(order_lines.order_line_tax) as product_avg_tax_per_order_line
+), tax_aggregates as (
 
-    from order_lines
-    left join orders
-        on order_lines.order_id = orders.order_id
-        and order_lines.source_relation = orders.source_relation
+    select
+        order_line_id,
+        source_relation,
+        sum(price) price
+
+    from tax
     group by 1,2
 
+), order_line_aggregates as (
+
+    select 
+        order_line.order_id,
+        order_line.source_relation,
+        count(*) as line_item_count,
+        sum(order_line.quantity) as order_total_quantity,
+        sum(tax_aggregates.price) as order_total_tax,
+        sum(order_line.total_discount) as order_total_discount
+
+    from order_line
+    left join tax_aggregates
+        on tax_aggregates.order_line_id = order_line.order_line_id
+        and tax_aggregates.source_relation = order_line.source_relation
+    group by 1,2
+
+), final as (
+
+    select
+        order_line_aggregates.order_id,
+        order_line_aggregates.source_relation,
+        order_line_aggregates.line_item_count,
+        order_line_aggregates.order_total_quantity,
+        order_line_aggregates.order_total_tax,
+        order_line_aggregates.order_total_discount,
+        shipping.shipping_price as order_total_shipping,
+        shipping.discounted_shipping_price as order_total_shipping_with_discounts,
+        shipping.shipping_tax as order_total_shipping_tax
+
+    from order_line_aggregates
+    left join shipping
+        on shipping.order_id = order_line_aggregates.order_id
+        and shipping.source_relation = order_line_aggregates.source_relation
 )
 
 select *
-from product_aggregated
+from final

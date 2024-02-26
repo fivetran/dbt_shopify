@@ -1,34 +1,52 @@
-with products as (
+with base as (
 
-    select *
-    from {{ ref('int_shopify__products_with_aggregates') }}
+    select * 
+    from {{ ref('tmp_shopify__product') }}
 
-), product_order_lines as (
+),
 
-    select *
-    from {{ ref('int_shopify__product__order_line_aggregates')}}
-
-), joined as (
+fields as (
 
     select
-        products.*,
-        coalesce(product_order_lines.quantity_sold,0) as total_quantity_sold,
-        coalesce(product_order_lines.subtotal_sold,0) as subtotal_sold,
-        coalesce(product_order_lines.quantity_sold_net_refunds,0) as quantity_sold_net_refunds,
-        coalesce(product_order_lines.subtotal_sold_net_refunds,0) as subtotal_sold_net_refunds,
-        product_order_lines.first_order_timestamp,
-        product_order_lines.most_recent_order_timestamp,
-        product_order_lines.avg_quantity_per_order_line as avg_quantity_per_order_line,
-        coalesce(product_order_lines.product_total_discount,0) as product_total_discount,
-        product_order_lines.product_avg_discount_per_order_line as product_avg_discount_per_order_line,
-        coalesce(product_order_lines.product_total_tax,0) as product_total_tax,
-        product_order_lines.product_avg_tax_per_order_line as product_avg_tax_per_order_line
 
-    from products
-    left join product_order_lines
-        on products.product_id = product_order_lines.product_id
-        and products.source_relation = product_order_lines.source_relation
+        {{
+            fivetran_utils.fill_staging_columns(
+                source_columns=adapter.get_columns_in_relation(ref('tmp_shopify__product')),
+                staging_columns=get_product_columns()
+            )
+        }}
+
+        {{ fivetran_utils.source_relation(
+            union_schema_variable='shopify_union_schemas', 
+            union_database_variable='shopify_union_databases') 
+        }}
+
+    from base
+
+),
+
+final as (
+
+    select
+        id as product_id,
+        handle,
+        product_type,
+        published_scope,
+        title,
+        vendor,
+        status,
+        _fivetran_deleted as is_deleted,
+        {{ dbt_date.convert_timezone(column='cast(created_at as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as created_timestamp,
+        {{ dbt_date.convert_timezone(column='cast(updated_at as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as updated_timestamp,
+        {{ dbt_date.convert_timezone(column='cast(published_at as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as published_timestamp,
+        {{ dbt_date.convert_timezone(column='cast(_fivetran_synced as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as _fivetran_synced,
+        source_relation
+
+        {{ fivetran_utils.fill_pass_through_columns('product_pass_through_columns') }}
+
+from fields
+
 )
 
-select *
-from joined
+select * 
+from final

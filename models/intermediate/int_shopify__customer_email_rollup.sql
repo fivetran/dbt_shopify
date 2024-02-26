@@ -1,3 +1,4 @@
+
 with customers as (
 
     select 
@@ -21,7 +22,7 @@ with customers as (
         customers.source_relation,
 
         -- fields to string agg together
-        {{ fivetran_utils.string_agg("distinct cast(customers.customer_id as " ~ dbt.type_string() ~ ")", "', '") }} as customer_ids,
+        {{ fivetran_utils.string_agg("cast(customers.customer_id as " ~ dbt.type_string() ~ ")", "', '") }} as customer_ids,
         {{ fivetran_utils.string_agg("distinct cast(customers.phone as " ~ dbt.type_string() ~ ")", "', '") }} as phone_numbers,
         {{ fivetran_utils.string_agg("distinct cast(customer_tags.value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags,
 
@@ -31,6 +32,8 @@ with customers as (
         max(customers.updated_timestamp) as last_updated_at,
         max(customers.marketing_consent_updated_at) as marketing_consent_updated_at,
         max(customers._fivetran_synced) as last_fivetran_synced,
+        sum(customers.orders_count) as orders_count,
+        sum(customers.total_spent) as total_spent,
 
         -- take true if ever given for boolean fields
         {{ fivetran_utils.max_bool("case when customers.customer_index = 1 then customers.is_tax_exempt else null end") }} as is_tax_exempt, -- since this changes every year
@@ -39,7 +42,7 @@ with customers as (
         -- for all other fields, just take the latest value
         {% set cols = adapter.get_columns_in_relation(ref('stg_shopify__customer')) %}
         {% set except_cols = ['_fivetran_synced', 'email', 'source_relation', 'customer_id', 'phone', 'created_at', 
-                                'marketing_consent_updated_at', 'orders_count', 'total_spent', 'created_timestamp', 'updated_timestamp',
+                                'updated_at', 'marketing_consent_updated_at', 'orders_count', 'total_spent',
                                 'is_tax_exempt', 'is_verified_email'] %}
         {% for col in cols %}
             {% if col.column|lower not in except_cols %}

@@ -2,6 +2,7 @@ with orders as (
 
     select *
     from {{ var('shopify_order') }}
+    where email is not null
 
 ), order_aggregates as (
 
@@ -22,27 +23,16 @@ with orders as (
     select 
         order_id,
         source_relation,
-        lower(kind) as kind,
+        kind,
         sum(currency_exchange_calculated_amount) as currency_exchange_calculated_amount
 
     from transactions
     {{ dbt_utils.group_by(n=3) }}
 
-), customer_emails as (
--- in case any orders records don't have the customer email attached yet
-    select 
-        customer_id, 
-        source_relation,
-        email
-
-    from {{ var('shopify_customer') }}
-    where email is not null
-    {{ dbt_utils.group_by(n=3) }}
-    
 ), aggregated as (
 
     select
-        lower(customer_emails.email) as email,
+        orders.email,
         orders.source_relation,
         min(orders.created_timestamp) as first_order_timestamp,
         max(orders.created_timestamp) as most_recent_order_timestamp,
@@ -62,9 +52,6 @@ with orders as (
         sum(order_aggregates.order_total_shipping_tax) as lifetime_total_shipping_tax,
         avg(order_aggregates.order_total_shipping_tax) as avg_shipping_tax_per_order
     from orders
-    join customer_emails
-        on orders.customer_id = customer_emails.customer_id
-        and orders.source_relation = customer_emails.source_relation
     left join transaction_aggregates 
         on orders.order_id = transaction_aggregates.order_id
         and orders.source_relation = transaction_aggregates.source_relation

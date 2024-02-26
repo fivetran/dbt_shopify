@@ -1,94 +1,43 @@
-with discount as (
+-- this model will be all NULL until you create a discount code in Shopify
 
-    select *
-    from {{ var('shopify_discount_code') }}
+with base as (
+
+    select * 
+    from {{ ref('tmp_shopify__discount_code') }}
 ),
 
-price_rule as (
-
-    select *
-    from {{ var('shopify_price_rule') }}
-),
-
-orders_aggregated as (
-
-    select *
-    from {{ ref('int_shopify__discounts__order_aggregates')}}
-),
-
-abandoned_checkouts_aggregated as (
-
-    select *
-    from {{ ref('int_shopify__discounts__abandoned_checkouts')}}
-),
-
-discount_price_rule_joined as (
+fields as (
 
     select
-        discount.*,
-        price_rule.target_selection,
-        price_rule.target_type,
-        price_rule.title,
-        price_rule.usage_limit,
-        price_rule.value,
-        price_rule.value_type,
-        price_rule.allocation_limit,
-        price_rule.allocation_method,
-        price_rule.is_once_per_customer,
-        price_rule.customer_selection,
-        -- the below are NULL if customer_selection = all
-        price_rule.prereq_min_quantity,
-        price_rule.prereq_max_shipping_price,
-        price_rule.prereq_min_subtotal,
-        price_rule.prereq_min_purchase_quantity_for_entitlement,
-        price_rule.prereq_buy_x_get_this,
-        price_rule.prereq_buy_this_get_y,
-        price_rule.starts_at,
-        price_rule.ends_at,
-        price_rule.created_at as price_rule_created_at,
-        price_rule.updated_at as price_rule_updated_at
+        {{
+            fivetran_utils.fill_staging_columns(
+                source_columns=adapter.get_columns_in_relation(ref('tmp_shopify__discount_code')),
+                staging_columns=get_discount_code_columns()
+            )
+        }}
 
-    from discount
-    left join price_rule
-        on discount.price_rule_id = price_rule.price_rule_id
-        and discount.source_relation = price_rule.source_relation
+        {{ fivetran_utils.source_relation(
+            union_schema_variable='shopify_union_schemas', 
+            union_database_variable='shopify_union_databases') 
+        }}
+
+    from base
 ),
 
-aggregates_joined as (
+final as (
 
     select 
-        discount_price_rule_joined.*,
-        coalesce(orders_aggregated.count_orders, 0) as count_orders,
-        coalesce(abandoned_checkouts_aggregated.count_abandoned_checkouts, 0) as count_abandoned_checkouts,
-        orders_aggregated.avg_order_discount_amount,
-        coalesce(orders_aggregated.total_order_discount_amount, 0) as total_order_discount_amount,
-        coalesce(abandoned_checkouts_aggregated.total_abandoned_checkout_discount_amount, 0) as total_abandoned_checkout_discount_amount,
-        coalesce(orders_aggregated.total_order_line_items_price, 0) as total_order_line_items_price,
-        coalesce(orders_aggregated.total_order_shipping_cost, 0) as total_order_shipping_cost,
-        coalesce(abandoned_checkouts_aggregated.total_abandoned_checkout_shipping_price, 0) as total_abandoned_checkout_shipping_price,
-        coalesce(orders_aggregated.total_order_refund_amount, 0) as total_order_refund_amount,
-        coalesce(orders_aggregated.count_customers, 0) as count_customers,
-        coalesce(orders_aggregated.count_customer_emails, 0) as count_customer_emails,
-        coalesce(abandoned_checkouts_aggregated.count_abandoned_checkout_customers, 0) as count_abandoned_checkout_customers,
-        coalesce(abandoned_checkouts_aggregated.count_abandoned_checkout_customer_emails, 0) as count_abandoned_checkout_customer_emails
+        id as discount_code_id,
+        upper(code) as code,
+        price_rule_id,
+        usage_count,
+        {{ dbt_date.convert_timezone(column='cast(created_at as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as created_at,
+        {{ dbt_date.convert_timezone(column='cast(updated_at as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as updated_at,
+        {{ dbt_date.convert_timezone(column='cast(_fivetran_synced as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as _fivetran_synced,
+        source_relation
 
-    from discount_price_rule_joined
-    left join orders_aggregated
-        on discount_price_rule_joined.code = orders_aggregated.code
-        and discount_price_rule_joined.source_relation = orders_aggregated.source_relation
-        -- in case one CODE can apply to both shipping and line items, percentages and fixed_amounts
-        and (case 
-                when discount_price_rule_joined.target_type = 'shipping_line' then 'shipping' -- when target_type = 'shipping', value_type = 'percentage'
-                else discount_price_rule_joined.value_type end) = orders_aggregated.type
-        
-    left join abandoned_checkouts_aggregated
-        on discount_price_rule_joined.code = abandoned_checkouts_aggregated.code
-        and discount_price_rule_joined.source_relation = abandoned_checkouts_aggregated.source_relation
-        -- in case one CODE can apply to both shipping and line items, percentages and fixed_amounts
-        and (case 
-                when discount_price_rule_joined.target_type = 'shipping_line' then 'shipping' -- when target_type = 'shipping', value_type = 'percentage'
-                else discount_price_rule_joined.value_type end) = abandoned_checkouts_aggregated.type 
+    from fields
 )
 
-select * 
-from aggregates_joined
+select *
+from final
