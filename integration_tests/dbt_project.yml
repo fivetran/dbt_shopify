@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '0.10.1'
+version: '0.11.0'
 profile: 'integration_tests'
 config-version: 2
 
