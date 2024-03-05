@@ -1,3 +1,13 @@
+# dbt_shopify v0.10.1
+[PR #74](https://github.com/fivetran/dbt_shopify/pull/74) includes the following updates: 
+
+## 🐛 Bug Fixes 🪛 
+- Added `source_relation` to the `partition_by` clauses that determine the `customer_index` in the `int_shopify__customer_email_rollup` table.
+
+## 🚘 Under The Hood 🚘
+- Included auto-releaser GitHub Actions workflow to automate future releases.
+- Added additional casting in seed dependencies for above models `integration_tests/dbt_project.yml` to ensure local testing passed on null cases.
+
 # dbt_shopify v0.10.0
 ## 🚨 Breaking Changes 🚨
 - This release will be a breaking change due to the removal of below dependencies.

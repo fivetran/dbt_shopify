@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '0.10.0'
+version: '0.10.1'
 profile: 'integration_tests'
 config-version: 2
 
@@ -117,9 +117,14 @@ seeds:
         user_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
     shopify_abandoned_checkout_discount_code_data:
       +column_types:
+        checkout_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        discount_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         amount: float
+        _fivetran_synced: timestamp
         created_at: timestamp
         updated_at: timestamp
+        code: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+        type: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
     shopify_abandoned_checkout_data:
       +column_types:
         total_line_items_price: float
@@ -156,6 +161,9 @@ seeds:
       +column_types:
         value_type: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
         type: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+        _fivetran_synced: timestamp
+        created_at: timestamp
+        updated_at: timestamp
     shopify_shop_data:
       +column_types:
         taxes_included: boolean

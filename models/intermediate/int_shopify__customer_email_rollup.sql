@@ -2,7 +2,7 @@ with customers as (
 
     select 
         *,
-        row_number() over(partition by email order by created_timestamp desc) as customer_index
+        row_number() over(partition by email, source_relation order by created_timestamp desc) as customer_index
 
     from {{ var('shopify_customer') }}
     where email is not null -- nonsensical to include any null emails here
