@@ -2,7 +2,7 @@
 [PR #74](https://github.com/fivetran/dbt_shopify/pull/74) includes the following updates: 
 
 ## 🚨 Breaking Changes 🚨
-- Added `source_relation` to the `partition_by` clauses that determine the `customer_index` in the `int_shopify__customer_email_rollup` table. If the user is leveraging the union feature, this could change data values, so would recommend a `dbt run --full-refresh` in this case. 
+- Added `source_relation` to the `partition_by` clauses that determine the `customer_index` in the `int_shopify__customer_email_rollup` table. If the user is leveraging the union feature, this could change data values. 
 
 ## 🚘 Under The Hood 🚘
 - Included auto-releaser GitHub Actions workflow to automate future releases.
