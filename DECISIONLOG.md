@@ -36,3 +36,6 @@ We have chosen to make the severity of these tests `warn`, as non-accepted value
 ### Currency
 
 All monetary values reported in the Shopify end models are in the default currency of your Shop.
+
+### Incremental Strategy
+The models having an incremental strategy were chosen based on the size of their upstream models. We wanted to be selective rather than make all models incremental due to the complexity of changes and maintenance required when stacking incrementals. However, we would still like to hear feedback on these choices. 

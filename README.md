@@ -117,6 +117,15 @@ vars:
 
 > **Note**: This will only **numerically** convert timestamps to your target timezone. They will however have a "UTC" appended to them. This is a current limitation of the dbt-date `convert_timezone` [macro](https://github.com/calogica/dbt-date#convert_timezone-column-target_tznone-source_tznone) we leverage. 
 
+#### Lookback Window
+Records can sometimes arrive late. Since several of the models in this package are incremental, by default we look back 7 days to ensure late arrivals are captured while avoiding requiring a full refresh. To change the default lookback window, add the following variable to your `dbt_project.yml` file:
+
+```yml
+vars:
+  shopify:
+    lookback_window: number_of_days # default is 7
+```
+
 ## (Optional) Step 6: Additional configurations
 <details><summary>Expand for configurations</summary>
     
