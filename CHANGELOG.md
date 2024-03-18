@@ -1,3 +1,15 @@
+# dbt_shopify v0.12.0
+[PR #76](https://github.com/fivetran/dbt_shopify/pull/76) includes the following updates: 
+
+## 🚨 Breaking Changes 🚨
+- Update materializations:
+  - list tables made incremental
+
+## Feature updates
+- optimization summary
+- lookback window (also add to Readme on how to set with variable)
+
+
 # dbt_shopify v0.11.0
 [PR #74](https://github.com/fivetran/dbt_shopify/pull/74) includes the following updates: 
 
