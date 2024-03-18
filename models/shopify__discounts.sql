@@ -3,7 +3,7 @@
         materialized='incremental',
         unique_key='discounts_unique_key',
         incremental_strategy='merge' if target.type not in ('postgres', 'redshift', 'snowflake') else 'delete+insert',
-        cluster_by=['discount_id']
+        cluster_by=['discount_code_id']
         ) 
 }}
 
