@@ -65,14 +65,17 @@ with calendar as (
 
 ), windows as (
 
-    {% set partition_string = 'partition by customer_id, source_relation order by date_month rows between unbounded preceding and current row' %}
+    {% set partition_string = 'partition by ' ~ shopify_partition_by_cols('customer_id', 'source_relation') ~ 'order by date_month rows between unbounded preceding and current row' %}
 
     select
         *,
         sum(total_price_in_month) over ({{ partition_string }}) as total_price_lifetime,
         sum(order_count_in_month) over ({{ partition_string }}) as order_count_lifetime,
         sum(line_item_count_in_month) over ({{ partition_string }}) as line_item_count_lifetime,
-        row_number() over (partition by customer_id, source_relation order by date_month asc) as cohort_month_number
+        row_number() over ( 
+            partition by {{ shopify_partition_by_cols('customer_id', 'source_relation') }}
+            order by date_month asc) 
+            as cohort_month_number
     from orders_joined
 
 {% if is_incremental() %}
