@@ -1,7 +1,25 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='discounts_unique_key',
+        incremental_strategy='merge' if target.type not in ('postgres', 'redshift', 'snowflake') else 'delete+insert',
+        cluster_by=['discount_id']
+        ) 
+}}
+
 with discount as (
 
-    select *
+    select 
+        *,
+        {{ dbt_utils.generate_surrogate_key(['source_relation', 'discount_code_id']) }} as discounts_unique_key
     from {{ var('shopify_discount_code') }}
+
+    {% if is_incremental() %}
+    where cast(coalesce(updated_at, created_at) as date) >= {{ shopify.shopify_lookback(
+        from_date="max(cast(coalesce(updated_at, created_at) as date))", 
+        interval=var('lookback_window', 7), 
+        datepart='day') }}
+    {% endif %}
 ),
 
 price_rule as (

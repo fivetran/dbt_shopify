@@ -1,6 +1,21 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='transactions_unique_id',
+        incremental_strategy='merge' if target.type not in ('postgres', 'redshift', 'snowflake') else 'delete+insert',
+        cluster_by=['transaction_id']
+        ) 
+}}
+
 with transactions as (
-    select *
+    select 
+        *,
+        {{ dbt_utils.generate_surrogate_key(['source_relation', 'transaction_id'])}} as transactions_unique_id
     from {{ var('shopify_transaction') }}
+
+    {% if is_incremental() %}
+    where cast(created_timestamp as date) >= {{ shopify.shopify_lookback(from_date="max(cast(created_timestamp as date))", interval=var('lookback_window', 7), datepart='day') }}
+    {% endif %}
 
 ), tender_transactions as (
 

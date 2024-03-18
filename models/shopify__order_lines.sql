@@ -1,7 +1,23 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='order_lines_unique_key',
+        incremental_strategy='merge' if target.type not in ('postgres', 'redshift', 'snowflake') else 'delete+insert',
+        cluster_by=['source_relation', 'order_line_id'],
+        file_format='parquet'
+        ) 
+}}
+
 with order_lines as (
 
-    select *
+    select 
+        *,
+        {{ dbt_utils.generate_surrogate_key(['source_relation', 'order_line_id']) }} as order_lines_unique_key
     from {{ var('shopify_order_line') }}
+
+    {% if is_incremental() %}
+    where cast(_fivetran_synced as date) >= {{ shopify.shopify_lookback(from_date="max(cast(_fivetran_synced as date))", interval=var('lookback_window', 3), datepart='day') }}
+    {% endif %}
 
 ), product_variants as (
 
