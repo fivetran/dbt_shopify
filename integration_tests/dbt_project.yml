@@ -10,7 +10,7 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 vars:
   shopify_using_fulfillment_event: true
-  shopify_schema: shopify_integration_tests_56
+  shopify_schema: shopify_integration_tests_6
   shopify_source:
     shopify_customer_identifier:          "shopify_customer_data"
     shopify_order_line_refund_identifier: "shopify_order_line_refund_data"

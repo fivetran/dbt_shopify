@@ -8,8 +8,8 @@
 
     {%- if var('shopify_union_schemas', false) or var('shopify_union_databases', false) -%}
     {{ base_col }}, {{ source_relation }}
-    {%- else -%}
+    {%- else %}
     {{ base_col }}
-    {%- endif -%}
+    {%- endif %}
 
 {% endmacro %}
