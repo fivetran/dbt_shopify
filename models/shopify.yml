@@ -923,13 +923,14 @@ models:
             - source_relation
           config:
             severity: warn # best practice for codes to be unique
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - discount_code_id
-            - source_relation
-          config:
-            severity: error # something is really up
     columns:
+      - name: discounts_unique_key
+        description: Unique key representing an order. Hashed on 'discount_code_id' and 'source_relation'.
+        tests:
+          - unique
+          - not_null
+        config:
+            severity: error
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: code
