@@ -46,7 +46,12 @@ The following table provides a detailed list of all models materialized within t
 To use this dbt package, you must have the following:
 
 - At least one Fivetran Shopify connector syncing data into your destination.
-- A **BigQuery**, **Snowflake**, **Redshift**, **Databricks**, or **PostgreSQL** destination.
+- One of the following destinations:
+  - [BigQuery](https://fivetran.com/docs/destinations/bigquery)
+  - [Snowflake](https://fivetran.com/docs/destinations/snowflake)
+  - [Redshift](https://fivetran.com/docs/destinations/redshift)
+  - [PostgreSQL](https://fivetran.com/docs/destinations/postgresql)
+  - [Databricks](https://fivetran.com/docs/destinations/databricks) with [Databricks Runtime](https://docs.databricks.com/en/compute/index.html#databricks-runtime)
 
 ## Step 2: Install the package (skip if also using the `shopify_holistic_reporting` package)
 If you are **not** using the [Shopify Holistic reporting package](https://github.com/fivetran/dbt_shopify_holistic_reporting), include the following shopify package version in your `packages.yml` file:
@@ -117,17 +122,8 @@ vars:
 
 > **Note**: This will only **numerically** convert timestamps to your target timezone. They will however have a "UTC" appended to them. This is a current limitation of the dbt-date `convert_timezone` [macro](https://github.com/calogica/dbt-date#convert_timezone-column-target_tznone-source_tznone) we leverage. 
 
-#### Lookback Window
-Records can sometimes arrive late. Since several of the models in this package are incremental, by default we look back 7 days to ensure late arrivals are captured while avoiding requiring a full refresh. To change the default lookback window, add the following variable to your `dbt_project.yml` file:
-
-```yml
-vars:
-  shopify:
-    lookback_window: number_of_days # default is 7
-```
-
 ## (Optional) Step 6: Additional configurations
-<details><summary>Expand for configurations</summary>
+<details open><summary>Expand/Collapse details</summary>
     
 ### Passing Through Additional Fields
 This package includes all source columns defined in the macros folder. You can add more columns using our pass-through column variables. These variables allow for the pass-through fields to be aliased (`alias`) and casted (`transform_sql`) if desired, but not required. Datatype casting is configured via a sql snippet within the `transform_sql` key. You may add the desired sql while omitting the `as field_name` at the end and your custom pass-though fields will be casted accordingly. Use the below format for declaring the respective pass-through variables:
@@ -196,6 +192,18 @@ If an individual source table has a different name than the package expects, add
 vars:
     shopify_<default_source_table_name>_identifier: your_table_name 
 ```
+
+#### Lookback Window
+Records from the source can sometimes arrive late. Since several of the models in this package are incremental, by default we look back 7 days to ensure late arrivals are captured while avoiding the need for frequent full refreshes. While the frequency can be reduced, we still recommend running `dbt --full-refresh` periodically to maintain data quality of the models. For more information on our incremental decisions, see the [Incremental Strategy section](https://github.com/fivetran/dbt_shopify/blob/main/DECISIONLOG.md#incremental-strategy) of the DECISIONLOG.
+
+To change the default lookback window, add the following variable to your `dbt_project.yml` file:
+
+```yml
+vars:
+  shopify:
+    lookback_window: number_of_days # default is 7
+```
+
 </details>
 
 

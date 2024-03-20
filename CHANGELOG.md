@@ -4,10 +4,9 @@
 ## 🚨 Breaking Changes 🚨
 > ⚠️ Since the following changes are breaking, a `--full-refresh` after upgrading will be required.
 
-- Added a default 7-day look-back to incremental models to accommodate late arriving records. The number of days can be changed by setting the var `lookback_window` in your dbt_project.yml. See the [Lookback Window section of the README](https://github.com/fivetran/dbt_shopify/blob/main/README.md#lookback-window) for more details. 
-
 - Performance improvements:
-  - Added an incremental strategy for of the following models. These models were picked for incremental materialization based on the size of their upstream sources.
+  - Added an incremental strategy for of the following models. These models were picked for incremental materialization based on the size of their upstream sources. 
+  > For Databricks destinations, the incremental updates have only been tested for compatibility with Databricks Runtime. 
     - `shopify__customer_cohorts`
     - `shopify__customer_email_cohorts`
     - `shopify__discounts`
@@ -17,7 +16,12 @@
   - Updated the materialization of `shopify__orders__order_line_aggregates` to a table. This model draws on several large upstream sources and is also referenced in several downstream models, so this was done to improve performance. This was not selected for incremental materialization due to the nature of the aggregates used.
 
 ## Features
-  - Updated partitioning logic in window functions to use only the necessary columns, depending on whether the unioning feature is used. This benefits mainly Redshift destinations, which can see errors when the staging models are materialized as views. 
+- Added a default 7-day look-back to incremental models to accommodate late arriving records. The number of days can be changed by setting the var `lookback_window` in your dbt_project.yml. See the [Lookback Window section of the README](https://github.com/fivetran/dbt_shopify/blob/main/README.md#lookback-window) for more details. 
+
+- Updated the partitioning logic in window functions to use only the necessary columns, depending on whether the unioning feature is used. This benefits mainly Redshift destinations, which can see errors when the staging models are materialized as views. 
+
+## Under the Hood
+- Updated the maintainer PR template to the current format.
 
 # dbt_shopify v0.11.0
 [PR #74](https://github.com/fivetran/dbt_shopify/pull/74) includes the following updates: 

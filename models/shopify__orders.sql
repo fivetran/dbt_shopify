@@ -163,7 +163,7 @@ with orders as (
     select 
         *,
         row_number() over (
-            partition by {{ shopify_partition_by_cols('customer_id', 'source_relation') }}
+            partition by {{ shopify.shopify_partition_by_cols('customer_id', 'source_relation') }}
             order by created_timestamp) 
             as customer_order_seq_number
     from joined

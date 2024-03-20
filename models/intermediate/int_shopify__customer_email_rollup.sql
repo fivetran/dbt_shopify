@@ -3,7 +3,7 @@ with customers as (
     select 
         *,
         row_number() over(
-            partition by {{ shopify_partition_by_cols('email', 'source_relation') }}
+            partition by {{ shopify.shopify_partition_by_cols('email', 'source_relation') }}
             order by created_timestamp desc) 
             as customer_index
 

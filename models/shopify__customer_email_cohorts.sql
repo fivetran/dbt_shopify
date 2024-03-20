@@ -65,7 +65,7 @@ with calendar as (
 
 ), windows as (
 
-    {% set partition_string = 'partition by ' ~ shopify_partition_by_cols('email', 'source_relation') ~ 'order by date_month rows between unbounded preceding and current row' %}
+    {% set partition_string = 'partition by ' ~ shopify.shopify_partition_by_cols('email', 'source_relation') ~ 'order by date_month rows between unbounded preceding and current row' %}
 
     select
         *,
@@ -73,7 +73,7 @@ with calendar as (
         sum(order_count_in_month) over ({{ partition_string }}) as order_count_lifetime,
         sum(line_item_count_in_month) over ({{ partition_string }}) as line_item_count_lifetime,
         row_number() over ( 
-            partition by {{ shopify_partition_by_cols('email', 'source_relation') }}
+            partition by {{ shopify.shopify_partition_by_cols('email', 'source_relation') }}
             order by date_month asc) 
             as cohort_month_number
     from orders_joined
