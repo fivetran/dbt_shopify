@@ -73,12 +73,12 @@ models:
         
   - name: shopify__orders
     description: Each record represents an order in Shopify.
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - order_id
-            - source_relation
     columns:
+      - name: orders_unique_key
+        description: Unique key representing an order. Hashed on 'order_id' and 'source_relation'.
+        tests:
+          - unique
+          - not_null
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: app_id
@@ -540,12 +540,12 @@ models:
 
   - name: shopify__order_lines
     description: Each record represents a line item of an order in Shopify.
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - order_line_id
-            - source_relation
     columns:
+      - name: order_lines_unique_key
+        description: Unique key representing an order. Hashed on 'order_line_id' and 'source_relation'.
+        tests:
+          - unique
+          - not_null
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: fulfillable_quantity
@@ -658,12 +658,12 @@ models:
 
   - name: shopify__transactions
     description: Each record represents a transaction in Shopify.
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - transaction_id
-            - source_relation
     columns:
+      - name: transactions_unique_id
+        description: Unique key representing an order. Hashed on 'transaction_id' and 'source_relation'.
+        tests:
+          - unique
+          - not_null
       - name: transaction_id
         description: The ID for the transaction.
       - name: order_id
