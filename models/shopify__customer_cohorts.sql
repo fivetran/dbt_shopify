@@ -2,7 +2,7 @@
     config(
         materialized='incremental',
         unique_key='customer_cohort_id',
-        incremental_strategy='insert_overwrite' if target.type in ('bigquery', 'databricks') else 'delete+insert',
+        incremental_strategy='insert_overwrite' if target.type in ('bigquery', 'databricks', 'spark') else 'delete+insert',
         partition_by={
             "field": "date_month", 
             "data_type": "date"

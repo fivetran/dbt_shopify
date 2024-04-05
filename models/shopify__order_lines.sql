@@ -3,7 +3,7 @@
         materialized='incremental',
         unique_key='order_lines_unique_key',
         incremental_strategy='merge' if target.type not in ('postgres', 'redshift', 'snowflake') else 'delete+insert',
-        cluster_by=['source_relation', 'order_line_id']
+        cluster_by=['order_line_id']
         ) 
 }}
 
