@@ -15,7 +15,7 @@ with discount as (
     from {{ var('shopify_discount_code') }}
 
     {% if is_incremental() %}
-    where cast(coalesce(updated_at, created_at) as date) >= {{ shopify.shopify_lookback(
+    where cast(coalesce(updated_at, created_at) as date) >= {{ fivetran_utils.fivetran_lookback(
         from_date="max(cast(coalesce(updated_at, created_at) as date))", 
         interval=var('lookback_window', 7), 
         datepart='day') }}

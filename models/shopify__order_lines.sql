@@ -15,7 +15,7 @@ with order_lines as (
     from {{ var('shopify_order_line') }}
 
     {% if is_incremental() %}
-    where cast(_fivetran_synced as date) >= {{ shopify.shopify_lookback(from_date="max(cast(_fivetran_synced as date))", interval=var('lookback_window', 3), datepart='day') }}
+    where cast(_fivetran_synced as date) >= {{ fivetran_utils.fivetran_lookback(from_date="max(cast(_fivetran_synced as date))", interval=var('lookback_window', 3), datepart='day') }}
     {% endif %}
 
 ), product_variants as (

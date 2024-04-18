@@ -15,7 +15,7 @@ with orders as (
     from {{ var('shopify_order') }}
 
     {% if is_incremental() %}
-    where cast(coalesce(updated_timestamp, created_timestamp) as date) >= {{ shopify.shopify_lookback(
+    where cast(coalesce(updated_timestamp, created_timestamp) as date) >= {{ fivetran_utils.fivetran_lookback(
         from_date="max(cast(coalesce(updated_timestamp, created_timestamp) as date))", 
         interval=var('lookback_window', 7), 
         datepart='day') }}
