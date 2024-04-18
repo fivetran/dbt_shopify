@@ -1,8 +1,8 @@
 {{
     config(
-        materialized='incremental',
+        materialized='table' if target.type in ('bigquery', 'databricks', 'spark') else 'incremental',
         unique_key='transactions_unique_id',
-        incremental_strategy='merge' if target.type not in ('postgres', 'redshift', 'snowflake') else 'delete+insert',
+        incremental_strategy='delete+insert' if target.type in ('postgres', 'redshift', 'snowflake') else 'merge',
         cluster_by=['transaction_id']
         ) 
 }}
