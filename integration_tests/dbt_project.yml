@@ -13,15 +13,15 @@ vars:
   # shopify_using_all_metafields: true # set to true when regenerating docs
   shopify_schema: shopify_integration_tests_6
   shopify_source:
-    shopify_customer_identifier:          "shopify_customer_data"
+    shopify_customer_identifier: "shopify_customer_data"
     shopify_order_line_refund_identifier: "shopify_order_line_refund_data"
-    shopify_order_line_identifier:        "shopify_order_line_data"
-    shopify_order_identifier:             "shopify_order_data"
-    shopify_product_identifier:           "shopify_product_data"
-    shopify_order_adjustment_identifier:  "shopify_order_adjustment_data"
-    shopify_product_variant_identifier:   "shopify_product_variant_data"
-    shopify_refund_identifier:            "shopify_refund_data"
-    shopify_transaction_identifier:       "shopify_transaction_data"
+    shopify_order_line_identifier: "shopify_order_line_data"
+    shopify_order_identifier: "shopify_order_data"
+    shopify_product_identifier: "shopify_product_data"
+    shopify_order_adjustment_identifier: "shopify_order_adjustment_data"
+    shopify_product_variant_identifier: "shopify_product_variant_data"
+    shopify_refund_identifier: "shopify_refund_data"
+    shopify_transaction_identifier: "shopify_transaction_data"
     shopify_abandoned_checkout_identifier: "shopify_abandoned_checkout_data"
     shopify_collection_product_identifier: "shopify_collection_product_data"
     shopify_collection_identifier: "shopify_collection_data"
@@ -51,7 +51,11 @@ vars:
 dispatch:
   - macro_namespace: dbt_utils
     search_order: ['spark_utils', 'dbt_utils']
-    
+
+models:
+  shopify:
+    +schema: "{{ 'shopify_integrations_tests_sqlw' if target.name == 'databricks-sql' else 'shopify' }}"
+
 seeds:
   shopify_integration_tests:
     +quote_columns: "{{ true if target.type in ('redshift', 'postgres') else false }}"
