@@ -48,7 +48,7 @@ with orders as (
         source_relation,
         sum(case when type = 'shipping' then amount else 0 end) as shipping_discount_amount,
         sum(case when type = 'percentage' then amount else 0 end) as percentage_calc_discount_amount,
-        sum(case when type = 'shipping' then amount else 0 end) as fixed_amount_discount_amount,
+        sum(case when type = 'fixed_amount' then amount else 0 end) as fixed_amount_discount_amount,
         count(distinct code) as count_discount_codes_applied
 
     from order_discount_code
