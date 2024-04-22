@@ -1,3 +1,11 @@
+# dbt_shopify v0.12.0
+## 🪲 Bug Fixes 🪛
+- Corrected the `fixed_amount_discount_amount` logic to appropriately bring in fixed amount discounts in `shopify__orders`. [PR #78](https://github.com/fivetran/dbt_shopify/pull/78)
+- Removed the `index=1` filter in `stg_shopify__order_discount_code` in the `dbt_shopify_source` package to ensure all discount codes are brought in for every orders. For customers with multiple discount codes in an order, this could update the `count_discount_codes_applied` field in the `shopify__orders` and `shopify__daily_shop` models. [PR #80](https://github.com/fivetran/dbt_shopify_source/pull/80)
+
+## 🔧 Under the Hood 🔩
+- Updated the pull request templates. [PR #78](https://github.com/fivetran/dbt_shopify/pull/78)
+
 # dbt_shopify v0.11.0
 [PR #74](https://github.com/fivetran/dbt_shopify/pull/74) includes the following updates: 
 
