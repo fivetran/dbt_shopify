@@ -1,4 +1,4 @@
 packages:
   - git: https://github.com/fivetran/dbt_shopify_source.git
-    revision: bugfix/remove-order-discount-code-filter
+    revision: release/v0.12.0
     warn-unpinned: false
