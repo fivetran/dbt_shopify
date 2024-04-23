@@ -1,6 +1,6 @@
 {{
     config(
-        materialized='table' if shopify.is_databricks_sql_warehouse(target) else 'incremental',
+        materialized='table' if fivetran_utils.fivetran_is_databricks_sql_warehouse() else 'incremental',
         unique_key='customer_cohort_id',
         incremental_strategy='insert_overwrite' if target.type in ('bigquery', 'databricks', 'spark') else 'delete+insert',
         partition_by={
@@ -9,7 +9,7 @@
             } if target.type not in ('spark','databricks') 
             else ['date_month'],
         cluster_by=['date_month', 'customer_id'],
-        file_format='delta' if shopify.is_databricks_sql_warehouse(target) else 'parquet'
+        file_format='delta' if fivetran_utils.fivetran_is_databricks_sql_warehouse() else 'parquet'
         ) 
 }}
 
