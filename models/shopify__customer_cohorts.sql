@@ -1,6 +1,6 @@
 {{
     config(
-        materialized='table' if fivetran_utils.fivetran_is_databricks_sql_warehouse() else 'incremental',
+        materialized='table' if shopify.shopify_is_databricks_sql_warehouse() else 'incremental',
         unique_key='customer_cohort_id',
         incremental_strategy='insert_overwrite' if target.type in ('bigquery', 'databricks', 'spark') else 'delete+insert',
         partition_by={
@@ -9,7 +9,7 @@
             } if target.type not in ('spark','databricks') 
             else ['date_month'],
         cluster_by=['date_month', 'customer_id'],
-        file_format='delta' if fivetran_utils.fivetran_is_databricks_sql_warehouse() else 'parquet'
+        file_format='delta' if shopify.shopify_is_databricks_sql_warehouse() else 'parquet'
         ) 
 }}
 
@@ -20,7 +20,7 @@ with calendar as (
     where cast({{ dbt.date_trunc('month','date_day') }} as date) = date_day
 
     {% if is_incremental() %}
-    and cast(date_day as date) >= {{ fivetran_utils.fivetran_lookback(from_date="max(date_month)", interval=1, datepart='month') }}
+    and cast(date_day as date) >= {{ shopify.shopify_lookback(from_date="max(date_month)", interval=1, datepart='month') }}
     {% endif %}
 
 ), customers as (
@@ -89,7 +89,7 @@ with calendar as (
         max(line_item_count_lifetime) as previous_line_item_count_lifetime,
         max(cohort_month_number) as previous_cohort_month_number
     from {{ this }}
-    where date_month < {{ fivetran_utils.fivetran_lookback(from_date="max(date_month)", interval=1, datepart='month') }}
+    where date_month < {{ shopify.shopify_lookback(from_date="max(date_month)", interval=1, datepart='month') }}
     group by 1,2
 
 ), final as (

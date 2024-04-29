@@ -15,7 +15,7 @@ with transactions as (
 
     {% if is_incremental() %}
 -- use created_timestamp instead of processed_at since a record could be created but not processed
-    where cast(created_timestamp as date) >= {{ fivetran_utils.fivetran_lookback(from_date="max(cast(created_timestamp as date))", interval=var('lookback_window', 7), datepart='day') }}
+    where cast(created_timestamp as date) >= {{ shopify.shopify_lookback(from_date="max(cast(created_timestamp as date))", interval=var('lookback_window', 7), datepart='day') }}
     {% endif %}
 
 ), tender_transactions as (
