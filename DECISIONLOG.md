@@ -36,3 +36,20 @@ We have chosen to make the severity of these tests `warn`, as non-accepted value
 ### Currency
 
 All monetary values reported in the Shopify end models are in the default currency of your Shop.
+
+### Incremental Strategy
+The models having an incremental strategy were chosen based on the size of their upstream models. We wanted to be selective rather than make all models incremental due to the complexity of changes and maintenance required when stacking incrementals. However, we would still like to hear feedback on these choices. 
+
+The strategies for each model are:
+
+| Model | Bigquery/Databricks strategy | Snowflake/Postgres/Redshift strategy |
+| --- | --- | --- |
+| `shopify__customer_cohorts` | insert_overwrite | delete+insert |
+| `shopify__customer_email_cohorts` | insert_overwrite | delete+insert |
+| `shopify__discounts` | merge | delete+insert |
+| `shopify__order_lines` | merge | delete+insert |
+| `shopify__orders` | merge | delete+insert |
+| `shopify__transactions` | merge | delete+insert |
+
+For Bigquery and Databricks, insert_overwrite was chosen for the cohort models since the date_day grain provides a suitable column to partition on. 
+Merge was chosen for the remaining models since this can handle updates to the records.

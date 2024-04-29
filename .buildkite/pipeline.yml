@@ -69,5 +69,21 @@ steps:
             - "CI_DATABRICKS_DBT_HOST"
             - "CI_DATABRICKS_DBT_HTTP_PATH"
             - "CI_DATABRICKS_DBT_TOKEN"
+            - "CI_DATABRICKS_DBT_CATALOG"
     commands: |
       bash .buildkite/scripts/run_models.sh databricks
+
+  - label: ":databricks: :database: Run Tests - Databricks SQL Warehouse"
+    key: "run_dbt_databricks_sql"
+    plugins:
+      - docker#v3.13.0:
+          image: "python:3.8"
+          shell: [ "/bin/bash", "-e", "-c" ]
+          environment:
+            - "BASH_ENV=/tmp/.bashrc"
+            - "CI_DATABRICKS_DBT_HOST"
+            - "CI_DATABRICKS_SQL_DBT_HTTP_PATH"
+            - "CI_DATABRICKS_SQL_DBT_TOKEN"
+            - "CI_DATABRICKS_DBT_CATALOG"
+    commands: |
+      bash .buildkite/scripts/run_models.sh databricks-sql

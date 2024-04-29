@@ -11,7 +11,7 @@
 ### Basic Validation
 Please acknowledge that you have successfully performed the following commands locally:
 - [ ] dbt run –full-refresh && dbt test
-- [ ] dbt run (if incremental models are present)
+- [ ] dbt run (if incremental models are present) && dbt test
 
 Before marking this PR as "ready for review" the following have been applied:
 - [ ] The appropriate issue has been linked, tagged, and properly assigned
@@ -23,3 +23,8 @@ Before marking this PR as "ready for review" the following have been applied:
 ### Detailed Validation
 Please share any and all of your validation steps:
 <!--- Provide the steps you took to validate your changes below. -->
+
+### If you had to summarize this PR in an emoji, which would it be?
+<!--- For a complete list of markdown compatible emojis check our this git repo (https://gist.github.com/rxaviers/7360908)  --> 
+:dancer:
+

@@ -1,6 +1,22 @@
+{{
+    config(
+        materialized='table' if target.type in ('bigquery', 'databricks', 'spark') else 'incremental',
+        unique_key='transactions_unique_id',
+        incremental_strategy='delete+insert' if target.type in ('postgres', 'redshift', 'snowflake') else 'merge',
+        cluster_by=['transaction_id']
+        ) 
+}}
+
 with transactions as (
-    select *
+    select 
+        *,
+        {{ dbt_utils.generate_surrogate_key(['source_relation', 'transaction_id'])}} as transactions_unique_id
     from {{ var('shopify_transaction') }}
+
+    {% if is_incremental() %}
+-- use created_timestamp instead of processed_at since a record could be created but not processed
+    where cast(created_timestamp as date) >= {{ shopify.shopify_lookback(from_date="max(cast(created_timestamp as date))", interval=var('lookback_window', 7), datepart='day') }}
+    {% endif %}
 
 ), tender_transactions as (
 
