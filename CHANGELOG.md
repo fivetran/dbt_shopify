@@ -7,28 +7,28 @@
 
 - Performance improvements:
   - Added an incremental strategy for of the following models. These models were picked for incremental materialization based on the size of their upstream sources. 
-  > For Databricks destinations, the incremental updates have only been tested for compatibility with Databricks Runtime. 
-    - `shopify__customer_cohorts`
-    - `shopify__customer_email_cohorts`
+    - `shopify__customer_cohorts` (For Databricks SQL Warehouse destinations, this model is materialized as a table without support for incremental runs at this time.)
+    - `shopify__customer_email_cohorts` (For Databricks SQL Warehouse destinations, this model is materialized as a table without support for incremental runs at this time.)
     - `shopify__discounts`
     - `shopify__order_lines`
     - `shopify__orders`
     - `shopify__transactions`
   - Updated the materialization of `shopify__orders__order_line_aggregates` to a table. This model draws on several large upstream sources and is also referenced in several downstream models, so this was done to improve performance. This was not selected for incremental materialization due to the nature of the aggregates used.
-
-- To reduce storage, updated the default materialization of the upstream staging models to views. (See the [dbt_netsuite_source CHANGELOG](https://github.com/fivetran/dbt_shopify_source/blob/main/CHANGELOG.md) for more details.)
+- To reduce storage, updated the default materialization of the upstream staging models to views. (See the [dbt_shopify_source CHANGELOG](https://github.com/fivetran/dbt_shopify_source/blob/main/CHANGELOG.md) for more details.)
 
 ## Features
 - Added a default 7-day look-back to incremental models to accommodate late arriving records. The number of days can be changed by setting the var `lookback_window` in your dbt_project.yml. See the [Lookback Window section of the README](https://github.com/fivetran/dbt_shopify/blob/main/README.md#lookback-window) for more details. 
+- Added macro `shopify_lookback` to streamline the lookback calculation.
 - Updated the partitioning logic in window functions to use only the necessary columns, depending on whether the unioning feature is used. This benefits mainly Redshift destinations, which can see errors when the staging models are materialized as views. 
-
-## Under the Hood
-- Updated the maintainer PR template to the current format.
-- Added integration testing pipeline for Databricks SQL Warehouse.
 
 ## 🪲 Bug Fixes 🪛
 - Corrected the `fixed_amount_discount_amount` logic to appropriately bring in fixed amount discounts in `shopify__orders`. [PR #78](https://github.com/fivetran/dbt_shopify/pull/78)
 - Removed the `index=1` filter in `stg_shopify__order_discount_code` in the `dbt_shopify_source` package to ensure all discount codes are brought in for every orders. For customers with multiple discount codes in an order, this could update the `count_discount_codes_applied` field in the `shopify__orders` and `shopify__daily_shop` models. [PR #80](https://github.com/fivetran/dbt_shopify_source/pull/80)
+
+## Under the Hood
+- Updated the maintainer PR template to the current format.
+- Added integration testing pipeline for Databricks SQL Warehouse.
+- Added macro `shopify_is_databricks_sql_warehouse` for detecting if a Databricks target is an All Purpose Cluster or a SQL Warehouse.
 
 # dbt_shopify v0.11.0
 [PR #74](https://github.com/fivetran/dbt_shopify/pull/74) includes the following updates: 
