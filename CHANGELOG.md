@@ -13,7 +13,7 @@
     - `shopify__order_lines`
     - `shopify__orders`
     - `shopify__transactions`
-  - Updated the materialization of `shopify__orders__order_line_aggregates` to a table. This model draws on several large upstream sources and is also referenced in several downstream models, so this was done to improve performance. This was not selected for incremental materialization due to the nature of the aggregates used.
+  - Updated the materialization of `shopify__orders__order_line_aggregates` to a table. This model draws on several large upstream sources and is also referenced in several downstream models, so this was done to improve performance. This model was not selected for incremental materialization since its structure was not conducive to incremental strategy.
 - To reduce storage, updated the default materialization of the upstream staging models from tables to views. (See the [dbt_shopify_source CHANGELOG](https://github.com/fivetran/dbt_shopify_source/blob/main/CHANGELOG.md) for more details.)
 
 ## Features
@@ -23,7 +23,7 @@
 
 ## 🪲 Bug Fixes 🪛
 - Corrected the `fixed_amount_discount_amount` logic to appropriately bring in fixed amount discounts in `shopify__orders`. [PR #78](https://github.com/fivetran/dbt_shopify/pull/78)
-- Removed the `index=1` filter in `stg_shopify__order_discount_code` in the `dbt_shopify_source` package to ensure all discount codes are brought in for every orders. For customers with multiple discount codes in an order, this could update the `count_discount_codes_applied` field in the `shopify__orders` and `shopify__daily_shop` models. [PR #80](https://github.com/fivetran/dbt_shopify_source/pull/80)
+- Removed the `index=1` filter in `stg_shopify__order_discount_code` in the `dbt_shopify_source` package to ensure all discount codes are brought in for every orders. For customers with multiple discount codes in an order, this could update the `count_discount_codes_applied` field in the `shopify__orders` and `shopify__daily_shop` models. [PR #78](https://github.com/fivetran/dbt_shopify/pull/78)
 
 ## Under the Hood
 - Updated the maintainer PR template to the current format.
