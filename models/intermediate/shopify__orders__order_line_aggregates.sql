@@ -1,3 +1,5 @@
+{{ config(materialized='table') }}
+
 with order_line as (
 
     select *
@@ -20,7 +22,7 @@ with order_line as (
     select
         order_line_id,
         source_relation,
-        sum(price) price
+        sum(price) as price
 
     from tax
     group by 1,2

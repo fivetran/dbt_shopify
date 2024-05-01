@@ -1,8 +1,27 @@
+{{
+    config(
+        materialized='table' if shopify.shopify_is_databricks_sql_warehouse() else 'incremental',
+        unique_key='customer_cohort_id',
+        incremental_strategy='insert_overwrite' if target.type in ('bigquery', 'databricks', 'spark') else 'delete+insert',
+        partition_by={
+            "field": "date_month", 
+            "data_type": "date"
+            } if target.type not in ('spark','databricks') 
+            else ['date_month'],
+        cluster_by=['date_month', 'email'],
+        file_format='delta' if shopify.shopify_is_databricks_sql_warehouse() else 'parquet'
+        ) 
+}}
+
 with calendar as (
 
     select *
     from {{ ref('shopify__calendar') }}
     where cast({{ dbt.date_trunc('month','date_day') }} as date) = date_day
+
+    {% if is_incremental() %}
+    and cast(date_day as date) >= {{ shopify.shopify_lookback(from_date="max(date_month)", interval=1, datepart='month') }}
+    {% endif %}
 
 ), customers as (
 
@@ -17,7 +36,7 @@ with calendar as (
 ), customer_calendar as (
 
     select
-        calendar.date_day as date_month,
+        cast(calendar.date_day as date) as date_month,
         customers.email,
         customers.first_order_timestamp,
         customers.source_relation,
@@ -46,24 +65,64 @@ with calendar as (
 
 ), windows as (
 
-    {% set partition_string = 'partition by email, source_relation order by date_month rows between unbounded preceding and current row' %}
+    {% set partition_string = 'partition by ' ~ shopify.shopify_partition_by_cols('email', 'source_relation') ~ 'order by date_month rows between unbounded preceding and current row' %}
 
     select
         *,
         sum(total_price_in_month) over ({{ partition_string }}) as total_price_lifetime,
         sum(order_count_in_month) over ({{ partition_string }}) as order_count_lifetime,
         sum(line_item_count_in_month) over ({{ partition_string }}) as line_item_count_lifetime,
-        row_number() over (partition by email, source_relation order by date_month asc) as cohort_month_number
+        row_number() over ( 
+            partition by {{ shopify.shopify_partition_by_cols('email', 'source_relation') }}
+            order by date_month asc) 
+            as cohort_month_number
     from orders_joined
-        
-), surrogate_key as (
+
+{% if is_incremental() %}
+), backfill_lifetime_sums as (
+    -- for incremental runs we need to fetch the prior lifetimes to properly continue adding to them
+    select
+        source_relation,
+        email,
+        max(total_price_lifetime) as previous_total_price_lifetime,
+        max(order_count_lifetime) as previous_order_count_lifetime,
+        max(line_item_count_lifetime) as previous_line_item_count_lifetime,
+        max(cohort_month_number) as previous_cohort_month_number
+    from {{ this }}
+    where date_month < {{ shopify.shopify_lookback(from_date="max(date_month)", interval=1, datepart='month') }}
+    group by 1,2
+
+), final as (
+
+    select 
+        windows.date_month, 
+        windows.email, 
+        windows.first_order_timestamp,
+        windows.cohort_month,
+        windows.source_relation,
+        windows.order_count_in_month,
+        windows.total_price_in_month,
+        windows.line_item_count_in_month,
+        backfill_lifetime_sums.previous_cohort_month_number + windows.cohort_month_number as cohort_month_number,
+        backfill_lifetime_sums.previous_total_price_lifetime + windows.total_price_lifetime as total_price_lifetime,
+        backfill_lifetime_sums.previous_order_count_lifetime + windows.order_count_lifetime as order_count_lifetime,
+        backfill_lifetime_sums.previous_line_item_count_lifetime + windows.line_item_count_lifetime as line_item_count_lifetime,
+        {{ dbt_utils.generate_surrogate_key(['windows.date_month','windows.email','windows.source_relation']) }} as customer_cohort_id
+    from windows
+    left join backfill_lifetime_sums
+        on backfill_lifetime_sums.source_relation = windows.source_relation
+        and backfill_lifetime_sums.email = windows.email
+
+{% else %}
+), final as (
 
     select 
         *, 
         {{ dbt_utils.generate_surrogate_key(['date_month','email','source_relation']) }} as customer_cohort_id
     from windows
 
+{% endif %}
 )
 
 select *
-from surrogate_key
+from final

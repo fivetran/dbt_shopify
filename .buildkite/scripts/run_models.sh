@@ -16,9 +16,20 @@ db=$1
 echo `pwd`
 cd integration_tests
 dbt deps
+
+if [ "$db" = "databricks-sql" ]; then
+dbt seed --vars '{shopify_schema: shopify_integrations_tests_sqlw}' --target "$db" --full-refresh
+dbt run --vars '{shopify_schema: shopify_integrations_tests_sqlw}' --target "$db" --full-refresh
+dbt test --vars '{shopify_schema: shopify_integrations_tests_sqlw}' --target "$db"
+dbt run --vars '{shopify_schema: shopify_integrations_tests_sqlw, shopify_timezone: "America/New_York", shopify_using_fulfillment_event: true, shopify_using_all_metafields: true}' --target "$db" --full-refresh
+dbt test --vars '{shopify_schema: shopify_integrations_tests_sqlw}' --target "$db"
+dbt run-operation fivetran_utils.drop_schemas_automation --target "$db"
+
+else
 dbt seed --target "$db" --full-refresh
 dbt run --target "$db" --full-refresh
 dbt test --target "$db"
 dbt run --vars '{shopify_timezone: "America/New_York", shopify_using_fulfillment_event: true, shopify_using_all_metafields: true}' --target "$db" --full-refresh
 dbt test --target "$db"
 dbt run-operation fivetran_utils.drop_schemas_automation --target "$db"
+fi
