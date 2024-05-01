@@ -6,7 +6,7 @@
 > ⚠️ Since the following changes are breaking, a `--full-refresh` after upgrading will be required.
 
 - Performance improvements:
-  - Added an incremental strategy for of the following models. These models were picked for incremental materialization based on the size of their upstream sources. 
+  - Added an incremental strategy for the following models. These models were picked for incremental materialization based on the size of their upstream sources. 
     - `shopify__customer_cohorts` (For Databricks SQL Warehouse destinations, this model is materialized as a table without support for incremental runs at this time.)
     - `shopify__customer_email_cohorts` (For Databricks SQL Warehouse destinations, this model is materialized as a table without support for incremental runs at this time.)
     - `shopify__discounts`
@@ -14,7 +14,7 @@
     - `shopify__orders`
     - `shopify__transactions`
   - Updated the materialization of `shopify__orders__order_line_aggregates` to a table. This model draws on several large upstream sources and is also referenced in several downstream models, so this was done to improve performance. This was not selected for incremental materialization due to the nature of the aggregates used.
-- To reduce storage, updated the default materialization of the upstream staging models to views. (See the [dbt_shopify_source CHANGELOG](https://github.com/fivetran/dbt_shopify_source/blob/main/CHANGELOG.md) for more details.)
+- To reduce storage, updated the default materialization of the upstream staging models from tables to views. (See the [dbt_shopify_source CHANGELOG](https://github.com/fivetran/dbt_shopify_source/blob/main/CHANGELOG.md) for more details.)
 
 ## Features
 - Added a default 7-day look-back to incremental models to accommodate late arriving records. The number of days can be changed by setting the var `lookback_window` in your dbt_project.yml. See the [Lookback Window section of the README](https://github.com/fivetran/dbt_shopify/blob/main/README.md#lookback-window) for more details. 
