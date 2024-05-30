@@ -1,3 +1,10 @@
+# dbt_shopify v0.12.1
+
+PR # includes the following updates: 
+
+## 🪲 Bug Fixes 🪛
+-Added support for a new 'delayed' fulfillment event status from Shopify.
+
 # dbt_shopify v0.12.0
 
 [PR #76](https://github.com/fivetran/dbt_shopify/pull/76) includes the following updates: 
