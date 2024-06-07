@@ -3,7 +3,10 @@
 [PR #81](https://github.com/fivetran/dbt_shopify/pull/81) includes the following updates: 
 
 ## 🪲 Bug Fixes 🪛
--Added support for a new 'delayed' fulfillment event status from Shopify.
+- Added support for a new `delayed` fulfillment event status from Shopify. This produces a new `count_fulfillment_delayed` field in the `shopify__daily_shop` model.
+
+## Contributors
+- [@shreveasaurus](https://github.com/shreveasaurus) [PR #81](https://github.com/fivetran/dbt_shopify/pull/81)
 
 # dbt_shopify v0.12.0
 
