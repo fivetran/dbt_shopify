@@ -55,6 +55,7 @@ dispatch:
 models:
   shopify:
     +schema: "{{ 'shopify_integrations_tests_sqlw' if target.name == 'databricks-sql' else 'shopify' }}"
+  # +schema: "shopify_{{ var('directed_schema','dev') }}"
 
 seeds:
   shopify_integration_tests:
