@@ -97,7 +97,7 @@ final as (
         coalesce(daily_abandoned_checkouts.count_customer_emails_abandoned_checkout, 0) as count_customer_emails_abandoned_checkout
 
         {% if var('shopify_using_fulfillment_event', false) %}
-            {% for status in ['attempted_delivery', 'delivered', 'failure', 'in_transit', 'out_for_delivery', 'ready_for_pickup', 'picked_up', 'label_printed', 'label_purchased', 'confirmed']%}
+            {% for status in ['attempted_delivery', 'delayed', 'delivered', 'failure', 'in_transit', 'out_for_delivery', 'ready_for_pickup', 'picked_up', 'label_printed', 'label_purchased', 'confirmed']%}
         , coalesce(count_fulfillment_{{ status }}, 0) as count_fulfillment_{{ status }}
             {% endfor %}
         {% endif %}

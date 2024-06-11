@@ -1139,6 +1139,8 @@ models:
         description: Count of distinct fulfillments for which a shipping label has been purchased (but not printed yet) on this day.
       - name: count_fulfillment_confirmed
         description: Count of confirmed distinct fulfillments. This is the default status when no other information is available about a fulfillment.
+      - name: count_fulfillment_delayed
+        description: Count of delayed distinct fulfillments.
       - name: avg_line_item_count
         description: Average line item count for orders placed on this day.
       - name: avg_discount
