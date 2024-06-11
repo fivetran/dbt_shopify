@@ -2,6 +2,7 @@
     tags="fivetran_validations",
     enabled=var('fivetran_validation_tests_enabled', false)
 ) }}
+-- test will only run if shopify_using_fulfillment_event is set to True
 
 with source as (
 
@@ -21,7 +22,7 @@ source_metrics as (
         count(distinct case when status = 'delivered' then fulfillment_id end) as count_fulfillment_delivered
 
     from source
-    where happened_at > '2023-01-01' and happened_at < '2024-01-01'
+    where happened_at > '2020-01-01' and happened_at < '2024-06-10'
     group by 1,2,3
 ),
 
@@ -43,7 +44,7 @@ model_metrics as (
         sum(count_fulfillment_delivered) as count_fulfillment_delivered
 
     from model
-    where date_day >= '2023-01-01' and date_day < '2024-01-01'
+    where date_day >= '2020-01-01' and date_day < '2024-06-10'
     group by 1,2,3
 ),
 

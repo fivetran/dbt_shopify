@@ -11,10 +11,13 @@ with prod as (
         sum(count_orders) as count_orders,
         count(count_customers) as count_customers,
         sum(order_adjusted_total) as order_adjusted_total,
-        sum(count_abandoned_checkouts) as count_abandoned_checkouts,
-        sum(count_fulfillment_attempted_delivery) as count_fulfillment_attempted_delivery,
-        sum(count_fulfillment_confirmed) as count_fulfillment_confirmed,
-        count(count_fulfillment_in_transit) as count_fulfillment_in_transit
+        sum(count_abandoned_checkouts) as count_abandoned_checkouts
+
+        {% if var('shopify_using_fulfillment_event', false) %}
+        , sum(count_fulfillment_attempted_delivery) as count_fulfillment_attempted_delivery
+        , sum(count_fulfillment_confirmed) as count_fulfillment_confirmed
+        , count(count_fulfillment_in_transit) as count_fulfillment_in_transit
+        {% endif %}
 
     from {{ target.schema }}_shopify_prod.shopify__daily_shop
     group by 1,2,3
@@ -28,10 +31,14 @@ dev as (
         sum(count_orders) as count_orders,
         count(count_customers) as count_customers,
         sum(order_adjusted_total) as order_adjusted_total,
-        sum(count_abandoned_checkouts) as count_abandoned_checkouts,
-        sum(count_fulfillment_attempted_delivery) as count_fulfillment_attempted_delivery,
-        sum(count_fulfillment_confirmed) as count_fulfillment_confirmed,
-        count(count_fulfillment_in_transit) as count_fulfillment_in_transit
+        sum(count_abandoned_checkouts) as count_abandoned_checkouts
+
+        {% if var('shopify_using_fulfillment_event', false) %}
+        , sum(count_fulfillment_attempted_delivery) as count_fulfillment_attempted_delivery
+        , sum(count_fulfillment_confirmed) as count_fulfillment_confirmed
+        , count(count_fulfillment_in_transit) as count_fulfillment_in_transit
+        {% endif %}
+
     from {{ target.schema }}_shopify_dev.shopify__daily_shop
     group by 1,2,3
 ),
@@ -51,11 +58,15 @@ final as (
         prod.order_adjusted_total as prod_order_adjusted_total,
         dev.order_adjusted_total as dev_order_adjusted_total,
         prod.count_abandoned_checkouts as prod_count_abandoned_checkouts,
-        dev.count_abandoned_checkouts as dev_count_abandoned_checkouts,
-        prod.count_fulfillment_attempted_delivery as prod_count_fulfillment_attempted_delivery,
-        dev.count_fulfillment_attempted_delivery as dev_count_fulfillment_attempted_delivery,
-        prod.count_fulfillment_confirmed as prod_count_fulfillment_confirmed,
-        dev.count_fulfillment_confirmed as dev_count_fulfillment_confirmed
+        dev.count_abandoned_checkouts as dev_count_abandoned_checkouts
+
+        {% if var('shopify_using_fulfillment_event', false) %}
+        , prod.count_fulfillment_attempted_delivery as prod_count_fulfillment_attempted_delivery
+        , dev.count_fulfillment_attempted_delivery as dev_count_fulfillment_attempted_delivery
+        , prod.count_fulfillment_confirmed as prod_count_fulfillment_confirmed
+        , dev.count_fulfillment_confirmed as dev_count_fulfillment_confirmed
+        {% endif %}
+
     from prod
     full outer join dev 
         on dev.date_day = prod.date_day
@@ -72,6 +83,9 @@ where
     abs(prod_count_orders - dev_count_orders) > .001 or
     abs(prod_count_customers - dev_count_customers) > .001 or
     abs(prod_order_adjusted_total - dev_order_adjusted_total) > .001 or
-    abs(prod_count_abandoned_checkouts - dev_count_abandoned_checkouts) > .001 or
-    abs(prod_count_fulfillment_attempted_delivery - dev_count_fulfillment_attempted_delivery) > .001 or
-    abs(prod_count_fulfillment_confirmed - dev_count_fulfillment_confirmed) > .001
+    abs(prod_count_abandoned_checkouts - dev_count_abandoned_checkouts) > .001
+    
+    {% if var('shopify_using_fulfillment_event', false) %}
+    or abs(prod_count_fulfillment_attempted_delivery - dev_count_fulfillment_attempted_delivery) > .001
+    or abs(prod_count_fulfillment_confirmed - dev_count_fulfillment_confirmed) > .001
+    {% endif %}

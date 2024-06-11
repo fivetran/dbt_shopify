@@ -18,7 +18,7 @@ order_metrics as (
         sum(order_adjusted_total) as order_adjusted_total
 
     from orders
-    where created_timestamp > '2023-01-01' and created_timestamp < '2024-01-01'
+    where created_timestamp > '2020-01-01' and created_timestamp < '2024-06-10'
     group by 1,2
 ),
 
@@ -37,7 +37,7 @@ daily_shop_metrics as (
         sum(order_adjusted_total) as order_adjusted_total
 
     from daily_shop
-    where date_day >= '2023-01-01' and date_day < '2024-01-01'
+    where date_day >= '2020-01-01' and date_day < '2024-06-10'
     group by 1,2
 ),
 
@@ -45,10 +45,10 @@ final as (
 
     select
         daily_shop_metrics.source_relation,
-        daily_shop_metrics.count_orders as daily_shop_count_orders,
-        order_metrics.count_orders as order_count_orders,
-        daily_shop_metrics.order_adjusted_total as daily_shop_order_adjusted_total,
-        order_metrics.order_adjusted_total as order_order_adjusted_total
+        coalesce(daily_shop_metrics.count_orders, 0) as daily_shop_count_orders,
+        coalesce(order_metrics.count_orders, 0) as order_count_orders,
+        coalesce(daily_shop_metrics.order_adjusted_total, 0) as daily_shop_order_adjusted_total,
+        coalesce(order_metrics.order_adjusted_total, 0) as order_order_adjusted_total
 
     from daily_shop_metrics
     full outer join order_metrics
