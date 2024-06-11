@@ -1,6 +1,3 @@
 packages:
-# - package: fivetran/shopify_source
-#   version: [">=0.12.0", "<0.13.0"]
-  - git: https://github.com/fivetran/dbt_shopify_source.git
-    revision: releases/v0.12.latest
-    warn-unpinned: false
+- package: fivetran/shopify_source
+  version: [">=0.12.0", "<0.13.0"]
