@@ -1,0 +1,79 @@
+version: 2
+
+models:
+  - name: shopify__line_item_enhanced
+    description: Add description
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - header_id
+            - line_item_id
+    columns:
+      - name: header_id
+        description: Id of corresponding invoice.
+      - name: line_item_id
+        description: Invoice line item id.
+      - name: line_item_index
+        description: Unique index of each line item id for each invoice.
+      - name: record_type
+        description: header or line_item
+      - name: created_at
+        description: When the invoice was created
+      - name: header_status
+        description: Status of the invoice.
+      - name: billing_type
+        description: Type of invoice line item.
+      - name: currency
+        description: Currency used in the invoice.
+      - name: product_id
+        description: Product ID
+      - name: product_name
+        description: Product name
+      - name: product_type
+        description: Product type
+      - name: transaction_type
+        description: Balance transaction type
+      - name: quantity
+        description: The number of units of this line item.
+      - name: unit_amount
+        description: Amount per unit.
+      - name: discount_amount
+        description: The discount amount associated with this invoice.
+      - name: tax_amount
+        description: The tax amount associated with this invoice.
+      - name: total_amount
+        description: Invoice total
+      - name: payment_id
+        description: Payment intent ID
+      - name: payment_method
+        description: Payment method type
+      - name: payment_method_id
+        description: Payment method ID
+      - name: payment_at
+        description: Charge created date
+      - name: fee_amount
+        description: Balance transaction fee
+      - name: refund_amount
+        description: Refund amount associated with this invoice.
+      - name: subscription_id
+        description: Subscription associated with this invoice.
+      - name: subscription_period_started_at
+        description: Subscription's current period start
+      - name: subscription_period_ended_at
+        description: Subscription's current period end
+      - name: subscription_status
+        description: Subscription status
+      - name: customer_id
+        description: Customer associated with this invoice.
+      - name: customer_level
+        description: Whether 'account' or 'customer'. For Stripe, the level is 'customer'.
+      - name: customer_name
+        description: Customer name
+      - name: customer_company
+        description: Associated account's company if applicable.
+      - name: customer_email
+        description: Customer email
+      - name: customer_city
+        description: Customer city
+      - name: customer_country
+        description: Customer country
