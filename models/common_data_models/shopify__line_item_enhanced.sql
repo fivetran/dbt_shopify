@@ -17,11 +17,16 @@ with line_items as (
 
     select *
     from {{ var('shopify_transaction')}}
+    where kind = 'capture'
 
-), tender_transactions as (
+), refund_transactions as (
 
-    select *
-    from {{ var('shopify_tender_transaction')}}
+    select
+        order_id,
+        sum(amount) as total_order_refund_amount
+    from {{ var('shopify_transaction')}}
+    where kind = 'refund' 
+    group by 1
 
 ), order_line_refund as (
 
@@ -44,8 +49,7 @@ with line_items as (
         li.fulfillment_status as header_status,
         li.product_id as product_id,
         p.title as product_name,
-        -- t.kind as transaction_type,
-        null as transaction_type,
+        t.kind as transaction_type,
         null as billing_type,
         p.product_type as product_type,
         li.quantity as quantity,
@@ -53,15 +57,12 @@ with line_items as (
         o.total_discounts as discount_amount,
         o.total_tax as tax_amount,
         (li.quantity*li.price) as total_amount,
-        -- tt.transaction_id as payment_id,
-        null as payment_id,
+        t.transaction_id as payment_id,
         null as payment_method_id,
-        -- tt.payment_method as payment_method,
-        null as payment_method,
-        -- t.processed_timestamp as payment_at,
-        null as payment_at,
+        t.gateway as payment_method, -- payment_method in tender_transaction would be like 'apply_pay', where gateway is like 'gift card' or 'shopify payments' which i think is more relevant here
+        t.processed_timestamp as payment_at,
         null as fee_amount,
-        (olr.subtotal + olr.total_tax) as refund_amount,
+        rt.total_order_refund_amount as refund_amount,
         null as subscription_id,
         null as subscription_period_started_at,
         null as subscription_period_ended_at,
@@ -76,6 +77,10 @@ with line_items as (
     from line_items li
     left join orders o
         on li.order_id = o.order_id
+    left join transactions t
+        on o.order_id = t.order_id
+    left join refund_transactions rt
+        on o.order_id = rt.order_id
     left join order_line_refund olr
         on li.order_line_id = olr.order_line_id
     left join product p 
