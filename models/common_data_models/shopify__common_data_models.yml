@@ -10,21 +10,21 @@ models:
             - line_item_id
     columns:
       - name: header_id
-        description: Id of corresponding invoice.
+        description: Id of corresponding order.
       - name: line_item_id
-        description: Invoice line item id.
+        description: Order line item id.
       - name: line_item_index
-        description: Unique index of each line item id for each invoice.
+        description: Unique index of each line item id for each order.
       - name: record_type
         description: header or line_item
       - name: created_at
-        description: When the invoice was created
+        description: When the order was created
       - name: header_status
-        description: Status of the invoice.
+        description: Status of the order.
       - name: billing_type
-        description: Type of invoice line item.
+        description: NA for Shopify.
       - name: currency
-        description: Currency used in the invoice.
+        description: Currency used in the order.
       - name: product_id
         description: Product ID
       - name: product_name
@@ -32,48 +32,48 @@ models:
       - name: product_type
         description: Product type
       - name: transaction_type
-        description: Balance transaction type
+        description: Transaction type (Charge, Refund, etc)
       - name: quantity
         description: The number of units of this line item.
       - name: unit_amount
-        description: Amount per unit.
+        description: Amount per unit, or the price.
       - name: discount_amount
-        description: The discount amount associated with this invoice.
+        description: The discount amount associated with this order.
       - name: tax_amount
-        description: The tax amount associated with this invoice.
+        description: The tax amount associated with this order.
       - name: total_amount
-        description: Invoice total
+        description: order total
       - name: payment_id
-        description: Payment intent ID
+        description: Transaction ID
       - name: payment_method
-        description: Payment method type
+        description: Transaction gateway for Shopify ('gift card', 'shopify payments', etc)
       - name: payment_method_id
-        description: Payment method ID
+        description: NA for Shopify
       - name: payment_at
-        description: Charge created date
+        description: Transaction processed timestamp
       - name: fee_amount
-        description: Balance transaction fee
+        description: NA for Shopify
       - name: refund_amount
-        description: Refund amount associated with this invoice.
+        description: Refund amount associated with this order.
       - name: subscription_id
-        description: Subscription associated with this invoice.
+        description: NA for Shopify
       - name: subscription_period_started_at
-        description: Subscription's current period start
+        description: NA for Shopify
       - name: subscription_period_ended_at
-        description: Subscription's current period end
+        description: NA for Shopify
       - name: subscription_status
-        description: Subscription status
+        description: NA for Shopify
       - name: customer_id
-        description: Customer associated with this invoice.
+        description: Customer associated with this order.
       - name: customer_level
-        description: Whether 'account' or 'customer'. For Stripe, the level is 'customer'.
+        description: Whether 'account' or 'customer'. For Shopify, the level is 'customer'.
       - name: customer_name
         description: Customer name
       - name: customer_company
-        description: Associated account's company if applicable.
+        description: Associated customer's company noted on the shipping address if applicable.
       - name: customer_email
         description: Customer email
       - name: customer_city
-        description: Customer city
+        description: Customer's shipping address city
       - name: customer_country
-        description: Customer country
+        description: Customer's shipping address country
