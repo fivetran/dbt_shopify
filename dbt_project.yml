@@ -4,7 +4,7 @@ config-version: 2
 require-dbt-version: [">=1.3.0", "<2.0.0"]
 models:
   shopify:
-    +schema: shopify
+    +schema: "{{ 'shopify_sql_' ~ var('directed_schema','dev') if target.name == 'databricks-sql' else 'shopify_' ~ var('directed_schema','dev') }}"
     +materialized: table
     intermediate:
       +materialized: ephemeral

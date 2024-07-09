@@ -23,10 +23,11 @@ with line_items as (
 
     select
         order_id,
+        source_relation,
         sum(amount) as total_order_refund_amount
     from {{ var('shopify_transaction')}}
     where kind = 'refund' 
-    group by 1
+    group by 1, 2
 
 ), order_line_refund as (
 
@@ -46,7 +47,7 @@ with line_items as (
         li.index as line_item_index,
         o.created_timestamp as created_at,
         o.currency as currency,
-        li.fulfillment_status as header_status,
+        o.fulfillment_status as header_status,
         li.product_id as product_id,
         p.title as product_name,
         t.kind as transaction_type,
@@ -54,9 +55,9 @@ with line_items as (
         p.product_type as product_type,
         li.quantity as quantity,
         li.price as unit_amount,
-        o.total_discounts as discount_amount,
+        li.total_discount as discount_amount,
         o.total_tax as tax_amount,
-        (li.quantity*li.price) as total_amount,
+        (li.quantity * li.price) as total_amount,  
         t.transaction_id as payment_id,
         null as payment_method_id,
         t.gateway as payment_method, -- payment_method in tender_transaction would be like 'apply_pay', where gateway is like 'gift card' or 'shopify payments' which i think is more relevant here
@@ -73,20 +74,27 @@ with line_items as (
         o.shipping_address_company as customer_company,
         o.email as customer_email,
         o.shipping_address_city as customer_city,
-        o.shipping_address_country as customer_country
+        o.shipping_address_country as customer_country,
+        li.source_relation
     from line_items li
     left join orders o
         on li.order_id = o.order_id
+        and li.source_relation = o.source_relation
     left join transactions t
         on o.order_id = t.order_id
+        and o.source_relation = t.source_relation
     left join refund_transactions rt
         on o.order_id = rt.order_id
+        and o.source_relation = rt.source_relation
     left join order_line_refund olr
         on li.order_line_id = olr.order_line_id
+        and li.source_relation = olr.source_relation
     left join product p 
         on li.product_id = p.product_id
+        and li.source_relation = p.source_relation
     left join customer c
         on o.customer_id = c.customer_id
+        and o.source_relation = c.source_relation
         
 ), final as (
 
@@ -123,7 +131,8 @@ with line_items as (
         customer_company,
         customer_email,
         customer_city,
-        customer_country
+        customer_country,
+        source_relation
     from enhanced
 
     union all
@@ -161,7 +170,8 @@ with line_items as (
         customer_company,
         customer_email,
         customer_city,
-        customer_country
+        customer_country,
+        source_relation
     from enhanced
     where line_item_index = 1 -- filter to just one arbitrary record
 
@@ -169,3 +179,4 @@ with line_items as (
 
 select * 
 from final
+order by header_id, line_item_index asc, source_relation

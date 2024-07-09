@@ -8,6 +8,7 @@ models:
           combination_of_columns:
             - header_id
             - line_item_id
+            - source_relation
     columns:
       - name: header_id
         description: Id of corresponding order.
@@ -42,7 +43,7 @@ models:
       - name: tax_amount
         description: The tax amount associated with this order.
       - name: total_amount
-        description: order total
+        description: Order total
       - name: payment_id
         description: Transaction ID
       - name: payment_method
@@ -77,3 +78,5 @@ models:
         description: Customer's shipping address city
       - name: customer_country
         description: Customer's shipping address country
+      - name: source_relation
+        description: The source of the record if the unioning functionality is being used. If not this field will be empty.
