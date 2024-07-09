@@ -1,7 +1,9 @@
 # dbt_shopify v0.12.2
 
-## Feature: Customizable date start
-- Updated the `shopify__calendar` start date to include a variable `shopify__calendar_start_date`. This can be set in your `dbt_project.yml`. If not used, the default will start at `2019-01-01`. See the [README](https://github.com/fivetran/dbt_shopify/blob/main/README.md#Change-the-calendar-start-date) for more details. 
+[PR #84](https://github.com/fivetran/dbt_shopify/pull/84) includes the following changes:
+
+## Feature
+- Introduce the variable `shopify__calendar_start_date` to `shopify__calendar` to allow for the start date to be customized. This can be set in your `dbt_project.yml`. If not used, the default will start at `2019-01-01`. See the [README](https://github.com/fivetran/dbt_shopify/blob/main/README.md#Change-the-calendar-start-date) for more details. 
 
 # dbt_shopify v0.12.1
 
