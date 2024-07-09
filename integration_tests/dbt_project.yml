@@ -11,7 +11,7 @@ clean-targets:         # directories to be removed by `dbt clean`
 vars:
   # shopify_using_fulfillment_event: true # set to true when regenerating docs
   # shopify_using_all_metafields: true # set to true when regenerating docs
-  shopify_schema: shopify_integration_tests_7
+  shopify_schema: shopify_integration_tests_8
   shopify_source:
     shopify_customer_identifier: "shopify_customer_data"
     shopify_order_line_refund_identifier: "shopify_order_line_refund_data"
