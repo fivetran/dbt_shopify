@@ -15,9 +15,18 @@ with line_items as (
 
 ), transactions as (
 
-    select *
+    select
+        order_id,
+        kind, 
+        source_relation,
+        {{ fivetran_utils.string_agg("cast (transaction_id as " ~ dbt.type_string() ~ ")", "', '") }} AS transaction_id,
+        {{ fivetran_utils.string_agg("cast (processed_timestamp as " ~ dbt.type_string() ~ ")", "', '") }} as processed_timestamp,
+        {{ fivetran_utils.string_agg('gateway', "', '") }} as gateway
+
     from {{ var('shopify_transaction')}}
     where kind = 'capture'
+    and status = 'success'
+    group by 1,2,3
 
 ), refund_transactions as (
 
@@ -27,17 +36,26 @@ with line_items as (
         sum(amount) as total_order_refund_amount
     from {{ var('shopify_transaction')}}
     where kind = 'refund' 
-    group by 1, 2
+    group by 1,2
 
-), order_line_refund as (
+), order_line_refund as ( -- There is a unique row for each individual item. So if quantity = 4 of 1 line item, then each has its own row
 
-    select *
+    select
+        order_line_id,
+        source_relation,
+        sum(subtotal + total_tax) as total_refund_amount
     from {{ var('shopify_order_line_refund')}}
+    group by 1,2
 
 ), customer as (
 
     select *
     from {{ var('shopify_customer')}}
+
+), shipping as (
+
+    select * 
+    from {{ ref('int_shopify__order__shipping_aggregates')}}
 
 ), enhanced as (
 
@@ -60,9 +78,9 @@ with line_items as (
         (li.quantity * li.price) as total_amount,  
         t.transaction_id as payment_id,
         null as payment_method_id,
-        t.gateway as payment_method, -- payment_method in tender_transaction would be like 'apply_pay', where gateway is like 'gift card' or 'shopify payments' which i think is more relevant here
+        t.gateway as payment_method, -- payment_method in tender_transaction can be something like 'apply_pay', where gateway is like 'gift card' or 'shopify payments' which I think is more relevant here
         t.processed_timestamp as payment_at,
-        null as fee_amount,
+        shipping.discounted_shipping_price + shipping.shipping_tax as fee_amount,
         rt.total_order_refund_amount as refund_amount,
         null as subscription_id,
         null as subscription_period_started_at,
@@ -86,15 +104,15 @@ with line_items as (
     left join refund_transactions rt
         on o.order_id = rt.order_id
         and o.source_relation = rt.source_relation
-    left join order_line_refund olr
-        on li.order_line_id = olr.order_line_id
-        and li.source_relation = olr.source_relation
     left join product p 
         on li.product_id = p.product_id
         and li.source_relation = p.source_relation
     left join customer c
         on o.customer_id = c.customer_id
         and o.source_relation = c.source_relation
+    left join shipping
+        on o.order_id = shipping.order_id
+        and o.source_relation = shipping.source_relation
         
 ), final as (
 
@@ -119,7 +137,7 @@ with line_items as (
         payment_method_id,
         payment_method,
         payment_at,
-        fee_amount,
+        cast(null as {{ dbt.type_numeric() }}) as fee_amount,
         cast(null as {{ dbt.type_numeric() }}) as refund_amount,
         subscription_id,
         subscription_period_started_at,
