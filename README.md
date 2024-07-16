@@ -204,6 +204,15 @@ vars:
     lookback_window: number_of_days # default is 7
 ```
 
+#### Change the calendar start date
+Our date-based models start at `2019-01-01` by default. To customize the start date, add the following variable to your `dbt_project.yml` file: 
+
+```yml
+vars:
+  shopify:
+    shopify__calendar_start_date: 'yyyy-mm-dd' # default is 2019-01-01
+```
+
 </details>
 
 
