@@ -9,14 +9,14 @@ with stg_order_line as (
         1 as join_key,
         count(*) as order_line_count,
         count(distinct order_id) as order_count
-    from {{ target.schema }}_shopify_dev.stg_shopify__order_line
+    from {{ ref('stg_shopify__order_line') }}
 ),
 
 line_item_enhanced as (
     select
         1 as join_key,
         count(*) as line_item_enhanced_count
-    from {{ target.schema }}_shopify_dev.shopify__line_item_enhanced
+    from {{ ref('shopify__line_item_enhanced') }}
 ),
 
 -- test will return values and fail if the row counts don't match
