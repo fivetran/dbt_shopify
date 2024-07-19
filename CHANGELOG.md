@@ -1,3 +1,9 @@
+# dbt_shopify v0.13.0
+[PR #83](https://github.com/fivetran/dbt_shopify/pull/83) includes the following changes:
+
+## Features
+- Introduced the new `shopify__line_item_enhanced` model. This model includes order line items enriched with order, payment, customer, and refund information. This model has been built with the intention of retaining a common line item schema across all other Fivetran billing data models.
+
 # dbt_shopify v0.12.2
 
 [PR #84](https://github.com/fivetran/dbt_shopify/pull/84) includes the following changes:
