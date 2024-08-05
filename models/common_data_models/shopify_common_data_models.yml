@@ -58,6 +58,8 @@ models:
         description: Refund amount associated with this order.
       - name: subscription_id
         description: NA for Shopify
+      - name: subscription_plan
+        description: NA for Shopify
       - name: subscription_period_started_at
         description: NA for Shopify
       - name: subscription_period_ended_at
@@ -66,6 +68,8 @@ models:
         description: NA for Shopify
       - name: customer_id
         description: Customer associated with this order.
+      - name: customer_created_at
+        description: The date and time when the customer was created.
       - name: customer_level
         description: Whether 'account' or 'customer'. For Shopify, the level is 'customer'.
       - name: customer_name
