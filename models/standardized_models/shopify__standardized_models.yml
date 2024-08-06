@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: shopify__line_item_enhanced
-    description: Add description
+    description: This model constructs a comprehensive, denormalized analytical table that enables reporting on key revenue, customer, and product metrics from your billing platform. It’s designed to align with the schema of the `*__line_item_enhanced` model found in Shopify, Recharge, Stripe, Zuora, and Recurly, offering standardized reporting across various billing platforms. To see the kinds of insights this model can generate, explore example visualizations in the [Fivetran Billing Model Streamlit App](https://fivetran-billing-model.streamlit.app/). Visit the app for more details.
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
@@ -49,23 +49,23 @@ models:
       - name: payment_method
         description: Transaction gateway for Shopify ('gift card', 'shopify payments', etc)
       - name: payment_method_id
-        description: NA for Shopify
+        description: Shopify does not have a particular payment_method_id, therefore all records will be null.
       - name: payment_at
         description: Transaction processed timestamp
       - name: fee_amount
-        description: NA for Shopify
+        description: The total shipping fee associated with the order.
       - name: refund_amount
         description: Refund amount associated with this order.
       - name: subscription_id
-        description: NA for Shopify
+        description: Shopify does not include subscriptions, therefore all records will be null.
       - name: subscription_plan
-        description: NA for Shopify
+        description: Shopify does not include subscriptions, therefore all records will be null.
       - name: subscription_period_started_at
-        description: NA for Shopify
+        description: Shopify does not include subscriptions, therefore all records will be null.
       - name: subscription_period_ended_at
-        description: NA for Shopify
+        description: Shopify does not include subscriptions, therefore all records will be null.
       - name: subscription_status
-        description: NA for Shopify
+        description: Shopify does not include subscriptions, therefore all records will be null.
       - name: customer_id
         description: Customer associated with this order.
       - name: customer_created_at

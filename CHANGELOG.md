@@ -2,7 +2,7 @@
 [PR #83](https://github.com/fivetran/dbt_shopify/pull/83) includes the following changes:
 
 ## Features
-- Introduced the new `shopify__line_item_enhanced` model. This model includes order line items enriched with order, payment, customer, and refund information. This model has been built with the intention of retaining a common line item schema across all other Fivetran billing data models.
+- Addition of the `shopify__line_item_enhanced` model. This model constructs a comprehensive, denormalized analytical table that enables reporting on key revenue, customer, and product metrics from your billing platform. It’s designed to align with the schema of the `*__line_item_enhanced` model found in Shopify, Recharge, Stripe, Zuora, and Recurly, offering standardized reporting across various billing platforms. To see the kinds of insights this model can generate, explore example visualizations in the [Fivetran Billing Model Streamlit App](https://fivetran-billing-model.streamlit.app/). Visit the app for more details.
 
 # dbt_shopify v0.12.2
 
