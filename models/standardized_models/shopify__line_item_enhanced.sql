@@ -10,15 +10,6 @@ with line_items as (
     select * 
     from {{ var('shopify_order')}}
 
-), line_item_aggregate as (
-
-    select
-        order_id,
-        source_relation,
-        sum(price*quantity) as total_line_item_amount
-    from {{ var('shopify_order_line')}}
-    group by 1, 2
-
 ), product as (
 
     select *
@@ -84,11 +75,9 @@ with line_items as (
         p.product_type as product_type,
         li.quantity as quantity,
         li.price as unit_amount,
-        li.total_discount as discount_amount,
+        o.total_discounts as discount_amount,
         o.total_tax as tax_amount,
-        (li.quantity * li.price) as line_item_amount,  
-        line_item_aggregate.total_line_item_amount,
-        o.total_price as total_invoice_amount,
+        (li.quantity * li.price) as total_amount,  
         t.transaction_id as payment_id,
         null as payment_method_id,
         t.gateway as payment_method, -- payment_method in tender_transaction can be something like 'apply_pay', where gateway is like 'gift card' or 'shopify payments' which I think is more relevant here
@@ -113,9 +102,6 @@ with line_items as (
     left join orders o
         on li.order_id = o.order_id
         and li.source_relation = o.source_relation
-    left join line_item_aggregate
-        on line_item_aggregate.order_id = o.order_id
-        and line_item_aggregate.source_relation = o.source_relation
     left join transactions t
         on o.order_id = t.order_id
         and o.source_relation = t.source_relation
@@ -151,7 +137,7 @@ with line_items as (
         cast(unit_amount as {{ dbt.type_numeric() }}) as unit_amount,
         cast(null as {{ dbt.type_numeric() }}) as discount_amount,
         cast(null as {{ dbt.type_numeric() }}) as tax_amount,
-        cast(line_item_amount as {{ dbt.type_numeric() }}) as total_amount,
+        cast(total_amount as {{ dbt.type_numeric() }}) as total_amount,
         payment_id,
         payment_method_id,
         payment_method,
@@ -193,7 +179,7 @@ with line_items as (
         cast(null as {{ dbt.type_numeric() }}) as unit_amount,
         discount_amount,
         tax_amount,
-        cast((total_invoice_amount - total_line_item_amount) as {{ dbt.type_float() }}) as total_amount,
+        cast(null as {{ dbt.type_numeric() }}) as total_amount,
         payment_id,
         payment_method_id,
         payment_method,
