@@ -1,5 +1,5 @@
 name: 'shopify'
-version: '0.12.2'
+version: '0.13.0'
 config-version: 2
 require-dbt-version: [">=1.3.0", "<2.0.0"]
 models:
@@ -22,7 +22,6 @@ vars:
     shopify_transaction: "{{ ref('stg_shopify__transaction') }}"
     shopify_refund: "{{ ref('stg_shopify__refund') }}"
     shopify_order_adjustment: "{{ ref('stg_shopify__order_adjustment') }}"
-
     shopify_abandoned_checkout: "{{ ref('stg_shopify__abandoned_checkout') }}"
     shopify_collection_product: "{{ ref('stg_shopify__collection_product') }}"
     shopify_collection: "{{ ref('stg_shopify__collection') }}"

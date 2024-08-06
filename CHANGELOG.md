@@ -1,3 +1,10 @@
+# dbt_shopify v0.13.0
+[PR #83](https://github.com/fivetran/dbt_shopify/pull/83) includes the following changes:
+
+## Features
+- Addition of the `shopify__line_item_enhanced` model. This model constructs a comprehensive, denormalized analytical table that enables reporting on key revenue, customer, and product metrics from your billing platform. It’s designed to align with the schema of the `*__line_item_enhanced` model found in Shopify, Recharge, Stripe, Zuora, and Recurly, offering standardized reporting across various billing platforms. To see the kinds of insights this model can generate, explore example visualizations in the [Fivetran Billing Model Streamlit App](https://fivetran-billing-model.streamlit.app/). Visit the app for more details.
+  - If desired, this model may be disabled by setting the `shopify__standardized_billing_model_enabled` as `false` in your `dbt_project.yml` (true by default).
+
 # dbt_shopify v0.12.2
 
 [PR #84](https://github.com/fivetran/dbt_shopify/pull/84) includes the following changes:
