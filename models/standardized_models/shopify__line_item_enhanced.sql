@@ -1,3 +1,5 @@
+{{ config(enabled= var('shopify__standardized_billing_model_enabled', True)) }}
+
 with line_items as (
 
     select * 
