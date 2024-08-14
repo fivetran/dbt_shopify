@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '0.12.2'
+version: '0.13.0'
 profile: 'integration_tests'
 config-version: 2
 
@@ -11,7 +11,7 @@ clean-targets:         # directories to be removed by `dbt clean`
 vars:
   # shopify_using_fulfillment_event: true # set to true when regenerating docs
   # shopify_using_all_metafields: true # set to true when regenerating docs
-  shopify_schema: shopify_integration_tests_8
+  shopify_schema: shopify_integration_tests_10
   shopify_source:
     shopify_customer_identifier: "shopify_customer_data"
     shopify_order_line_refund_identifier: "shopify_order_line_refund_data"
@@ -53,8 +53,7 @@ dispatch:
     search_order: ['spark_utils', 'dbt_utils']
 
 models:
-  shopify:
-    +schema: "{{ 'shopify_integrations_tests_sqlw' if target.name == 'databricks-sql' else 'shopify' }}"
+  +schema: "{{ 'shopify_integrations_tests_sqlw' if target.name == 'databricks-sql' else 'shopify' }}"
   # +schema: "shopify_{{ var('directed_schema','dev') }}"
 
 seeds:
