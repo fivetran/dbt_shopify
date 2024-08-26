@@ -103,10 +103,10 @@ with calendar as (
         windows.order_count_in_month,
         windows.total_price_in_month,
         windows.line_item_count_in_month,
-        coalesce(backfill_lifetime_sums.previous_cohort_month_number, 0) + windows.cohort_month_number as cohort_month_number,
-        coalesce(backfill_lifetime_sums.previous_total_price_lifetime, 0) + windows.total_price_lifetime as total_price_lifetime,
-        coalesce(backfill_lifetime_sums.previous_order_count_lifetime, 0) + windows.order_count_lifetime as order_count_lifetime,
-        coalesce(backfill_lifetime_sums.previous_line_item_count_lifetime, 0) + windows.line_item_count_lifetime as line_item_count_lifetime,
+        coalesce(backfill_lifetime_sums.previous_cohort_month_number, 0) + coalesce(windows.cohort_month_number, 0) as cohort_month_number,
+        coalesce(backfill_lifetime_sums.previous_total_price_lifetime, 0) + coalesce(windows.total_price_lifetime, 0) as total_price_lifetime,
+        coalesce(backfill_lifetime_sums.previous_order_count_lifetime, 0) + coalesce(windows.order_count_lifetime, 0) as order_count_lifetime,
+        coalesce(backfill_lifetime_sums.previous_line_item_count_lifetime, 0) + coalesce(windows.line_item_count_lifetime, 0) as line_item_count_lifetime,
         {{ dbt_utils.generate_surrogate_key(['windows.date_month','windows.customer_id','windows.source_relation']) }} as customer_cohort_id
     from windows
     left join backfill_lifetime_sums
