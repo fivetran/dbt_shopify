@@ -1,3 +1,15 @@
+# dbt_shopify v0.13.1
+
+## 🪲 Bug Fixes 🪛
+- Coalesces the previous lifetimes fields from incremental loads. This fixes the issue of NULL values in the lifetime columns in `shopify__customer_cohorts` table. ([PR #86](https://github.com/fivetran/dbt_shopify/pull/86)).
+
+## 🚘 Under the Hood 🚘
+- Coalesces `backfill_lifetime_sums` columns
+- Coalesces `windows` columns in a rare case where there are no orders in an incremental period 
+
+## Contributors
+- [@advolut-team](https://github.com/advolut-team) ([PR #86](https://github.com/fivetran/dbt_shopify/pull/86))
+
 # dbt_shopify v0.13.0
 [PR #83](https://github.com/fivetran/dbt_shopify/pull/83) includes the following changes:
 
