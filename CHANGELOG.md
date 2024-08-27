@@ -1,9 +1,11 @@
 # dbt_shopify v0.13.1
+[PR #87](https://github.com/fivetran/dbt_shopify/pull/87) includes the following changes:
+
 ## Bug Fixes
 - Coalesces the `backfill_lifetime_sums` fields from incremental loads, as well as `cohort_month_number` in the rare cases there are no orders from an incremental period. This fixes the issue of NULL values in the lifetime columns in `shopify__customer_cohorts` table. ([PR #86](https://github.com/fivetran/dbt_shopify/pull/86)).
 
 ## Under the Hood:
-- Added consistency and integrity tests within `integration_tests` for the `shopify__customer_cohorts` model.
+- Added consistency and integrity tests within `integration_tests` for the `shopify__customer_cohorts` model. ([PR #87](https://github.com/fivetran/dbt_shopify/pull/87)).
 
 ## Contributors
 - [@advolut-team](https://github.com/advolut-team) ([PR #86](https://github.com/fivetran/dbt_shopify/pull/86))
