@@ -1,3 +1,15 @@
+# dbt_shopify v0.13.1
+[PR #87](https://github.com/fivetran/dbt_shopify/pull/87) includes the following changes:
+
+## Bug Fixes
+- Coalesces the `backfill_lifetime_sums` fields from incremental loads, as well as `cohort_month_number` in the rare cases there are no orders from an incremental period. This fixes the issue of NULL values in the lifetime columns in `shopify__customer_cohorts` table. ([PR #86](https://github.com/fivetran/dbt_shopify/pull/86)).
+
+## Under the Hood:
+- Added consistency and integrity tests within `integration_tests` for the `shopify__customer_cohorts` model. ([PR #87](https://github.com/fivetran/dbt_shopify/pull/87)).
+
+## Contributors
+- [@advolut-team](https://github.com/advolut-team) ([PR #86](https://github.com/fivetran/dbt_shopify/pull/86))
+
 # dbt_shopify v0.13.0
 [PR #83](https://github.com/fivetran/dbt_shopify/pull/83) includes the following changes:
 
@@ -6,7 +18,7 @@
   - This model is currently disabled by default. You may enable it by setting the `shopify__standardized_billing_model_enabled` as `true` in your `dbt_project.yml`.
 
 ## Under the Hood:
-- Added consistency test within integration_tests for the `stripe__line_item_enhanced` model.
+- Added consistency test within integration_tests for the `shopify__line_item_enhanced` model.
 
 # dbt_shopify v0.12.2
 
