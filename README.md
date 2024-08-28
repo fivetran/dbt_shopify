@@ -58,11 +58,11 @@ To use this dbt package, you must have the following:
 
 - At least one Fivetran Shopify connector syncing data into your destination.
 - One of the following destinations:
-- [BigQuery](https://fivetran.com/docs/destinations/bigquery)
-- [Snowflake](https://fivetran.com/docs/destinations/snowflake)
-- [Redshift](https://fivetran.com/docs/destinations/redshift)
-- [PostgreSQL](https://fivetran.com/docs/destinations/postgresql)
-- [Databricks](https://fivetran.com/docs/destinations/databricks) with [Databricks Runtime](https://docs.databricks.com/en/compute/index.html#databricks-runtime)
+  - [BigQuery](https://fivetran.com/docs/destinations/bigquery)
+  - [Snowflake](https://fivetran.com/docs/destinations/snowflake)
+  - [Redshift](https://fivetran.com/docs/destinations/redshift)
+  - [PostgreSQL](https://fivetran.com/docs/destinations/postgresql)
+  - [Databricks](https://fivetran.com/docs/destinations/databricks) with [Databricks Runtime](https://docs.databricks.com/en/compute/index.html#databricks-runtime)
 
 ### Step 2: Install the package (skip if also using the `shopify_holistic_reporting` package)
 If you are **not** using the [Shopify Holistic reporting package](https://github.com/fivetran/dbt_shopify_holistic_reporting), include the following shopify package version in your `packages.yml` file:
