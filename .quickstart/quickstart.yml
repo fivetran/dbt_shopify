@@ -24,5 +24,6 @@ public_models: [
   "shopify__products",
   "shopify__transactions",
   "shopify__customers",
-  "shopify__order_lines"
+  "shopify__order_lines",
+  "shopify__line_item_enhanced"
 ]

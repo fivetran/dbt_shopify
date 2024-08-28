@@ -22,10 +22,10 @@ This package models Shopify data from [Fivetran's connector](https://fivetran.co
 The main focus of the package is to transform the core object tables into analytics-ready models, including a cohort model to understand how your customers are behaving over time.
 
 <!--section="shopify_transformation_model"-->
-The following table provides a detailed list of all models materialized within this package by default.
-> TIP: See more details about these models in the package's [dbt docs site](https://fivetran.github.io/dbt_shopify/#!/overview/shopify).
+The following table provides a detailed list of all tables materialized within this package by default.
+> TIP: See more details about these tables in the package's [dbt docs site](https://fivetran.github.io/dbt_shopify/#!/overview/shopify).
 
-| **model**                 | **description**                                                                                                    |
+| **Table**                 | **Description**                                                                                                    |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | [shopify__customer_cohorts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_cohorts)  | Each record represents the monthly performance of a customer (based on `customer_id`), including fields for the month of their 'cohort'.    |
 | [shopify__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customers)        | Each record represents a distinct `customer_id`, with additional dimensions like lifetime value and number of orders.            |
