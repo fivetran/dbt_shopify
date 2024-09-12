@@ -1,6 +1,27 @@
 version: 2
 
 models:
+  - name: report__sales_by_channel
+    description: Sales channel name, orders, gross sales, discounts, returns, net sales, shipping, tax, total sales. 
+    columns:
+      - name: api_client_title
+        description: the name of the sales channel.
+      - name: orders
+        description: indicates how many orders were placed through each channel.
+      - name: gross_sales
+        description: the gross sales value associated with each sales channel.
+      - name: discounts
+        description: the total discounts value associated with each sales channel.
+      - name: returns
+        description: the number of returns associated with each sales channel.
+      - name: net_sales
+        description: the net sales value associated with each sales channel.
+      - name: shipping
+        description: the total shipping value associated with each sales channel.
+      - name: taxes
+        description: the total taxes value associated with each sales channel.
+      - name: total_sale
+        description: the total sales value associated with each sales channel.
   - name: shopify__customer_cohorts
     description: Each record represents a customer's performance in a calendar month.
     columns:
