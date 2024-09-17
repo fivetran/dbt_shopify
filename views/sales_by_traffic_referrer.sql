@@ -1,7 +1,11 @@
 SELECT
     customer_visit.source,
-    count(customer_visit.order_id) AS num_orders,
-    sum(customer_visit.order_id) AS total_sales
-  FROM
+    COUNT(o_rder.id) AS num_orders,
+    SUM(o_rder.total_price) AS total_price
+FROM
     `smartycommerce.shopify_fivetran.customer_visit` AS customer_visit
-  GROUP BY 1;
+INNER JOIN 
+    `smartycommerce.shopify_fivetran.order` AS o_rder 
+    ON customer_visit.order_id = o_rder.id
+GROUP BY
+    customer_visit.source;
