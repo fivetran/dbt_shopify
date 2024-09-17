@@ -1,8 +1,7 @@
 SELECT
-    shopify__orders.referring_site,
-    shopify__orders.name,
-    count(shopify__orders.order_id) AS num_orders,
-    sum(shopify__orders.total_price) AS total_sales
+    customer_visit.source,
+    count(customer_visit.order_id) AS num_orders,
+    sum(customer_visit.order_id) AS total_sales
   FROM
-    `smartycommerce.shopify_fivetran_shopify.shopify__orders` AS shopify__orders
-  GROUP BY 1, 2;
+    `smartycommerce.shopify_fivetran.customer_visit` AS customer_visit
+  GROUP BY 1;
