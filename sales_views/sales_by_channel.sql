@@ -1,14 +1,12 @@
 SELECT
     shopify__orders.source_name,
-    count(shopify__orders.order_id) AS num_orders,
-    sum(shopify__orders.total_price) AS gross_sales,
-    sum(shopify__orders.total_discounts) AS discounts,
-    sum(shopify__transactions.amount) AS returns,
-    sum(shopify__orders.total_price) - sum(shopify__transactions.amount) AS net_sales,
-    sum(shopify__orders.shipping_cost) AS shipping,
-    sum(shopify__orders.total_tax) AS taxes,
-    sum(shopify__orders.total_price) + sum(shopify__orders.shipping_cost) + sum(shopify__orders.total_tax) AS total_sales
+    DATE_TRUNC(shopify__orders.created_timestamp, DAY) AS order_date,
+    shopify__orders.total_price AS gross_sale_amount,
+    shopify__orders.total_discounts AS discount_amount,
+    shopify__transactions.amount AS transaction_amount,
+    shopify__orders.total_price - shopify__orders.total_discounts AS net_sale_amount,
+    shopify__orders.shipping_cost AS shipping_cost,
+    shopify__orders.total_price + shopify__orders.shipping_cost AS total_sale_amount
   FROM
     `smartycommerce.shopify_fivetran_shopify.shopify__orders` AS shopify__orders
-    INNER JOIN `smartycommerce.shopify_fivetran_shopify.shopify__transactions` AS shopify__transactions ON shopify__orders.order_id = shopify__transactions.order_id
-  GROUP BY 1;
+    INNER JOIN `smartycommerce.shopify_fivetran_shopify.shopify__transactions` AS shopify__transactions ON shopify__orders.order_id = shopify__transactions.order_id;
