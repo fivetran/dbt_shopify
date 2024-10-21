@@ -1,3 +1,13 @@
+# dbt_shopify v0.13.2
+[PR #89](https://github.com/fivetran/dbt_shopify/pull/89) includes the following changes:
+
+## Bug Fixes
+- Fixed an issue where the `shopify__customers` model incorrectly displayed NULL values for the `customer_tags` field for customers without orders. Updated the logic to ensure customer tags are retrieved even if no orders have been placed for that customer.
+
+## Under the Hood
+- Updated seed data to include customers without orders, verifying that their tags are correctly pulled through.
+- Added consistency and integrity tests for the `shopify__customers` model to ensure accurate handling of customer tags for all customers.
+
 # dbt_shopify v0.13.1
 [PR #87](https://github.com/fivetran/dbt_shopify/pull/87) includes the following changes:
 

@@ -19,6 +19,16 @@ with customers as (
     where customer_id is not null
     group by 1,2
 
+), customer_tags_aggregated as (
+
+    select 
+        customer_id,
+        source_relation,
+        {{ fivetran_utils.string_agg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags
+
+    from {{ var('shopify_customer_tag' )}}
+    group by 1,2
+
 ), joined as (
 
     select 
@@ -26,7 +36,7 @@ with customers as (
         coalesce(abandoned.lifetime_abandoned_checkouts, 0) as lifetime_abandoned_checkouts,
         orders.first_order_timestamp,
         orders.most_recent_order_timestamp,
-        orders.customer_tags,
+        customer_tags_aggregated.customer_tags,
         orders.avg_order_value,
         coalesce(orders.lifetime_total_spent, 0) as lifetime_total_spent,
         coalesce(orders.lifetime_total_refunded, 0) as lifetime_total_refunded,
@@ -51,6 +61,9 @@ with customers as (
     left join abandoned
         on customers.customer_id = abandoned.customer_id
         and customers.source_relation = abandoned.source_relation
+    left join customer_tags_aggregated
+        on customers.customer_id = customer_tags_aggregated.customer_id
+        and customers.source_relation = customer_tags_aggregated.source_relation
 )
 
 select *
