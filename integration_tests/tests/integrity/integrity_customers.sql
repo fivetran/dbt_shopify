@@ -14,10 +14,10 @@ with source as (
 transform as (
     select
         customer_id,
-        count(*) as transform_customer_tag_count
+        array_length(split(customer_tags, ',')) as transform_customer_tag_count -- Only BigQuery compatible for the time being
     from {{ target.schema }}_shopify_dev.shopify__customers
     where customer_tags is not null
-    group by 1
+    group by customer_id, customer_tags
 ), 
 
 compare as (
