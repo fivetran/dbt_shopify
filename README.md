@@ -120,7 +120,18 @@ vars:
     shopify_using_fulfillment_event: true # false by default
 ```
 
-### Step 5: Setting your timezone
+### Step 5: Disable models for non-existent sources
+This package considers that not every Shopify connector uses the `abandoned_checkout` tables (including `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`). This package allows you to disable the corresponding functionality. By default, all variables' values are assumed to be `true`. To disable the `abandoned_checkout` tables, add the following variables:
+
+```yml
+# dbt_project.yml
+
+...
+vars:
+    shopify_using_abandoned_checkout: False  #True by default
+```
+
+### Step 6: Setting your timezone
 By default, the data in your Shopify schema is in UTC. However, you may want reporting to reflect a specific timezone for more realistic analysis or data validation.
 
 To convert the timezone of **all** timestamps in the package, update the `shopify_timezone` variable to your target zone in [IANA tz Database format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones):
@@ -133,7 +144,7 @@ vars:
 
 > **Note**: This will only **numerically** convert timestamps to your target timezone. They will however have a "UTC" appended to them. This is a current limitation of the dbt-date `convert_timezone` [macro](https://github.com/calogica/dbt-date#convert_timezone-column-target_tznone-source_tznone) we leverage.
 
-### (Optional) Step 6: Additional configurations
+### (Optional) Step 7: Additional configurations
 <details open><summary>Expand/Collapse details</summary>
 
 #### Enabling Standardized Billing Model
@@ -143,7 +154,7 @@ This package contains the `shopify__line_item_enhanced` model which constructs a
 vars:
   shopify__standardized_billing_model_enabled: true # false by default.
 ```
-    
+
 #### Passing Through Additional Fields
 This package includes all source columns defined in the macros folder. You can add more columns using our pass-through column variables. These variables allow for the pass-through fields to be aliased (`alias`) and casted (`transform_sql`) if desired, but not required. Datatype casting is configured via a sql snippet within the `transform_sql` key. You may add the desired sql while omitting the `as field_name` at the end and your custom pass-though fields will be casted accordingly. Use the below format for declaring the respective pass-through variables:
 
@@ -172,7 +183,7 @@ vars:
 ```
 
 #### Adding Metafields
-In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) the Shopify connector included support for the [metafield resource](https://shopify.dev/api/admin-rest/2023-01/resources/metafield). If you would like to take advantage of these metafields, this package offers corresponding mapping models which append these metafields to the respective source object for the following tables: collection, customer, order, product_image, product, product_variant, shop. If enabled, these models will materialize as `shopify__[object]_metafields` for each respective supported object. To enable these metafield mapping models, you may use the following configurations within your `dbt_project.yml`.
+In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) the Shopify connector included support for the [metafield resource](https://shopify.dev/api/admin-rest/2023-01/resources/metafield). If you would like to take advantage of these metafields, this package offers corresponding mapping models which append these metafields to the respective source object for the following tables: collection, customer, order, product_image, product, product_variant, shop. Enabling any of the following variables will materialize the `stg_shopify__metafield` model, in addition to respective models that will materialize as `shopify__[object]_metafields` for each respective supported object. To enable these metafield mapping models, you may use the following configurations within your `dbt_project.yml`.
 >**Note**: These metafield models will contain all the same records as the corresponding staging models with the exception of the metafield columns being added.
 
 ```yml
@@ -235,7 +246,7 @@ vars:
 </details>
 
 
-### (Optional) Step 7: Orchestrate your models with Fivetran Transformations for dbt Core™
+### (Optional) Step 8: Orchestrate your models with Fivetran Transformations for dbt Core™
 <details><summary>Expand for details</summary>
 <br>
     

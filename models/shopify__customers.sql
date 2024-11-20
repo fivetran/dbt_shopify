@@ -9,6 +9,7 @@ with customers as (
     select *
     from {{ ref('shopify__customers__order_aggregates' )}}
 
+{% if var('shopify_using_abandoned_checkout', True) %}
 ), abandoned as (
 
     select 
@@ -18,6 +19,7 @@ with customers as (
     from {{ var('shopify_abandoned_checkout' )}}
     where customer_id is not null
     group by 1,2
+{% endif %}
 
 ), customer_tags_aggregated as (
 
@@ -33,7 +35,11 @@ with customers as (
 
     select 
         customers.*,
+
+        {% if var('shopify_using_abandoned_checkout', True) %}
         coalesce(abandoned.lifetime_abandoned_checkouts, 0) as lifetime_abandoned_checkouts,
+        {% endif %}
+
         orders.first_order_timestamp,
         orders.most_recent_order_timestamp,
         customer_tags_aggregated.customer_tags,
@@ -58,12 +64,16 @@ with customers as (
     left join orders
         on customers.customer_id = orders.customer_id
         and customers.source_relation = orders.source_relation
-    left join abandoned
-        on customers.customer_id = abandoned.customer_id
-        and customers.source_relation = abandoned.source_relation
     left join customer_tags_aggregated
         on customers.customer_id = customer_tags_aggregated.customer_id
         and customers.source_relation = customer_tags_aggregated.source_relation
+    
+    {% if var('shopify_using_abandoned_checkout', True) %}
+    left join abandoned
+        on customers.customer_id = abandoned.customer_id
+        and customers.source_relation = abandoned.source_relation
+    {% endif %}
+
 )
 
 select *

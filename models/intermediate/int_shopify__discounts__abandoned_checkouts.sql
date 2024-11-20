@@ -1,3 +1,5 @@
+{{ config(enabled=var('shopify_using_abandoned_checkout', True)) }}
+
 with abandoned_checkout as (
 
     select *
