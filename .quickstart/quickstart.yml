@@ -6,6 +6,10 @@ dbt_versions: ">=1.3.0 <2.0.0"
 table_variables:
   shopify_using_fulfillment_event:
     - fulfillment_event
+  shopify_using_abandoned_checkout:
+    - abandoned_checkout
+    - abandoned_checkout_discount_code
+    - abandoned_checkout_shipping_line
 
 destination_configurations:
   databricks:
