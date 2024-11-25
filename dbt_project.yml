@@ -10,7 +10,7 @@ models:
       +materialized: ephemeral
       int_shopify__customer_email_rollup:
         +materialized: view # so we can use the dbt_utils.star macro
-        
+
 vars:
   shopify:
     shopify_customer: "{{ ref('stg_shopify__customer') }}"
