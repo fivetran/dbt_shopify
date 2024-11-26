@@ -1,4 +1,4 @@
-<p align="center">
+<p align="left">
     <a alt="License"
         href="https://github.com/fivetran/dbt_shopify/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" /></a>
