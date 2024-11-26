@@ -1,3 +1,5 @@
+# Shopify Transformation dbt Package ([Docs](https://fivetran.github.io/dbt_shopify/))
+
 <p align="left">
     <a alt="License"
         href="https://github.com/fivetran/dbt_shopify/blob/main/LICENSE">
@@ -12,8 +14,6 @@
         href="https://fivetran.com/docs/transformations/dbt/quickstart">
         <img src="https://img.shields.io/badge/Fivetran_Quickstart_Compatible%3F-yes-green.svg" /></a>
 </p>
-
-# Shopify Transformation dbt Package ([Docs](https://fivetran.github.io/dbt_shopify/))
 
 ## What does this dbt package do?
 
