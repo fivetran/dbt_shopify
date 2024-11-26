@@ -110,35 +110,15 @@ To connect your multiple schema/database sources to the package models, follow t
 
 ### Step 4: Disable models for non-existent sources
 
-The package takes into consideration that not every Shopify connector may have the `fulfillment_event`, `metadata`, or `abandoned_checkout` tables (including `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`) and allows you to enable or disable the corresponding functionality.
-
-The `fulfillment_event` table is **disabled by default** but does hold valuable information that is leveraged in the `shopify__daily_shop` model in the transformation package. If you would like to enable the modeling of fulfillment events downstream, add the following variable to your `dbt_project.yml` file:
+The package takes into consideration that not every Shopify connector may have the `fulfillment_event`, `metadata`, or `abandoned_checkout` tables (including `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
 
 ```yml
 # dbt_project.yml
 
 vars:
-    shopify_using_fulfillment_event: true # false by default
-```
-
-The `metadata` table is **enabled by default**. To disable this tables and prevent metadata fields from persisting downstream, add the following variable to your `dbt_project.yml` file:
-
-```yml
-# dbt_project.yml
-
-...
-vars:
+    shopify_using_fulfillment_event: true # false by default. 
     shopify_using_metafield: false  #true by default
-```
-
-The `abandoned_checkout` tables (including `abandoned_checkout` in addition to the `abandoned_checkout_discount_code` and `abandoned_checkout_shipping_line` child tables) are **enabled by default**. To disable the `abandoned_checkout` tables, add the following variable to your `dbt_project.yml` file:
-
-```yml
-# dbt_project.yml
-
-...
-vars:
-    shopify_using_abandoned_checkout: false  #true by default
+    shopify_using_abandoned_checkout: false # true by default. Setting to false will disable `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`.
 ```
 
 ### Step 5: Setting your timezone
