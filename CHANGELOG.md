@@ -3,12 +3,14 @@
 [PR #92](https://github.com/fivetran/dbt_shopify/pull/92) includes the following updates:
 ## Under the Hood
 - Adds enable/disable config for the `metadata` staging model using the `shopify_using_metafield` variable (default `true`).
+  - This variable is now a requirement for all `shopify__x_metafield` models.
 - Adds enable/disable config for the `abandoned_checkout` staging models using the `shopify_using_abandoned_checkout` variable (default `true`):
    - `stg_shopify__abandoned_checkout`
    - `stg_shopify__abandoned_checkout_discount_code`
-   - `stg_shopify__abandoned_checkout_shipping_line`. 
+   - `stg_shopify__abandoned_checkout_shipping_line`.
+
+  - Disabling `shopify_using_abandoned_checkout` will also disable the `int_shopify__daily_abandoned_checkouts` and `int_shopify__discounts__abandoned_checkouts` intermediate models, in addition to disabling `abandoned_checkout` references in end models (including `shopify__daily_shop`, `shopify__customers`, `shopify__customer_emails`, `shopify__customer_email_cohorts`, `shopify__customer_cohorts`, and `shopify__discounts`).
 - For more information on how to enable/disable these tables, refer to the [README](https://github.com/fivetran/dbt_shopify/blob/main/README.md#step-4-disable-models-for-non-existent-sources).
-- Updates the `index` calculation in `stg_shopify__abandoned_checkout_discount_code` by removing the conditional logic for null scenarios now that a disable config has been added to the model.
 
 # dbt_shopify v0.13.2
 [PR #89](https://github.com/fivetran/dbt_shopify/pull/89) includes the following changes:
