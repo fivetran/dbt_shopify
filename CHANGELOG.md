@@ -9,7 +9,7 @@
    - `stg_shopify__abandoned_checkout_discount_code`
    - `stg_shopify__abandoned_checkout_shipping_line`.
 
-  - Disabling `shopify_using_abandoned_checkout` will also disable the `int_shopify__daily_abandoned_checkouts` and `int_shopify__discounts__abandoned_checkouts` intermediate models, in addition to disabling `abandoned_checkout` references in end models (including `shopify__daily_shop`, `shopify__customers`, `shopify__customer_emails`, `shopify__customer_email_cohorts`, `shopify__customer_cohorts`, and `shopify__discounts`).
+   - Disabling `shopify_using_abandoned_checkout` will also disable the `int_shopify__daily_abandoned_checkouts` and `int_shopify__discounts__abandoned_checkouts` intermediate models, in addition to disabling `abandoned_checkout` references in end models (including `shopify__daily_shop`, `shopify__customers`, `shopify__customer_emails`, `shopify__customer_email_cohorts`, `shopify__customer_cohorts`, and `shopify__discounts`).
 - For more information on how to enable/disable these tables, refer to the [README](https://github.com/fivetran/dbt_shopify/blob/main/README.md#step-4-disable-models-for-non-existent-sources).
 
 # dbt_shopify v0.13.2
