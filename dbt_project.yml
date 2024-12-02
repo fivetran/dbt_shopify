@@ -1,5 +1,5 @@
 name: 'shopify'
-version: '0.13.2'
+version: '0.14.0'
 config-version: 2
 require-dbt-version: [">=1.3.0", "<2.0.0"]
 models:
@@ -10,7 +10,7 @@ models:
       +materialized: ephemeral
       int_shopify__customer_email_rollup:
         +materialized: view # so we can use the dbt_utils.star macro
-        
+
 vars:
   shopify:
     shopify_customer: "{{ ref('stg_shopify__customer') }}"

@@ -10,6 +10,7 @@ with customer_emails as (
     from {{ ref('int_shopify__emails__order_aggregates' )}}
     where email is not null
 
+{% if var('shopify_using_abandoned_checkout', True) %}
 ), abandoned as (
 
     select 
@@ -19,12 +20,17 @@ with customer_emails as (
     from {{ var('shopify_abandoned_checkout' )}}
     where email is not null
     group by 1,2
+{% endif %}
 
 ), joined as (
 
     select 
         customer_emails.*,
+
+        {% if var('shopify_using_abandoned_checkout', True) %}
         coalesce(abandoned.lifetime_abandoned_checkouts, 0) as lifetime_abandoned_checkouts,
+        {% endif %}
+
         orders.first_order_timestamp,
         orders.most_recent_order_timestamp,
         orders.avg_order_value,
@@ -48,9 +54,12 @@ with customer_emails as (
     left join orders
         on customer_emails.email = orders.email
         and customer_emails.source_relation = orders.source_relation
+
+    {% if var('shopify_using_abandoned_checkout', True) %}
     left join abandoned
         on customer_emails.email = abandoned.email
         and customer_emails.source_relation = abandoned.source_relation
+    {% endif %}
 )
 
 select *

@@ -1,4 +1,6 @@
-<p align="center">
+# Shopify Transformation dbt Package ([Docs](https://fivetran.github.io/dbt_shopify/))
+
+<p align="left">
     <a alt="License"
         href="https://github.com/fivetran/dbt_shopify/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" /></a>
@@ -12,8 +14,6 @@
         href="https://fivetran.com/docs/transformations/dbt/quickstart">
         <img src="https://img.shields.io/badge/Fivetran_Quickstart_Compatible%3F-yes-green.svg" /></a>
 </p>
-
-# Shopify Transformation dbt Package ([Docs](https://fivetran.github.io/dbt_shopify/))
 
 ## What does this dbt package do?
 
@@ -70,7 +70,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=0.13.0", "<0.14.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.14.0", "<0.15.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 Do **NOT** include the `shopify_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
@@ -108,16 +108,17 @@ vars:
 
 To connect your multiple schema/database sources to the package models, follow the steps outlined in the [Union Data Defined Sources Configuration](https://github.com/fivetran/dbt_fivetran_utils/tree/releases/v0.4.latest#union_data-source) section of the Fivetran Utils documentation for the union_data macro. This will ensure a proper configuration and correct visualization of connections in the DAG.
 
-### Step 4: Enable `fulfillment_event` data
+### Step 4: Disable models for non-existent sources
 
-The package takes into consideration that not every Shopify connector may have `fulfillment_event` data enabled. However, this table does hold valuable information that is leveraged in the `shopify__daily_shop` model. `fulfillment_event` data is **disabled by default**.
+The package takes into consideration that not every Shopify connector may have the `fulfillment_event`, `metadata`, or `abandoned_checkout` tables (including `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
 
-Add the following variable to your `dbt_project.yml` file to enable the modeling of fulfillment events:
 ```yml
 # dbt_project.yml
 
 vars:
-    shopify_using_fulfillment_event: true # false by default
+    shopify_using_fulfillment_event: true # false by default. 
+    shopify_using_metafield: false  #true by default
+    shopify_using_abandoned_checkout: false # true by default. Setting to false will disable `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`.
 ```
 
 ### Step 5: Setting your timezone
@@ -143,7 +144,7 @@ This package contains the `shopify__line_item_enhanced` model which constructs a
 vars:
   shopify__standardized_billing_model_enabled: true # false by default.
 ```
-    
+
 #### Passing Through Additional Fields
 This package includes all source columns defined in the macros folder. You can add more columns using our pass-through column variables. These variables allow for the pass-through fields to be aliased (`alias`) and casted (`transform_sql`) if desired, but not required. Datatype casting is configured via a sql snippet within the `transform_sql` key. You may add the desired sql while omitting the `as field_name` at the end and your custom pass-though fields will be casted accordingly. Use the below format for declaring the respective pass-through variables:
 
@@ -173,7 +174,10 @@ vars:
 
 #### Adding Metafields
 In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) the Shopify connector included support for the [metafield resource](https://shopify.dev/api/admin-rest/2023-01/resources/metafield). If you would like to take advantage of these metafields, this package offers corresponding mapping models which append these metafields to the respective source object for the following tables: collection, customer, order, product_image, product, product_variant, shop. If enabled, these models will materialize as `shopify__[object]_metafields` for each respective supported object. To enable these metafield mapping models, you may use the following configurations within your `dbt_project.yml`.
->**Note**: These metafield models will contain all the same records as the corresponding staging models with the exception of the metafield columns being added.
+
+>**Note 1**: These metafield models will contain all the same records as the corresponding staging models with the exception of the metafield columns being added.
+
+>**Note 2**: Please ensure that the `shopify_using_metafield` is not disabled. (Enabled by default)
 
 ```yml
 vars:
@@ -250,7 +254,7 @@ This dbt package is dependent on the following dbt packages. These dependencies 
 ```yml
 packages:
     - package: fivetran/shopify_source
-      version: [">=0.12.0", "<0.13.0"]
+      version: [">=0.13.0", "<0.14.0"]
 
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]
