@@ -2,6 +2,50 @@
 
 [PR #94](https://github.com/fivetran/dbt_shopify/pull/94) includes the following updates:
 ## Breaking Changes
+- Updated for connector changes released on January 6, 2025. See the [release notes](https://fivetran.com/docs/connectors/applications/shopify/changelog#january2025) for more details. Added the following columns to models:
+  - `shopify__inventory_levels`:
+    - `unit_cost_amount`
+    - `unit_cost_currency_code`
+    - `duplicate_sku_count`
+    - `harmonized_system_code`
+    - `inventory_history_url`
+    - `legacy_resource_id`
+    - `measurement_id`
+    - `measurement_weight_value`
+    - `measurement_weight_unit`
+    - `is_tracked_editable_locked`
+    - `tracked_editable_reason`
+  - `shopify__order_lines`:
+    - `is_available_for_sale as variant_is_available_for_sale`
+    - `display_name as variant_display_name`
+    - `legacy_resource_id as variant_legacy_resource_id`
+    - `has_components_required as variant_has_components_required`
+    - `sellable_online_quantity as variant_sellable_online_quantity`
+
+## Documentation
+- Marked the following columns as deprecated in the documentation. These will be removed in a future release:
+  - `inventory_level`:
+    - `available`
+  - `product_variant`:
+    - `fulfillment_service`
+    - `grams`
+    - `inventory_management`
+    - `requires_shipping`
+    - `weight`
+    - `weight_unit`
+    - `option_*`
+  - `product_image`:
+    - `position`
+    - `created_at`
+    - `updated_at`
+    - `variant_ids`
+
+## Under the Hood
+- Updated `shopify_*_data` seed data to include new columns for the following tables:
+  - `inventory_item`
+  - `inventory_level`
+  - `product_image`
+  - `product_variant`
 
 # dbt_shopify v0.14.0
 
