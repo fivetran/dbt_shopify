@@ -10,10 +10,10 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 vars:
   ## Uncomment when regenerating docs
-  # shopify_using_fulfillment_event: true
-  # shopify_using_all_metafields: true
-  # shopify__standardized_billing_model_enabled: true
-  shopify_schema: shopify_integration_tests_12
+  shopify_using_fulfillment_event: true
+  shopify_using_all_metafields: true
+  shopify__standardized_billing_model_enabled: true
+  shopify_schema: zz_shopify #shopify_integration_tests_12
 
   shopify_source:
     shopify_customer_identifier: "shopify_customer_data"

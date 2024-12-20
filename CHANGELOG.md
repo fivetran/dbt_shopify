@@ -24,21 +24,26 @@
 
 ## Documentation
 - Marked the following columns as deprecated in the documentation. These will be removed in a future release:
-  - `inventory_level`:
-    - `available`
-  - `product_variant`:
-    - `fulfillment_service`
-    - `grams`
-    - `inventory_management`
-    - `requires_shipping`
-    - `weight`
-    - `weight_unit`
-    - `option_*`
-  - `product_image`:
-    - `position`
-    - `created_at`
-    - `updated_at`
-    - `variant_ids`
+  - `shopify__inventory_levels`:
+    - `available_quantity`
+    - `is_shipping_required`
+    - `variant_fulfillment_service`
+    - `variant_grams`
+    - `variant_inventory_management`
+    - `variant_option_1`
+    - `variant_option_2`
+    - `variant_option_3`
+    - `variant_weight`
+    - `variant_weight_unit`
+  - `shopify__order_lines`:
+    - `variant_fulfillment_service`
+    - `variant_grams`
+    - `variant_inventory_management`
+    - `variant_option_1`
+    - `variant_option_2`
+    - `variant_option_3`
+    - `variant_weight`
+    - `variant_weight_unit`
 
 ## Under the Hood
 - Updated `shopify_*_data` seed data to include new columns for the following tables:

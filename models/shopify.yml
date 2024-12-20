@@ -556,7 +556,7 @@ models:
       - name: is_gift_card
         description: Whether the item is a gift card. If true, then the item is not taxed or considered for shipping charges.
       - name: grams
-        description: (DEPRECATED 2025-01-06) The weight of the item in grams.
+        description: The weight of the item in grams.
       - name: order_line_id
         description: The ID of the line item.
       - name: name
