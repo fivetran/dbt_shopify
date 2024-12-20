@@ -784,8 +784,6 @@ models:
         description: "{{ doc('_fivetran_deleted') }}"
       - name: sku
         description: The unique SKU (stock keeping unit) of the inventory item.
-      - name: cost
-        description: The unit cost of the inventory item. The shop's default currency is used.
       - name: province_code_of_origin
         description: The province code (ISO 3166-2 alpha-2) of where the item came from. The province code is only used if the shipping provider for the inventory item is Canada Post.
       - name: duplicate_sku_count

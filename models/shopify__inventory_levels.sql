@@ -40,7 +40,6 @@ joined_info as (
         inventory_level.*,
         inventory_item.sku,
         inventory_item.is_deleted as is_inventory_item_deleted,
-        inventory_item.cost,
         inventory_item.unit_cost_amount,
         inventory_item.unit_cost_currency_code,
         inventory_item.country_code_of_origin,
