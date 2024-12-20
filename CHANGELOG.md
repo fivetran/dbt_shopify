@@ -21,6 +21,7 @@
     - `legacy_resource_id as variant_legacy_resource_id`
     - `has_components_required as variant_has_components_required`
     - `sellable_online_quantity as variant_sellable_online_quantity`
+- Additionally, new columns were added in the upstream package. For more details, see the [dbt_shopify_source v0.14.0 release notes](https://github.com/fivetran/dbt_shopify_source/releases/tag/v0.14.0).
 
 ## Documentation
 - Marked the following columns as deprecated in the documentation. These will be removed in a future release:
