@@ -594,23 +594,26 @@ models:
       - name: variant_created_at
         description: The date and time (ISO 8601 format) when the product variant was created.
       - name: variant_fulfillment_service
-        description: The fulfillment service associated with the product variant.
+        description: (DEPRECATED 2025-01-06) The fulfillment service associated with the product variant.
       - name: variant_grams
-        description: The weight of the product variant in grams.
+        description: (DEPRECATED 2025-01-06) The weight of the product variant in grams.
       - name: inventory_item_id
         description: The unique identifier for the inventory item, which is used in the Inventory API to query for inventory information.
       - name: variant_inventory_management
-        description: The fulfillment service that tracks the number of items in stock for the product variant.
+        description: (DEPRECATED 2025-01-06) The fulfillment service that tracks the number of items in stock for the product variant.
       - name: variant_inventory_policy
         description: Whether customers are allowed to place an order for the product variant when it's out of stock.
       - name: variant_inventory_quantity
         description: An aggregate of inventory across all locations. To adjust inventory at a specific location, use the InventoryLevel resource.
       - name: variant_option_1
-        description: "The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3."
+        description: >
+          (DEPRECATED 2025-01-06) The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3. 
       - name: variant_option_2
-        description: "The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3."
+        description: >
+          (DEPRECATED 2025-01-06) The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3.
       - name: variant_option_3
-        description: "The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3."
+        description: >
+          (DEPRECATED 2025-01-06) The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3.
       - name: variant_position
         description: The order of the product variant in the list of product variants. The first position in the list is 1. The position of variants is indicated by the order in which they are listed.
       - name: variant_price
@@ -626,9 +629,20 @@ models:
       - name: variant_updated_at
         description: The date and time when the product variant was last modified. Gets returned in ISO 8601 format.
       - name: variant_weight
-        description: The weight of the product variant in the unit system specified with weight_unit.
+        description: (DEPRECATED 2025-01-06) The weight of the product variant in the unit system specified with weight_unit.
       - name: variant_weight_unit
-        description: "The unit of measurement that applies to the product variant's weight. If you don't specify a value for weight_unit, then the shop's default unit of measurement is applied. Valid values: g, kg, oz, and lb."
+        description: >
+          (DEPRECATED 2025-01-06) The unit of measurement that applies to the product variant's weight. If you don't specify a value for weight_unit, then the shop's default unit of measurement is applied. Valid values: g, kg, oz, and lb.
+      - name: variant_is_available_for_sale
+        description: Indicates whether the product variant is available for sale.
+      - name: variant_display_name
+        description: The display name of the variant, based on the product's title and variant's title. 
+      - name: variant_legacy_resource_id
+        description: The ID of the corresponding resource in the REST Admin API. 
+      - name: variant_has_components_required
+        description: Indicates whether a product variant requires components. 
+      - name: variant_sellable_online_quantity
+        description: The total sellable quantity of the variant for online channels. 
       - name: refunded_subtotal
         description: Subtotal amount of the refund applied to the order line in shop currency.
       - name: subtotal_net_refunds
@@ -672,8 +686,6 @@ models:
         description: The ID associated with a refund in the refund table.
       - name: amount
         description: The amount of money included in the transaction in shop currency.
-      - name: authorization
-        description: The authorization code associated with the transaction.
       - name: created_timestamp
         description: The date and time when the transaction was created.
       - name: processed_timestamp
@@ -761,7 +773,7 @@ models:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: available_quantity
-        description: The available quantity of an inventory item at the inventory level's associated location. Returns null if the inventory item is not tracked.
+        description: (DEPRECATED 2025-01-06) The available quantity of an inventory item at the inventory level's associated location. Returns null if the inventory item is not tracked.
       - name: inventory_item_id
         description: The ID of the inventory item associated with the inventory level.
         tests:
@@ -776,16 +788,42 @@ models:
         description: "{{ doc('_fivetran_deleted') }}"
       - name: sku
         description: The unique SKU (stock keeping unit) of the inventory item.
-      - name: cost
-        description: The unit cost of the inventory item. The shop's default currency is used.
       - name: province_code_of_origin
         description: The province code (ISO 3166-2 alpha-2) of where the item came from. The province code is only used if the shipping provider for the inventory item is Canada Post.
+      - name: duplicate_sku_count
+        description: The number of inventory items that share the same SKU with this item.
+      - name: harmonized_system_code
+        description: The harmonized system code of the item.
+      - name: inventory_history_url
+        description: The URL that points to the inventory history for the item.
+      - name: legacy_resource_id
+        description: The ID of the corresponding resource in the REST Admin API.
+      - name: measurement_id
+        description: The unique identifier for the inventory item's measurement.
+      - name: measurement_weight_value
+        description: The weight value of the inventory item's measurement.
+      - name: measurement_weight_unit
+        description: The unit of measurement for the inventory item's weight.
+      - name: is_tracked_editable_locked
+        description: Indicates whether the 'tracked' field for the inventory item is locked from editing.
+      - name: tracked_editable_reason
+        description: Provides the reason why the 'tracked' field for the inventory item is locked from editing.
+      - name: unit_cost_amount
+        description: The unit cost associated with the inventory item.
+      - name: unit_cost_currency_code
+        description: Currency of the unit cost associated with the inventory item. 
       - name: country_code_of_origin
         description: The country code (ISO 3166-1 alpha-2) of where the item came from.
       - name: is_shipping_required
-        description: Boolean representing whether a customer needs to provide a shipping address when placing an order containing the inventory item.
+        description: (DEPRECATED 2025-01-06) Boolean representing whether a customer needs to provide a shipping address when placing an order containing the inventory item.
       - name: is_inventory_quantity_tracked
         description: Boolean representing whether inventory levels are tracked for the item. If true, then the inventory quantity changes are tracked by Shopify.
+      - name: can_deactivate
+        description: Indicates whether the inventory item can be deactivated at the location.
+      - name: deactivation_alert
+        description: Provides an alert message when the inventory item is deactivated at the location.
+      - name: created_at
+        description: The date and time when the inventory level was created.
       - name: inventory_item_created_at
         description: The date and time (ISO 8601 format) when the inventory item was created.
       - name: inventory_item_updated_at
@@ -828,25 +866,28 @@ models:
       - name: variant_created_at
         description: The date and time (ISO 8601 format) when the product variant was created.
       - name: variant_fulfillment_service
-        description: The fulfillment service associated with the product variant.
+        description: (DEPRECATED 2025-01-06) The fulfillment service associated with the product variant.
       - name: variant_grams
-        description: The weight of the product variant in grams.
+        description: (DEPRECATED 2025-01-06) The weight of the product variant in grams.
       - name: variant_id
         description: The unique numeric identifier for the product variant.
       - name: variant_image_id
         description: The unique numeric identifier for a product's image. The image must be associated to the same product as the variant.
       - name: variant_inventory_management
-        description: The fulfillment service that tracks the number of items in stock for the product variant.
+        description: (DEPRECATED 2025-01-06) The fulfillment service that tracks the number of items in stock for the product variant.
       - name: variant_inventory_policy
         description: Whether customers are allowed to place an order for the product variant when it's out of stock.
       - name: variant_inventory_quantity
         description: An aggregate of inventory across all locations. To adjust inventory at a specific location, use the InventoryLevel resource.
       - name: variant_option_1
-        description: "The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3."
+        description: >
+          (DEPRECATED 2025-01-06) The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3. 
       - name: variant_option_2
-        description: "The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3."
+        description: >
+          (DEPRECATED 2025-01-06) The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3.
       - name: variant_option_3
-        description: "The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3."
+        description: >
+          (DEPRECATED 2025-01-06) The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3.
       - name: variant_price
         description: The price of the product variant in shop currency.
       - name: product_id
@@ -860,9 +901,20 @@ models:
       - name: variant_updated_at
         description: The date and time when the product variant was last modified. Gets returned in ISO 8601 format.
       - name: variant_weight
-        description: The weight of the product variant in the unit system specified with weight_unit.
+        description: (DEPRECATED 2025-01-06) The weight of the product variant in the unit system specified with weight_unit.
       - name: variant_weight_unit
-        description: "The unit of measurement that applies to the product variant's weight. If you don't specify a value for weight_unit, then the shop's default unit of measurement is applied. Valid values: g, kg, oz, and lb."
+        description: >
+          (DEPRECATED 2025-01-06) The unit of measurement that applies to the product variant's weight. If you don't specify a value for weight_unit, then the shop's default unit of measurement is applied. Valid values: g, kg, oz, and lb.
+      - name: variant_is_available_for_sale
+        description: Indicates whether the product variant is available for sale.
+      - name: variant_display_name
+        description: The display name of the variant, based on the product's title and variant's title. 
+      - name: variant_legacy_resource_id
+        description: The ID of the corresponding resource in the REST Admin API. 
+      - name: variant_has_components_required
+        description: Indicates whether a product variant requires components. 
+      - name: variant_sellable_online_quantity
+        description: The total sellable quantity of the variant for online channels. 
       - name: subtotal_sold
         description: Total amount (monetary, in shop currency) sold from the inventory level. Includes refunds.
       - name: quantity_sold
