@@ -16,11 +16,11 @@
     - `is_tracked_editable_locked`
     - `tracked_editable_reason`
   - `shopify__order_lines`:
-    - `is_available_for_sale as variant_is_available_for_sale`
-    - `display_name as variant_display_name`
-    - `legacy_resource_id as variant_legacy_resource_id`
-    - `has_components_required as variant_has_components_required`
-    - `sellable_online_quantity as variant_sellable_online_quantity`
+    - `variant_is_available_for_sale`
+    - `variant_display_name`
+    - `variant_legacy_resource_id`
+    - `variant_has_components_required`
+    - `variant_sellable_online_quantity`
 - Additionally, new columns were added in the upstream package. For more details, see the [dbt_shopify_source v0.14.0 release notes](https://github.com/fivetran/dbt_shopify_source/releases/tag/v0.14.0).
 
 ## Documentation
