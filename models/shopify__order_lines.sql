@@ -88,6 +88,11 @@ with order_lines as (
         product_variants.option_2 as variant_option_2,
         product_variants.option_3 as variant_option_3,
         product_variants.tax_code as variant_tax_code,
+        product_variants.is_available_for_sale as variant_is_available_for_sale,
+        product_variants.display_name as variant_display_name,
+        product_variants.legacy_resource_id as variant_legacy_resource_id,
+        product_variants.has_components_required as variant_has_components_required,
+        product_variants.sellable_online_quantity as variant_sellable_online_quantity,
 
         tax_lines_aggregated.order_line_tax
 

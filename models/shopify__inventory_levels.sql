@@ -41,12 +41,23 @@ joined_info as (
         inventory_item.sku,
         inventory_item.is_deleted as is_inventory_item_deleted,
         inventory_item.cost,
+        inventory_item.unit_cost_amount,
+        inventory_item.unit_cost_currency_code,
         inventory_item.country_code_of_origin,
         inventory_item.province_code_of_origin,
         inventory_item.is_shipping_required,
         inventory_item.is_inventory_quantity_tracked,
         inventory_item.created_at as inventory_item_created_at,
         inventory_item.updated_at as inventory_item_updated_at,
+        inventory_item.duplicate_sku_count,
+        inventory_item.harmonized_system_code,
+        inventory_item.inventory_history_url,
+        inventory_item.legacy_resource_id,
+        inventory_item.measurement_id,
+        inventory_item.measurement_weight_value,
+        inventory_item.measurement_weight_unit,
+        inventory_item.is_tracked_editable_locked,
+        inventory_item.tracked_editable_reason,
 
         location.name as location_name, 
         location.is_deleted as is_location_deleted,
@@ -83,7 +94,12 @@ joined_info as (
         product_variant.option_3 as variant_option_3,
         product_variant.tax_code as variant_tax_code,
         product_variant.created_timestamp as variant_created_at,
-        product_variant.updated_timestamp as variant_updated_at
+        product_variant.updated_timestamp as variant_updated_at,
+        product_variant.is_available_for_sale as variant_is_available_for_sale,
+        product_variant.display_name as variant_display_name,
+        product_variant.legacy_resource_id as variant_legacy_resource_id,
+        product_variant.has_components_required as variant_has_components_required,
+        product_variant.sellable_online_quantity as variant_sellable_online_quantity
 
         {{ fivetran_utils.persist_pass_through_columns('product_variant_pass_through_columns', identifier='product_variant') }}
 

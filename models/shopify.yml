@@ -629,6 +629,16 @@ models:
         description: The weight of the product variant in the unit system specified with weight_unit.
       - name: variant_weight_unit
         description: "The unit of measurement that applies to the product variant's weight. If you don't specify a value for weight_unit, then the shop's default unit of measurement is applied. Valid values: g, kg, oz, and lb."
+      - name: variant_is_available_for_sale
+        description: Indicates whether the product variant is available for sale.
+      - name: variant_display_name
+        description: The display name of the variant, based on the product's title and variant's title. 
+      - name: variant_legacy_resource_id
+        description: The ID of the corresponding resource in the REST Admin API. 
+      - name: variant_has_components_required
+        description: Indicates whether a product variant requires components. 
+      - name: variant_sellable_online_quantity
+        description: The total sellable quantity of the variant for online channels. 
       - name: refunded_subtotal
         description: Subtotal amount of the refund applied to the order line in shop currency.
       - name: subtotal_net_refunds
@@ -672,8 +682,6 @@ models:
         description: The ID associated with a refund in the refund table.
       - name: amount
         description: The amount of money included in the transaction in shop currency.
-      - name: authorization
-        description: The authorization code associated with the transaction.
       - name: created_timestamp
         description: The date and time when the transaction was created.
       - name: processed_timestamp
@@ -780,12 +788,40 @@ models:
         description: The unit cost of the inventory item. The shop's default currency is used.
       - name: province_code_of_origin
         description: The province code (ISO 3166-2 alpha-2) of where the item came from. The province code is only used if the shipping provider for the inventory item is Canada Post.
+      - name: duplicate_sku_count
+        description: The number of inventory items that share the same SKU with this item.
+      - name: harmonized_system_code
+        description: The harmonized system code of the item.
+      - name: inventory_history_url
+        description: The URL that points to the inventory history for the item.
+      - name: legacy_resource_id
+        description: The ID of the corresponding resource in the REST Admin API.
+      - name: measurement_id
+        description: The unique identifier for the inventory item's measurement.
+      - name: measurement_weight_value
+        description: The weight value of the inventory item's measurement.
+      - name: measurement_weight_unit
+        description: The unit of measurement for the inventory item's weight.
+      - name: is_tracked_editable_locked
+        description: Indicates whether the 'tracked' field for the inventory item is locked from editing.
+      - name: tracked_editable_reason
+        description: Provides the reason why the 'tracked' field for the inventory item is locked from editing.
+      - name: unit_cost_amount
+        description: The unit cost associated with the inventory item.
+      - name: unit_cost_currency_code
+        description: Currency of the unit cost associated with the inventory item. 
       - name: country_code_of_origin
         description: The country code (ISO 3166-1 alpha-2) of where the item came from.
       - name: is_shipping_required
         description: Boolean representing whether a customer needs to provide a shipping address when placing an order containing the inventory item.
       - name: is_inventory_quantity_tracked
         description: Boolean representing whether inventory levels are tracked for the item. If true, then the inventory quantity changes are tracked by Shopify.
+      - name: can_deactivate
+        description: Indicates whether the inventory item can be deactivated at the location.
+      - name: deactivation_alert
+        description: Provides an alert message when the inventory item is deactivated at the location.
+      - name: created_at
+        description: The date and time when the inventory level was created.
       - name: inventory_item_created_at
         description: The date and time (ISO 8601 format) when the inventory item was created.
       - name: inventory_item_updated_at
@@ -863,6 +899,16 @@ models:
         description: The weight of the product variant in the unit system specified with weight_unit.
       - name: variant_weight_unit
         description: "The unit of measurement that applies to the product variant's weight. If you don't specify a value for weight_unit, then the shop's default unit of measurement is applied. Valid values: g, kg, oz, and lb."
+      - name: variant_is_available_for_sale
+        description: Indicates whether the product variant is available for sale.
+      - name: variant_display_name
+        description: The display name of the variant, based on the product's title and variant's title. 
+      - name: variant_legacy_resource_id
+        description: The ID of the corresponding resource in the REST Admin API. 
+      - name: variant_has_components_required
+        description: Indicates whether a product variant requires components. 
+      - name: variant_sellable_online_quantity
+        description: The total sellable quantity of the variant for online channels. 
       - name: subtotal_sold
         description: Total amount (monetary, in shop currency) sold from the inventory level. Includes refunds.
       - name: quantity_sold
