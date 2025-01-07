@@ -2,11 +2,14 @@
 
 [PR #94](https://github.com/fivetran/dbt_shopify/pull/94) includes the following updates:
 ## Breaking Changes
-- Updated for connector changes released on January 6, 2025. See the [release notes](https://fivetran.com/docs/connectors/applications/shopify/changelog#january2025) for more details. Added the following columns to models:
+- Updated columns with the connector changes released on January 6, 2025. See the [release notes](https://fivetran.com/docs/connectors/applications/shopify/changelog#january2025) for more details. 
+
+- In the `shopify__inventory_levels` model, replaced the `cost` column with:
+  - `unit_cost_amount`
+  - `unit_cost_currency_code`
+
+- Added the following columns to models:
   - `shopify__inventory_levels`:
-    - `cost` replaced with:
-      - `unit_cost_amount`
-      - `unit_cost_currency_code`
     - `duplicate_sku_count`
     - `harmonized_system_code`
     - `inventory_history_url`
@@ -24,7 +27,6 @@
     - `variant_sellable_online_quantity`
 - Additionally, new columns were added in the upstream package. For more details, see the [dbt_shopify_source v0.14.0 release notes](https://github.com/fivetran/dbt_shopify_source/releases/tag/v0.14.0).
 
-## Documentation
 - Marked the following columns as deprecated in the documentation. These columns will return `null` values following the connector update, and customers should expect this behavior until the columns are fully removed in a future release.
   - `shopify__inventory_levels`:
     - `available_quantity`
