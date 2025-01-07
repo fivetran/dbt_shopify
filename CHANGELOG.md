@@ -19,7 +19,7 @@
     - `measurement_weight_unit`
     - `is_tracked_editable_locked`
     - `tracked_editable_reason`
-  - `shopify__order_lines`:
+  - `shopify__inventory_levels` and `shopify__order_lines`:
     - `variant_is_available_for_sale`
     - `variant_display_name`
     - `variant_legacy_resource_id`
