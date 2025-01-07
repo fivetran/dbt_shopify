@@ -1,3 +1,61 @@
+# dbt_shopify v0.15.0
+
+[PR #94](https://github.com/fivetran/dbt_shopify/pull/94) includes the following updates:
+## Breaking Changes
+- Updated columns with the connector changes released on January 6, 2025. See the [release notes](https://fivetran.com/docs/connectors/applications/shopify/changelog#january2025) for more details. 
+
+- In the `shopify__inventory_levels` model, replaced the `cost` column with:
+  - `unit_cost_amount`
+  - `unit_cost_currency_code`
+
+- Added the following columns to models:
+  - `shopify__inventory_levels`:
+    - `duplicate_sku_count`
+    - `harmonized_system_code`
+    - `inventory_history_url`
+    - `legacy_resource_id`
+    - `measurement_id`
+    - `measurement_weight_value`
+    - `measurement_weight_unit`
+    - `is_tracked_editable_locked`
+    - `tracked_editable_reason`
+  - `shopify__inventory_levels` and `shopify__order_lines`:
+    - `variant_is_available_for_sale`
+    - `variant_display_name`
+    - `variant_legacy_resource_id`
+    - `variant_has_components_required`
+    - `variant_sellable_online_quantity`
+- Additionally, new columns were added in the upstream package. For more details, see the [dbt_shopify_source v0.14.0 release notes](https://github.com/fivetran/dbt_shopify_source/releases/tag/v0.14.0).
+
+- Marked the following columns as deprecated in the documentation. These columns will return `null` values following the connector update, and customers should expect this behavior until the columns are fully removed in a future release.
+  - `shopify__inventory_levels`:
+    - `available_quantity`
+    - `is_shipping_required`
+    - `variant_fulfillment_service`
+    - `variant_grams`
+    - `variant_inventory_management`
+    - `variant_option_1`
+    - `variant_option_2`
+    - `variant_option_3`
+    - `variant_weight`
+    - `variant_weight_unit`
+  - `shopify__order_lines`:
+    - `variant_fulfillment_service`
+    - `variant_grams`
+    - `variant_inventory_management`
+    - `variant_option_1`
+    - `variant_option_2`
+    - `variant_option_3`
+    - `variant_weight`
+    - `variant_weight_unit`
+
+## Under the Hood
+- Updated `shopify_*_data` seed data to include new columns for the following tables:
+  - `inventory_item`
+  - `inventory_level`
+  - `product_image`
+  - `product_variant`
+
 # dbt_shopify v0.14.0
 
 [PR #92](https://github.com/fivetran/dbt_shopify/pull/92) includes the following updates:
