@@ -1,3 +1,9 @@
+# dbt_shopify version.version
+
+## Documentation
+- Added Quickstart model counts to README. ([#96](https://github.com/fivetran/dbt_shopify/pull/96))
+- Corrected references to connectors and connections in the README. ([#96](https://github.com/fivetran/dbt_shopify/pull/96))
+
 # dbt_shopify v0.14.0
 
 [PR #92](https://github.com/fivetran/dbt_shopify/pull/92) includes the following updates:
