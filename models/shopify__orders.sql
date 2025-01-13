@@ -1,8 +1,7 @@
 {{
     config(
-        materialized='table' if target.type in ('bigquery', 'databricks', 'spark') else 'incremental',
+        materialized='table',
         unique_key='orders_unique_key',
-        incremental_strategy='delete+insert' if target.type in ('postgres', 'redshift', 'snowflake') else 'merge',
         cluster_by=['order_id']
         ) 
 }}
@@ -13,14 +12,7 @@ with orders as (
         *,
         {{ dbt_utils.generate_surrogate_key(['source_relation', 'order_id']) }} as orders_unique_key
     from {{ var('shopify_order') }}
-
-    {% if is_incremental() %}
-    where cast(coalesce(updated_timestamp, created_timestamp) as date) >= {{ shopify.shopify_lookback(
-        from_date="max(cast(coalesce(updated_timestamp, created_timestamp) as date))", 
-        interval=var('lookback_window', 7), 
-        datepart='day') }}
-    {% endif %}
-
+ 
 ), order_lines as (
 
     select *
