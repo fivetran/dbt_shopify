@@ -1,5 +1,19 @@
 # dbt_shopify v0.16.0
+[PR #97](https://github.com/fivetran/dbt_shopify/pull/97) includes the following updates:
 
+## Bug Fixes
+- Removed incremental logic in the following end models:
+  - `shopify__discounts`
+  - `shopify__order_lines`
+  - `shopify__orders`
+  - `shopify__transactions`
+- These models utilized the `merge` incremental strategy on BigQuery and Databricks, as we could not rely on a time series timestamp to impelment the `insert_overwrite` strategy. Using `merge` is a costly strategy, so it defeats the purpose of leveraging incremental logic. 
+- There were also concerns about the incremental logic returning incorrect data in some end models. For example, if a repeat order within the `new_vs_repeat` CTE logic in `shopify__orders` was calculated within the specified incremental window but the new order was not in that same time period, it could be incorrectly processed as a new order.  
+
+## [Upstream Under-the-Hood Updates from `shopify_source` Package](https://github.com/fivetran/dbt_shopify_source/releases/tag/v0.15.0)
+- (Affects Redshift only) Creates new `shopify_union_data` macro to accommodate Redshift's treatment of empty tables.
+  - For each staging model, if the source table is not found in any of your schemas, the package will create a empty table with 0 rows for non-Redshift warehouses and a table with 1 all-`null` row for Redshift destinations.
+  - This is necessary as Redshift will ignore explicit data casts when a table is completely empty and materialize every column as a `varchar`. This throws errors in downstream transformations in the `shopify` package. The 1 row will ensure that Redshift will respect the package's datatype casts.
 
 # dbt_shopify v0.15.0
 
