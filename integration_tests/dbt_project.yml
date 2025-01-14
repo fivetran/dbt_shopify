@@ -13,7 +13,7 @@ vars:
   # shopify_using_fulfillment_event: true
   # shopify_using_all_metafields: true
   # shopify__standardized_billing_model_enabled: true
-  shopify_schema: shopify_integration_tests_13
+  shopify_schema: shopify_integration_tests_14
 
   shopify_source:
     shopify_customer_identifier: "shopify_customer_data"
