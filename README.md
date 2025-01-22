@@ -49,6 +49,8 @@ Curious what these tables can do? Check out example visualizations from the [sho
 </a>
 </p>
 
+### Materialized Models
+Each Quickstart transformation job run materializes 89 models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
 <!--section-end-->
 
 ## How do I use the dbt package?
@@ -56,7 +58,7 @@ Curious what these tables can do? Check out example visualizations from the [sho
 ### Step 1: Prerequisites
 To use this dbt package, you must have the following:
 
-- At least one Fivetran Shopify connector syncing data into your destination.
+- At least one Fivetran Shopify connection syncing data into your destination.
 - One of the following destinations:
   - [BigQuery](https://fivetran.com/docs/destinations/bigquery)
   - [Snowflake](https://fivetran.com/docs/destinations/snowflake)
@@ -84,7 +86,7 @@ dispatch:
 ```
 
 ### Step 3: Define database and schema variables
-#### Single connector
+#### Single connection
 By default, this package runs using your destination and the `shopify` schema. If this is not where your Shopify data is (for example, if your Shopify schema is named `shopify_fivetran`), add the following configuration to your root `dbt_project.yml` file:
 
 ```yml
@@ -94,8 +96,8 @@ vars:
     shopify_database: your_database_name
     shopify_schema: your_schema_name
 ```
-#### Union multiple connectors
-If you have multiple Shopify connectors in Fivetran and would like to use this package on all of them simultaneously, we have provided functionality to do so. The package will union all of the data together and pass the unioned table into the transformations. You will be able to see which source it came from in the `source_relation` column of each model. To use this functionality, you will need to set either the `shopify_union_schemas` OR `shopify_union_databases` variables (cannot do both) in your root `dbt_project.yml` file:
+#### Union multiple connections
+If you have multiple Shopify connections in Fivetran and would like to use this package on all of them simultaneously, we have provided functionality to do so. The package will union all of the data together and pass the unioned table into the transformations. You will be able to see which source it came from in the `source_relation` column of each model. To use this functionality, you will need to set either the `shopify_union_schemas` OR `shopify_union_databases` variables (cannot do both) in your root `dbt_project.yml` file:
 
 ```yml
 # dbt_project.yml
@@ -110,7 +112,7 @@ To connect your multiple schema/database sources to the package models, follow t
 
 ### Step 4: Disable models for non-existent sources
 
-The package takes into consideration that not every Shopify connector may have the `fulfillment_event`, `metadata`, or `abandoned_checkout` tables (including `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
+The package takes into consideration that not every Shopify connection may have the `fulfillment_event`, `metadata`, or `abandoned_checkout` tables (including `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
 
 ```yml
 # dbt_project.yml

@@ -1,8 +1,9 @@
 # dbt_shopify v0.16.0
-[PR #97](https://github.com/fivetran/dbt_shopify/pull/97) includes the following updates:
+This release includes the following updates:
 
 ## Bug Fixes
-- Removed incremental logic in the following end models:
+- Removed incremental logic in the following end models 
+([PR #97](https://github.com/fivetran/dbt_shopify/pull/97)):
   - `shopify__discounts`
   - `shopify__order_lines`
   - `shopify__orders`
@@ -13,6 +14,10 @@
 - (Affects Redshift only) Creates new `shopify_union_data` macro to accommodate Redshift's treatment of empty tables.
   - For each staging model, if the source table is not found in any of your schemas, the package will create a table with one row with null values for Redshift destinations. There will be no change in behavior in non-Redshift warehouses.
   - This is necessary as Redshift will ignore explicit data casts when a table is completely empty and materialize every column as a `varchar`. This throws errors in downstream transformations in the `shopify` package. The 1 row will ensure that Redshift will respect the package's datatype casts.
+
+## Documentation
+- Added Quickstart model counts to README. ([#96](https://github.com/fivetran/dbt_shopify/pull/96))
+- Corrected references to connectors and connections in the README. ([#96](https://github.com/fivetran/dbt_shopify/pull/96))
 
 # dbt_shopify v0.15.0
 
