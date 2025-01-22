@@ -7,7 +7,7 @@
   - `shopify__order_lines`
   - `shopify__orders`
   - `shopify__transactions`
-- Incremental strategies were removed from these models due to potential inaccuracies with the `merge` strategy on BigQuery and Databricks. For instance, the `new_vs_repeat` field in `shopify__orders` could produce incorrect results during incremental runs. To ensure consistency, this logic was removed across all warehouses. If the previous incremental functionality was valuable to you, please consider opening a feature request to revisit this approach.
+- Incremental strategies were removed from these models due to potential inaccuracies from incremental runs. For instance, the `new_vs_repeat` field in `shopify__orders` could produce incorrect results during incremental runs. To ensure consistency, this logic was removed across all warehouses. If the previous incremental functionality was valuable to you, please consider opening a feature request to revisit this approach.
 
 ## [Upstream Under-the-Hood Updates from `shopify_source` Package](https://github.com/fivetran/dbt_shopify_source/releases/tag/v0.15.0)
 - (Affects Redshift only) Creates new `shopify_union_data` macro to accommodate Redshift's treatment of empty tables.
