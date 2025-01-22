@@ -1,11 +1,3 @@
-{{
-    config(
-        materialized='table',
-        unique_key='transactions_unique_id',
-        cluster_by=['transaction_id']
-        ) 
-}}
-
 with transactions as (
     select 
         *,

@@ -1,11 +1,3 @@
-{{
-    config(
-        materialized='table',
-        unique_key='discounts_unique_key',
-        cluster_by=['discount_code_id']
-        ) 
-}}
-
 with discount as (
 
     select 

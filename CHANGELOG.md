@@ -7,12 +7,11 @@
   - `shopify__order_lines`
   - `shopify__orders`
   - `shopify__transactions`
-- These models utilized the `merge` incremental strategy on BigQuery and Databricks, as we could not rely on a time series timestamp to impelment the `insert_overwrite` strategy. Using `merge` is a costly strategy, so it defeats the purpose of leveraging incremental logic. 
-- There were also concerns about the incremental logic returning incorrect data in some end models. For example, if a repeat order within the `new_vs_repeat` CTE logic in `shopify__orders` was calculated within the specified incremental window but the new order was not in that same time period, it could be incorrectly processed as a new order.  
+- Incremental strategies were removed from these models due to potential inaccuracies with the `merge` strategy on BigQuery and Databricks. For instance, the `new_vs_repeat` field in `shopify__orders` could produce incorrect results during incremental runs. To ensure consistency, this logic was removed across all warehouses. If the previous incremental functionality was valuable to you, please consider opening a feature request to revisit this approach.
 
 ## [Upstream Under-the-Hood Updates from `shopify_source` Package](https://github.com/fivetran/dbt_shopify_source/releases/tag/v0.15.0)
 - (Affects Redshift only) Creates new `shopify_union_data` macro to accommodate Redshift's treatment of empty tables.
-  - For each staging model, if the source table is not found in any of your schemas, the package will create a empty table with 0 rows for non-Redshift warehouses and a table with 1 all-`null` row for Redshift destinations.
+  - For each staging model, if the source table is not found in any of your schemas, the package will create a table with one row with null values for Redshift destinations. There will be no change in behavior in non-Redshift warehouses.
   - This is necessary as Redshift will ignore explicit data casts when a table is completely empty and materialize every column as a `varchar`. This throws errors in downstream transformations in the `shopify` package. The 1 row will ensure that Redshift will respect the package's datatype casts.
 
 # dbt_shopify v0.15.0

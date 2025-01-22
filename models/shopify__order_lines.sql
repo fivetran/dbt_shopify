@@ -1,11 +1,3 @@
-{{
-    config(
-        materialized='table',
-        unique_key='order_lines_unique_key',
-        cluster_by=['order_line_id']
-        ) 
-}}
-
 with order_lines as (
 
     select 
