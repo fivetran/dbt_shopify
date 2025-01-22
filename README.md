@@ -70,7 +70,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=0.15.0", "<0.16.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.16.0", "<0.17.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 Do **NOT** include the `shopify_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
