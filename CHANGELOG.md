@@ -1,3 +1,10 @@
+# dbt_shopify_source v0.16.1
+This PR will include the following updates:
+ 
+# Upstream Bug Fixes from `shopify_source` Package
+- Updated the `owner_resource` logic in `stg_shopify__metafield` to ensure the new 'PRODUCTVARIANT' value gets used by `shopify__product_variant_metafields`. This will make sure all product variant metafield values are brought in for both the old 'variant' and new 'PRODUCTVARIANT' field values.
+  - This new 'PRODUCTVARIANT' value is what's used in the Shopify GraphQL API (the old 'variant' reference value belongs to the deprecated REST API, but this change will still bring those values in). [See the Shopify API docs for more information](https://shopify.dev/docs/api/admin-graphql/2025-01/objects/metafield).
+
 # dbt_shopify v0.16.0
 This release includes the following updates:
 
