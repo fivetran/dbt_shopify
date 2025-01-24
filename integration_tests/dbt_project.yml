@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '0.16.0'
+version: '0.16.1'
 profile: 'integration_tests'
 config-version: 2
 
@@ -11,7 +11,7 @@ clean-targets:         # directories to be removed by `dbt clean`
 vars:
   ## Uncomment when regenerating docs
   # shopify_using_fulfillment_event: true
-  # shopify_using_all_metafields: true
+  shopify_using_all_metafields: true
   # shopify__standardized_billing_model_enabled: true
   shopify_schema: shopify_integration_tests_15
 
