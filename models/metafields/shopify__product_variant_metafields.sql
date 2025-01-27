@@ -2,5 +2,5 @@
 
 {{ get_metafields( 
     source_object = "stg_shopify__product_variant", 
-    reference_value = 'variant') 
-}}
+    reference_values = ['variant', 'productvariant'] 
+) }}
