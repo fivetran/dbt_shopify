@@ -1,4 +1,18 @@
-{% macro get_metafields(source_object, reference_values=None, reference_value=None, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource") %}
+{% macro get_metafields(source_object, reference_values=None, reference_value=None, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource", id_column_override=None) %}
+    {{ adapter.dispatch('get_metafields', 'shopify')(
+        source_object=source_object,
+        reference_values=reference_values,
+        reference_value=reference_value,
+        lookup_object=lookup_object,
+        key_field=key_field,
+        key_value=key_value,
+        reference_field=reference_field,
+        id_column_override=id_column_override
+    ) }}
+{% endmacro %}
+
+
+{% macro default__get_metafields(source_object, reference_values=None, reference_value=None, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource", id_column_override=None) %}
 
 {# Handle backward compatibility for reference_value #}
 {% if reference_values is none and reference_value is not none %}
@@ -10,15 +24,21 @@
     {% do exceptions.raise_compiler_error("Either reference_values or reference_value must be provided.") %}
 {% endif %}
 
+{# Determine the _id column to use (respect id_column_override) #}
+{% if id_column_override is not none %}
+    {% set id_column = id_column_override %}
+    {% do log("Using id_column_override: " ~ id_column, info=true) %}
+{% else %}
+    {% set id_column = reference_values[0] ~ '_id' %}
+    {% do log("Dynamically resolved id_column: " ~ id_column, info=true) %}
+{% endif %}
+
 {# Manually quote and join reference values #}
 {% set quoted_values = [] %}
 {% for value in reference_values %}
     {% do quoted_values.append("'" ~ value | lower ~ "'") %}
 {% endfor %}
 {% set reference_values_clause = quoted_values | join(", ") %}
-
-{# Resolve the correct _id column dynamically #}
-{% set id_column = reference_values[0] ~ '_id' %}
 
 {# Get the pivot fields dynamically based on the reference values #}
 {% set pivot_fields = dbt_utils.get_column_values(
@@ -62,7 +82,7 @@ final as (
         {% endfor %}
     from source_table
     left join lookup_object 
-        on lookup_object.{{ reference_field }}_id = source_table.{{ id_column }}
+        on lookup_object.owner_resource_id = source_table.{{ id_column }}
         and lower(lookup_object.{{ reference_field }}) IN ({{ reference_values_clause }})
     {{ dbt_utils.group_by(source_column_count) }}
 )
