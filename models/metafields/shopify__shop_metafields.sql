@@ -2,5 +2,5 @@
 
 {{ shopify.get_metafields( 
     source_object = "stg_shopify__shop", 
-    reference_value = 'shop') 
+    reference_values = ['shop']) 
 }}

@@ -1,42 +1,29 @@
-{% macro get_metafields(source_object, reference_values=None, reference_value=None, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource", id_column_override=None) %}
+{% macro get_metafields(source_object, reference_values=None, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource") %}
     {{ adapter.dispatch('get_metafields', 'shopify')(
         source_object=source_object,
         reference_values=reference_values,
-        reference_value=reference_value,
         lookup_object=lookup_object,
         key_field=key_field,
         key_value=key_value,
-        reference_field=reference_field,
-        id_column_override=id_column_override
-    ) }}
-{% endmacro %}
+        reference_field=reference_field
+    ) }} 
+{%- endmacro %}
 
+{% macro default__get_metafields(source_object, reference_values, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource") %}
 
-{% macro default__get_metafields(source_object, reference_values=None, reference_value=None, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource", id_column_override=None) %}
-
-{# Handle backward compatibility for reference_value #}
-{% if reference_values is none and reference_value is not none %}
-    {% set reference_values = [reference_value] %}
-{% endif %}
-
-{# Ensure reference_values is defined #}
+{# Ensure reference_values is defined and always a list #}
 {% if reference_values is none %}
-    {% do exceptions.raise_compiler_error("Either reference_values or reference_value must be provided.") %}
+    {% do exceptions.raise_compiler_error("The reference_values parameter must be provided.") %}
 {% endif %}
 
-{# Determine the _id column to use (respect id_column_override) #}
-{% if id_column_override is not none %}
-    {% set id_column = id_column_override %}
-    {% do log("Using id_column_override: " ~ id_column, info=true) %}
-{% else %}
-    {% set id_column = reference_values[0] ~ '_id' %}
-    {% do log("Dynamically resolved id_column: " ~ id_column, info=true) %}
-{% endif %}
+{# Derive the _id column dynamically #}
+{% set id_column = reference_values[0] ~ '_id' %}
+{% do log("Dynamically resolved id_column: " ~ id_column, info=true) %}
 
 {# Manually quote and join reference values #}
 {% set quoted_values = [] %}
 {% for value in reference_values %}
-    {% do quoted_values.append("'" ~ value | lower ~ "'") %}
+    {% do quoted_values.append("'" ~ value | lower | trim ~ "'") %}
 {% endfor %}
 {% set reference_values_clause = quoted_values | join(", ") %}
 
