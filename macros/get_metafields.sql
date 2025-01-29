@@ -1,12 +1,12 @@
 {% macro get_metafields(source_object, reference_values=None, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource") %}
-    {{ adapter.dispatch('get_metafields', 'shopify')(
+    {{ return(adapter.dispatch('get_metafields', 'shopify')(
         source_object=source_object,
         reference_values=reference_values,
         lookup_object=lookup_object,
         key_field=key_field,
         key_value=key_value,
         reference_field=reference_field
-    ) }} 
+    )) }} 
 {%- endmacro %}
 
 {% macro default__get_metafields(source_object, reference_values, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource") %}
