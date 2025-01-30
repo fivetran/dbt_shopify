@@ -1,24 +1,8 @@
-{% macro get_metafields(source_object, reference_values=None, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource") %}
-    {{ return(adapter.dispatch('get_metafields', 'shopify')(
-        source_object=source_object,
-        reference_values=reference_values,
-        lookup_object=lookup_object,
-        key_field=key_field,
-        key_value=key_value,
-        reference_field=reference_field
-    )) }} 
+{% macro get_metafields(source_object, reference_values, id_column, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource") %}
+    {{ return(adapter.dispatch('get_metafields', 'shopify')(source_object, reference_values, id_column, lookup_object, key_field, key_value, reference_field)) }} 
 {%- endmacro %}
 
-{% macro default__get_metafields(source_object, reference_values, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource") %}
-
-{# Ensure reference_values is defined and always a list #}
-{% if reference_values is none %}
-    {% do exceptions.raise_compiler_error("The reference_values parameter must be provided.") %}
-{% endif %}
-
-{# Derive the _id column dynamically #}
-{% set id_column = reference_values[0] ~ '_id' %}
-{% do log("Dynamically resolved id_column: " ~ id_column, info=true) %}
+{% macro default__get_metafields(source_object, reference_values, id_column, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource") %}
 
 {# Manually quote and join reference values #}
 {% set quoted_values = [] %}
@@ -70,7 +54,7 @@ final as (
     from source_table
     left join lookup_object 
         on lookup_object.owner_resource_id = source_table.{{ id_column }}
-        and lower(lookup_object.{{ reference_field }}) IN ({{ reference_values_clause }})
+        and lower(lookup_object.{{ reference_field }}) in ({{ reference_values_clause }})
     {{ dbt_utils.group_by(source_column_count) }}
 )
 

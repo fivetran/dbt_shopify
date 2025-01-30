@@ -2,5 +2,6 @@
 
 {{ shopify.get_metafields( 
     source_object = "stg_shopify__order", 
-    reference_values = ['order']) 
-}}
+    reference_values = ['order'],
+    id_column = "order_id"
+) }}
