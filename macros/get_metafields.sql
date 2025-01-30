@@ -53,7 +53,7 @@ final as (
         {% endfor %}
     from source_table
     left join lookup_object 
-        on lookup_object.owner_resource_id = source_table.{{ id_column }}
+        on lookup_object.{{ reference_field }}_id = source_table.{{ id_column }}
         and lower(lookup_object.{{ reference_field }}) in ({{ reference_values_clause }})
     {{ dbt_utils.group_by(source_column_count) }}
 )
