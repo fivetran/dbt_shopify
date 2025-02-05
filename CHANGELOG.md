@@ -1,3 +1,14 @@
+# dbt_shopify v0.16.1
+[PR #99](https://github.com/fivetran/dbt_shopify/pull/99) includes the following updates:
+
+## Bug Fixes
+- Updated the `get_metafields` macro to support multiple reference values, ensuring compatibility with both the Shopify GraphQL API (ex: 'PRODUCTVARIANT' from the `product_variant` source) and the deprecated REST API (previously 'variant' for `product_variant`). [See the Shopify API docs for more information](https://shopify.dev/docs/api/admin-graphql/2025-01/objects/metafield).
+  - Updated `reference_value` parameter to `reference_values` to grab lists of reference values rather than a single string value. Now all records from `stg_shopify__metafield` are properly added to the relevant metafield models.
+  - Added `id_column` parameter to explicitly specify what field in the staging model should be joined on to properly unpivot the metafields. 
+
+## Under the Hood
+- Updated the `shopify_metafield_data` seed to validate the functionality of the `get_metafields` macro, ensuring it correctly retrieves metafield data for all supported reference values.
+
 # dbt_shopify v0.16.0
 This release includes the following updates:
 

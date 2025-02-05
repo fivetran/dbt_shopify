@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '0.16.0'
+version: '0.16.1'
 profile: 'integration_tests'
 config-version: 2
 
@@ -9,11 +9,12 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "dbt_modules"
 
 vars:
-  ## Uncomment when regenerating docs
+  # Uncomment when regenerating docs
   # shopify_using_fulfillment_event: true
   # shopify_using_all_metafields: true
   # shopify__standardized_billing_model_enabled: true
-  shopify_schema: shopify_integration_tests_15
+
+  shopify_schema: shopify_integration_tests_16
 
   shopify_source:
     shopify_customer_identifier: "shopify_customer_data"
@@ -181,6 +182,8 @@ seeds:
       +column_types:
         value_type: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
         type: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+        id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        owner_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         _fivetran_synced: timestamp
         created_at: timestamp
         updated_at: timestamp
