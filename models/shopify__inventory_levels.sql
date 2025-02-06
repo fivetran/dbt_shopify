@@ -10,6 +10,17 @@ inventory_item as (
     from {{ var('shopify_inventory_item') }}
 ),
 
+inventory_quantity as (
+
+    select
+        source_relation,
+        inventory_item_id,
+        sum(coalesce(quantity, 0)) as quantity_available
+    from {{ var('shopify_inventory_quantity') }}
+    where lower(inventory_state_name) = 'available'
+    group by 1,2
+),
+
 location as (
 
     select *
@@ -37,7 +48,17 @@ inventory_level_aggregated as (
 joined_info as (
 
     select 
-        inventory_level.*,
+        inventory_level.inventory_level_id,
+        inventory_level.inventory_item_id,
+        inventory_level.location_id,
+        coalesce(inventory_quantity.quantity_available, inventory_level.quantity_available) as quantity_available,
+        inventory_level.can_deactivate,
+        inventory_level.deactivation_alert,
+        inventory_level.created_at,
+        inventory_level.updated_at,
+        inventory_level._fivetran_synced,
+        inventory_level.source_relation,
+
         inventory_item.sku,
         inventory_item.is_deleted as is_inventory_item_deleted,
         inventory_item.unit_cost_amount,
@@ -112,6 +133,9 @@ joined_info as (
     join product_variant 
         on inventory_item.inventory_item_id = product_variant.inventory_item_id 
         and inventory_item.source_relation = product_variant.source_relation
+    left join inventory_quantity
+        on inventory_quantity.inventory_item_id = product_variant.inventory_item_id 
+        and inventory_quantity.source_relation = product_variant.source_relation
 
 ),
 

@@ -1,5 +1,5 @@
 name: 'shopify'
-version: '0.16.1'
+version: '0.17.0'
 config-version: 2
 require-dbt-version: [">=1.3.0", "<2.0.0"]
 models:
@@ -30,6 +30,7 @@ vars:
     shopify_fulfillment: "{{ ref('stg_shopify__fulfillment') }}"
     shopify_inventory_item: "{{ ref('stg_shopify__inventory_item') }}"
     shopify_inventory_level: "{{ ref('stg_shopify__inventory_level') }}"
+    shopify_inventory_quantity: "{{ ref('stg_shopify__inventory_quantity') }}"
     shopify_location: "{{ ref('stg_shopify__location') }}"
     shopify_metafield: "{{ ref('stg_shopify__metafield') }}"
     shopify_order_note_attribute: "{{ ref('stg_shopify__order_note_attribute') }}"
