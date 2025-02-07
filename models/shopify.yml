@@ -773,7 +773,7 @@ models:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: available_quantity
-        description: (DEPRECATED 2025-01-06) The available quantity of an inventory item at the inventory level's associated location. Returns null if the inventory item is not tracked.
+        description: The available quantity of an inventory item, determined by coalescing the `quantity` where inventory_state_name = 'available' from `stg_shopify__inventory_quantity` and `available_quantity` from the deprecated `stg_shopify__inventory_level`. Returns null if the inventory item is not tracked.
       - name: inventory_item_id
         description: The ID of the inventory item associated with the inventory level.
         tests:

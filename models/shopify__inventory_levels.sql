@@ -15,7 +15,7 @@ inventory_quantity as (
     select
         source_relation,
         inventory_item_id,
-        sum(coalesce(quantity, 0)) as quantity_available
+        sum(coalesce(quantity, 0)) as available_quantity
     from {{ var('shopify_inventory_quantity') }}
     where lower(inventory_state_name) = 'available'
     group by 1,2
@@ -51,7 +51,7 @@ joined_info as (
         inventory_level.inventory_level_id,
         inventory_level.inventory_item_id,
         inventory_level.location_id,
-        coalesce(inventory_quantity.quantity_available, inventory_level.quantity_available) as quantity_available,
+        coalesce(inventory_quantity.available_quantity, inventory_level.available_quantity) as available_quantity,
         inventory_level.can_deactivate,
         inventory_level.deactivation_alert,
         inventory_level.created_at,
