@@ -218,7 +218,7 @@ vars:
     shopify_<default_source_table_name>_identifier: your_table_name 
 ```
 
-##### Lookback Window
+#### Lookback Window
 Records from the source can sometimes arrive late. Since several of the models in this package are incremental, by default we look back 7 days to ensure late arrivals are captured while avoiding the need for frequent full refreshes. While the frequency can be reduced, we still recommend running `dbt --full-refresh` periodically to maintain data quality of the models. For more information on our incremental decisions, see the [Incremental Strategy section](https://github.com/fivetran/dbt_shopify/blob/main/DECISIONLOG.md#incremental-strategy) of the DECISIONLOG.
 
 To change the default lookback window, add the following variable to your `dbt_project.yml` file:
@@ -229,13 +229,21 @@ vars:
     lookback_window: number_of_days # default is 7
 ```
 
-##### Change the calendar start date
+#### Change the calendar start date
 Our date-based models start at `2019-01-01` by default. To customize the start date, add the following variable to your `dbt_project.yml` file:
 
 ```yml
 vars:
   shopify:
     shopify__calendar_start_date: 'yyyy-mm-dd' # default is 2019-01-01
+```
+
+#### Customizing Inventory States
+You can modify the inventory quantity states brought into the `shopify__inventory_levels` model to limit the `*_quantity` fields created. To override the default list, add the following variable to your `dbt_project.yml` file:
+
+```yml
+vars:
+  shopify_inventory_states: ['available', 'committed'] # Default: ['incoming', 'on_hand', 'available', 'committed', 'reserved', 'damaged', 'safety_stock', 'quality_control']
 ```
 
 </details>

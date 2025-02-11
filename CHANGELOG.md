@@ -1,3 +1,9 @@
+# dbt_shopify_source v0.17.0
+[PR #100](https://github.com/fivetran/dbt_shopify/pull/100) includes the following changes:
+
+## Features
+
+
 # dbt_shopify v0.16.1
 [PR #99](https://github.com/fivetran/dbt_shopify/pull/99) includes the following updates:
 
