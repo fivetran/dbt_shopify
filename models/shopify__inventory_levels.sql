@@ -12,13 +12,8 @@ inventory_item as (
 
 inventory_quantity as (
 
-    select
-        source_relation,
-        inventory_item_id,
-        sum(coalesce(quantity, 0)) as available_quantity
+    select *
     from {{ var('shopify_inventory_quantity') }}
-    where lower(inventory_state_name) = 'available'
-    group by 1,2
 ),
 
 location as (
@@ -45,13 +40,38 @@ inventory_level_aggregated as (
     from {{ ref('int_shopify__inventory_level__aggregates') }}
 ),
 
+inventory_quantity_aggregated as (
+
+    select
+        inventory_quantity.source_relation,
+        inventory_quantity.inventory_item_id,
+        inventory_quantity.inventory_level_id
+
+        {% set inventory_states = var('shopify_inventory_states', ['incoming', 'on_hand', 'available', 'committed', 'reserved', 'damaged', 'safety_stock', 'quality_control']) -%}
+        {% for inventory_state in inventory_states -%}
+            , sum(case when lower(inventory_state_name) = {{ "'" ~ inventory_state|lower ~ "'" }}
+                {% if inventory_state|lower == 'available ' -%}
+                then coalesce(inventory_quantity.quantity, inventory_level.available_quantity)
+                {% else -%}
+                then inventory_quantity.quantity
+                {% endif -%}
+                end) as {{ inventory_state }}_quantity
+        {% endfor -%}
+
+    from inventory_quantity
+    left join inventory_level
+        on inventory_quantity.inventory_item_id = inventory_level.inventory_item_id
+        and inventory_quantity.inventory_level_id = inventory_level.inventory_level_id
+        and inventory_quantity.source_relation = inventory_level.source_relation
+    group by 1,2,3
+),
+
 joined_info as (
 
     select 
         inventory_level.inventory_level_id,
         inventory_level.inventory_item_id,
         inventory_level.location_id,
-        coalesce(inventory_quantity.available_quantity, inventory_level.available_quantity) as available_quantity,
         inventory_level.can_deactivate,
         inventory_level.deactivation_alert,
         inventory_level.created_at,
@@ -133,9 +153,6 @@ joined_info as (
     join product_variant 
         on inventory_item.inventory_item_id = product_variant.inventory_item_id 
         and inventory_item.source_relation = product_variant.source_relation
-    left join inventory_quantity
-        on inventory_quantity.inventory_item_id = product_variant.inventory_item_id 
-        and inventory_quantity.source_relation = product_variant.source_relation
 
 ),
 
@@ -154,14 +171,22 @@ joined_aggregates as (
         coalesce(inventory_level_aggregated.quantity_sold_refunds, 0) as quantity_sold_refunds
 
         {% for status in ['pending', 'open', 'success', 'cancelled', 'error', 'failure'] %}
-        , coalesce(count_fulfillment_{{ status }}, 0) as count_fulfillment_{{ status }}
+        , coalesce(inventory_level_aggregated.count_fulfillment_{{ status }}, 0) as count_fulfillment_{{ status }}
         {% endfor %}
+
+        {% for inventory_state in inventory_states -%}
+        , inventory_quantity_aggregated.{{ inventory_state }}_quantity
+        {% endfor -%}
 
     from joined_info
     left join inventory_level_aggregated
         on joined_info.location_id = inventory_level_aggregated.location_id
         and joined_info.variant_id = inventory_level_aggregated.variant_id
         and joined_info.source_relation = inventory_level_aggregated.source_relation
+    left join inventory_quantity_aggregated
+        on joined_info.inventory_item_id = inventory_quantity_aggregated.inventory_item_id
+        and joined_info.inventory_level_id = inventory_quantity_aggregated.inventory_level_id
+        and joined_info.source_relation = inventory_quantity_aggregated.source_relation
 ),
 
 final as (

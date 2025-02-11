@@ -772,8 +772,6 @@ models:
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
-      - name: available_quantity
-        description: The available quantity of an inventory item, determined by coalescing the `quantity` where inventory_state_name = 'available' from `stg_shopify__inventory_quantity` and `available_quantity` from the deprecated `stg_shopify__inventory_level`. Returns null if the inventory item is not tracked.
       - name: inventory_item_id
         description: The ID of the inventory item associated with the inventory level.
         tests:
@@ -963,6 +961,29 @@ models:
           "Failure" = The fulfillment request failed.
       - name: source_relation
         description: "{{ doc('source_relation') }}"
+      - name: available_quantity
+        description: >
+          The available quantity that a merchant can sell, determined by coalescing the `quantity` where 
+          inventory_state_name = 'available' from `stg_shopify__inventory_quantity`and `available_quantity` 
+          from the deprecated `stg_shopify__inventory_level`. Returns null if the inventory item is not tracked.
+      - name: incoming_quantity
+        description: The incoming quantity on its way to a merchant's location. Returns null if the inventory item is not tracked.
+      - name: on_hand_quantity
+        description: >
+          The total number of units that are physically at a location. The `on_hand` state equals the sum of inventory quantities that 
+          are in the `available`, `committed`, `reserved`, `damaged`, `safety_stock`, and `quality_control` states.
+          Returns null if the inventory item is not tracked.
+      - name: committed_quantity
+        description: The number of units that are part of a placed order but aren't fulfilled. When a draft order is created, the inventory isn't committed until the draft order is completed and an order is created. Returns null if the inventory item is not tracked.
+      - name: reserved_quantity
+        description: The on-hand units that are temporarily set aside. Returns null if the inventory item is not tracked.
+      - name: damaged_quantity
+        description: The on-hand units that aren't sellable or usable due to damage. Returns null if the inventory item is not tracked.
+      - name: safety_stock_quantity
+        description: The on-hand units that are set aside to help guard against overselling. Returns null if the inventory item is not tracked.
+      - name: quality_control_quantity
+        description: The on-hand units that aren't sellable because they're currently in inspection for quality purposes. Returns null if the inventory item is not tracked.
+
 
   - name: shopify__discounts
     description: >

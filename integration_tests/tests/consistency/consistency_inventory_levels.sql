@@ -5,12 +5,12 @@
 
 with prod as (
     select *
-    from {{ target.schema }}_shopify_prod.shopify__customers
+    from {{ target.schema }}_shopify_prod.shopify__inventory_levels
 ),
 
 dev as (
     select *
-    from {{ target.schema }}_shopify_dev.shopify__customers
+    from {{ target.schema }}_shopify_dev.shopify__inventory_levels
 ), 
 
 prod_not_in_dev as (
