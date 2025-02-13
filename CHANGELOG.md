@@ -1,8 +1,25 @@
 # dbt_shopify_source v0.17.0
-[PR #100](https://github.com/fivetran/dbt_shopify/pull/100) includes the following changes:
 
-## Features
+[PR #100](https://github.com/fivetran/dbt_shopify/pull/100) includes the following updates:  
 
+## Breaking Changes  
+- In the source package, introduced the `inventory_quantity` source and the `stg_shopify__inventory_quantity` model to support downstream quantity tracking. 
+  - See the [v0.16.0 dbt_shopify_source release notes](https://github.com/fivetran/dbt_shopify_source/releases/tag/v0.16.0) for more details.
+- Updated model `shopify__inventory_levels` to add the following columns based on the `quantity` field from `stg_shopify__inventory_quantity`:  
+  - `available_quantity` 
+  - `committed_quantity`  
+  - `damaged_quantity`  
+  - `incoming_quantity`  
+  - `on_hand_quantity`  
+  - `quality_control_quantity`  
+  - `reserved_quantity`  
+  - `safety_stock_quantity` 
+
+## Documentation  
+- Added definitions for the new fields.  
+
+## Under the Hood  
+- Added seed `inventory_quantity_data` and macro `get_inventory_quantity_columns` to support the new `inventory_quantity` source.  
 
 # dbt_shopify v0.16.1
 [PR #99](https://github.com/fivetran/dbt_shopify/pull/99) includes the following updates:

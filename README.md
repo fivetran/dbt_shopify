@@ -239,7 +239,9 @@ vars:
 ```
 
 #### Customizing Inventory States
-You can modify the inventory quantity states brought into the `shopify__inventory_levels` model to limit the `*_quantity` fields created. To override the default list, add the following variable to your `dbt_project.yml` file:
+You can customize the inventory quantity states included in the `shopify__inventory_levels` model to control which `*_quantity` fields are created. [See the list of expected values](https://shopify.dev/docs/apps/build/orders-fulfillment/inventory-management-apps#inventory-states).  
+
+To override the default list, define the following variable in your `dbt_project.yml` file:  
 
 ```yml
 vars:
