@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '0.16.1'
+version: '0.17.0'
 profile: 'integration_tests'
 config-version: 2
 
@@ -35,6 +35,7 @@ vars:
     shopify_fulfillment_event_identifier: "shopify_fulfillment_event_data"
     shopify_inventory_item_identifier: "shopify_inventory_item_data"
     shopify_inventory_level_identifier: "shopify_inventory_level_data"
+    shopify_inventory_quantity_identifier: "shopify_inventory_quantity_data"
     shopify_location_identifier: "shopify_location_data"
     shopify_metafield_identifier: "shopify_metafield_data"
     shopify_order_note_attribute_identifier: "shopify_order_note_attribute_data"
@@ -198,6 +199,12 @@ seeds:
         id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         inventory_item_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         location_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+    shopify_inventory_quantity_data:
+      +column_types:
+        updated_at: timestamp
+        id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        inventory_item_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        inventory_level_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
     shopify_inventory_item_data:
       +column_types:
         updated_at: timestamp

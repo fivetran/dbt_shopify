@@ -1,6 +1,6 @@
 {{ config(
     tags="fivetran_validations",
-    enabled=var('fivetran_validation_tests_enabled', false)
+    enabled=var('fivetran_validation_tests_enabled', false) and var('shopify__standardized_billing_model_enabled', false)
 ) }}
 
 -- this test is to make sure there is no fanout between the staging order_line_table and the line_item_enhanced model.

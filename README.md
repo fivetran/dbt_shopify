@@ -72,7 +72,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=0.16.0", "<0.17.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.17.0", "<0.18.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 Do **NOT** include the `shopify_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
@@ -218,7 +218,7 @@ vars:
     shopify_<default_source_table_name>_identifier: your_table_name 
 ```
 
-##### Lookback Window
+#### Lookback Window
 Records from the source can sometimes arrive late. Since several of the models in this package are incremental, by default we look back 7 days to ensure late arrivals are captured while avoiding the need for frequent full refreshes. While the frequency can be reduced, we still recommend running `dbt --full-refresh` periodically to maintain data quality of the models. For more information on our incremental decisions, see the [Incremental Strategy section](https://github.com/fivetran/dbt_shopify/blob/main/DECISIONLOG.md#incremental-strategy) of the DECISIONLOG.
 
 To change the default lookback window, add the following variable to your `dbt_project.yml` file:
@@ -229,13 +229,23 @@ vars:
     lookback_window: number_of_days # default is 7
 ```
 
-##### Change the calendar start date
+#### Change the calendar start date
 Our date-based models start at `2019-01-01` by default. To customize the start date, add the following variable to your `dbt_project.yml` file:
 
 ```yml
 vars:
   shopify:
     shopify__calendar_start_date: 'yyyy-mm-dd' # default is 2019-01-01
+```
+
+#### Customizing Inventory States
+You can customize the inventory quantity states included in the `shopify__inventory_levels` model to control which `*_quantity` fields are created. [See the list of expected values](https://shopify.dev/docs/apps/build/orders-fulfillment/inventory-management-apps#inventory-states).  
+
+To override the default list, define the following variable in your `dbt_project.yml` file:  
+
+```yml
+vars:
+  shopify_inventory_states: ['available', 'committed'] # Default: ['incoming', 'on_hand', 'available', 'committed', 'reserved', 'damaged', 'safety_stock', 'quality_control']
 ```
 
 </details>
@@ -256,7 +266,7 @@ This dbt package is dependent on the following dbt packages. These dependencies 
 ```yml
 packages:
     - package: fivetran/shopify_source
-      version: [">=0.15.0", "<0.16.0"]
+      version: [">=0.16.0", "<0.17.0"]
 
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]
