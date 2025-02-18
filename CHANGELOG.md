@@ -3,7 +3,8 @@
 [PR #100](https://github.com/fivetran/dbt_shopify/pull/100) includes the following updates:  
 
 ## Breaking Changes  
-- In the source package, introduced the `inventory_quantity` source and the `stg_shopify__inventory_quantity` model to support downstream quantity tracking. 
+- In the source package, introduced the `inventory_quantity` source and the `stg_shopify__inventory_quantity` model to support downstream quantity tracking.
+  - This replaces the deprecated `available_quantity` column in `stg_shopify__inventory_level`.  
   - See the [v0.16.0 dbt_shopify_source release notes](https://github.com/fivetran/dbt_shopify_source/releases/tag/v0.16.0) for more details.
 - Updated model `shopify__inventory_levels` to add the following columns based on the `quantity` field from `stg_shopify__inventory_quantity`:  
   - `available_quantity` 
