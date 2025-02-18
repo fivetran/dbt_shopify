@@ -27,9 +27,9 @@ transform as (
 compare as (
     select *
     from source
-    join transform
-    on source.source_count != transform.transform_count
+    cross join transform
 )
 
 select *
 from compare
+where source_count != transform_count
