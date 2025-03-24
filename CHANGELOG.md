@@ -5,7 +5,7 @@
   - `dbt_date.convert_timezone` -> `shopify_source.fivetran_convert_timezone`
 
 ## Under the Hood
-- Added consistency data validation tests for all remaining end models:
+- Added consistency data validation tests for all remaining end models ([PR #102](https://github.com/fivetran/dbt_shopify/pull/102)):
   - `shopify__customer_email_cohorts`
   - `shopify__customer_emails`
   - `shopify__discounts`
