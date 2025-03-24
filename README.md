@@ -72,7 +72,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=0.17.0", "<0.18.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.18.0", "<0.19.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 Do **NOT** include the `shopify_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
@@ -134,7 +134,7 @@ vars:
     shopify_timezone: "America/New_York" # Replace with your timezone
 ```
 
-> **Note**: This will only **numerically** convert timestamps to your target timezone. They will however have a "UTC" appended to them. This is a current limitation of the dbt-date `convert_timezone` [macro](https://github.com/calogica/dbt-date#convert_timezone-column-target_tznone-source_tznone) we leverage.
+> **Note**: This will only **numerically** convert timestamps to your target timezone. They will however have a "UTC" appended to them. This is a current limitation of the dbt-date `convert_timezone` [macro](https://github.com/calogica/dbt-date#convert_timezone-column-target_tznone-source_tznone) we have leveraged and replicated in the [shopify_source](https://github.com/fivetran/dbt_shopify_source/tree/main/macros/fivetran_date_macros) package.
 
 ### (Optional) Step 6: Additional configurations
 <details open><summary>Expand/Collapse details</summary>
@@ -266,16 +266,13 @@ This dbt package is dependent on the following dbt packages. These dependencies 
 ```yml
 packages:
     - package: fivetran/shopify_source
-      version: [">=0.16.0", "<0.17.0"]
+      version: [">=0.17.0", "<0.18.0"]
 
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]
 
     - package: dbt-labs/dbt_utils
       version: [">=1.0.0", "<2.0.0"]
-
-    - package: calogica/dbt_date
-      version: [">=0.9.0", "<1.0.0"]
       
     - package: dbt-labs/spark_utils
       version: [">=0.3.0", "<0.4.0"]
