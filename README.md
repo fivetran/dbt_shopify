@@ -134,7 +134,7 @@ vars:
     shopify_timezone: "America/New_York" # Replace with your timezone
 ```
 
-> **Note**: This will only **numerically** convert timestamps to your target timezone. They will however have a "UTC" appended to them. This is a current limitation of the dbt-date `convert_timezone` [macro](https://github.com/calogica/dbt-date#convert_timezone-column-target_tznone-source_tznone) we have leveraged and replicated in the [shopify_source](https://github.com/fivetran/dbt_shopify_source/tree/main/macros/fivetran_date_macros) package.
+> **Note**: This will only **numerically** convert timestamps to your target timezone. They will however have a "UTC" appended to them. This is a current limitation of the dbt-date `convert_timezone` [macro](https://github.com/calogica/dbt-date#convert_timezone-column-target_tznone-source_tznone) we have leveraged and replicated in the [shopify_source](https://github.com/fivetran/dbt_shopify_source/tree/main/macros/fivetran_date_macros/fivetran_convert_timezone.sql) package.
 
 ### (Optional) Step 6: Additional configurations
 <details open><summary>Expand/Collapse details</summary>
