@@ -1,3 +1,19 @@
+# dbt_shopify v0.18.0
+This release includes the following updates:
+
+## Dependency Changes
+- Removed the dependency on [calogica/dbt_date](https://github.com/calogica/dbt-date) as it is no longer actively maintained. To maintain functionality, the highly leveraged `dbt_date.convert_timezone` macro (see [README](https://github.com/fivetran/dbt_shopify?tab=readme-ov-file#step-5-setting-your-timezone) for how to use) has been replicated within the Shopify Source package's `macros/fivetran_date_macros` [folder](https://github.com/fivetran/dbt_shopify_source/tree/main/macros/fivetran_date_macros/fivetran_convert_timezone.sql) with minimal modifications. It has been prefixed with `fivetran_` to avoid potential naming conflicts ([Source PR #98](https://github.com/fivetran/dbt_shopify_source/pull/98)):
+  - `dbt_date.convert_timezone` -> `shopify_source.fivetran_convert_timezone`
+
+## Under the Hood
+- Added consistency data validation tests for all remaining end models ([PR #102](https://github.com/fivetran/dbt_shopify/pull/102)):
+  - `shopify__customer_email_cohorts`
+  - `shopify__customer_emails`
+  - `shopify__discounts`
+  - `shopify__order_lines`
+  - `shopify__orders`
+  - `shopify__transactions`
+
 # dbt_shopify v0.17.0
 
 [PR #100](https://github.com/fivetran/dbt_shopify/pull/100) includes the following updates:  
