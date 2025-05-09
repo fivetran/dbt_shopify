@@ -1,0 +1,4 @@
+_fivetran_synced,amount,amount_set_presentment_money_amount,amount_set_presentment_money_currency_code,amount_set_shop_money_amount,amount_set_shop_money_currency_code,discount_application_index,index,order_line_id
+2021-03-22 05:43:56.784000,5.00,5.00,USD,5.00,USD,11443,0,1001
+2021-11-11 07:43:53.706000,10.00,10.00,USD,10.00,USD,564075,0,1002
+2021-12-03 06:47:21.433000,3.50,3.50,USD,3.50,USD,9339,0,1003

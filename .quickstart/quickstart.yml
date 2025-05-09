@@ -12,6 +12,10 @@ table_variables:
     - abandoned_checkout
     - abandoned_checkout_discount_code
     - abandoned_checkout_shipping_line
+  shopify_using_product_media:
+    - media
+    - media_image
+    - product_media
 
 destination_configurations:
   databricks:
