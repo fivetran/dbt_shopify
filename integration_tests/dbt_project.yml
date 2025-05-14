@@ -14,7 +14,7 @@ vars:
   # shopify_using_all_metafields: true
   # shopify__standardized_billing_model_enabled: true
 
-  shopify_schema: zz_dbt_avinash_seed
+  shopify_schema: shopify_integration_tests_16
 
   shopify_source:
     shopify_customer_identifier: "shopify_customer_data"
@@ -65,8 +65,8 @@ dispatch:
     search_order: ['spark_utils', 'dbt_utils']
 
 models:
-  # +schema: "{{ 'shopify_integrations_tests_sqlw' if target.name == 'databricks-sql' else 'shopify' }}"
-  +schema: "shopify_{{ var('directed_schema','dev') }}" ## To be used for validation tests
+  +schema: "{{ 'shopify_integrations_tests_sqlw' if target.name == 'databricks-sql' else 'shopify' }}"
+  # +schema: "shopify_{{ var('directed_schema','dev') }}" ## To be used for validation tests
 
 seeds:
   shopify_integration_tests:
