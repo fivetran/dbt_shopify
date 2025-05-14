@@ -1,3 +1,5 @@
+# dbt_shopify v0.19.0
+
 # dbt_shopify v0.18.0
 This release includes the following updates:
 

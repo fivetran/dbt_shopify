@@ -56,7 +56,6 @@ with order_lines as (
         product_variants.created_timestamp as variant_created_at,
         product_variants.updated_timestamp as variant_updated_at,
         product_variants.inventory_item_id,
-        product_variants.image_id,
 
         product_variants.price as variant_price,
         product_variants.sku as variant_sku,

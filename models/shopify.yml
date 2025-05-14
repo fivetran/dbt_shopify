@@ -869,8 +869,6 @@ models:
         description: (DEPRECATED 2025-01-06) The weight of the product variant in grams.
       - name: variant_id
         description: The unique numeric identifier for the product variant.
-      - name: variant_image_id
-        description: The unique numeric identifier for a product's image. The image must be associated to the same product as the variant.
       - name: variant_inventory_management
         description: (DEPRECATED 2025-01-06) The fulfillment service that tracks the number of items in stock for the product variant.
       - name: variant_inventory_policy

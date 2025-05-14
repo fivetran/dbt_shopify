@@ -1,123 +1,168 @@
-with discount_code as (
+with discount_code_basic as (
 
-    select *
-    from {{ var('shopify__discount_code') }}
+    select
+        discount_code_id,
+        'basic' as discount_subtype,
+        applies_once_per_customer,
+        usage_count,
+        codes_count,
+        codes_precision,
+        combines_with_order_discounts,
+        combines_with_product_discounts,
+        combines_with_shipping_discounts,
+        created_at,
+        customer_selection_all_customers,
+        ends_at, 
+        starts_at,
+        status,
+        title,
+        total_sales_amount,
+        total_sales_currency_code,
+        updated_at,
+        usage_limit,
+        source_relation
+    from {{ var('shopify_discount_code_basic') }}
 ),
 
-discount_allocation as (
+discount_code_bxgy as (
 
-    select *
-    from {{ var('shopify_discount_allocation') }}
+    select
+        discount_code_id,
+        'bxgy' as discount_subtype, 
+        applies_once_per_customer,
+        usage_count,
+        codes_count,
+        codes_precision,
+        combines_with_order_discounts,
+        combines_with_product_discounts,
+        combines_with_shipping_discounts,
+        created_at,
+        customer_selection_all_customers,
+        ends_at,
+        starts_at,
+        status,
+        title,
+        total_sales_amount,
+        total_sales_currency_code,
+        updated_at,
+        usage_limit,
+        source_relation
+    from {{ var('shopify_discount_code_bxgy') }}
 ),
 
-discount_application as (
+discount_code_free_shipping as (
+
+    select
+        discount_code_id,
+        'free_shipping' as discount_subtype, 
+        applies_once_per_customer,
+        usage_count,
+        codes_count,
+        codes_precision,
+        combines_with_order_discounts,
+        combines_with_product_discounts,
+        combines_with_shipping_discounts,
+        created_at,
+        customer_selection_all_customers,
+        ends_at, 
+        starts_at,
+        status,
+        title,
+        total_sales_amount,
+        total_sales_currency_code,
+        updated_at,
+        usage_limit,
+        source_relation
+    from {{ var('shopify_discount_code_free_shipping') }}
+),
+
+{% if var('shopify_using_discount_code_app', False) %}
+
+discount_code_app as (
+
+    select
+        discount_code_id,
+        'app' as discount_subtype,
+        applies_once_per_customer,
+        usage_count,
+        codes_count,
+        codes_precision,
+        combines_with_order_discounts,
+        combines_with_product_discounts,
+        combines_with_shipping_discounts,
+        created_at,
+        customer_selection_all_customers,
+        ends_at,
+        starts_at,
+        status,
+        title,
+        total_sales_amount,
+        total_sales_currency_code,
+        updated_at,
+        usage_limit,
+        source_relation
+    from {{ var('shopify_discount_code_app') }}
+),
+{% endif %}
+
+discount_redeem_codes as (
+    
+    select *
+    from {{ var('shopify_discount_redeem_code') }}
+),
+
+discount_applications as (
 
     select *
     from {{ var('shopify_discount_application') }}
 ),
 
-{% if var('shopify_using_discount_basic_code', true) %}
-discount_basic_code as (
+unified_discount_codes as (
 
-    select *
-    from {{ var('shopify__discount_basic_code') }}
-)
-{% endif %}
+    select * 
+    from discount_code_basic
+    
+    union all
+    
+    select * 
+    from discount_code_bxgy
 
-, discount_code_enhanced as (
+    union all
+    
+    select * 
+    from discount_code_free_shipping
 
-    select
-        discount_code.discount_code_id,
-        discount_code.source_relation,
-        discount_code.code,
-        discount_code.price_rule_id,
-        discount_code.usage_count,
-        discount_code.created_at,
-        discount_code.updated_at,
-
-        {% if var('shopify_using_discount_basic_code', true) %}
-        discount_basic_code.applies_once_per_customer,
-        discount_basic_code.starts_at,
-        discount_basic_code.ends_at
-        {% else %}
-        cast(null as boolean) as applies_once_per_customer,
-        cast(null as {{ dbt.type_timestamp() }}) as starts_at,
-        cast(null as {{ dbt.type_timestamp() }}) as ends_at
-        {% endif %}
-
-    from discount_code
-    {% if var('shopify_using_discount_basic_code', true) %}
-    left join discount_basic_code
-        on discount_code.discount_code_id = discount_basic_code.discount_code_id
-        and discount_code.source_relation = discount_basic_code.source_relation
+    {% if var('shopify_using_discount_code_app', False) %}
+    union all
+    select * from discount_code_app
     {% endif %}
 ),
 
-discounts_with_application as (
+discounts_with_codes as (
 
     select
-        discount_code_enhanced.discount_code_id,
-        discount_code_enhanced.code,
-        discount_code_enhanced.price_rule_id,
-        discount_code_enhanced.usage_count,
-        discount_code_enhanced.created_at,
-        discount_code_enhanced.updated_at,
-        discount_code_enhanced.source_relation,
-        discount_code_enhanced.applies_once_per_customer,
-        discount_code_enhanced.starts_at,
-        discount_code_enhanced.ends_at,
-
-        discount_application.allocation_method,
-        discount_application.description,
-        discount_application.target_selection,
-        discount_application.target_type,
-        discount_application.title,
-        discount_application.type,
-        discount_application.value,
-        discount_application.value_type
-
-    from discount_code_enhanced
-    left join discount_application
-        on discount_code_enriched.code = discount_application.code
-        and discount_code_enriched.source_relation = discount_application.source_relation
+        unified_discount_codes.*,
+        discount_redeem_codes.code
+    from unified_discount_codes 
+    left join discount_redeem_codes 
+        on unified_discount_codes.discount_code_id = discount_redeem_codes.discount_id
 ),
 
-discounts_final as (
+discounts_with_applications as (
 
     select
-        discounts_with_application.discount_code_id,
-        discounts_with_application.code,
-        discounts_with_application.price_rule_id,
-        discounts_with_application.usage_count,
-        discounts_with_application.created_at,
-        discounts_with_application.updated_at,
-        discounts_with_application._fivetran_synced,
-        discounts_with_application.source_relation,
-        discounts_with_application.applies_once_per_customer,
-        discounts_with_application.starts_at,
-        discounts_with_application.ends_at,
-
-        discounts_with_application.allocation_method,
-        discounts_with_application.description,
-        discounts_with_application.target_selection,
-        discounts_with_application.target_type,
-        discounts_with_application.title,
-        discounts_with_application.type,
-        discounts_with_application.value,
-        discounts_with_application.value_type,
-
-        discount_allocation.amount,
-        discount_allocation.amount_set_presentment_money_amount,
-        discount_allocation.amount_set_presentment_money_currency_code,
-        discount_allocation.amount_set_shop_money_amount,
-        discount_allocation.amount_set_shop_money_currency_code,
-        discount_allocation.order_line_id
-
-    from discounts_with_application
-    left join discount_allocation
-        on discounts_with_application.discount_code_id = discount_allocation.discount_application_index
-        and discounts_with_application.source_relation = discount_allocation.source_relation
+        discounts_with_codes.*,
+        discount_applications.allocation_method,
+        discount_applications.description,
+        discount_applications.target_selection,
+        discount_applications.target_type,
+        discount_applications.type,
+        discount_applications.value,
+        discount_applications.value_type
+    from discounts_with_codes
+    left join discount_applications 
+        on discounts_with_codes.code = discount_applications.code
 )
 
 select *
-from discounts_final
+from discounts_with_applications

@@ -1,4 +1,6 @@
-_fivetran_synced,amount,amount_set_presentment_money_amount,amount_set_presentment_money_currency_code,amount_set_shop_money_amount,amount_set_shop_money_currency_code,discount_application_index,index,order_line_id
-2021-03-22 05:43:56.784000,5.00,5.00,USD,5.00,USD,11443,0,1001
-2021-11-11 07:43:53.706000,10.00,10.00,USD,10.00,USD,564075,0,1002
-2021-12-03 06:47:21.433000,3.50,3.50,USD,3.50,USD,9339,0,1003
+_fivetran_synced,allocation_method,code,description,index,order_id,target_selection,target_type,title,type,value,value_type
+2025-05-01 08:00:00.000000 UTC,across,"SPRING2025","Spring promo applied by script",0,1000001,all,order,"Spring Discount",manual,15.00,percentage
+2025-05-02 09:00:00.000000 UTC,eac,"APPX15","App discount for new customers",1,1000002,entitled,product,"AppX Intro Offer",manual,20.00,fixed_amount
+2025-05-03 10:15:00.000000 UTC,across,"FREESHIP50","Free shipping promo",0,1000003,all,shipping_line,"Free Shipping",script,0.00,percentage
+2025-05-04 11:30:00.000000 UTC,eac,"BULKBUY","Volume discount applied",2,1000004,entitled,product,"Bulk Buy Deal",manual,5.00,fixed_amount
+2025-05-05 14:00:00.000000 UTC,across,"LOYALTY20","Loyalty reward",0,1000005,all,order,"Loyalty Discount",script,10.00,percentage

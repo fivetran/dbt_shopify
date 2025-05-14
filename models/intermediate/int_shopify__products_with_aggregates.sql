@@ -27,20 +27,13 @@ product_variant as (
 
     select *
     from {{ var('shopify_product_variant') }}
-),
-
-product_image as (
-
-    select *
-    from {{ var('shopify_product_image') }}
-),
+), 
 
 product_media as (
 
     select *
     from {{ var('shopify_product_media') }}
 ),
-
 
 collections_aggregated as (
 
@@ -78,17 +71,15 @@ variants_aggregated as (
 
 ),
 
-{% if var('shopify_using_product_media', True) %}
 media_aggregated as (
 
     select 
         product_id,
         source_relation,
         count(distinct media_id) as count_media
-    from product_image
+    from product_media
     group by 1,2
-),
-{% endif %}
+), 
 
 joined as (
 

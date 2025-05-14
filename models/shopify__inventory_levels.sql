@@ -120,7 +120,6 @@ joined_info as (
         product_variant.title as variant_title,
         product_variant.inventory_policy as variant_inventory_policy,
         product_variant.price as variant_price,
-        product_variant.image_id as variant_image_id,
         product_variant.fulfillment_service as variant_fulfillment_service,
         product_variant.inventory_management as variant_inventory_management,
         product_variant.is_taxable as is_variant_taxable,
