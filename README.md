@@ -50,7 +50,7 @@ Curious what these tables can do? Check out example visualizations from the [sho
 </p>
 
 ### Materialized Models
-Each Quickstart transformation job run materializes 89 models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
+Each Quickstart transformation job run materializes 105 models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
 <!--section-end-->
 
 ## How do I use the dbt package?
@@ -189,7 +189,6 @@ vars:
   shopify_using_customer_metafields: True ## False by default. Will enable ONLY the customer metafield model.
   shopify_using_order_metafields: True ## False by default. Will enable ONLY the order metafield model.
   shopify_using_product_metafields: True ## False by default. Will enable ONLY the product metafield model.
-  shopify_using_product_image_metafields: True ## False by default. Will enable ONLY the product image metafield model.
   shopify_using_product_variant_metafields: True ## False by default. Will enable ONLY the product variant metafield model.
   shopify_using_shop_metafields: True ## False by default. Will enable ONLY the shop metafield model.
 ```

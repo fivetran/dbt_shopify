@@ -64,6 +64,7 @@
 ## Under the Hood
 - Created and removed seed files to ensure end models run successfully.
 - Created new vertical integrity test to ensure discount code counts match between `shopify__discounts` and its upstream source models.
+- Enable `shopify__line_item_enhanced` by default by setting the `shopify__standardized_billing_model_enabled` variable to be `true`.
 
 ## Documentation Notes
 - Added/removed yml documentation for new/deprecated models respectively.

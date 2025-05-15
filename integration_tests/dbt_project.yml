@@ -12,7 +12,7 @@ vars:
   # Uncomment when regenerating docs
   # shopify_using_fulfillment_event: true
   # shopify_using_all_metafields: true
-  # shopify__standardized_billing_model_enabled: true
+  # shopify_using_discount_code_app: true
 
   shopify_schema: shopify_integration_tests_16
 

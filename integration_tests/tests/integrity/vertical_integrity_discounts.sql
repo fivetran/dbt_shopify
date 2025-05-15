@@ -40,13 +40,12 @@ discount_codes_unioned as (
     {% if var('shopify_using_discount_code_app', False) %}
 
     union all
-
+ 
     select
         discount_code_id,
         source_relation 
     from {{ ref('stg_shopify__discount_code_app') }} 
     group by 1, 2
-
     {% endif %}
 ),
 
@@ -80,8 +79,8 @@ final as (
     select 
         discount_codes_source.code,
         discount_codes_source.source_relation,
-        discount_codes_source.code_count_source,
-        discount_codes_end.code_count_end
+        coalesce(discount_codes_source.code_count_source, 0) as code_count_source,
+        coalesce(discount_codes_end.code_count_end, 0) as code_count_end
     from discount_codes_source
     full outer join discount_codes_end
         on discount_codes_source.code = discount_codes_end.code
