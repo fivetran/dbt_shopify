@@ -14,7 +14,7 @@ vars:
   # shopify_using_all_metafields: true
   # shopify_using_discount_code_app: true
 
-  shopify_schema: shopify_integration_tests_16
+  shopify_schema: shopify_integration_tests_17
 
   shopify_source:
     shopify_customer_identifier: "shopify_customer_data"
