@@ -1,8 +1,14 @@
-with discount_code_basic as (
+with discount_redeem_codes as (
+    
+    select *
+    from {{ var('shopify_discount_redeem_code') }}
+),
+
+discount_code_basic as (
 
     select
         discount_code_id,
-        'basic' as discount_subtype,
+        'basic' as discount_type,
         applies_once_per_customer,
         usage_count,
         codes_count,
@@ -28,7 +34,7 @@ discount_code_bxgy as (
 
     select
         discount_code_id,
-        'bxgy' as discount_subtype, 
+        'bxgy' as discount_type, 
         applies_once_per_customer,
         usage_count,
         codes_count,
@@ -54,7 +60,7 @@ discount_code_free_shipping as (
 
     select
         discount_code_id,
-        'free_shipping' as discount_subtype, 
+        'free_shipping' as discount_type, 
         applies_once_per_customer,
         usage_count,
         codes_count,
@@ -82,7 +88,7 @@ discount_code_app as (
 
     select
         discount_code_id,
-        'app' as discount_subtype,
+        'app' as discount_type,
         applies_once_per_customer,
         usage_count,
         codes_count,
@@ -104,12 +110,6 @@ discount_code_app as (
     from {{ var('shopify_discount_code_app') }}
 ),
 {% endif %}
-
-discount_redeem_codes as (
-    
-    select *
-    from {{ var('shopify_discount_redeem_code') }}
-),
 
 discount_applications as (
 
@@ -141,11 +141,12 @@ unified_discount_codes as (
 discounts_with_codes as (
 
     select
-        unified_discount_codes.*,
-        discount_redeem_codes.code
+        discount_redeem_codes.code,
+        unified_discount_codes.*
     from unified_discount_codes 
     left join discount_redeem_codes 
         on unified_discount_codes.discount_code_id = discount_redeem_codes.discount_id
+        and unified_discount_codes.source_relation = discount_redeem_codes.source_relation
 ),
 
 discounts_with_applications as (
@@ -156,12 +157,13 @@ discounts_with_applications as (
         discount_applications.description,
         discount_applications.target_selection,
         discount_applications.target_type,
-        discount_applications.type,
+        discount_applications.type as application_type,
         discount_applications.value,
         discount_applications.value_type
     from discounts_with_codes
     left join discount_applications 
         on discounts_with_codes.code = discount_applications.code
+        and discounts_with_codes.source_relation = discount_applications.source_relation
 )
 
 select *

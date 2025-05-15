@@ -525,8 +525,8 @@ models:
         description: Average taxes per order line with this product.
       - name: count_variants
         description: Count of product variants.
-      - name: has_product_image
-        description: If the product has an image.
+      - name: has_product_media
+        description: If the product has media.
       - name: status
         description: >
           The status of the product. Valid values:
@@ -647,8 +647,6 @@ models:
         description: Subtotal amount of the refund applied to the order line in shop currency.
       - name: subtotal_net_refunds
         description: Subtotal of the order line with refunds subtracted in shop currency.
-      - name: image_id
-        description: Image id of the product variant associated with the order line.
       - name: source_relation
         description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
       - name: restock_types
@@ -985,8 +983,7 @@ models:
 
   - name: shopify__discounts
     description: >
-      Each record represents a unique discount, enriched with information about its associated `price_rule`
-      and metrics regarding orders and abandoned checkouts.
+      Each record represents a unique discount, enriched with discount metadata and metrics regarding orders and abandoned checkouts.
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
@@ -1003,75 +1000,62 @@ models:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: code
-        description: The case-insensitive discount code that customers use at checkout. Shopify recommends this map onto the associated `price_rule.title`.
-      - name: created_at
-        description: The date and time (ISO 8601 format) when the discount code was created.
+        description: The case-insensitive discount code that customers use at checkout. 
       - name: discount_code_id
         description: The ID for the discount code.
         tests:
           - not_null
-      - name: price_rule_id
-        description: The ID for the price rule that this discount code belongs to.
-      - name: updated_at
-        description: The date and time (ISO 8601 format) when the discount code was updated.
+      - name: discount_type
+        description: The type of discount (e.g. 'basic', 'bxgy', 'free_shipping', 'app').
+      - name: applies_once_per_customer
+        description: Whether the discount can be used only once per customer.
       - name: usage_count
-        description: The number of times that the discount code has been redeemed.
-      - name: allocation_limit
-        description: >
-          The number of times the discount can be allocated on the cart - if eligible. For example a Buy 1 hat Get 1 hat for free discount can be applied 3 times on a cart having more than 6 hats, 
-          where maximum of 3 hats get discounted - if the allocation_limit is 3. Empty (null) allocation_limit means unlimited number of allocations.
+        description: Number of times the discount has been used (asynchronously updated).
+      - name: codes_count
+        description: Number of unique redeem codes associated with the discount.
+      - name: codes_precision
+        description: Indicates whether `codes_count` is exact or estimated.
+      - name: combines_with_order_discounts
+        description: Whether this discount can be combined with order-level discounts.
+      - name: combines_with_product_discounts
+        description: Whether this discount can be combined with product-level discounts.
+      - name: combines_with_shipping_discounts
+        description: Whether this discount can be combined with shipping-level discounts.
+      - name: created_at
+        description: Timestamp when the discount was created.
+      - name: customer_selection_all_customers
+        description: Whether the discount is available to all customers.
+      - name: ends_at
+        description: Timestamp when the discount ends or expires.
+      - name: starts_at
+        description: Timestamp when the discount becomes active.
+      - name: status
+        description: Current status of the discount (e.g. 'active', 'expired', 'scheduled').
+      - name: title
+        description: The discount’s display name in the Shopify admin and to customers.
+      - name: total_sales_amount
+        description: The total sales amount that resulted from the usage of this discount.
+      - name: total_sales_currency_code
+        description: The currency code associated with `total_sales_amount`.
+      - name: updated_at
+        description: Timestamp when the discount was last updated.
+      - name: usage_limit
+        description:  The total number of times the discount code can be used.
       - name: allocation_method
         description: >
-          The allocation method of the price rule. Valid values include `each` (the discount is applied to each of the entitled items. For example, for a price rule that takes $15 off, each entitled line item in a checkout will be discounted by $15)
-          and `across` (the calculated discount amount will be applied across the entitled items. For example, for a price rule that takes $15 off, the discount will be applied across all the entitled items).
-      - name: price_rule_created_at
-        description: The date and time (ISO 8601 format) when the price rule was created.
-      - name: customer_selection
-        description: >
-          The customer selection for the price rule. Valid values include `all` (the price rule is valid for all customers) and `prerequisite` 
-          (the customer must either belong to one of the customer segments specified by customer_segment_prerequisite_ids, or be one of the customers specified by prerequisite_customer_ids).
-      - name: ends_at
-        description: The date and time (ISO 8601 format) when the price rule ends. Must be after starts_at.
-      - name: price_rule_id
-        description: The ID for the price rule.
-      - name: is_once_per_customer
-        description: Boolean representing whether the generated discount code will be valid only for a single use per customer. This is tracked using customer ID.
-      - name: prereq_min_quantity
-        description: If `customer_selection` is `prerequisite`, the minimum number of items for the price rule to be applicable. The quantity of an entitled cart item must be greater than or equal to this value.
-      - name: prereq_max_shipping_price
-        description: If `customer_selection` is `prerequisite`, the maximum shipping price for the price rule to be applicable. The shipping price must be less than or equal to this value
-      - name: prereq_min_subtotal
-        description: If `customer_selection` is `prerequisite`, the minimum subtotal for the price rule to be applicable. The subtotal of the entitled cart items must be greater than or equal to this value for the discount to apply.
-      - name: prereq_min_purchase_quantity_for_entitlement
-        description: If `customer_selection` is `prerequisite`, the prerequisite purchase for a Buy X Get Y discount. The minimum purchase amount required to be entitled to the discount.
-      - name: prereq_buy_x_get_this
-        description: If `customer_selection` is `prerequisite`, in a Buy/Get ratio for a Buy X Get Y discount, this is the offered 'get' quantity.
-      - name: prereq_buy_this_get_y
-        description: If `customer_selection` is `prerequisite`, in a Buy/Get ratio for a Buy X Get Y discount, this defines the necessary 'buy' quantity.
-      - name: starts_at
-        description: The date and time (ISO 8601 format) when the price rule starts.
+          The method by which the discount is allocated. Valid values include `each` (applies the discount to each eligible item) and `across` (spreads the discount value across eligible items).
+      - name: description
+        description:  A description of the discount, often corresponding to the rule or promotion name.
       - name: target_selection
-        description: >
-          The target selection method of the price rule. Valid values include `all` (the price rule applies the discount to all line items in the checkout) and 
-          `entitled` (the price rule applies the discount to selected entitlements only).
+        description: Indicates whether the discount applies to 'all' or 'entitled' items.
       - name: target_type
-        description: The target type that the price rule applies to. Valid values include `line_item` (the price rule applies to the cart's line items) and `shipping_line` (the price rule applies to the cart's shipping lines).
-      - name: title
-        description: >
-          The title of the price rule. This is used by the Shopify admin search to retrieve discounts. It is also displayed on the Discounts page of the Shopify admin for bulk discounts. 
-          Shopify recommends that this map onto the associated `discount_code.code`.
-      - name: price_rule_updated_at
-        description: The date and time (ISO 8601 format) when the price rule was updated.
-      - name: usage_limit
-        description: The maximum number of times the price rule can be used, per discount code.
+        description: The type of target this discount applies to (e.g., `line_item` or `shipping_line`).
+      - name: application_type
+        description:  The type of discount (e.g., `manual`, `script`, or `automatic`).
       - name: value
-        description: The value of the price rule. If if the value of `target_type` is `shipping_line`, then only -100 is accepted. The value must be negative.
+        description: Numeric value of the discount (e.g., percentage or fixed amount).
       - name: value_type
-        description: >
-          The value type of the price rule. Valid values include `fixed_amount` (applies a discount of value as a unit of the store's currency. For example, if value is -30 and the store's currency is USD, then $30 USD is deducted when the discount is applied)
-          and `percentage` (applies a percentage discount of value. For example, if value is -30, then 30% will be deducted when the discount is applied).
-
-          If `target_type` is `shipping_line`, then only `percentage` is accepted.
+        description: How the discount value is interpreted (e.g., 'percentage', 'fixed_amount').
       - name: total_order_discount_amount
         description: Total monetary amount (in shop currency) of discounts taken off of orders. 
       - name: total_abandoned_checkout_discount_amount

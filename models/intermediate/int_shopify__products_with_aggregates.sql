@@ -88,11 +88,7 @@ joined as (
         collections_aggregated.collections,
         tags_aggregated.tags,
         variants_aggregated.count_variants,
-        {% if var('shopify_using_product_media', True) %}
         coalesce(media_aggregated.count_media, 0) > 0 as has_product_media
-        {% else %}
-        0 as has_product_media
-        {% endif %}
 
     from products
     left join collections_aggregated
@@ -104,12 +100,9 @@ joined as (
     left join variants_aggregated
         on products.product_id = variants_aggregated.product_id
         and products.source_relation = variants_aggregated.source_relation
-
-    {% if var('shopify_using_product_media', True) %}
     left join media_aggregated
         on products.product_id = media_aggregated.product_id
         and products.source_relation = media_aggregated.source_relation
-    {% endif %}
 )
 
 select *
