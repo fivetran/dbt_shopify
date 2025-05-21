@@ -47,6 +47,7 @@ vars:
     shopify_order_tag: "{{ ref('stg_shopify__order_tag') }}"
     shopify_order_url_tag: "{{ ref('stg_shopify__order_url_tag') }}"
     shopify_product_media: "{{ ref('stg_shopify__product_media') }}"
+    shopify_product_variant_media: "{{ ref('stg_shopify__product_variant_media') }}"
     shopify_product_tag: "{{ ref('stg_shopify__product_tag') }}"
     shopify_shop: "{{ ref('stg_shopify__shop') }}"
     shopify_tax_line: "{{ ref('stg_shopify__tax_line') }}"

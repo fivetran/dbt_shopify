@@ -4,7 +4,13 @@ with discount_redeem_codes as (
     from {{ var('shopify_discount_redeem_code') }}
 ),
 
-discount_code_basic as (
+discount_applications as (
+
+    select *
+    from {{ var('shopify_discount_application') }}
+),
+
+unified_discount_codes as (
 
     select
         discount_code_id,
@@ -28,10 +34,9 @@ discount_code_basic as (
         usage_limit,
         source_relation
     from {{ var('shopify_discount_code_basic') }}
-),
 
-discount_code_bxgy as (
-
+    union all
+    
     select
         discount_code_id,
         'bxgy' as discount_type, 
@@ -54,10 +59,9 @@ discount_code_bxgy as (
         usage_limit,
         source_relation
     from {{ var('shopify_discount_code_bxgy') }}
-),
 
-discount_code_free_shipping as (
-
+    union all
+    
     select
         discount_code_id,
         'free_shipping' as discount_type, 
@@ -80,13 +84,12 @@ discount_code_free_shipping as (
         usage_limit,
         source_relation
     from {{ var('shopify_discount_code_free_shipping') }}
-),
 
-{% if var('shopify_using_discount_code_app', False) %}
+    {% if var('shopify_using_discount_code_app', False) %}
+    
+    union all
 
-discount_code_app as (
-
-    select
+    select  
         discount_code_id,
         'app' as discount_type,
         applies_once_per_customer,
@@ -108,33 +111,6 @@ discount_code_app as (
         usage_limit,
         source_relation
     from {{ var('shopify_discount_code_app') }}
-),
-{% endif %}
-
-discount_applications as (
-
-    select *
-    from {{ var('shopify_discount_application') }}
-),
-
-unified_discount_codes as (
-
-    select * 
-    from discount_code_basic
-    
-    union all
-    
-    select * 
-    from discount_code_bxgy
-
-    union all
-    
-    select * 
-    from discount_code_free_shipping
-
-    {% if var('shopify_using_discount_code_app', False) %}
-    union all
-    select * from discount_code_app
     {% endif %}
 ),
 

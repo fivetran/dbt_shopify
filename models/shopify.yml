@@ -599,6 +599,8 @@ models:
         description: (DEPRECATED 2025-01-06) The weight of the product variant in grams.
       - name: inventory_item_id
         description: The unique identifier for the inventory item, which is used in the Inventory API to query for inventory information.
+      - name: media_id
+        description: The unique numeric identifier for a product variant's media. 
       - name: variant_inventory_management
         description: (DEPRECATED 2025-01-06) The fulfillment service that tracks the number of items in stock for the product variant.
       - name: variant_inventory_policy
@@ -884,6 +886,8 @@ models:
           (DEPRECATED 2025-01-06) The custom properties that a shop owner uses to define product variants. You can define three options for a product variant: option1, option2, option3.
       - name: variant_price
         description: The price of the product variant in shop currency.
+      - name: variant_media_id
+        description: The unique numeric identifier for a product variant's media. 
       - name: product_id
         description: The unique numeric identifier for the product.
       - name: is_variant_taxable

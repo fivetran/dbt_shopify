@@ -3,7 +3,7 @@
 [PR #104](https://github.com/fivetran/dbt_shopify/pull/104) introduces the following updates:
 
 ## Schema & Data Updates
-**23 new models -- 7 deprecated models -- 8 potential breaking changes**
+**25 new models -- 7 deprecated models -- 8 potential breaking changes**
 
 | Data Model                                                                                                                                               | Change Type | Old Name                     | New Name                                             | Notes                                                                                    |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ---------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------- |
@@ -14,11 +14,11 @@
 | `stg_shopify__price_rule_tmp`            | Deprecated Temp Model |   |          | Deprecated the `price_rule` source table.    |
 | `stg_shopify__product_image`                    | Deprecated Staging Model |   |          | Deprecated the `product_image` source table.     |
 | `stg_shopify__product_image_tmp`                    | Deprecated Temp Model |   |          | Deprecated the `product_image` source table.    |
-| [shopify__inventory_levels](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__inventory_levels)                      |  Deprecated Columns |  `variant_image_id`  |   None       | No longer supported in `product_variant` source.    |
-| [shopify__order_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__order_lines)                      |  Deprecated Columns |  `image_id`  |   None       | No longer supported in `product_variant` source.    |
+| [shopify__inventory_levels](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__inventory_levels)                      |  Renamed Columns |  `variant_image_id`  |   `variant_media_id`       | Removed from `product_variant` source, utilizing new `product_variant_media` source.    |
+| [shopify__order_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__order_lines)                      |  Renamed Columns |  `image_id`  |   `media_id`       | Removed from `product_variant` source, utilizing new `product_variant_media` source.    |
 | [stg_shopify__product_variant](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__product_variant)                      | Deprecated Columns | `image_id`  |   None       | No longer supported in `product_variant` source.    |
 | [shopify__discounts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__discounts)                      |  Deprecated Columns  |  `price_rule_id`, `allocation_limit`, `price_rule_created_at`, `price_rule_updated_at`, `prereq_min_quantity`, `prereq_max_shipping_price`, `prereq_min_subtotal`, `prereq_min_purchase_quantity_for_entitlement`, `prereq_buy_x_get_this`, `prereq_buy_this_get_y`                          |        | Removing fields from deprecated `price_rule` source.       |
-| [shopify__discounts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__discounts)                      |  Renamed Columns  |  `is_once_per_customer`, `customer_selection`                          |   `applies_once_per_customer`, `customer_selection_all_customers`     | Renaming  fields from deprecated `price_rule` source to their equivalent fields in the `discount_*` sources.      |
+| [shopify__discounts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__discounts)                      |  Renamed Columns  |  `is_once_per_customer`, `customer_selection`                          |   `applies_once_per_customer`, `customer_selection_all_customers`     | Renaming fields from deprecated `price_rule` source to their equivalent fields in the `discount_*` sources.      |
 | [shopify__discounts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__discounts)                      |  New Columns  |      |   `discount_type`, `codes_count`, `codes_precision`, `combines_with_order_discounts`, `combines_with_product_discounts`, `combines_with_shipping_discounts`, `total_sales_amount`, `total_sales_currency_code`, `description`, `application_type`    | Bringing in new fields that are common to the new `discount_code_*` sources.      |
 | [shopify__products](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__products)                      |   Renamed Columns   |      `has_product_image`                        |  `has_product_media`        |  Switching from deprecated `product_image` to new `product_media` source.          |
 | [int_shopify__products_with_aggregates](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.int_shopify__products_with_aggregates)                      |   Renamed Columns   |      `has_product_image`                         |  `has_product_media`        |   Switching from deprecated `product_image` to new `product_media` source.              |
@@ -34,6 +34,7 @@
 | [stg_shopify__media](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__media)                               | New Staging Model  | | | Source: `media` table.  |
 | [stg_shopify__media_image](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__media_image)                               |  New Staging Model   | |   |  Source: `media_image` table.       
 | [stg_shopify__product_media](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__product_media)                               |  New Staging Model    | | | Source: `product_media` table.        |
+| [stg_shopify__product_variant_media](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__product_variant_media)                               | New Staging Model |          |          | Source: `product_variant_media`  table.               |
 | [stg_shopify__discount_code_app_tmp](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__discount_code_app_tmp)                      | New Temp Model |          |          | Source: `discount_code_app` table.           |
 | [stg_shopify__discount_code_basic_tmp](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__discount_code_basic_tmp)                  | New Temp Model |          |          | Source:  `discount_code_basic` table.         |
 | [stg_shopify__discount_code_bxgy_tmp](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__discount_code_bxgy_tmp)                    | New Temp Model |          |          | Source: `discount_code_bxgy` table.          |
@@ -45,21 +46,22 @@
 | [stg_shopify__media_tmp](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__media_tmp)                                                | New Temp Model |          |          | Source: `media` table.                       |
 | [stg_shopify__media_image_tmp](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__media_image_tmp)                                   | New Temp Model |          |          | Source: `media_image`  table.                 |
 | [stg_shopify__product_media_tmp](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__product_media_tmp)                               | New Temp Model |          |          | Source: `product_media`  table.               |
+| [stg_shopify__product_variant_media_tmp](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__product_variant_media_tmp)                               | New Temp Model |          |          | Source: `product_variant_media`  table.               |
 
-## Major Release Notes
+## Release Notes
 - Applied the above schema changes in accordance with the latest Fivetran connector update to accommodate new changes in the Shopify API. [See the release notes for more details](https://fivetran.com/docs/connectors/applications/shopify/changelog#april2025).
 - Major updates included:
   - Created `int_shopify__discount_code_enriched` intermediate model to union/join together new `discount_code_*`, `discount_redeem_code` and `discount_application` sources. This then replaces deprecated `discount_code`/`price_rule` source data which flows into `shopify__discounts`
   - Removal of `shopify__product_image_metafields`, as the `product_image` source is no longer being supported.
-  - Removed `variant_image_id` in `shopify__inventory_levels` and `image_id` in `shopify__order_lines`, as `image_id` is no longer supported in the `product_variant` source.
-  - See the concurrent `shopify_source` [release update](https://github.com/fivetran/dbt_shopify_source/releases/tag/v0.18.0) to learn more about other schema updtes. 
+  - Replaced `variant_image_id` in `shopify__inventory_levels` and `image_id` in `shopify__order_lines` with `variant_media_id` from the new `product_variant_media` source.
+  - See the concurrent `shopify_source` [release update](https://github.com/fivetran/dbt_shopify_source/releases/tag/v0.18.0) to learn more about other schema updates. 
 
 ## Quickstart Updates
 - Added `shopify__line_item_enhanced` to public models to allow customer access. 
-- Introduced table variable `shopify_using_discount_code_app`, which is enabled when `discount_code_app` source table is selected in the Fivetran connector schema tab. 
+- Introduced table variables `shopify_using_discount_code_app` and `shopify_using_product_variant_media`, which is enabled when `discount_code_app` and `product_variant_media` source tables are selected in the Fivetran connector schema tab. 
 
 ## Feature Updates
-- If users are utilizing the `discount_code_app` source, these models can be enabled by setting the variable `shopify_using_discount_code_app` to `true`.  More instructions [are available in the README](https://github.com/fivetran/dbt_shopify/blob/main/README.md#step-4-disable-models-for-non-existent-sources).
+- If users are utilizing the `discount_code_app` and/or `product_variant_media` sources, these models can be enabled by setting the variables `shopify_using_discount_code_app` and/or `shopify_using_product_variant_media` to `true`.  More instructions [are available in the README](https://github.com/fivetran/dbt_shopify/blob/main/README.md#step-4-disable-models-for-non-existent-sources).
 
 ## Under the Hood
 - Created and removed seed files to ensure end models run successfully.

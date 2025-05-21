@@ -14,6 +14,8 @@ table_variables:
     - abandoned_checkout_shipping_line
   shopify_using_discount_code_app:
     - discount_code_app
+  shopify_using_product_variant_media:
+    - product_variant_media
 
 destination_configurations:
   databricks:

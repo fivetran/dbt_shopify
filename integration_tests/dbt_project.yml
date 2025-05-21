@@ -10,11 +10,12 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 vars:
   # Uncomment when regenerating docs
-  # shopify_using_fulfillment_event: true
-  # shopify_using_all_metafields: true
-  # shopify_using_discount_code_app: true
+  shopify_using_fulfillment_event: true
+  shopify_using_all_metafields: true
+  shopify_using_discount_code_app: true
+  shopify_using_product_variant_media: true
 
-  shopify_schema: shopify_integration_tests_17
+  shopify_schema: zz_dbt_avinash_seed
 
   shopify_source:
     shopify_customer_identifier: "shopify_customer_data"
@@ -51,6 +52,7 @@ vars:
     shopify_order_tag_identifier: "shopify_order_tag_data"
     shopify_order_url_tag_identifier: "shopify_order_url_tag_data"
     shopify_product_media_identifier: "shopify_product_media_data"
+    shopify_product_variant_media_identifier: "shopify_product_variant_media_data"
     shopify_product_tag_identifier: "shopify_product_tag_data"
     shopify_shop_identifier: "shopify_shop_data"
     shopify_tender_transaction_identifier: "shopify_tender_transaction_data"
@@ -65,8 +67,8 @@ dispatch:
     search_order: ['spark_utils', 'dbt_utils']
 
 models:
-  +schema: "{{ 'shopify_integrations_tests_sqlw' if target.name == 'databricks-sql' else 'shopify' }}"
-  # +schema: "shopify_{{ var('directed_schema','dev') }}" ## To be used for validation tests
+  # +schema: "{{ 'shopify_integrations_tests_sqlw' if target.name == 'databricks-sql' else 'shopify' }}"
+  +schema: "shopify_{{ var('directed_schema','dev') }}" ## To be used for validation tests
 
 seeds:
   shopify_integration_tests:
@@ -122,6 +124,10 @@ seeds:
         product_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         inventory_item_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         legacy_resource_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+    shopify_product_variant_media_data:
+      +column_types:
+        product_variant_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        media_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
     shopify_transaction_data:
       +column_types:
         id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
@@ -284,8 +290,8 @@ seeds:
         applies_on_one_time_purchase: boolean
         applies_on_subscription: boolean
         async_usage_count: integer
-        codes_count: integer
-        codes_precision: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+        codes_count_count: integer
+        codes_count_precision: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
         combines_with_order_discounts: boolean
         combines_with_product_discounts: boolean
         combines_with_shipping_discounts: boolean
