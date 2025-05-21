@@ -15,7 +15,7 @@ vars:
   shopify_using_discount_code_app: true
   shopify_using_product_variant_media: true
 
-  shopify_schema: zz_dbt_avinash_seed
+  shopify_schema: shopify_integration_tests_17
 
   shopify_source:
     shopify_customer_identifier: "shopify_customer_data"
