@@ -36,7 +36,7 @@ The following table provides a detailed list of all tables materialized within t
 | [shopify__products](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__products)         | Each record represents a product, with additional dimensions like most recent order date and order volume.         |
 | [shopify__transactions](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__transactions)     | Each record represents a transaction with additional calculations to handle exchange rates.                        |
 | [shopify__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__daily_shop)     | Each record represents a day of activity for each of your shops, conveyed by a suite of daily metrics about customers, orders, abandoned checkouts, fulfillment events, and more.                        |
-| [shopify__discounts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__discounts)     | Each record represents a unique discount, enriched with information about its associated `price_rule`and metrics regarding orders and abandoned checkouts.                        |
+| [shopify__discounts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__discounts)     | Each record represents a unique discount, enriched with discount metadata and metrics regarding orders and abandoned checkouts.                        |
 | [shopify__inventory_levels](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__inventory_levels)     | Each record represents an inventory level (unique pairing of inventory items and locations), enriched with information about its products, orders, and fulfillments.                        |
 | [shopify__line_item_enhanced](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__line_item_enhanced)       | This model constructs a comprehensive, denormalized analytical table that enables reporting on key revenue, customer, and product metrics from your billing platform. It’s designed to align with the schema of the `*__line_item_enhanced` model found in Shopify, Recharge, Stripe, Zuora, and Recurly, offering standardized reporting across various billing platforms. To see the kinds of insights this model can generate, explore example visualizations in the [Fivetran Billing Model Streamlit App](https://fivetran-billing-model.streamlit.app/). Visit the app for more details.  |
 
@@ -50,7 +50,7 @@ Curious what these tables can do? Check out example visualizations from the [sho
 </p>
 
 ### Materialized Models
-Each Quickstart transformation job run materializes 89 models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
+Each Quickstart transformation job run materializes 107 models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
 <!--section-end-->
 
 ## How do I use the dbt package?
@@ -72,7 +72,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=0.18.0", "<0.19.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.19.0", "<0.20.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 Do **NOT** include the `shopify_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
@@ -112,14 +112,16 @@ To connect your multiple schema/database sources to the package models, follow t
 
 ### Step 4: Disable models for non-existent sources
 
-The package takes into consideration that not every Shopify connection may have the `fulfillment_event`, `metadata`, or `abandoned_checkout` tables (including `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
+The package takes into consideration that not every Shopify connection may have the `fulfillment_event`, `metadata`, `discount_code_app`, `product_variant_media`, or `abandoned_checkout` tables (including `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
 
 ```yml
 # dbt_project.yml
 
 vars:
     shopify_using_fulfillment_event: true # false by default. 
-    shopify_using_metafield: false  #true by default
+    shopify_using_metafield: false  #true by default.
+    shopify_using_discount_code_app: true #false by default.
+    shopify_using_product_variant_media: true #false by default.
     shopify_using_abandoned_checkout: false # true by default. Setting to false will disable `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`.
 ```
 
@@ -188,7 +190,6 @@ vars:
   shopify_using_customer_metafields: True ## False by default. Will enable ONLY the customer metafield model.
   shopify_using_order_metafields: True ## False by default. Will enable ONLY the order metafield model.
   shopify_using_product_metafields: True ## False by default. Will enable ONLY the product metafield model.
-  shopify_using_product_image_metafields: True ## False by default. Will enable ONLY the product image metafield model.
   shopify_using_product_variant_metafields: True ## False by default. Will enable ONLY the product variant metafield model.
   shopify_using_shop_metafields: True ## False by default. Will enable ONLY the shop metafield model.
 ```
@@ -266,7 +267,7 @@ This dbt package is dependent on the following dbt packages. These dependencies 
 ```yml
 packages:
     - package: fivetran/shopify_source
-      version: [">=0.17.0", "<0.18.0"]
+      version: [">=0.18.0", "<0.19.0"]
 
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]

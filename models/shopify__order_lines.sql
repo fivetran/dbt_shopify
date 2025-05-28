@@ -15,7 +15,17 @@ with order_lines as (
     select *
     from {{ ref('shopify__orders__order_refunds') }}
 
-), refunds_aggregated as (
+), 
+
+{% if var('shopify_using_product_variant_media', False) %}
+product_variant_media as (
+
+    select *
+    from {{ var('shopify_product_variant_media') }}
+),
+{% endif %}
+
+refunds_aggregated as (
     
     select
         order_line_id,
@@ -56,7 +66,10 @@ with order_lines as (
         product_variants.created_timestamp as variant_created_at,
         product_variants.updated_timestamp as variant_updated_at,
         product_variants.inventory_item_id,
-        product_variants.image_id,
+
+        {% if var('shopify_using_product_variant_media', False) %}
+        product_variant_media.media_id,
+        {% endif %}
 
         product_variants.price as variant_price,
         product_variants.sku as variant_sku,
@@ -94,7 +107,11 @@ with order_lines as (
         on tax_lines_aggregated.order_line_id = order_lines.order_line_id
         and tax_lines_aggregated.source_relation = order_lines.source_relation
 
-
+    {% if var('shopify_using_product_variant_media', False) %}
+    left join product_variant_media
+        on product_variant_media.product_variant_id = product_variants.variant_id
+        and product_variant_media.source_relation = product_variants.source_relation
+    {% endif %}
 )
 
 select *

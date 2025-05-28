@@ -12,6 +12,10 @@ table_variables:
     - abandoned_checkout
     - abandoned_checkout_discount_code
     - abandoned_checkout_shipping_line
+  shopify_using_discount_code_app:
+    - discount_code_app
+  shopify_using_product_variant_media:
+    - product_variant_media
 
 destination_configurations:
   databricks:
@@ -30,5 +34,6 @@ public_models: [
   "shopify__products",
   "shopify__transactions",
   "shopify__customers",
-  "shopify__order_lines"
+  "shopify__order_lines",
+  "shopify__line_item_enhanced"
 ]

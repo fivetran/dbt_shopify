@@ -27,14 +27,13 @@ product_variant as (
 
     select *
     from {{ var('shopify_product_variant') }}
-),
+), 
 
-product_image as (
+product_media as (
 
     select *
-    from {{ var('shopify_product_image') }}
+    from {{ var('shopify_product_media') }}
 ),
-
 
 collections_aggregated as (
 
@@ -72,15 +71,15 @@ variants_aggregated as (
 
 ),
 
-images_aggregated as (
+media_aggregated as (
 
     select 
         product_id,
         source_relation,
-        count(*) as count_images
-    from product_image
+        count(distinct media_id) as count_media
+    from product_media
     group by 1,2
-),
+), 
 
 joined as (
 
@@ -89,7 +88,7 @@ joined as (
         collections_aggregated.collections,
         tags_aggregated.tags,
         variants_aggregated.count_variants,
-        coalesce(images_aggregated.count_images, 0) > 0 as has_product_image
+        coalesce(media_aggregated.count_media, 0) > 0 as has_product_media
 
     from products
     left join collections_aggregated
@@ -101,9 +100,9 @@ joined as (
     left join variants_aggregated
         on products.product_id = variants_aggregated.product_id
         and products.source_relation = variants_aggregated.source_relation
-    left join images_aggregated
-        on products.product_id = images_aggregated.product_id
-        and products.source_relation = images_aggregated.source_relation
+    left join media_aggregated
+        on products.product_id = media_aggregated.product_id
+        and products.source_relation = media_aggregated.source_relation
 )
 
 select *
