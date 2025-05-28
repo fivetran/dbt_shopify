@@ -49,12 +49,12 @@
 | [stg_shopify__product_variant_media_tmp](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__product_variant_media_tmp)                               | New Temp Model |          |          | Source: `product_variant_media`  table.               |
 
 ## Release Notes
-- Applied the above schema changes in accordance with the latest Fivetran connector update to accommodate new changes in the Shopify API. [See the release notes for more details](https://fivetran.com/docs/connectors/applications/shopify/changelog#april2025).
+- Applied the above schema changes in accordance with the April 2025 Fivetran connector update to accommodate new changes in the Shopify API. [See the release notes for more details](https://fivetran.com/docs/connectors/applications/shopify/changelog#april2025).
 - Major updates included:
-  - Created `int_shopify__discount_code_enriched` intermediate model to union/join together new `discount_code_*`, `discount_redeem_code` and `discount_application` sources. This then replaces deprecated `discount_code`/`price_rule` source data which flows into `shopify__discounts`
-  - Removal of `shopify__product_image_metafields`, as the `product_image` source is no longer being supported.
-  - Replaced `variant_image_id` in `shopify__inventory_levels` and `image_id` in `shopify__order_lines` with `variant_media_id` from the new `product_variant_media` source.
-  - See the concurrent `shopify_source` [release update](https://github.com/fivetran/dbt_shopify_source/releases/tag/v0.18.0) to learn more about other schema updates. 
+  - Created the `int_shopify__discount_code_enriched` intermediate model to union/join together new `discount_code_*`, `discount_redeem_code` and `discount_application` sources. This replaces deprecated `discount_code`/`price_rule` source data which flows into `shopify__discounts`
+  - Removal of the `shopify__product_image_metafields` model, as the `product_image` source is no longer supported.
+  - Replaced fields `variant_image_id` in `shopify__inventory_levels` and `image_id` in `shopify__order_lines` with `variant_media_id` from the new `product_variant_media` source.
+  - See the concurrent `shopify_source` [v0.18.0 release update](https://github.com/fivetran/dbt_shopify_source/releases/tag/v0.18.0) to learn more about other schema updates. 
 
 ## Quickstart Updates
 - Added `shopify__line_item_enhanced` to public models to allow customer access. 
