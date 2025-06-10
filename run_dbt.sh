@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Check if credentials are provided
+if [ -z "$GOOGLE_APPLICATION_CREDENTIALS_JSON" ]; then
+    echo "Error: GOOGLE_APPLICATION_CREDENTIALS_JSON environment variable is not set"
+    exit 1
+fi
+
+# Write credentials to file
+echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > /root/.config/gcloud/application_default_credentials.json
+
 # Function to run dbt for a specific target
 run_dbt_target() {
     local target=$1
