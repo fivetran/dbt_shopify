@@ -1,0 +1,27 @@
+wow_ai_transformation:
+  outputs:
+    vitrine_dev:
+      dataset: vitrine_test
+      method: oauth
+      project: wow-ai-461911
+      threads: 4
+      type: bigquery
+    vitrine_prod:
+      dataset: vitrine_reports
+      method: oauth
+      project: wow-ai-461911
+      threads: 4
+      type: bigquery
+    breathe_dev:
+      dataset: breathe_test
+      method: oauth
+      project: wow-ai-461911
+      threads: 4
+      type: bigquery
+    breathe_prod:
+      dataset: breathe_reports
+      method: oauth
+      project: wow-ai-461911
+      threads: 4
+      type: bigquery
+  target: vitrine_dev
