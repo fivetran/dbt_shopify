@@ -9,6 +9,10 @@ fi
 # Write credentials to file
 echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > /root/.config/gcloud/application_default_credentials.json
 
+# Install dbt dependencies
+echo "Installing dbt dependencies..."
+dbt deps
+
 # Function to run dbt for a specific target
 run_dbt_target() {
     local target=$1
