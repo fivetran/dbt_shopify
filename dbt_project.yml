@@ -6,10 +6,11 @@ models:
   shopify:
     +schema: shopify
     +materialized: table
-    intermediate:
-      +materialized: ephemeral
-      int_shopify__customer_email_rollup:
-        +materialized: view # so we can use the dbt_utils.star macro
+    rest:
+      intermediate:
+        +materialized: ephemeral
+        int_shopify__customer_email_rollup:
+          +materialized: view # so we can use the dbt_utils.star macro
 
 vars:
   shopify:
@@ -56,3 +57,4 @@ vars:
     shopify_order_discount_code: "{{ ref('stg_shopify__order_discount_code') }}"
     shopify_abandoned_checkout_shipping_line: "{{ ref('stg_shopify__abandoned_checkout_shipping_line') }}"
     shopify_fulfillment_event: "{{ ref('stg_shopify__fulfillment_event') }}"
+# add stuff here
