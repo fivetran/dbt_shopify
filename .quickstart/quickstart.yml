@@ -37,3 +37,4 @@ public_models: [
   "shopify__order_lines",
   "shopify__line_item_enhanced"
 ]
+# todo - all stuff here

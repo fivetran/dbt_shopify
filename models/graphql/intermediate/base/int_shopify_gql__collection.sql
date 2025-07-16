@@ -1,13 +1,15 @@
+{{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
+
 with collection as (
 
     select *
-    from {{ ref('stg_shopify_gql__collection') }}
+    from {{ var('shopify_gql_collection') }}
 ),
 
 collection_rule as (
 
     select *
-    from {{ ref('stg_shopify_gql__collection_rule') }}
+    from {{ var('shopify_gql_collection_rule') }}
 ),
 
 prep_collection_rule as (

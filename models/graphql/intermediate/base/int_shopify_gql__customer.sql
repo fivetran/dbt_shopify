@@ -1,13 +1,15 @@
+{{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
+
 with customer as (
 
     select *
-    from {{ ref('stg_shopify_gql__customer') }}
+    from {{ var('shopify_gql_customer') }}
 ),
 
 customer_address as (
 
     select *
-    from {{ ref('stg_shopify_gql__customer_address') }}
+    from {{ var('shopify_gql_customer_address') }}
 ),
 
 customer_default_address as (

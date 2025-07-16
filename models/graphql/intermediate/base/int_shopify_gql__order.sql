@@ -1,13 +1,15 @@
+{{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
+
 with order as (
 
     select * 
-    from {{ ref('stg_shopify_gql__order') }}
+    from {{ var('shopify_gql_order') }}
 ),
 
 customer_visit as (
     
     select * 
-    from {{ ref('stg_shopify_gql__customer_visit') }}
+    from {{ var('shopify_gql_customer_visit') }}
 ),
 
 joined as (

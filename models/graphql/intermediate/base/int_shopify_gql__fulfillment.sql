@@ -1,13 +1,15 @@
+{{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
+
 with fulfillment as (
 
     select *
-    from {{ ref('stg_shopify_gql__fulfillment') }}
+    from {{ var('shopify_gql_fulfillment') }}
 ),
 
 fulfillment_tracking_info as (
 
     select *
-    from {{ ref('stg_shopify_gql__fulfillment_tracking_info') }}
+    from {{ var('shopify_gql_fulfillment_tracking_info') }}
 ),
 
 agg_fulfillment_tracking_info as (
