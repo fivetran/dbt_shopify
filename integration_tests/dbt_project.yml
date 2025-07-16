@@ -359,3 +359,7 @@ seeds:
         media_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
   +docs:
     show: false
+
+flags:
+  send_anonymous_usage_stats: False
+  use_colors: True
