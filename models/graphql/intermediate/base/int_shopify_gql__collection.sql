@@ -17,7 +17,7 @@ prep_collection_rule as (
     select 
         collection_id,
         source_relation,
-        {# should we lower() these fields? #}
+        {# QUESTION: should we lower() these fields? #}
         '{"column":"' || columns || '","relation":"' || relation || '","condition":"' || condition || '"}' as rule
     from collection_rule
 ),

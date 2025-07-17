@@ -1,4 +1,4 @@
-{{ config(enabled=var('shopify__standardized_billing_model_enabled', True)) }}
+{{ config(enabled=(var('shopify__standardized_billing_model_enabled', True) and var('shopify_api', 'rest') == 'rest')) }}
 
 with line_items as (
 

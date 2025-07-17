@@ -1,23 +1,23 @@
-{{ config(enabled=var('shopify_api', 'rest') == 'rest') }}
+{{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
 with discounts_enriched as (
 
     select *,
         {{ dbt_utils.generate_surrogate_key(['source_relation', 'discount_code_id']) }} as discounts_unique_key
-    from {{ ref('int_shopify__discount_code_enriched')}}
+    from {{ ref('int_shopify_gql__discount_code_enriched')}}
 ),
 
 orders_aggregated as (
 
     select *
-    from {{ ref('int_shopify__discounts__order_aggregates')}}
+    from {{ ref('int_shopify_gql__discounts__order_aggregates')}}
 ),
 
 {% if var('shopify_using_abandoned_checkout', True) %}
 abandoned_checkouts_aggregated as (
 
     select *
-    from {{ ref('int_shopify__discounts__abandoned_checkouts')}}
+    from {{ ref('int_shopify_gql__discounts__abandoned_checkouts')}}
 ),
 {% endif %}
 

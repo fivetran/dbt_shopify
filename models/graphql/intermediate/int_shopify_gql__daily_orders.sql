@@ -1,9 +1,9 @@
-{{ config(enabled=var('shopify_api', 'rest') == 'rest') }}
+{{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
 with orders as (
 
     select *
-    from {{ ref('shopify__orders') }}
+    from {{ ref('shopify_gql__orders') }}
 
     where not coalesce(is_deleted, false)
 ),
@@ -11,7 +11,7 @@ with orders as (
 order_lines as(
 
     select *
-    from {{ ref('shopify__order_lines') }}
+    from {{ ref('shopify_gql__order_lines') }}
 ),
 
 order_aggregates as (

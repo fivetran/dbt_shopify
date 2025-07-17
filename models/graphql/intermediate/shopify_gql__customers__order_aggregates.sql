@@ -12,7 +12,7 @@ with orders as (
     from {{ ref('shopify_gql__orders__order_line_aggregates') }}
 
 ), transactions as (
-{# todo #}
+
     select *
     from {{ ref('shopify_gql__transactions')}}
 

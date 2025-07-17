@@ -1,4 +1,4 @@
-{{ config(enabled=var('shopify_using_abandoned_checkout', True)) }}
+{{ config(enabled=(var('shopify_using_abandoned_checkout', True) and var('shopify_api', 'rest') == 'rest')) }}
 
 with abandoned_checkout as (
 

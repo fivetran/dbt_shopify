@@ -16,7 +16,7 @@ joined as (
 
     select 
         order_adjustment.*,
-        refund.order_id -- just need this
+        refund.order_id -- QUESTION: just need this, does this need a base model?
 
     from order_adjustment
     left join refund

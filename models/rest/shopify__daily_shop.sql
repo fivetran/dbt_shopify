@@ -1,3 +1,5 @@
+{{ config(enabled=var('shopify_api', 'rest') == 'rest') }}
+
 with shop as (
 
     select *

@@ -25,7 +25,7 @@ with order_line as (
     select
         order_line_id,
         source_relation,
-        sum(coalesce(price_set_shop_amount, 0)) as price
+        sum(coalesce(price_shop_amount, 0)) as price
 
     from tax
     group by 1,2
@@ -38,7 +38,9 @@ with order_line as (
         count(*) as line_item_count,
         sum(coalesce(order_line.quantity, 0)) as order_total_quantity,
         sum(coalesce(tax_aggregates.price, 0)) as order_total_tax,
-        sum(coalesce(order_line.total_discount_set_shop_amount, 0)) as order_total_discount
+        sum(coalesce(order_line.total_discount_shop_amount, 0)) as order_total_discount,
+        sum(coalesce(price_pres_amount, 0)) as total_line_items_price_pres_amount,
+        sum(coalesce(price_shop_amount, 0)) as total_line_items_price_shop_amount
 
     from order_line
     left join tax_aggregates
@@ -55,6 +57,8 @@ with order_line as (
         order_line_aggregates.order_total_quantity,
         order_line_aggregates.order_total_tax,
         order_line_aggregates.order_total_discount,
+        order_line_aggregates.total_line_items_price_pres_amount,
+        order_line_aggregates.total_line_items_price_shop_amount,
         shipping.shipping_price as order_total_shipping,
         shipping.discounted_shipping_price as order_total_shipping_with_discounts,
         shipping.shipping_tax as order_total_shipping_tax

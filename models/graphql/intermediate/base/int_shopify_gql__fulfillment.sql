@@ -19,7 +19,7 @@ agg_fulfillment_tracking_info as (
         source_relation,
         {{ fivetran_utils.string_agg("distinct cast(tracking_number as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_numbers,
         {{ fivetran_utils.string_agg("distinct cast(tracking_url as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_urls,
-        {# This is new, should we include? #}
+        {# QUESTION: This is new, should we include? #}
         {{ fivetran_utils.string_agg("distinct cast(tracking_company as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_companies
     from fulfillment_tracking_info
     group by fulfillment_id, source_relation

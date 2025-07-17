@@ -1,15 +1,15 @@
-{{ config(enabled=var('shopify_api', 'rest') == 'rest') }}
+{{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
 with discount_redeem_codes as (
     
     select *
-    from {{ var('shopify_discount_redeem_code') }}
+    from {{ var('shopify_gql_discount_redeem_code') }}
 ),
 
 discount_applications as (
 
     select *
-    from {{ var('shopify_discount_application') }}
+    from {{ var('shopify_gql_discount_application') }}
 ),
 
 unified_discount_codes as (
@@ -29,13 +29,13 @@ unified_discount_codes as (
         ends_at, 
         starts_at,
         status,
-        title,
+        null as title,
         total_sales_amount,
         total_sales_currency_code,
         updated_at,
         usage_limit,
         source_relation
-    from {{ var('shopify_discount_code_basic') }}
+    from {{ var('shopify_gql_discount_code_basic') }}
 
     union all
     
@@ -60,7 +60,7 @@ unified_discount_codes as (
         updated_at,
         usage_limit,
         source_relation
-    from {{ var('shopify_discount_code_bxgy') }}
+    from {{ var('shopify_gql_discount_code_bxgy') }}
 
     union all
     
@@ -79,13 +79,13 @@ unified_discount_codes as (
         ends_at, 
         starts_at,
         status,
-        title,
+        null as title,
         total_sales_amount,
         total_sales_currency_code,
         updated_at,
         usage_limit,
         source_relation
-    from {{ var('shopify_discount_code_free_shipping') }}
+    from {{ var('shopify_gql_discount_code_free_shipping') }}
 
     {% if var('shopify_using_discount_code_app', False) %}
     
@@ -112,7 +112,7 @@ unified_discount_codes as (
         updated_at,
         usage_limit,
         source_relation
-    from {{ var('shopify_discount_code_app') }}
+    from {{ var('shopify_gql_discount_code_app') }}
     {% endif %}
 ),
 
@@ -132,15 +132,17 @@ discounts_with_applications as (
     select
         discounts_with_codes.*,
         discount_applications.allocation_method,
-        discount_applications.description,
+        {# discount_applications.description, #}
         discount_applications.target_selection,
         discount_applications.target_type,
-        discount_applications.type as application_type,
-        discount_applications.value,
+        {# discount_applications.type as application_type, #}
+        discount_applications.value_amount as value, -- QUESTION: should we be renaming this?
+        discount_application.value_currency_code,
+        discount_applications.value_percentage,
         discount_applications.value_type
     from discounts_with_codes
     left join discount_applications 
-        on discounts_with_codes.code = discount_applications.code
+        on discounts_with_codes.code = discount_applications.code -- NEED this
         and discounts_with_codes.source_relation = discount_applications.source_relation
 )
 

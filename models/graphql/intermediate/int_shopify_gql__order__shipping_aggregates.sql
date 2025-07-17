@@ -6,8 +6,8 @@ with order_shipping_line as (
         order_id,
         source_relation,
         order_shipping_line_id,
-        sum(coalesce(price_set_shop_amount, 0)) as shipping_price,
-        sum(coalesce(discounted_price_set_shop_amount, 0)) as discounted_shipping_price
+        sum(coalesce(price_shop_amount, 0)) as shipping_price,
+        sum(coalesce(discounted_price_shop_amount, 0)) as discounted_shipping_price
         
     from {{ var('shopify_gql_order_shipping_line') }}
     group by 1,2,3
@@ -17,7 +17,7 @@ with order_shipping_line as (
     select
         order_shipping_line_id,
         source_relation,
-        sum(coalesce(price_set_shop_amount, 0)) as shipping_tax
+        sum(coalesce(price_shop_amount, 0)) as shipping_tax
 
     from {{ var('shopify_gql_order_shipping_tax_line') }}
     group by 1,2 

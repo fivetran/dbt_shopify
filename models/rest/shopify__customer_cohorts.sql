@@ -1,5 +1,6 @@
 {{
     config(
+        enabled=var('shopify_api', 'rest') == 'rest',
         materialized='table' if shopify.shopify_is_databricks_sql_warehouse() else 'incremental',
         unique_key='customer_cohort_id',
         incremental_strategy='insert_overwrite' if target.type in ('bigquery', 'databricks', 'spark') else 'delete+insert',

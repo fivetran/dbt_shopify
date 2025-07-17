@@ -1,28 +1,28 @@
-{{ config(enabled=var('shopify_api', 'rest') == 'rest') }}
+{{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
 with order_lines as (
 
     select *
-    from {{ var('shopify_order_line') }}
+    from {{ ref('int_shopify_gql__order_line') }}
 ),
 
 fulfillment as (
 
     select *
-    from {{ var('shopify_fulfillment') }}
+    from {{ ref('int_shopify_gql__fulfillment') }}
 ),
 
 orders as (
 
     select *
-    from {{ var('shopify_order') }}
+    from {{ var('shopify_gql_order') }}
     where not coalesce(is_deleted, false)
 ), 
 
 refunds as (
 
     select *
-    from {{ ref('shopify__orders__order_refunds') }}
+    from {{ ref('shopify_gql__orders__order_refunds') }}
 
 ), refunds_aggregated as (
     
@@ -72,14 +72,15 @@ aggregated as (
         variant_id,
         location_id,
         source_relation,
-        sum(pre_tax_price) as subtotal_sold,
-        sum(quantity) as quantity_sold,
+        sum(coalesce(pre_tax_price, 0)) as subtotal_sold,
+        sum(coalesce(quantity, 0)) as quantity_sold,
         count(distinct order_id) as count_distinct_orders,
         count(distinct customer_id) as count_distinct_customers,
         count(distinct email) as count_distinct_customer_emails,
         min(order_created_timestamp) as first_order_timestamp,
         max(order_created_timestamp) as last_order_timestamp
 
+        {# open and pending are set to be deprecated in the future by Shopify #}
         {% for status in ['pending', 'open', 'success', 'cancelled', 'error', 'failure'] %}
         , count(distinct case when fulfillment_status = '{{ status }}' then fulfillment_id end) as count_fulfillment_{{ status }}
         {% endfor %}

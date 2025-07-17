@@ -24,7 +24,7 @@ joined as (
     select 
         customer.*,
         customer_default_address.customer_address_id as default_address_id
-        {# maybe add other fields that are helpful (would be new) #}
+        {# QUESTION: maybe add other fields that are helpful (would be new)? #}
     
     from customer 
     left join customer_default_address

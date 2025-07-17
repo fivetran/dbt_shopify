@@ -1,45 +1,45 @@
-{{ config(enabled=var('shopify_api', 'rest') == 'rest') }}
+{{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
 with inventory_level as (
 
     select *
-    from {{ var('shopify_inventory_level') }}
+    from {{ var('shopify_gql_inventory_level') }}
 ), 
 
 inventory_item as (
 
     select *
-    from {{ var('shopify_inventory_item') }}
+    from {{ var('shopify_gql_inventory_item') }}
 ),
 
 inventory_quantity as (
 
     select *
-    from {{ var('shopify_inventory_quantity') }}
+    from {{ var('shopify_gql_inventory_quantity') }}
 ),
 
 location as (
 
     select *
-    from {{ var('shopify_location') }}
+    from {{ var('shopify_gql_location') }}
 ),
 
 product_variant as (
 
     select *
-    from {{ var('shopify_product_variant') }}
+    from {{ var('shopify_gql_product_variant') }}
 ),
 
 product as (
 
     select *
-    from {{ var('shopify_product') }}
+    from {{ var('shopify_gql_product') }}
 ),
 
 inventory_level_aggregated as (
 
     select *
-    from {{ ref('int_shopify__inventory_level__aggregates') }}
+    from {{ ref('int_shopify_gql__inventory_level__aggregates') }}
 ),
 
 {% if var('shopify_using_product_variant_media', False) %}
@@ -60,12 +60,7 @@ inventory_quantity_aggregated as (
         {% set inventory_states = var('shopify_inventory_states', ['incoming', 'on_hand', 'available', 'committed', 'reserved', 'damaged', 'safety_stock', 'quality_control']) -%}
         {% for inventory_state in inventory_states -%}
             , sum(case when lower(inventory_state_name) = {{ "'" ~ inventory_state|lower ~ "'" }}
-                {% if inventory_state|lower == 'available ' -%}
-                then coalesce(inventory_quantity.quantity, inventory_level.available_quantity)
-                {% else -%}
-                then inventory_quantity.quantity
-                {% endif -%}
-                end) as {{ inventory_state }}_quantity
+                then inventory_quantity.quantity end) as {{ inventory_state }}_quantity
         {% endfor -%}
 
     from inventory_quantity
@@ -117,6 +112,7 @@ joined_info as (
         location.city,
         location.country,
         location.country_code,
+        location.country_name, -- new
         location.is_legacy as is_legacy_location,
         location.province,
         location.province_code,
@@ -135,17 +131,17 @@ joined_info as (
         product_variant_media.media_id as variant_media_id,
         {% endif %}
 
-        product_variant.fulfillment_service as variant_fulfillment_service,
-        product_variant.inventory_management as variant_inventory_management,
+        {# DEPRECATED product_variant.fulfillment_service as variant_fulfillment_service,
+        product_variant.inventory_management as variant_inventory_management, #}
         product_variant.is_taxable as is_variant_taxable,
         product_variant.barcode as variant_barcode,
-        product_variant.grams as variant_grams, 
+        {# DEPRECATED: product_variant.grams as variant_grams,  #}
         product_variant.inventory_quantity as variant_inventory_quantity,
-        product_variant.weight as variant_weight,
+        {# DEPRECATED: product_variant.weight as variant_weight,
         product_variant.weight_unit as variant_weight_unit,
         product_variant.option_1 as variant_option_1,
         product_variant.option_2 as variant_option_2,
-        product_variant.option_3 as variant_option_3,
+        product_variant.option_3 as variant_option_3, #}
         product_variant.tax_code as variant_tax_code,
         product_variant.created_timestamp as variant_created_at,
         product_variant.updated_timestamp as variant_updated_at,

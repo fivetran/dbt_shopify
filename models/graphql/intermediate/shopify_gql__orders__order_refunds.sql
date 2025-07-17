@@ -22,8 +22,8 @@ with refunds as (
         order_line_refunds.order_line_id,
         order_line_refunds.restock_type,
         order_line_refunds.quantity,
-        order_line_refunds.subtotal_set_shop_amount as subtotal,
-        order_line_refunds.total_tax_set_shop_amount as total_tax
+        order_line_refunds.subtotal_shop_amount as subtotal,
+        order_line_refunds.total_tax_shop_amount as total_tax
 
     from refunds
     left join order_line_refunds

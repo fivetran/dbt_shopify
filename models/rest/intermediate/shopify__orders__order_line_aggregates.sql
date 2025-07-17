@@ -1,4 +1,4 @@
-{{ config(materialized='table') }}
+{{ config(materialized='table', enabled=var('shopify_api', 'rest') == 'rest') }}
 
 with order_line as (
 
