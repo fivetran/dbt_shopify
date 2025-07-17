@@ -6,6 +6,7 @@ with collection as (
     from {{ var('shopify_gql_collection') }}
 ),
 
+{# todo: add variable here #}
 collection_rule as (
 
     select *

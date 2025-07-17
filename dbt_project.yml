@@ -11,6 +11,12 @@ models:
         +materialized: ephemeral
         int_shopify__customer_email_rollup:
           +materialized: view # so we can use the dbt_utils.star macro
+    graphql:
+      intermediate:
+        +schema: _int_shopify_gql # just for dev
+        # +materialized: ephemeral
+        int_shopify_gql__customer_email_rollup:
+          +materialized: view # so we can use the dbt_utils.star macro
 
 vars:
   shopify:

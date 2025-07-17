@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: shopify_gql__collection_metafields
+    description: Replica of the stg_shopify_gql__collection model with the addition of metafields pivoted out from the stg_shopify_gql__metafield model.
+
+  - name: shopify_gql__customer_metafields
+    description: Replica of the stg_shopify_gql__customer model with the addition of metafields pivoted out from the stg_shopify_gql__metafield model.
+
+  - name: shopify_gql__order_metafields
+    description: Replica of the stg_shopify_gql__order model with the addition of metafields pivoted out from the stg_shopify_gql__metafield model.
+
+  - name: shopify_gql__product_metafields
+    description: Replica of the stg_shopify_gql__product model with the addition of metafields pivoted out from the stg_shopify_gql__metafield model.
+
+  - name: shopify_gql__product_variant_metafields
+    description: Replica of the stg_shopify_gql__product_variant model with the addition of metafields pivoted out from the stg_shopify_gql__metafield model.
+
+  - name: shopify_gql__shop_metafields
+    description: Replica of the stg_shopify_gql__shop model with the addition of metafields pivoted out from the stg_shopify_gql__metafield model.
