@@ -19,7 +19,7 @@ with customer_emails as (
         lower(email) as email,
         source_relation,
         count(distinct checkout_id) as lifetime_abandoned_checkouts
-    from {{ var('shopify_gql_abandoned_checkout' )}}
+    from {{ ref('int_shopify_gql__abandoned_checkout' )}}
     where email is not null
     group by 1,2
 {% endif %}

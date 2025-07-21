@@ -35,7 +35,7 @@ with line_items as (
     select
         order_id,
         source_relation,
-        sum(amount) as total_order_refund_amount
+        sum(amount_shop) as total_order_refund_amount
     from {{ var('shopify_gql_transaction')}}
     where kind = 'refund' 
     group by 1,2
@@ -45,7 +45,7 @@ with line_items as (
     select
         order_line_id,
         source_relation,
-        sum(subtotal + total_tax) as total_refund_amount
+        sum(subtotal_shop_amount + total_tax_shop_amount) as total_refund_amount
     from {{ var('shopify_gql_order_line_refund')}}
     group by 1,2
 
@@ -74,10 +74,10 @@ with line_items as (
         null as billing_type,
         p.product_type as product_type,
         li.quantity as quantity,
-        li.price as unit_amount,
-        o.total_discounts as discount_amount,
-        o.total_tax as tax_amount,
-        (li.quantity * li.price) as total_amount,  
+        li.price_shop_amount as unit_amount,
+        o.total_discounts_shop_amount as discount_amount,
+        o.total_tax_shop_amount as tax_amount,
+        (li.quantity * li.price_shop_amount) as total_amount,  
         t.transaction_id as payment_id,
         null as payment_method_id,
         t.gateway as payment_method, -- payment_method in tender_transaction can be something like 'apply_pay', where gateway is like 'gift card' or 'shopify payments' which I think is more relevant here
