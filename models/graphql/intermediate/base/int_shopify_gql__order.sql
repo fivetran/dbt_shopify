@@ -1,6 +1,6 @@
 {{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
-with order as (
+with orders as (
 
     select * 
     from {{ var('shopify_gql_order') }}
@@ -15,12 +15,12 @@ customer_visit as (
 joined as (
 
     select 
-        order.*,
+        orders.*,
         customer_visit.referring_site
-    from order
+    from orders
     left join customer_visit
-        on order.order_id = customer_visit.order_id
-        and order.source_relation = customer_visit.source_relation
+        on orders.order_id = customer_visit.order_id
+        and orders.source_relation = customer_visit.source_relation
 )
 
 select *

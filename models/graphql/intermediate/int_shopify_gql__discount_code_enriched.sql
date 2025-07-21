@@ -137,7 +137,7 @@ discounts_with_applications as (
         discount_applications.target_type,
         {# discount_applications.type as application_type, #}
         discount_applications.value_amount as value, -- QUESTION: should we be renaming this?
-        discount_application.value_currency_code,
+        discount_applications.value_currency_code,
         discount_applications.value_percentage,
         discount_applications.value_type
     from discounts_with_codes
