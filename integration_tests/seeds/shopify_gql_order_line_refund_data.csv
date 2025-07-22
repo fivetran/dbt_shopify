@@ -1,0 +1,11 @@
+_fivetran_synced,id,location_id,order_line_id,quantity,refund_id,restock_type,subtotal_set_pres_amount,subtotal_set_pres_currency_code,subtotal_set_shop_amount,subtotal_set_shop_currency_code,total_tax_set_pres_amount,total_tax_set_pres_currency_code,total_tax_set_shop_amount,total_tax_set_shop_currency_code
+2025-07-18 11:00:00,10001,20001,30001,1.0,40001,return,19.99,USD,19.99,USD,2.00,USD,2.00,USD
+2025-07-18 11:01:00,10002,20002,30002,2.0,40002,no_restock,29.99,USD,29.99,USD,3.00,USD,3.00,USD
+2025-07-18 11:02:00,10003,20003,30003,1.0,40003,legacy_restock,49.99,CAD,49.99,CAD,5.00,CAD,5.00,CAD
+2025-07-18 11:03:00,10004,20004,30004,3.0,40004,return,15.00,USD,15.00,USD,1.50,USD,1.50,USD
+2025-07-18 11:04:00,10005,20005,30005,2.0,40005,no_restock,24.99,USD,24.99,USD,2.49,USD,2.49,USD
+2025-07-18 11:05:00,10006,20006,30006,1.0,40006,return,39.99,USD,39.99,USD,4.00,USD,4.00,USD
+2025-07-18 11:06:00,10007,20007,30007,2.0,40007,legacy_restock,59.99,USD,59.99,USD,6.00,USD,6.00,USD
+2025-07-18 11:07:00,10008,20008,30008,1.0,40008,return,9.99,USD,9.99,USD,0.99,USD,0.99,USD
+2025-07-18 11:08:00,10009,20009,30009,3.0,40009,no_restock,89.99,USD,89.99,USD,8.99,USD,8.99,USD
+2025-07-18 11:09:00,10010,20010,30010,1.0,40010,return,11.99,USD,11.99,USD,1.20,USD,1.20,USD

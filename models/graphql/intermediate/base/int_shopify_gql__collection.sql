@@ -4,10 +4,10 @@ with collection as (
 
     select *
     from {{ var('shopify_gql_collection') }}
-),
+)
 
-{# todo: add variable here #}
-collection_rule as (
+{% if var('shopify_gql_using_collection_rule', False) %}
+, collection_rule as (
 
     select *
     from {{ var('shopify_gql_collection_rule') }}
@@ -46,3 +46,11 @@ joined as (
 
 select *
 from joined
+
+{% else %}
+select 
+    collection.*,
+    cast(null as {{ dbt.type_string() }}) as rules
+from collection
+
+{% endif %}

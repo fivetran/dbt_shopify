@@ -62,6 +62,44 @@ vars:
     shopify_fulfillment_event_identifier: "shopify_fulfillment_event_data"
     shopify_tax_line_identifier: "shopify_tax_line_data"
 
+    shopify_gql_abandoned_checkout_identifier: "shopify_gql_abandoned_checkout_data"
+    shopify_gql_collection_product_identifier: "shopify_gql_collection_product_data"
+    shopify_gql_collection_identifier: "shopify_gql_collection_data"
+    shopify_gql_customer_tag_identifier: "shopify_gql_customer_tag_data"
+    shopify_gql_discount_allocation_identifier: "shopify_gql_discount_allocation_data"
+    shopify_gql_discount_application_identifier: "shopify_gql_discount_application_data"
+    shopify_gql_discount_code_app_identifier: "shopify_gql_discount_code_app_data"
+    shopify_gql_discount_code_basic_identifier: "shopify_gql_discount_code_basic_data"
+    shopify_gql_discount_code_bxgy_identifier: "shopify_gql_discount_code_bxgy_data"
+    shopify_gql_discount_code_free_shipping_identifier: "shopify_gql_discount_code_free_shipping_data"
+    shopify_gql_discount_redeem_code_identifier: "shopify_gql_discount_redeem_code_data"
+    shopify_gql_fulfillment_identifier: "shopify_gql_fulfillment_data"
+    shopify_gql_inventory_item_identifier: "shopify_gql_inventory_item_data"
+    shopify_gql_inventory_level_identifier: "shopify_gql_inventory_level_data"
+    shopify_gql_inventory_quantity_identifier: "shopify_gql_inventory_quantity_data"
+    shopify_gql_location_identifier: "shopify_gql_location_data"
+    shopify_gql_media_identifier: "shopify_gql_media_data"
+    shopify_gql_media_image_identifier: "shopify_gql_media_image_data"
+    shopify_gql_metafield_identifier: "shopify_gql_metafield_data"
+    shopify_gql_order_note_attribute_identifier: "shopify_gql_order_note_attribute_data"
+    shopify_gql_order_shipping_line_identifier: "shopify_gql_order_shipping_line_data"
+    shopify_gql_order_shipping_tax_line_identifier: "shopify_gql_order_shipping_tax_line_data"
+    shopify_gql_order_tag_identifier: "shopify_gql_order_tag_data"
+    shopify_gql_product_media_identifier: "shopify_gql_product_media_data"
+    shopify_gql_product_variant_media_identifier: "shopify_gql_product_variant_media_data"
+    shopify_gql_product_tag_identifier: "shopify_gql_product_tag_data"
+    shopify_gql_shop_identifier: "shopify_gql_shop_data"
+    shopify_gql_tender_transaction_identifier: "shopify_gql_tender_transaction_data"
+    shopify_gql_abandoned_checkout_discount_code_identifier: "shopify_gql_abandoned_checkout_discount_code_data"
+    shopify_gql_order_discount_code_identifier: "shopify_gql_order_discount_code_data"
+    shopify_gql_fulfillment_event_identifier: "shopify_gql_fulfillment_event_data"
+    shopify_gql_tax_line_identifier: "shopify_gql_tax_line_data"
+    shopify_gql_fulfillment_tracking_info_identifier: "shopify_gql_fulfillment_tracking_info_data"
+    shopify_gql_fulfillment_order_line_item_identifier: "shopify_gql_fulfillment_order_line_item_data"
+    shopify_gql_customer_visit_identifier: "shopify_gql_customer_visit_data"
+    shopify_gql_customer_address_identifier: "shopify_gql_customer_address_data"
+    shopify_gql_collection_rule_identifier: "shopify_gql_collection_rule_data"
+
 dispatch:
   - macro_namespace: dbt_utils
     search_order: ['spark_utils', 'dbt_utils']
@@ -80,6 +118,12 @@ seeds:
         _fivetran_synced: timestamp
         id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         default_address_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+    shopify_gql_customer_data:
+      +column_types:
+        phone: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+    shopify_gql_customer_address_data:
+      +column_types:
+        phone: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
     shopify_order_data:
       +column_types:
         created_at: timestamp
@@ -92,6 +136,22 @@ seeds:
         customer_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         location_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         user_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+    shopify_gql_order_data:
+      +column_types:
+        billing_address_phone: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+        shipping_address_phone: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+        total_shipping_price_set_pres_amount: float
+        total_shipping_price_set_shop_amount: float
+        total_tax_set_pres_amount: float
+        total_tax_set_shop_amount: float
+        total_discounts_set_pres_amount: float
+        total_discounts_set_shop_amount: float
+        total_price_set_pres_amount: float
+        total_price_set_shop_amount: float
+        subtotal_price_set_pres_amount: float
+        subtotal_price_set_shop_amount: float
+        total_tip_received_set_pres_amount: float 
+        total_tip_received_set_shop_amount: float
     shopify_order_line_data:
       +column_types:
         _fivetran_synced: timestamp
@@ -99,6 +159,9 @@ seeds:
         id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         product_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         variant_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+    shopify_gql_order_line_refund_data:
+      +column_types:
+        quantity: float
     shopify_order_line_refund_data:
       +column_types:
         _fivetran_synced: timestamp
@@ -124,6 +187,9 @@ seeds:
         product_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         inventory_item_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         legacy_resource_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+    shopify_gql_product_variant_data:
+      +column_types:
+        compare_at_price: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
     shopify_product_variant_media_data:
       +column_types:
         product_variant_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
@@ -156,6 +222,22 @@ seeds:
         closed_at: timestamp
         created_at: timestamp
         updated_at: timestamp
+    shopify_gql_abandoned_checkout_data:
+      +column_types:
+        billing_address_phone: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+        shipping_address_phone: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+        subtotal_price_set_pres_amount: float
+        subtotal_price_set_shop_amount: float
+        total_discount_set_shop_amount: float
+        total_discount_set_pres_amount: float
+        total_duties_set_shop_amount: float 
+        total_duties_set_pres_amount: float
+        total_line_items_price_set_shop_amount: float 
+        total_line_items_price_set_pres_amount: float
+        total_price_set_shop_amount: float
+        total_price_set_pres_amount: float
+        total_tax_set_shop_amount: float 
+        total_tax_set_pres_amount: float
     shopify_order_discount_code_data:
       +column_types:
         order_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
@@ -167,6 +249,9 @@ seeds:
       +column_types:
         discounted_price: float
         price: float
+    shopify_gql_order_shipping_line_data:
+      +column_types:
+        phone: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
     shopify_tax_line_data:
       +column_types:
         price: float
@@ -190,6 +275,9 @@ seeds:
         taxes_included: boolean
         google_apps_login_enabled: boolean
         county_taxes: boolean
+    shopify_gql_shop_data:
+      +column_types:
+        billing_address_phone: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
     shopify_inventory_level_data:
       +column_types:
         updated_at: timestamp
@@ -238,6 +326,9 @@ seeds:
         total_sales_currency_code: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
         updated_at: timestamp
         usage_limit: integer
+    shopify_gql_discount_code_basic_data:
+      +column_types:
+        total_sales_amount: float
     shopify_discount_code_bxgy_data:
       +column_types:
         id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
@@ -339,6 +430,9 @@ seeds:
         type: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
         value: float
         value_type: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+    shopify_gql_location_data:
+      +column_types:
+        phone: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
     shopify_media_data:
       +column_types:
         id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"

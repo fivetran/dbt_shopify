@@ -112,7 +112,7 @@ joined_info as (
         location.city,
         location.country,
         location.country_code,
-        location.country_name, -- new
+        location.country_name, -- New field introduced in GraphQL API
         location.is_legacy as is_legacy_location,
         location.province,
         location.province_code,
