@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '0.19.0'
+version: '0.19.1'
 profile: 'integration_tests'
 config-version: 2
 
@@ -10,10 +10,10 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 vars:
   # Uncomment when regenerating docs
-  # shopify_using_fulfillment_event: true
-  # shopify_using_all_metafields: true
-  # shopify_using_discount_code_app: true
-  # shopify_using_product_variant_media: true
+  # shopify_using_fulfillment_event: true # @docs-include
+  # shopify_using_all_metafields: true # @docs-include
+  # shopify_using_discount_code_app: true # @docs-include
+  # shopify_using_product_variant_media: true # @docs-include
 
   shopify_schema: shopify_integration_tests_17
 
@@ -359,3 +359,7 @@ seeds:
         media_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
   +docs:
     show: false
+
+flags:
+  send_anonymous_usage_stats: False
+  use_colors: True
