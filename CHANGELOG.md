@@ -1,3 +1,11 @@
+# dbt_shopify v0.19.1
+
+This release includes the following updates:
+
+## Bug Fixes
+- Removed the unique combination of columns test for the `int_shopify__discount_code_enriched` model.
+  - This has been removed as it's already tested in the [shopify__discounts](https://github.com/fivetran/dbt_shopify/blob/7e174a8367ee063b5025172734bdcd19fe802606/models/shopify.yml#L991-L997) end model and is configured to warn instead of fail. As such, we can remove the test from the intermediate level.
+
 [PR #109](https://github.com/fivetran/dbt_shopify/pull/109) includes the following updates:
 
 ### Under the Hood - July 2025 Updates
