@@ -1,6 +1,6 @@
 # dbt_shopify v0.19.1
 
-This release includes the following updates:
+[PR #108](https://github.com/fivetran/dbt_shopify/pull/108) includes the following updates:
 
 ## Bug Fixes
 - Removed the unique combination of columns test for the `int_shopify__discount_code_enriched` model.
@@ -9,7 +9,6 @@ This release includes the following updates:
 [PR #109](https://github.com/fivetran/dbt_shopify/pull/109) includes the following updates:
 
 ### Under the Hood - July 2025 Updates
-
 - Updated conditions in `.github/workflows/auto-release.yml`.
 - Added `.github/workflows/generate-docs.yml`.
 - Added `+docs: show: False` to `integration_tests/dbt_project.yml`.
