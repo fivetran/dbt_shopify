@@ -75,11 +75,11 @@ with orders as (
         source_relation,
         tracking_companies,
         tracking_numbers,
-        count(distinct fulfillment_id) as number_of_fulfillments,
-        {{ fivetran_utils.string_agg("distinct cast(service as " ~ dbt.type_string() ~ ")", "', '") }} as fulfillment_services
+        fulfillment_services,
+        count(distinct fulfillment_id) as number_of_fulfillments
 
     from {{ ref('int_shopify_gql__fulfillment') }}
-    group by 1,2,3,4
+    {{ dbt_utils.group_by(n=5) }}
 
 ), joined as (
 
