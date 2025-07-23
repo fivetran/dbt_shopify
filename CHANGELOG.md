@@ -6,6 +6,25 @@ This release includes the following updates:
 - Removed the unique combination of columns test for the `int_shopify__discount_code_enriched` model.
   - This has been removed as it's already tested in the [shopify__discounts](https://github.com/fivetran/dbt_shopify/blob/7e174a8367ee063b5025172734bdcd19fe802606/models/shopify.yml#L991-L997) end model and is configured to warn instead of fail. As such, we can remove the test from the intermediate level.
 
+[PR #109](https://github.com/fivetran/dbt_shopify/pull/109) includes the following updates:
+
+### Under the Hood - July 2025 Updates
+
+- Updated conditions in `.github/workflows/auto-release.yml`.
+- Added `.github/workflows/generate-docs.yml`.
+- Added `+docs: show: False` to `integration_tests/dbt_project.yml`.
+- Migrated `flags` (e.g., `send_anonymous_usage_stats`, `use_colors`) from `sample.profiles.yml` to `integration_tests/dbt_project.yml`.
+- Updated `maintainer_pull_request_template.md` with improved checklist.
+- Refreshed README tag block:
+  - Standardized Quickstart-compatible badge set
+  - Left-aligned and positioned below the H1 title.
+- Updated Python image version to `3.10.13` in `pipeline.yml`.
+- Added `CI_DATABRICKS_DBT_CATALOG` to:
+  - `.buildkite/hooks/pre-command` (as an export)
+  - `pipeline.yml` (under the `environment` block, after `CI_DATABRICKS_DBT_TOKEN`)
+- Added `certifi==2025.1.31` to `requirements.txt` (if missing).
+- Updated `.gitignore` to exclude additional DBT, Python, and system artifacts.
+
 # dbt_shopify v0.19.0
 
 [PR #104](https://github.com/fivetran/dbt_shopify/pull/104) introduces the following updates:
