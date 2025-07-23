@@ -43,6 +43,12 @@ The following table provides a detailed list of all tables materialized within t
 ### Example Visualizations
 Curious what these tables can do? Check out example visualizations from the [shopify__line_item_enhanced](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__line_item_enhanced) table in the [Fivetran Billing Model Streamlit App](https://fivetran-billing-model.streamlit.app/), and see how you can use these tables in your own reporting. Below is a screenshot of an example report—explore the app for more.
 
+<p align="center">
+<a href="https://fivetran-billing-model.streamlit.app/">
+    <img src="https://raw.githubusercontent.com/fivetran/dbt_shopify/main/images/streamlit_example.png" alt="Streamlit Billing Model App" width="75%">
+</a>
+</p>
+
 ### Materialized Models
 Each Quickstart transformation job run materializes 107 models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
 <!--section-end-->
