@@ -183,20 +183,50 @@ models:
         description: Where the order originated. Can be set only during order creation, and is not writeable afterwards.
       - name: source_relation
         description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
-      - name: subtotal_price
-        description: The price of the order in the shop currency after discounts but before shipping, taxes, and tips.
+      - name: subtotal_price_shop_amount
+        description: The sum of the prices for all line items after discounts and before returns, in *shop* currency. If taxesIncluded is true, then the subtotal also includes tax.
+      - name: subtotal_price_pres_amount
+        description: The sum of the prices for all line items after discounts and before returns, in shop presentment currency. If taxesIncluded is true, then the subtotal also includes tax.
+      - name: subtotal_price_shop_currency_code
+        description: The three-letter code (ISO 4217 format) for the shop currency used to display the subtotal price.
+      - name: subtotal_price_pres_currency_code
+        description: The three-letter code (ISO 4217 format) for the presentment currency used to display the subtotal price.
       - name: has_taxes_included
         description: Whether taxes are included in the order subtotal.
       - name: is_test_order
         description: Whether this is a test order.
-      - name: total_discounts
-        description: The total discounts applied to the price of the order in the shop currency.
-      - name: total_line_items_price
+      - name: total_discounts_shop_amount
+        description: The total amount discounted on the order before returns, in *shop* currency. This includes both order and line level discounts.
+      - name: total_discounts_pres_amount
+        description: The total amount discounted on the order before returns, in *presentment* currency. This includes both order and line level discounts.
+      - name: total_discounts_shop_currency_code
+        description: The three-letter code (ISO 4217 format) for the shop currency used to display the total discounts.
+      - name: total_discounts_pres_currency_code
+        description: The three-letter code (ISO 4217 format) for the currency currency used to display the total discounts.
+      - name: total_price_shop_amount
+        description: The total price of the order, before returns, in *shop* currency.
+      - name: total_price_pres_amount
+        description: The total price of the order, before returns, in *presentment* currency.
+      - name: total_price_pres_currency_code
+        description: The three-letter code (ISO 4217 format) for the shop currency used to display the total price.
+      - name: total_price_shop_currency_code
+        description: The three-letter code (ISO 4217 format) for the presentment currency used to display the total price.
+      - name: total_line_items_price_shop_amount
         description: The sum of all line item prices in the shop currency.
-      - name: total_price
-        description: The sum of all line item prices, discounts, shipping, taxes, and tips in the shop currency. Must be positive.
-      - name: total_tax
-        description: The sum of all the taxes applied to the order in th shop currency. Must be positive.
+      - name: total_line_items_price_pres_amount
+        description: The sum of all line item prices in the presentment currency.
+      - name: total_line_items_price_shop_currency_codes
+        description: The three-letter codes (ISO 4217 format) for the shop currency used to display the total line item price.
+      - name: total_line_items_price_pres_currency_codes
+        description: The three-letter codes (ISO 4217 format) for the presentment currency used to display the total line item price.
+      - name: total_tax_shop_amount
+        description: The total tax amount of the order, before returns, in *shop* currency.
+      - name: total_tax_pres_amount
+        description: The total tax amount of the order, before returns, in *presentment* currency.
+      - name: total_tax_shop_currency_code
+        description: The three-letter code (ISO 4217 format) for the shop currency used to display the total tax amount.
+      - name: total_tax_pres_currency_code
+        description: The three-letter code (ISO 4217 format) for the presentment currency used to display the total tax amount.
       - name: total_weight
         description: The sum of all line item weights in grams.
       - name: updated_timestamp
@@ -209,8 +239,14 @@ models:
         description: The sequential number of the order as it relates to the customer
       - name: new_vs_repeat
         description: Whether the order was a new or repeat order for the customer.
-      - name: shipping_cost
-        description: The shipping cost of the order.
+      - name: shipping_cost_shop_amount
+        description: The total shipping costs returned to the customer, in *shop* currency.
+      - name: shipping_cost_pres_amount
+        description: The total shipping costs returned to the customer, in *presentment* currency.
+      - name: shipping_cost_shop_currency_code
+        description: The three-letter code (ISO 4217 format) for the shop currency used to display the total shipping costs.
+      - name: shipping_cost_pres_currency_code
+        description: The three-letter code (ISO 4217 format) for the presentment currency used to display the total shipping costs.
       - name: order_adjustment_amount
         description: Total adjustment amount applied to the order in shop currency.
       - name: order_adjustment_tax_amount
@@ -224,8 +260,6 @@ models:
           Order total adjusted for refunds and other adjustments. The calculation used for this field is as follows:
           total price listed on the original order (including shipping costs and discounts) + adjustments + adjustments tax - total refunds - refunds tax
           The order_adjusted_total will equate to the total sales - refunds listed within the transactions table for the order (after currency exchange).
-      - name: total_shipping_price_set
-        description: The total shipping price set to the order.
       - name: order_total_shipping_tax
         description: Total shipping tax attributed to the order.
       - name: order_tags
@@ -238,8 +272,14 @@ models:
         description: List of tracking companies for the order.
       - name: tracking_numbers
         description: List of tracking numbers for the order.
-      - name: total_tip_received
-        description: The sum of all the tips in the order in the shop currency.
+      - name: total_tip_received_shop_amount
+        description: The sum of all tip amounts for the order, in *shop* currency.
+      - name: total_tip_received_pres_amount
+        description: The sum of all tip amounts for the order, in *presentment* currency.
+      - name: total_tip_received_shop_currency_code
+        description: The three-letter code (ISO 4217 format) for the shop currency used to display the total tips received.
+      - name: total_tip_received_pres_currency_code
+        description: The three-letter code (ISO 4217 format) for the presentment currency used to display the total tips received.
       - name: customer_locale
         description: The two or three-letter language code, optionally followed by a region modifier. Example values - en, en-CA.  
       - name: order_status_url
@@ -250,14 +290,6 @@ models:
         description: "{{ doc('_fivetran_deleted') }}"
       - name: tracking_numbers
         description: List of tracking numbers for the order.
-      - name: total_discounts_set
-        description: The total discounts applied to the price of the order in shop and presentment currencies.
-      - name: total_line_items_price_set
-        description: The total of all line item prices in shop and presentment currencies.
-      - name: total_price_set
-        description: The total price of the order in shop and presentment currencies.
-      - name: total_tax_set
-        description: The total tax applied to the order in shop and presentment currencies.
       - name: is_confirmed
         description: Whether the order is confirmed.
       - name: shipping_discount_amount
@@ -537,16 +569,20 @@ models:
         description: How far along an order is in terms line items fulfilled.
       - name: is_gift_card
         description: Whether the item is a gift card. If true, then the item is not taxed or considered for shipping charges.
-      - name: grams
-        description: The weight of the item in grams.
       - name: order_line_id
         description: The ID of the line item.
       - name: name
         description: The name of the product variant.
       - name: order_id
         description: The ID of the related order.
-      - name: price
-        description: The price of the item before discounts have been applied in the shop currency.
+      - name: price_pres_amount
+        description: The total price of the line item when the order was created, in *presentment* currency. This value doesn't include discounts.
+      - name: price_pres_currency_code
+        description: The three-letter code (ISO 4217 format) for the presentment currency used to display the total price.
+      - name: price_shop_amount
+        description: The total price of the line item when the order was created, in *shop* currency. This value doesn't include discounts.
+      - name: price_shop_currency_code
+        description: The three-letter code (ISO 4217 format) for the shop currency used to display the total price.
       - name: product_id
         description: The ID of the product that the line item belongs to. Can be null if the original product associated with the order is deleted at a later date.
       - name: quantity
@@ -559,8 +595,14 @@ models:
         description: Whether the item was taxable.
       - name: title
         description: The title of the product.
-      - name: total_discount
-        description: The total amount of the discount allocated to the line item in the shop currency.
+      - name: total_discount_shop_amount
+        description: The total discount allocated to the line item in *shop* currency, including the total allocated to refunded and removed quantities. This value doesn't include order-level discounts.
+      - name: total_discount_pres_amount
+        description: The total discount allocated to the line item in *presentment* currency, including the total allocated to refunded and removed quantities. This value doesn't include order-level discounts.
+      - name: total_discount_shop_currency_code
+        description: The three-letter code (ISO å4217 format) for the shop currency used to display the total discount.
+      - name: total_discount_pres_currency_code
+        description: The three-letter code (ISO 4217 format) for the currency currency used to display the total discount.
       - name: variant_id
         description: The ID of the product variant.
       - name: vendor
@@ -598,10 +640,10 @@ models:
       - name: variant_updated_at
         description: The date and time when the product variant was last modified. Gets returned in ISO 8601 format.
       - name: variant_weight
-        description: (DEPRECATED 2025-01-06) The weight of the product variant in the unit system specified with weight_unit.
+        description: The weight value of the variant's inventory item's measurement.
       - name: variant_weight_unit
         description: >
-          (DEPRECATED 2025-01-06) The unit of measurement that applies to the product variant's weight. If you don't specify a value for weight_unit, then the shop's default unit of measurement is applied. Valid values: g, kg, oz, and lb.
+          The unit of measurement for the variant's inventory item's weight.
       - name: variant_is_available_for_sale
         description: Indicates whether the product variant is available for sale.
       - name: variant_display_name
@@ -626,12 +668,6 @@ models:
         description: The index associated with the order.
       - name: pre_tax_price
         description: The total pre tax price of the order.
-      - name: pre_tax_price_set
-        description: The pre tax price of the line item in shop currency and presentment currency.
-      - name: price_set
-        description: The price of the line item in shop and presentment currencies.
-      - name: total_discount_set
-        description: The total amount allocated to the line item in the presentment currency.
       - name: weight_unit
         description: The unit of measurement for the weight of a single item (e.g., grams, ounces).
       - name: weight_value
