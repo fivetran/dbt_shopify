@@ -10,10 +10,10 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 vars:
   # Uncomment when regenerating docs
-  # shopify_using_fulfillment_event: true
-  # shopify_using_all_metafields: true
-  # shopify_using_discount_code_app: true
-  # shopify_using_product_variant_media: true
+  # shopify_using_fulfillment_event: true # @docs-include
+  # shopify_using_all_metafields: true # @docs-include
+  # shopify_using_discount_code_app: true # @docs-include
+  # shopify_using_product_variant_media: true # @docs-include
 
   shopify_schema: shopify_integration_tests_17
 
