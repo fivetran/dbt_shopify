@@ -4,9 +4,10 @@ with fulfillment as (
 
     select *
     from {{ var('shopify_gql_fulfillment') }}
-),
+)
 
-fulfillment_tracking_info as (
+{% if var('shopify_gql_using_fulfillment_tracking_info', False) %}
+, fulfillment_tracking_info as (
 
     select *
     from {{ var('shopify_gql_fulfillment_tracking_info') }}
@@ -19,7 +20,6 @@ agg_fulfillment_tracking_info as (
         source_relation,
         {{ fivetran_utils.string_agg("distinct cast(tracking_number as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_numbers,
         {{ fivetran_utils.string_agg("distinct cast(tracking_url as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_urls,
-        {# QUESTION: This is new, should we include? #}
         {{ fivetran_utils.string_agg("distinct cast(tracking_company as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_companies
     from fulfillment_tracking_info
     group by fulfillment_id, source_relation
@@ -40,3 +40,12 @@ joined as (
 
 select *
 from joined
+{% else %}
+
+select 
+    fulfillment.*,
+    cast(null as {{ dbt.type_string() }}) as tracking_numbers,
+    cast(null as {{ dbt.type_string() }}) as tracking_urls,
+    cast(null as {{ dbt.type_string() }}) as tracking_companies
+from fulfillment
+{% endif %}

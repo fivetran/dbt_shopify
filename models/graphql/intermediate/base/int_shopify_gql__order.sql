@@ -4,9 +4,10 @@ with orders as (
 
     select * 
     from {{ var('shopify_gql_order') }}
-),
+)
 
-customer_visit as (
+{% if var('shopify_gql_using_customer_visit', True) %}
+, customer_visit as (
     
     select * 
     from {{ var('shopify_gql_customer_visit') }}
@@ -25,3 +26,12 @@ joined as (
 
 select *
 from joined
+
+{% else %}
+
+select 
+    orders.*,
+    cast(null as {{ dbt.type_string() }}) as referring_site
+from orders
+
+{% endif %}

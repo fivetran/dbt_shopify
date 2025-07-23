@@ -1,0 +1,11 @@
+_fivetran_synced,allocated_amount_set_pres_amount,allocated_amount_set_pres_currency_code,allocated_amount_set_shop_amount,allocated_amount_set_shop_currency_code,discount_application_index,index,order_line_id
+2025-07-18 10:10:00,5.00,USD,5.00,USD,0,0,10001
+2025-07-18 10:10:01,3.00,USD,3.00,USD,1,1,10002
+2025-07-18 10:10:02,2.50,USD,2.50,USD,0,2,10003
+2025-07-18 10:10:03,1.00,USD,1.00,USD,2,3,10004
+2025-07-18 10:10:04,4.75,USD,4.75,USD,0,4,10005
+2025-07-18 10:10:05,6.00,USD,6.00,USD,1,5,10006
+2025-07-18 10:10:06,7.25,USD,7.25,USD,2,6,10007
+2025-07-18 10:10:07,3.00,USD,3.00,USD,0,7,10008
+2025-07-18 10:10:08,5.50,USD,5.50,USD,1,8,10009
+2025-07-18 10:10:09,8.00,USD,8.00,USD,2,9,10010
