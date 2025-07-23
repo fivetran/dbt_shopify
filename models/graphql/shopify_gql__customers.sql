@@ -3,8 +3,8 @@
 with customers as (
 
     select 
-        {{ dbt_utils.star(from=ref('stg_shopify_gql__customer'), except=["orders_count", "total_spent"]) }}
-    from {{ var('shopify_gql_customer') }}
+        {{ dbt_utils.star(from=ref('int_shopify_gql__customer'), except=["orders_count", "total_spent"]) }}
+    from {{ ref('int_shopify_gql__customer') }}
 
 ), orders as (
 

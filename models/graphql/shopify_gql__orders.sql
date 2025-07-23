@@ -5,7 +5,7 @@ with orders as (
     select 
         *,
         {{ dbt_utils.generate_surrogate_key(['source_relation', 'order_id']) }} as orders_unique_key
-    from {{ var('shopify_gql_order') }}
+    from {{ ref('int_shopify_gql__order') }}
 
 ), order_lines as (
 
@@ -86,7 +86,7 @@ with orders as (
     select
         orders.*,
         {# QUESTION: in REST, we needed to parse a json to get this, but in gql it's already included in orders.*
-        but it has a slightly different name. should we include the below as well? #}
+        but it has a slightly different name/is split out - should we include the below as well? #}
         coalesce(shipping_cost_shop_amount, 0) as shipping_cost,
         
         order_adjustments_aggregates.order_adjustment_amount,
@@ -101,6 +101,8 @@ with orders as (
         order_lines.line_item_count,
         order_lines.total_line_items_price_pres_amount,
         order_lines.total_line_items_price_shop_amount,
+        order_lines.total_line_items_price_pres_currency_codes,
+        order_lines.total_line_items_price_shop_currency_codes,
 
         coalesce(discount_aggregates.shipping_discount_amount, 0) as shipping_discount_amount,
         coalesce(discount_aggregates.percentage_calc_discount_amount, 0) as percentage_calc_discount_amount,

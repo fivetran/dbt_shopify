@@ -19,7 +19,7 @@ daily_orders as (
     from {{ ref('int_shopify_gql__daily_orders') }}
 ),
 
-{% if var('shopify_using_abandoned_checkout', True) %}
+{% if var('shopify_gql_using_abandoned_checkout', True) %}
 daily_abandoned_checkouts as (
 
     select *
@@ -27,7 +27,7 @@ daily_abandoned_checkouts as (
 ),
 {% endif %}
 
-{% if var('shopify_using_fulfillment_event', false) %}
+{% if var('shopify_gql_using_fulfillment_event', false) %}
 daily_fulfillment as (
 
     select *
@@ -95,13 +95,13 @@ final as (
         coalesce(daily_orders.quantity_gift_cards_sold, 0) as quantity_gift_cards_sold,
         coalesce(daily_orders.quantity_requiring_shipping, 0) as quantity_requiring_shipping
 
-        {% if var('shopify_using_abandoned_checkout', True) %}
+        {% if var('shopify_gql_using_abandoned_checkout', True) %}
         , coalesce(daily_abandoned_checkouts.count_abandoned_checkouts, 0) as count_abandoned_checkouts,
         coalesce(daily_abandoned_checkouts.count_customers_abandoned_checkout, 0) as count_customers_abandoned_checkout,
         coalesce(daily_abandoned_checkouts.count_customer_emails_abandoned_checkout, 0) as count_customer_emails_abandoned_checkout
         {% endif %}
 
-        {% if var('shopify_using_fulfillment_event', false) %}
+        {% if var('shopify_gql_using_fulfillment_event', false) %}
             {% for status in ['attempted_delivery', 'delayed', 'delivered', 'failure', 'in_transit', 'out_for_delivery', 'ready_for_pickup', 'picked_up', 'label_printed', 'label_purchased', 'confirmed']%}
         , coalesce(count_fulfillment_{{ status }}, 0) as count_fulfillment_{{ status }}
             {% endfor %}
@@ -112,13 +112,13 @@ final as (
         on shop_calendar.source_relation = daily_orders.source_relation
         and shop_calendar.date_day = daily_orders.date_day
 
-    {% if var('shopify_using_abandoned_checkout', True) %}
+    {% if var('shopify_gql_using_abandoned_checkout', True) %}
     left join daily_abandoned_checkouts 
         on shop_calendar.source_relation = daily_abandoned_checkouts.source_relation
         and shop_calendar.date_day = daily_abandoned_checkouts.date_day
     {% endif %}
 
-    {% if var('shopify_using_fulfillment_event', false) %}
+    {% if var('shopify_gql_using_fulfillment_event', false) %}
     left join daily_fulfillment 
         on shop_calendar.source_relation = daily_fulfillment.source_relation
         and shop_calendar.date_day = daily_fulfillment.date_day
