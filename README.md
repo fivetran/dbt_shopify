@@ -56,15 +56,99 @@ Each Quickstart transformation job run materializes 107 models if all components
 ## How do I use the dbt package?
 
 ### Step 1: Prerequisites
-To use this dbt package, you must have the following:
+To use this dbt package, you must have either at least one Fivetran REST API-based Shopify connection or one Fivetran GraphQL-based Shopify connection syncing these respective tables to your destination:
 
-- At least one Fivetran Shopify connection syncing data into your destination.
-- One of the following destinations:
-  - [BigQuery](https://fivetran.com/docs/destinations/bigquery)
-  - [Snowflake](https://fivetran.com/docs/destinations/snowflake)
-  - [Redshift](https://fivetran.com/docs/destinations/redshift)
-  - [PostgreSQL](https://fivetran.com/docs/destinations/postgresql)
-  - [Databricks](https://fivetran.com/docs/destinations/databricks) with [Databricks Runtime](https://docs.databricks.com/en/compute/index.html#databricks-runtime)
+#### Shopify REST API
+- customer
+- order_line_refund
+- order_line
+- order
+- product
+- product_variant
+- transaction
+- refund
+- order_adjustment
+- abandoned_checkout
+- collection_product
+- collection
+- customer_tag
+- discount_allocation
+- discount_application
+- discount_code_app
+- discount_code_basic
+- discount_code_bxgy
+- discount_code_free_shipping
+- discount_redeem_code
+- fulfillment
+- inventory_item
+- inventory_level
+- inventory_quantity
+- location
+- media
+- media_image
+- metafield
+- order_note_attribute
+- order_shipping_line
+- order_shipping_tax_line
+- order_tag
+- order_url_tag
+- product_media
+- product_variant_media
+- product_tag
+- shop
+- tender_transaction
+- abandoned_checkout_discount_code
+- order_discount_code
+- abandoned_checkout_shipping_line
+- fulfillment_event
+- tax_line
+
+#### Shopify GraphQL
+- collection_product
+- collection
+- customer_tag
+- discount_allocation
+- discount_application
+- discount_code_app
+- discount_code_basic
+- discount_code_bxgy
+- discount_code_free_shipping
+- discount_redeem_code
+- fulfillment
+- inventory_item
+- inventory_level
+- inventory_quantity
+- location
+- media
+- media_image
+- metafield
+- order_note_attribute
+- order_shipping_line
+- order_shipping_tax_line
+- order_tag
+- product_media
+- product_variant_media
+- product_tag
+- shop
+- tender_transaction
+- tax_line
+- order_discount_code
+- abandoned_checkout
+- abandoned_checkout_discount_code
+- fulfillment_event
+- fulfillment_tracking_info
+- fulfillment_order_line_item
+- customer_visit
+- customer_address
+- collection_rule
+
+#### Database Compatibility
+To use this package, you will need to have one of the following kinds of destinations:
+- [BigQuery](https://fivetran.com/docs/destinations/bigquery)
+- [Snowflake](https://fivetran.com/docs/destinations/snowflake)
+- [Redshift](https://fivetran.com/docs/destinations/redshift)
+- [PostgreSQL](https://fivetran.com/docs/destinations/postgresql)
+- [Databricks](https://fivetran.com/docs/destinations/databricks) with [Databricks Runtime](https://docs.databricks.com/en/compute/index.html#databricks-runtime)
 
 ### Step 2: Install the package (skip if also using the `shopify_holistic_reporting` package)
 If you are **not** using the [Shopify Holistic reporting package](https://github.com/fivetran/dbt_shopify_holistic_reporting), include the following shopify package version in your `packages.yml` file:
@@ -112,6 +196,11 @@ To connect your multiple schema/database sources to the package models, follow t
 
 ### Step 4: Disable models for non-existent sources
 
+The Shopify package will automatically create null staging models for missing tables so as to not break downstream transformations. However, you may avoid the creation of certain null tables by leveraging the following variable configurations.
+
+#### REST API
+> If your Shopify connection is leveraging the older Shopify REST API and you are not running the package via Fivetran Quickstart, refer to the following variables.
+
 The package takes into consideration that not every Shopify connection may have the `fulfillment_event`, `metadata`, `discount_code_app`, `product_variant_media`, or `abandoned_checkout` tables (including `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
 
 ```yml
@@ -123,6 +212,26 @@ vars:
     shopify_using_discount_code_app: true #false by default.
     shopify_using_product_variant_media: true #false by default.
     shopify_using_abandoned_checkout: false # true by default. Setting to false will disable `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`.
+```
+
+#### GraphQL API
+> If your Shopify connection is leveraging the newer Shopify GraphQL API and you are not running the package via Fivetran Quickstart, refer to the following variables.
+
+The package takes into consideration that not every Shopify connection may have the `collection_rule`, `customer_visit`, `fulfillment_event`, `fulfillment_tracking_info`, `fulfillment_order_line_item`, `metafield`, `discount_code_app`, `product_variant_media` or `abandoned_checkout` tables (including `abandoned_checkout` and `abandoned_checkout_discount_code`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
+
+```yml
+# dbt_project.yml
+
+vars:
+    shopify_gql_using_fulfillment_event: true # FALSE by default.
+    shopify_gql_using_metafield: false  # TRUE by default.
+    shopify_gql_using_discount_code_app: true # FALSE by default.
+    shopify_gql_using_product_variant_media: true # FALSE by default.
+    shopify_gql_using_abandoned_checkout: false # TRUE by default. Setting to false will disable `abandoned_checkout` and `abandoned_checkout_discount_code`
+    shopify_gql_using_collection_rule: true # FALSE by default. 
+    shopify_gql_using_customer_visit: false # TRUE by default
+    shopify_gql_using_fulfillment_order_line_item: false # TRUE by default
+    shopify_gql_using_fulfillment_tracking_info: true # FALSE by default.  
 ```
 
 ### Step 5: Setting your timezone
