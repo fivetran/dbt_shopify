@@ -169,7 +169,19 @@ dispatch:
     search_order: ['spark_utils', 'dbt_utils']
 ```
 
-### Step 3: Define database and schema variables
+### Step 3: Define REST API or GraphQL API Source
+In INSERT_DATE, Fivetran released a new version of the Shopify connector that leverages Shopify's newer [GraphQL](https://shopify.dev/docs/apps/build/graphql) API instead of the REST API, as Shopify deprecated the REST API in October 2024. The GraphQL and REST API-based schemas are slightly different, but this package is designed to run for either or, not both. It will do so based on the value of the `shopify_api` variable.
+
+By default, `shopify_api` is set to `rest` and will run the `shopify__*` models in the [rest](https://github.com/fivetran/dbt_shopify/tree/main/models/rest) folder. If you would like to run the package on a GraphQL-based schema, adjust `shopify_api` accordingly. This will run the `shopify_gql__*` models in the [graphql](https://github.com/fivetran/dbt_shopify/tree/main/models/graphql) folder:
+
+```yml
+vars:
+  shopify_api: graphql # By default = rest. Must be lowercase
+```
+
+This variable is dynamically configured for you in Fivetran Quickstart based on your Shopify connection details.
+
+### Step 4: Define database and schema variables
 #### Single connection
 By default, this package runs using your destination and the `shopify` schema. If this is not where your Shopify data is (for example, if your Shopify schema is named `shopify_fivetran`), add the following configuration to your root `dbt_project.yml` file:
 
@@ -194,7 +206,7 @@ vars:
 
 To connect your multiple schema/database sources to the package models, follow the steps outlined in the [Union Data Defined Sources Configuration](https://github.com/fivetran/dbt_fivetran_utils/tree/releases/v0.4.latest#union_data-source) section of the Fivetran Utils documentation for the union_data macro. This will ensure a proper configuration and correct visualization of connections in the DAG.
 
-### Step 4: Disable models for non-existent sources
+### Step 5: Disable models for non-existent sources
 
 The Shopify package will automatically create null staging models for missing tables so as to not break downstream transformations. However, you may avoid the creation of certain null tables by leveraging the following variable configurations.
 
@@ -234,7 +246,7 @@ vars:
     shopify_gql_using_fulfillment_tracking_info: true # FALSE by default.  
 ```
 
-### Step 5: Setting your timezone
+### Step 6: Setting your timezone
 By default, the data in your Shopify schema is in UTC. However, you may want reporting to reflect a specific timezone for more realistic analysis or data validation.
 
 To convert the timezone of **all** timestamps in the package, update the `shopify_timezone` variable to your target zone in [IANA tz Database format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones):
@@ -247,7 +259,7 @@ vars:
 
 > **Note**: This will only **numerically** convert timestamps to your target timezone. They will however have a "UTC" appended to them. This is a current limitation of the dbt-date `convert_timezone` [macro](https://github.com/calogica/dbt-date#convert_timezone-column-target_tznone-source_tznone) we have leveraged and replicated in the [shopify_source](https://github.com/fivetran/dbt_shopify_source/tree/main/macros/fivetran_date_macros/fivetran_convert_timezone.sql) package with minimal modifications.
 
-### (Optional) Step 6: Additional configurations
+### (Optional) Step 7: Additional configurations
 <details open><summary>Expand/Collapse details</summary>
 
 #### Enabling Standardized Billing Model
@@ -361,7 +373,7 @@ vars:
 </details>
 
 
-### (Optional) Step 7: Orchestrate your models with Fivetran Transformations for dbt Core™
+### (Optional) Step 8: Orchestrate your models with Fivetran Transformations for dbt Core™
 <details><summary>Expand for details</summary>
 <br>
     

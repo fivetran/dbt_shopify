@@ -68,5 +68,5 @@ select
     cast(null as {{ dbt.type_string() }}) as tracking_numbers,
     cast(null as {{ dbt.type_string() }}) as tracking_urls,
     cast(null as {{ dbt.type_string() }}) as tracking_companies
-from fulfillment
+from fulfillment_prep
 {% endif %}
