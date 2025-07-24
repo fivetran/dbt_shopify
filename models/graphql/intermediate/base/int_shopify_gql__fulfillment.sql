@@ -4,7 +4,7 @@ with fulfillment as (
 
     select *
     from {{ var('shopify_gql_fulfillment') }}
-),
+)
 
 agg_fulfillment_services as (
     
