@@ -12,6 +12,11 @@ with orders as (
     select *
     from {{ ref('shopify_gql__orders__order_line_aggregates') }}
 
+), fulfillments as (
+
+    select *
+    from {{ ref('int_shopify_gql__order__fulfillment_aggregates') }}
+    
 ), order_adjustments as (
 
     select *
@@ -67,19 +72,6 @@ with orders as (
     
     from {{ var('shopify_gql_order_tag') }}
     group by 1,2
-
-), fulfillments as (
-
-    select 
-        order_id,
-        source_relation,
-        tracking_companies,
-        tracking_numbers,
-        fulfillment_services,
-        count(distinct fulfillment_id) as number_of_fulfillments
-
-    from {{ ref('int_shopify_gql__fulfillment') }}
-    {{ dbt_utils.group_by(n=5) }}
 
 ), joined as (
 

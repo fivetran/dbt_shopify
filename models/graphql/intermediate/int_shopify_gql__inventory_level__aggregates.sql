@@ -9,7 +9,7 @@ with order_lines as (
 fulfillment as (
 
     select *
-    from {{ ref('int_shopify_gql__fulfillment') }}
+    from {{ var('shopify_gql_fulfillment') }}
 ),
 
 orders as (

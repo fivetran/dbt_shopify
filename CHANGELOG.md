@@ -1,10 +1,19 @@
 # dbt_shopify v0.20.0
 
-TODO
+[PR #113](https://github.com/fivetran/dbt_shopify/pull/113) introduces the following updates:
 
 ## Feature Update: GraphQL API Support
 
-[Shopify](https://shopify.dev/docs/apps/build/graphql) has deprecated the REST Admin API in favor of the GraphQL API. This release supports compatibility with GraphQL-based Fivetran Shopify connections.
+In INSERT_DATE, Fivetran released a new version of the Shopify connector that leverages Shopify's newer [GraphQL](https://shopify.dev/docs/apps/build/graphql) API instead of the REST API, as Shopify deprecated the REST API in October 2024. The GraphQL and REST API-based schemas are slightly different, but this package is designed to run for either or, not both. It will do so based on the value of the `shopify_api` variable.
+
+By default, `shopify_api` is set to `rest` and will run the `shopify__*` models in the [rest](https://github.com/fivetran/dbt_shopify/tree/main/models/rest) folder. If you would like to run the package on a GraphQL-based schema, adjust `shopify_api` accordingly. This will run the `shopify_gql__*` models in the [graphql](https://github.com/fivetran/dbt_shopify/tree/main/models/graphql) folder:
+
+```yml
+vars:
+  shopify_api: graphql # By default = rest. Must be lowercase
+```
+
+This variable is dynamically configured for you in Fivetran Quickstart based on your Shopify connection details.
 
 # dbt_shopify v0.19.0
 
