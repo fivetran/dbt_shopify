@@ -56,15 +56,99 @@ Each Quickstart transformation job run materializes 107 models if all components
 ## How do I use the dbt package?
 
 ### Step 1: Prerequisites
-To use this dbt package, you must have the following:
+To use this dbt package, you must have either at least one Fivetran REST API-based Shopify connection or one Fivetran GraphQL-based Shopify connection syncing these respective tables to your destination:
 
-- At least one Fivetran Shopify connection syncing data into your destination.
-- One of the following destinations:
-  - [BigQuery](https://fivetran.com/docs/destinations/bigquery)
-  - [Snowflake](https://fivetran.com/docs/destinations/snowflake)
-  - [Redshift](https://fivetran.com/docs/destinations/redshift)
-  - [PostgreSQL](https://fivetran.com/docs/destinations/postgresql)
-  - [Databricks](https://fivetran.com/docs/destinations/databricks) with [Databricks Runtime](https://docs.databricks.com/en/compute/index.html#databricks-runtime)
+#### Shopify REST API
+- customer
+- order_line_refund
+- order_line
+- order
+- product
+- product_variant
+- transaction
+- refund
+- order_adjustment
+- abandoned_checkout
+- collection_product
+- collection
+- customer_tag
+- discount_allocation
+- discount_application
+- discount_code_app
+- discount_code_basic
+- discount_code_bxgy
+- discount_code_free_shipping
+- discount_redeem_code
+- fulfillment
+- inventory_item
+- inventory_level
+- inventory_quantity
+- location
+- media
+- media_image
+- metafield
+- order_note_attribute
+- order_shipping_line
+- order_shipping_tax_line
+- order_tag
+- order_url_tag
+- product_media
+- product_variant_media
+- product_tag
+- shop
+- tender_transaction
+- abandoned_checkout_discount_code
+- order_discount_code
+- abandoned_checkout_shipping_line
+- fulfillment_event
+- tax_line
+
+#### Shopify GraphQL
+- collection_product
+- collection
+- customer_tag
+- discount_allocation
+- discount_application
+- discount_code_app
+- discount_code_basic
+- discount_code_bxgy
+- discount_code_free_shipping
+- discount_redeem_code
+- fulfillment
+- inventory_item
+- inventory_level
+- inventory_quantity
+- location
+- media
+- media_image
+- metafield
+- order_note_attribute
+- order_shipping_line
+- order_shipping_tax_line
+- order_tag
+- product_media
+- product_variant_media
+- product_tag
+- shop
+- tender_transaction
+- tax_line
+- order_discount_code
+- abandoned_checkout
+- abandoned_checkout_discount_code
+- fulfillment_event
+- fulfillment_tracking_info
+- fulfillment_order_line_item
+- customer_visit
+- customer_address
+- collection_rule
+
+#### Database Compatibility
+To use this package, you will need to have one of the following kinds of destinations:
+- [BigQuery](https://fivetran.com/docs/destinations/bigquery)
+- [Snowflake](https://fivetran.com/docs/destinations/snowflake)
+- [Redshift](https://fivetran.com/docs/destinations/redshift)
+- [PostgreSQL](https://fivetran.com/docs/destinations/postgresql)
+- [Databricks](https://fivetran.com/docs/destinations/databricks) with [Databricks Runtime](https://docs.databricks.com/en/compute/index.html#databricks-runtime)
 
 ### Step 2: Install the package (skip if also using the `shopify_holistic_reporting` package)
 If you are **not** using the [Shopify Holistic reporting package](https://github.com/fivetran/dbt_shopify_holistic_reporting), include the following shopify package version in your `packages.yml` file:
@@ -72,7 +156,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=0.19.0", "<0.20.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=0.20.0", "<0.21.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 Do **NOT** include the `shopify_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
@@ -85,7 +169,19 @@ dispatch:
     search_order: ['spark_utils', 'dbt_utils']
 ```
 
-### Step 3: Define database and schema variables
+### Step 3: Define REST API or GraphQL API Source
+In INSERT_DATE, Fivetran released a new version of the Shopify connector that leverages Shopify's newer [GraphQL](https://shopify.dev/docs/apps/build/graphql) API instead of the REST API, as Shopify deprecated the REST API in October 2024. The GraphQL and REST API-based schemas are slightly different, but this package is designed to run for either or, not both. It will do so based on the value of the `shopify_api` variable.
+
+By default, `shopify_api` is set to `rest` and will run the `shopify__*` models in the [rest](https://github.com/fivetran/dbt_shopify/tree/main/models/rest) folder. If you would like to run the package on a GraphQL-based schema, adjust `shopify_api` accordingly. This will run the `shopify_gql__*` models in the [graphql](https://github.com/fivetran/dbt_shopify/tree/main/models/graphql) folder:
+
+```yml
+vars:
+  shopify_api: graphql # By default = rest. Must be lowercase
+```
+
+This variable is dynamically configured for you in Fivetran Quickstart based on your Shopify connection details.
+
+### Step 4: Define database and schema variables
 #### Single connection
 By default, this package runs using your destination and the `shopify` schema. If this is not where your Shopify data is (for example, if your Shopify schema is named `shopify_fivetran`), add the following configuration to your root `dbt_project.yml` file:
 
@@ -110,7 +206,12 @@ vars:
 
 To connect your multiple schema/database sources to the package models, follow the steps outlined in the [Union Data Defined Sources Configuration](https://github.com/fivetran/dbt_fivetran_utils/tree/releases/v0.4.latest#union_data-source) section of the Fivetran Utils documentation for the union_data macro. This will ensure a proper configuration and correct visualization of connections in the DAG.
 
-### Step 4: Disable models for non-existent sources
+### Step 5: Disable models for non-existent sources
+
+The Shopify package will automatically create null staging models for missing tables so as to not break downstream transformations. However, you may avoid the creation of certain null tables by leveraging the following variable configurations.
+
+#### REST API
+> If your Shopify connection is leveraging the older Shopify REST API and you are not running the package via Fivetran Quickstart, refer to the following variables.
 
 The package takes into consideration that not every Shopify connection may have the `fulfillment_event`, `metadata`, `discount_code_app`, `product_variant_media`, or `abandoned_checkout` tables (including `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
 
@@ -125,7 +226,27 @@ vars:
     shopify_using_abandoned_checkout: false # true by default. Setting to false will disable `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`.
 ```
 
-### Step 5: Setting your timezone
+#### GraphQL API
+> If your Shopify connection is leveraging the newer Shopify GraphQL API and you are not running the package via Fivetran Quickstart, refer to the following variables.
+
+The package takes into consideration that not every Shopify connection may have the `collection_rule`, `customer_visit`, `fulfillment_event`, `fulfillment_tracking_info`, `fulfillment_order_line_item`, `metafield`, `discount_code_app`, `product_variant_media` or `abandoned_checkout` tables (including `abandoned_checkout` and `abandoned_checkout_discount_code`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
+
+```yml
+# dbt_project.yml
+
+vars:
+    shopify_gql_using_fulfillment_event: true # FALSE by default.
+    shopify_gql_using_metafield: false  # TRUE by default.
+    shopify_gql_using_discount_code_app: true # FALSE by default.
+    shopify_gql_using_product_variant_media: true # FALSE by default.
+    shopify_gql_using_abandoned_checkout: false # TRUE by default. Setting to false will disable `abandoned_checkout` and `abandoned_checkout_discount_code`
+    shopify_gql_using_collection_rule: true # FALSE by default. 
+    shopify_gql_using_customer_visit: false # TRUE by default
+    shopify_gql_using_fulfillment_order_line_item: false # TRUE by default
+    shopify_gql_using_fulfillment_tracking_info: true # FALSE by default.  
+```
+
+### Step 6: Setting your timezone
 By default, the data in your Shopify schema is in UTC. However, you may want reporting to reflect a specific timezone for more realistic analysis or data validation.
 
 To convert the timezone of **all** timestamps in the package, update the `shopify_timezone` variable to your target zone in [IANA tz Database format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones):
@@ -138,7 +259,7 @@ vars:
 
 > **Note**: This will only **numerically** convert timestamps to your target timezone. They will however have a "UTC" appended to them. This is a current limitation of the dbt-date `convert_timezone` [macro](https://github.com/calogica/dbt-date#convert_timezone-column-target_tznone-source_tznone) we have leveraged and replicated in the [shopify_source](https://github.com/fivetran/dbt_shopify_source/tree/main/macros/fivetran_date_macros/fivetran_convert_timezone.sql) package with minimal modifications.
 
-### (Optional) Step 6: Additional configurations
+### (Optional) Step 7: Additional configurations
 <details open><summary>Expand/Collapse details</summary>
 
 #### Enabling Standardized Billing Model
@@ -252,7 +373,7 @@ vars:
 </details>
 
 
-### (Optional) Step 7: Orchestrate your models with Fivetran Transformations for dbt Core™
+### (Optional) Step 8: Orchestrate your models with Fivetran Transformations for dbt Core™
 <details><summary>Expand for details</summary>
 <br>
     
@@ -267,7 +388,7 @@ This dbt package is dependent on the following dbt packages. These dependencies 
 ```yml
 packages:
     - package: fivetran/shopify_source
-      version: [">=0.18.0", "<0.19.0"]
+      version: [">=0.19.0", "<0.20.0"]
 
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]

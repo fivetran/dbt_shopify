@@ -42,7 +42,7 @@ with customers as (
         {{ fivetran_utils.max_bool("customers.is_verified_email") }} as is_verified_email
 
         -- for all other fields, just take the latest value
-        {% set cols = adapter.get_columns_in_relation(ref('stg_shopify_gql__customer')) %}
+        {% set cols = adapter.get_columns_in_relation(ref('int_shopify_gql__customer')) %}
         {% set except_cols = ['_fivetran_synced', 'email', 'source_relation', 'customer_id', 'phone', 'created_at', 
                                 'marketing_consent_updated_at', 'orders_count', 'total_spent', 'created_timestamp', 'updated_timestamp',
                                 'is_tax_exempt', 'is_verified_email'] %}

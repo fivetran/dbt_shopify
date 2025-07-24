@@ -87,7 +87,7 @@ unified_discount_codes as (
         source_relation
     from {{ var('shopify_gql_discount_code_free_shipping') }}
 
-    {% if var('shopify_using_discount_code_app', False) %}
+    {% if var('shopify_gql_using_discount_code_app', False) %}
     
     union all
 

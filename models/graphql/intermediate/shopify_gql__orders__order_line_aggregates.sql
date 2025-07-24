@@ -40,7 +40,9 @@ with order_line as (
         sum(coalesce(tax_aggregates.price, 0)) as order_total_tax,
         sum(coalesce(order_line.total_discount_shop_amount, 0)) as order_total_discount,
         sum(coalesce(price_pres_amount, 0)) as total_line_items_price_pres_amount,
-        sum(coalesce(price_shop_amount, 0)) as total_line_items_price_shop_amount
+        sum(coalesce(price_shop_amount, 0)) as total_line_items_price_shop_amount,
+        {{ fivetran_utils.string_agg("distinct cast(order_line.price_pres_currency_code as " ~ dbt.type_string() ~ ")", "', '") }} as total_line_items_price_pres_currency_codes,
+        {{ fivetran_utils.string_agg("distinct cast(order_line.price_shop_currency_code as " ~ dbt.type_string() ~ ")", "', '") }} as total_line_items_price_shop_currency_codes
 
     from order_line
     left join tax_aggregates
@@ -59,6 +61,8 @@ with order_line as (
         order_line_aggregates.order_total_discount,
         order_line_aggregates.total_line_items_price_pres_amount,
         order_line_aggregates.total_line_items_price_shop_amount,
+        order_line_aggregates.total_line_items_price_pres_currency_codes,
+        order_line_aggregates.total_line_items_price_shop_currency_codes,
         shipping.shipping_price as order_total_shipping,
         shipping.discounted_shipping_price as order_total_shipping_with_discounts,
         shipping.shipping_tax as order_total_shipping_tax

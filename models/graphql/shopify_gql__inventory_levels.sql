@@ -42,11 +42,11 @@ inventory_level_aggregated as (
     from {{ ref('int_shopify_gql__inventory_level__aggregates') }}
 ),
 
-{% if var('shopify_using_product_variant_media', False) %}
+{% if var('shopify_gql_using_product_variant_media', False) %}
 product_variant_media as (
 
     select *
-    from {{ var('shopify_product_variant_media') }}
+    from {{ var('shopify_gql_product_variant_media') }}
 ),
 {% endif %}
 
@@ -127,11 +127,11 @@ joined_info as (
         product_variant.inventory_policy as variant_inventory_policy,
         product_variant.price as variant_price,
         
-        {% if var('shopify_using_product_variant_media', False) %}
+        {% if var('shopify_gql_using_product_variant_media', False) %}
         product_variant_media.media_id as variant_media_id,
         {% endif %}
 
-        {# DEPRECATED product_variant.fulfillment_service as variant_fulfillment_service,
+        {# DEPRECATED: product_variant.fulfillment_service as variant_fulfillment_service,
         product_variant.inventory_management as variant_inventory_management, #}
         product_variant.is_taxable as is_variant_taxable,
         product_variant.barcode as variant_barcode,
@@ -164,7 +164,7 @@ joined_info as (
         on inventory_item.inventory_item_id = product_variant.inventory_item_id 
         and inventory_item.source_relation = product_variant.source_relation
 
-    {% if var('shopify_using_product_variant_media', False) %}
+    {% if var('shopify_gql_using_product_variant_media', False) %}
     join product_variant_media 
         on product_variant.variant_id = product_variant_media.product_variant_id
         and product_variant.source_relation = product_variant_media.source_relation

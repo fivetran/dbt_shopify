@@ -10,7 +10,7 @@ with order_lines as (
 ), product_variants as (
 
     select *
-    from {{ var('shopify_gql_product_variant') }}
+    from {{ ref('int_shopify_gql__product_variant') }}
 
 ), refunds as (
 
@@ -19,7 +19,7 @@ with order_lines as (
 
 ), 
 
-{% if var('shopify_using_product_variant_media', False) %}
+{% if var('shopify_gql_using_product_variant_media', False) %}
 product_variant_media as (
 
     select *
@@ -53,7 +53,7 @@ refunds_aggregated as (
         product_variants.updated_timestamp as variant_updated_at,
         product_variants.inventory_item_id,
 
-        {% if var('shopify_using_product_variant_media', False) %}
+        {% if var('shopify_gql_using_product_variant_media', False) %}
         product_variant_media.media_id,
         {% endif %}
 
@@ -67,14 +67,16 @@ refunds_aggregated as (
         product_variants.is_taxable as variant_is_taxable,
         product_variants.barcode as variant_barcode,
         product_variants.inventory_quantity as variant_inventory_quantity,
-        {# ALL DEPRECATED:
-        product_variants.grams as variant_grams,
         product_variants.weight as variant_weight,
         product_variants.weight_unit as variant_weight_unit,
+        {# ALL DEPRECATED:
+        product_variants.grams as variant_grams,
         product_variants.option_1 as variant_option_1,
         product_variants.option_2 as variant_option_2,
         product_variants.option_3 as variant_option_3, 
         #}
+        -- QUESTION: in REST, we have an order_line.tax_code field that is described identically to product_variants.tax_code, but it is not present in the GraphQL schema.
+        -- Should we create a tax_code field that is just a copy of product_variants.tax_code, or should we leave it out?
         product_variants.tax_code as variant_tax_code,
         product_variants.is_available_for_sale as variant_is_available_for_sale,
         product_variants.display_name as variant_display_name,
@@ -90,7 +92,7 @@ refunds_aggregated as (
         on product_variants.variant_id = order_lines.variant_id
         and product_variants.source_relation = order_lines.source_relation
 
-    {% if var('shopify_using_product_variant_media', False) %}
+    {% if var('shopify_gql_using_product_variant_media', False) %}
     left join product_variant_media
         on product_variant_media.product_variant_id = product_variants.variant_id
         and product_variant_media.source_relation = product_variants.source_relation

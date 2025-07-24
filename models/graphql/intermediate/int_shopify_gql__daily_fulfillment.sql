@@ -1,4 +1,4 @@
-{{ config(enabled=(var('shopify_using_fulfillment_event', false) and var('shopify_api', 'rest') == var('shopify_api_override','graphql'))) }}
+{{ config(enabled=(var('shopify_gql_using_fulfillment_event', false) and var('shopify_api', 'rest') == var('shopify_api_override','graphql'))) }}
 
 with fulfillment_event as (
 

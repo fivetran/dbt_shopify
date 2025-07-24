@@ -17,7 +17,8 @@ joined as (
 
     select 
         orders.*,
-        customer_visit.referring_site
+        customer_visit.referring_site,
+        customer_visit.landing_page as landing_site_base_url
     from orders
     left join customer_visit
         on orders.order_id = customer_visit.order_id
@@ -31,7 +32,8 @@ from joined
 
 select 
     orders.*,
-    cast(null as {{ dbt.type_string() }}) as referring_site
+    cast(null as {{ dbt.type_string() }}) as referring_site,
+    cast(null as {{ dbt.type_string() }}) as landing_site_base_url
 from orders
 
 {% endif %}

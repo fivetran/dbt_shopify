@@ -1,3 +1,11 @@
+# dbt_shopify v0.20.0
+
+TODO
+
+## Feature Update: GraphQL API Support
+
+[Shopify](https://shopify.dev/docs/apps/build/graphql) has deprecated the REST Admin API in favor of the GraphQL API. This release supports compatibility with GraphQL-based Fivetran Shopify connections.
+
 # dbt_shopify v0.19.0
 
 [PR #104](https://github.com/fivetran/dbt_shopify/pull/104) introduces the following updates:
