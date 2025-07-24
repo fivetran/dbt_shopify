@@ -17,27 +17,6 @@ count_fulfillments as (
     group by 1,2
 ),
 
-{# agg_fulfillment_services as (
-    
-    select 
-        order_id,
-        source_relation,
-        {{ fivetran_utils.string_agg("distinct cast(service as " ~ dbt.type_string() ~ ")", "', '") }} as fulfillment_services
-    from fulfillment
-    group by fulfillment_id, source_relation
-),
-
-fulfillment_prep as (
-
-    select 
-        fulfillment.*,
-        agg_fulfillment_services.fulfillment_services
-    from fulfillment
-    left join agg_fulfillment_services
-        on fulfillment.fulfillment_id = agg_fulfillment_services.fulfillment_id
-        and fulfillment.source_relation = agg_fulfillment_services.source_relation
-) #}
-
 {% if var('shopify_gql_using_fulfillment_tracking_info', False) %}
 fulfillment_tracking_info as (
 
@@ -76,23 +55,6 @@ final as (
         on joined.order_id = count_fulfillments.order_id
         and joined.source_relation = count_fulfillments.source_relation
 )
-
-{# joined as (
-
-    select 
-        fulfillment_prep.*,
-        agg_fulfillment_tracking_info.tracking_numbers,
-        agg_fulfillment_tracking_info.tracking_urls,
-        agg_fulfillment_tracking_info.tracking_companies
-    from fulfillment_prep
-    left join agg_fulfillment_tracking_info
-        on fulfillment_prep.fulfillment_id = agg_fulfillment_tracking_info.fulfillment_id
-        and fulfillment_prep.source_relation = agg_fulfillment_tracking_info.source_relation
-) 
-select *
-from joined
-
-#}
 
 {% else %}
 final as (
