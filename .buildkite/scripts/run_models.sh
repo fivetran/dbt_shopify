@@ -31,5 +31,9 @@ dbt run --target "$db" --full-refresh
 dbt test --target "$db"
 dbt run --vars '{shopify_timezone: "America/New_York", shopify_using_fulfillment_event: true, shopify_using_all_metafields: true, shopify__calendar_start_date: '2020-01-01', shopify_using_abandoned_checkout: false, shopify_using_metafield: false, shopify_using_discount_code_app: true, shopify_using_product_variant_media: true}' --target "$db" --full-refresh
 dbt test --target "$db"
+if [ "$db" = "bigquery" ]; then
+dbt run --vars '{shopify_collection_identifier: shopify_collection_bq_json_data, shopify_order_identifier: shopify_order_bq_json_data, shopify_transaction_identifier: shopify_transaction_bq_json_data, shopify_using_all_metafields: true}' --target "$db" --full-refresh
+dbt test --target "$db"
+fi
 dbt run-operation fivetran_utils.drop_schemas_automation --target "$db"
 fi
