@@ -1,9 +1,7 @@
 {{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
 with transactions as (
-    select 
-        *,
-        {{ dbt_utils.generate_surrogate_key(['source_relation', 'transaction_id'])}} as transactions_unique_id
+    select *
     from {{ var('shopify_gql_transaction') }} 
 
 ), tender_transactions as (

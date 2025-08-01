@@ -2,9 +2,7 @@
 
 with order_lines as (
 
-    select 
-        *,
-        {{ dbt_utils.generate_surrogate_key(['source_relation', 'order_line_id']) }} as order_lines_unique_key
+    select *
     from {{ ref('int_shopify_gql__order_line') }}
 
 ), product_variants as (

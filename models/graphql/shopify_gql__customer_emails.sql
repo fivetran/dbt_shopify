@@ -3,7 +3,7 @@
 with customer_emails as (
 
     select 
-        {{ dbt_utils.star(from=ref('int_shopify_gql__customer_email_rollup'), except=["orders_count", "total_spent"]) }}
+        {{ dbt_utils.star(from=ref('int_shopify_gql__customer_email_rollup'), except=["orders_count", "total_spent", "unique_key"]) }}
     from {{ ref('int_shopify_gql__customer_email_rollup') }}
 
 ), orders as (
