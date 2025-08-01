@@ -22,7 +22,7 @@ orders as (
 refunds as (
 
     select *
-    from {{ ref('shopify_gql__orders__order_refunds') }}
+    from {{ ref('int_shopify_gql__orders_order_refunds') }}
 
 ), refunds_aggregated as (
     

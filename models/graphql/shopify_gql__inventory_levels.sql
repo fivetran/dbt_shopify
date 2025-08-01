@@ -39,7 +39,7 @@ product as (
 inventory_level_aggregated as (
 
     select *
-    from {{ ref('int_shopify_gql__inventory_level__aggregates') }}
+    from {{ ref('int_shopify_gql__inventory_level_aggregates') }}
 ),
 
 {% if var('shopify_gql_using_product_variant_media', False) %}
@@ -83,7 +83,6 @@ joined_info as (
         inventory_level.updated_at,
         inventory_level._fivetran_synced,
         inventory_level.source_relation,
-
         inventory_item.sku,
         inventory_item.is_deleted as is_inventory_item_deleted,
         inventory_item.unit_cost_amount,
@@ -103,7 +102,6 @@ joined_info as (
         inventory_item.measurement_weight_unit,
         inventory_item.is_tracked_editable_locked,
         inventory_item.tracked_editable_reason,
-
         location.name as location_name, 
         location.is_deleted as is_location_deleted,
         location.is_active as is_location_active,
@@ -112,7 +110,7 @@ joined_info as (
         location.city,
         location.country,
         location.country_code,
-        location.country_name, -- New field introduced in GraphQL API
+        location.country_name,
         location.is_legacy as is_legacy_location,
         location.province,
         location.province_code,
@@ -120,28 +118,19 @@ joined_info as (
         location.zip,
         location.created_at as location_created_at,
         location.updated_at as location_updated_at,
-
         product_variant.variant_id,
         product_variant.product_id,
         product_variant.title as variant_title,
         product_variant.inventory_policy as variant_inventory_policy,
         product_variant.price as variant_price,
-        
+
         {% if var('shopify_gql_using_product_variant_media', False) %}
         product_variant_media.media_id as variant_media_id,
         {% endif %}
 
-        {# DEPRECATED: product_variant.fulfillment_service as variant_fulfillment_service,
-        product_variant.inventory_management as variant_inventory_management, #}
         product_variant.is_taxable as is_variant_taxable,
         product_variant.barcode as variant_barcode,
-        {# DEPRECATED: product_variant.grams as variant_grams,  #}
         product_variant.inventory_quantity as variant_inventory_quantity,
-        {# DEPRECATED: product_variant.weight as variant_weight,
-        product_variant.weight_unit as variant_weight_unit,
-        product_variant.option_1 as variant_option_1,
-        product_variant.option_2 as variant_option_2,
-        product_variant.option_3 as variant_option_3, #}
         product_variant.tax_code as variant_tax_code,
         product_variant.created_timestamp as variant_created_at,
         product_variant.updated_timestamp as variant_updated_at,

@@ -13,10 +13,12 @@ models:
           +materialized: view # so we can use the dbt_utils.star macro
     graphql:
       intermediate:
-        +schema: _int_shopify_gql # just for dev
-        # +materialized: ephemeral
+        +materialized: ephemeral
         int_shopify_gql__customer_email_rollup:
           +materialized: view # so we can use the dbt_utils.star macro
+        base:
+          int_shopify_gql__customer:
+            +materialized: view # so we can use the dbt_utils.star macro
 
 vars:
   shopify:
@@ -63,7 +65,7 @@ vars:
     shopify_order_discount_code: "{{ ref('stg_shopify__order_discount_code') }}"
     shopify_abandoned_checkout_shipping_line: "{{ ref('stg_shopify__abandoned_checkout_shipping_line') }}"
     shopify_fulfillment_event: "{{ ref('stg_shopify__fulfillment_event') }}"
-# add stuff here
+
     shopify_gql_customer: "{{ ref('stg_shopify_gql__customer') }}"
     shopify_gql_order: "{{ ref('stg_shopify_gql__order') }}"
     shopify_gql_order_line: "{{ ref('stg_shopify_gql__order_line') }}"

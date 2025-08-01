@@ -1,6 +1,6 @@
 packages:
 #  - package: fivetran/shopify_source
 #    version: [">=0.19.0", "<0.20.0"]
-# - local: ../ECommerce/Shopify/dbt_shopify_source
-- git: https://github.com/fivetran/dbt_shopify_source.git
-  revision: update/graphql
+- local: ../ECommerce/Shopify/dbt_shopify_source
+# - git: https://github.com/fivetran/dbt_shopify_source.git
+#   revision: update/graphql

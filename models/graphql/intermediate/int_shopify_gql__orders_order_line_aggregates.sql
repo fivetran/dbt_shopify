@@ -18,7 +18,7 @@ with order_line as (
 
     select
         *
-    from {{ ref('int_shopify_gql__order__shipping_aggregates')}}
+    from {{ ref('int_shopify_gql__order_shipping_aggregates')}}
 
 ), tax_aggregates as (
 

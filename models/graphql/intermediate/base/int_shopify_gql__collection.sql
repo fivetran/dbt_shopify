@@ -18,7 +18,6 @@ prep_collection_rule as (
     select 
         collection_id,
         source_relation,
-        {# QUESTION: should we lower() these fields? #}
         '{"column":"' || columns || '","relation":"' || relation || '","condition":"' || condition || '"}' as rule
     from collection_rule
 ),
@@ -30,7 +29,7 @@ agg_collection_rule as (
         source_relation,
         '[' || {{ fivetran_utils.string_agg("rule", "','") }} || ']' as rules
     from prep_collection_rule
-    group by collection_id, source_relation
+    group by 1,2
 ),
 
 joined as (

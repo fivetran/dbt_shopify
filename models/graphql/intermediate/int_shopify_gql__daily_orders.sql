@@ -26,7 +26,7 @@ order_aggregates as (
         count(distinct email) as count_customer_emails,
         sum(coalesce(order_adjusted_total, 0)) as order_adjusted_total,
         avg(order_adjusted_total) as avg_order_value,
-        sum(coalesce(shipping_cost, 0)) as shipping_cost,
+        sum(coalesce(shipping_cost_shop_amount, 0)) as shipping_cost,
         sum(coalesce(order_adjustment_amount, 0)) as order_adjustment_amount,
         sum(coalesce(order_adjustment_tax_amount, 0)) as order_adjustment_tax_amount,
         sum(coalesce(refund_subtotal, 0)) as refund_subtotal,

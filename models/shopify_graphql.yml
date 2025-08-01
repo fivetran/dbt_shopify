@@ -721,16 +721,16 @@ models:
         description: The transaction's type.
       - name: receipt
         description: A transaction receipt attached to the transaction by the gateway.
-      # - name: currency_exchange_id
-      #   description: The ID of the adjustment.
-      # - name: currency_exchange_adjustment
-      #   description: The difference between the amounts on the associated transaction and the parent transaction.
-      # - name: currency_exchange_original_amount
-      #   description: The amount of the parent transaction in the shop currency.
-      # - name: currency_exchange_final_amount
-      #   description: The amount of the associated transaction in the shop currency.
-      # - name: currency_exchange_currency
-      #   description: The shop currency.
+      - name: currency_exchange_id
+        description: The ID of the adjustment.
+      - name: currency_exchange_adjustment
+        description: The difference between the amounts on the associated transaction and the parent transaction.
+      - name: currency_exchange_original_amount
+        description: The amount of the parent transaction in the shop currency.
+      - name: currency_exchange_final_amount
+        description: The amount of the associated transaction in the shop currency.
+      - name: currency_exchange_currency
+        description: The shop currency.
       - name: error_code
         description: A standardized error code, independent of the payment provider.
       - name: status
@@ -1037,8 +1037,8 @@ models:
         description: Indicates whether the discount applies to 'all' or 'entitled' items.
       - name: target_type
         description: The type of target this discount applies to (e.g., `line_item` or `shipping_line`).
-      - name: value
-        description: Numeric value of the discount (e.g., percentage or fixed amount).
+      - name: value_amount
+        description: The numerical value of the discount application. A monetary value in decimal format, allowing for precise representation of cents or fractional currency.
       - name: value_type
         description: How the discount value is interpreted (e.g., 'percentage', 'fixed_amount').
       - name: value_currency_code
@@ -1174,8 +1174,6 @@ models:
         description: Count of distinct fulfillments being delivered to their final destination.
       - name: count_fulfillment_ready_for_pickup
         description: Count of distinct fulfillments ready for pickup at a shipping depot.
-      - name: count_fulfillment_picked_up
-        description: Count of distinct fulfillments successfully picked up on this day.
       - name: count_fulfillment_label_printed
         description: Count of distinct fulfillments for which a purchased shipping label has been printed on this day.
       - name: count_fulfillment_label_purchased

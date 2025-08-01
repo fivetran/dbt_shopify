@@ -17,6 +17,26 @@ table_variables:
   shopify_using_product_variant_media:
     - product_variant_media
 
+  shopify_gql_using_abandoned_checkout:
+    - abandoned_checkout
+    - abandoned_checkout_discount_code
+  shopify_gql_using_customer_visit:
+    - customer_visit
+  shopify_gql_using_fulfillment_order_line_item:
+    - fulfillment_order_line_item
+  shopify_gql_using_metafield:
+    - metafield
+  shopify_gql_using_collection_rule:
+    - collection_rule
+  shopify_gql_using_discount_code_app:
+    - discount_code_app
+  shopify_gql_using_fulfillment_event:
+    - fulfillment_event
+  shopify_gql_using_fulfillment_tracking_info:
+    - fulfillment_tracking_info
+  shopify_gql_using_product_variant_media:
+    - product_variant_media
+
 destination_configurations:
   databricks:
     dispatch:

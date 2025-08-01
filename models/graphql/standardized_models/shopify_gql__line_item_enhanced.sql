@@ -57,7 +57,7 @@ with line_items as (
 ), shipping as (
 
     select * 
-    from {{ ref('int_shopify_gql__order__shipping_aggregates')}}
+    from {{ ref('int_shopify_gql__order_shipping_aggregates')}}
 
 ), enhanced as (
 

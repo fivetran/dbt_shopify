@@ -29,7 +29,7 @@ unified_discount_codes as (
         ends_at, 
         starts_at,
         status,
-        null as title,
+        title,
         total_sales_amount,
         total_sales_currency_code,
         updated_at,
@@ -79,7 +79,7 @@ unified_discount_codes as (
         ends_at, 
         starts_at,
         status,
-        null as title,
+        title,
         total_sales_amount,
         total_sales_currency_code,
         updated_at,
@@ -132,11 +132,9 @@ discounts_with_applications as (
     select
         discounts_with_codes.*,
         discount_applications.allocation_method,
-        {# discount_applications.description, #}
         discount_applications.target_selection,
         discount_applications.target_type,
-        {# discount_applications.type as application_type, #}
-        discount_applications.value_amount as value, -- QUESTION: should we be renaming this?
+        discount_applications.value_amount,
         discount_applications.value_currency_code,
         discount_applications.value_percentage,
         discount_applications.value_type

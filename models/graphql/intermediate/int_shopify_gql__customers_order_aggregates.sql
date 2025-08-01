@@ -9,7 +9,7 @@ with orders as (
 ), order_aggregates as (
 
     select *
-    from {{ ref('shopify_gql__orders__order_line_aggregates') }}
+    from {{ ref('int_shopify_gql__orders_order_line_aggregates') }}
 
 ), transactions as (
 

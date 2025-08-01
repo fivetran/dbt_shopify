@@ -102,7 +102,7 @@ final as (
         {% endif %}
 
         {% if var('shopify_gql_using_fulfillment_event', false) %}
-            {% for status in ['attempted_delivery', 'delayed', 'delivered', 'failure', 'in_transit', 'out_for_delivery', 'ready_for_pickup', 'picked_up', 'label_printed', 'label_purchased', 'confirmed']%}
+            {% for status in ['attempted_delivery', 'delayed', 'delivered', 'failure', 'in_transit', 'out_for_delivery', 'ready_for_pickup', 'label_printed', 'label_purchased', 'confirmed']%}
         , coalesce(count_fulfillment_{{ status }}, 0) as count_fulfillment_{{ status }}
             {% endfor %}
         {% endif %}

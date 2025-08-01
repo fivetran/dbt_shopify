@@ -15,7 +15,7 @@ with order_lines as (
 ), refunds as (
 
     select *
-    from {{ ref('shopify_gql__orders__order_refunds') }}
+    from {{ ref('int_shopify_gql__orders_order_refunds') }}
 
 ), 
 
@@ -43,12 +43,10 @@ refunds_aggregated as (
     select
         order_lines.*,
         refunds_aggregated.restock_types,
-
         coalesce(refunds_aggregated.quantity,0) as refunded_quantity,
         coalesce(refunds_aggregated.subtotal,0) as refunded_subtotal,
         order_lines.quantity - coalesce(refunds_aggregated.quantity,0) as quantity_net_refunds,
         order_lines.pre_tax_price - coalesce(refunds_aggregated.subtotal,0) as subtotal_net_refunds,
-        
         product_variants.created_timestamp as variant_created_at,
         product_variants.updated_timestamp as variant_updated_at,
         product_variants.inventory_item_id,
@@ -62,21 +60,11 @@ refunds_aggregated as (
         product_variants.position as variant_position,
         product_variants.inventory_policy as variant_inventory_policy,
         product_variants.compare_at_price as variant_compare_at_price,
-        {# deprecated: product_variants.fulfillment_service as variant_fulfillment_service, #}
-
         product_variants.is_taxable as variant_is_taxable,
         product_variants.barcode as variant_barcode,
         product_variants.inventory_quantity as variant_inventory_quantity,
         product_variants.weight as variant_weight,
         product_variants.weight_unit as variant_weight_unit,
-        {# ALL DEPRECATED:
-        product_variants.grams as variant_grams,
-        product_variants.option_1 as variant_option_1,
-        product_variants.option_2 as variant_option_2,
-        product_variants.option_3 as variant_option_3, 
-        #}
-        -- QUESTION: in REST, we have an order_line.tax_code field that is described identically to product_variants.tax_code, but it is not present in the GraphQL schema.
-        -- Should we create a tax_code field that is just a copy of product_variants.tax_code, or should we leave it out?
         product_variants.tax_code as variant_tax_code,
         product_variants.is_available_for_sale as variant_is_available_for_sale,
         product_variants.display_name as variant_display_name,

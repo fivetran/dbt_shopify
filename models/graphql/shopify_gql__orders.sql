@@ -10,12 +10,12 @@ with orders as (
 ), order_lines as (
 
     select *
-    from {{ ref('shopify_gql__orders__order_line_aggregates') }}
+    from {{ ref('int_shopify_gql__orders_order_line_aggregates') }}
 
 ), fulfillments as (
 
     select *
-    from {{ ref('int_shopify_gql__order__fulfillment_aggregates') }}
+    from {{ ref('int_shopify_gql__order_fulfillment_aggregates') }}
     
 ), order_adjustments as (
 
@@ -34,7 +34,7 @@ with orders as (
 ), refunds as (
 
     select *
-    from {{ ref('shopify_gql__orders__order_refunds') }}
+    from {{ ref('int_shopify_gql__orders_order_refunds') }}
 
 ), refund_aggregates as (
     select
@@ -77,16 +77,10 @@ with orders as (
 
     select
         orders.*,
-        {# QUESTION: in REST, we needed to parse a json to get this, but in gql it's already included in orders.*
-        but it has a slightly different name/is split out - should we include the below as well? #}
-        coalesce(shipping_cost_shop_amount, 0) as shipping_cost,
-        
         order_adjustments_aggregates.order_adjustment_amount,
         order_adjustments_aggregates.order_adjustment_tax_amount,
-
         refund_aggregates.refund_subtotal,
         refund_aggregates.refund_total_tax,
-
         (orders.total_price_shop_amount
             + coalesce(order_adjustments_aggregates.order_adjustment_amount,0) + coalesce(order_adjustments_aggregates.order_adjustment_tax_amount,0) 
             - coalesce(refund_aggregates.refund_subtotal,0) - coalesce(refund_aggregates.refund_total_tax,0)) as order_adjusted_total,
@@ -95,19 +89,16 @@ with orders as (
         order_lines.total_line_items_price_shop_amount,
         order_lines.total_line_items_price_pres_currency_codes,
         order_lines.total_line_items_price_shop_currency_codes,
-
         coalesce(discount_aggregates.shipping_discount_amount, 0) as shipping_discount_amount,
         coalesce(discount_aggregates.percentage_calc_discount_amount, 0) as percentage_calc_discount_amount,
         coalesce(discount_aggregates.fixed_amount_discount_amount, 0) as fixed_amount_discount_amount,
         coalesce(discount_aggregates.count_discount_codes_applied, 0) as count_discount_codes_applied,
         coalesce(order_lines.order_total_shipping_tax, 0) as order_total_shipping_tax,
         order_tag.order_tags,
-        {# QUESTION: order_url_tag was removed so no order_url_tag.order_url_tags -- should we set a null field? #}
         fulfillments.number_of_fulfillments,
         fulfillments.fulfillment_services,
         fulfillments.tracking_companies,
         fulfillments.tracking_numbers
-
 
     from orders
     left join order_lines

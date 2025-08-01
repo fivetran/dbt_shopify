@@ -8,7 +8,7 @@ with products as (
 ), product_order_lines as (
 
     select *
-    from {{ ref('int_shopify_gql__product__order_line_aggregates')}}
+    from {{ ref('int_shopify_gql__product_order_line_aggregates')}}
 
 ), joined as (
 

@@ -9,10 +9,10 @@ with customer_emails as (
 ), orders as (
 
     select *
-    from {{ ref('int_shopify_gql__emails__order_aggregates' )}}
+    from {{ ref('int_shopify_gql__emails_order_aggregates' )}}
     where email is not null
 
-{% if var('shopify_using_abandoned_checkout', True) %}
+{% if var('shopify_gql_using_abandoned_checkout', True) %}
 ), abandoned as (
 
     select 
@@ -29,7 +29,7 @@ with customer_emails as (
     select 
         customer_emails.*,
 
-        {% if var('shopify_using_abandoned_checkout', True) %}
+        {% if var('shopify_gql_using_abandoned_checkout', True) %}
         coalesce(abandoned.lifetime_abandoned_checkouts, 0) as lifetime_abandoned_checkouts,
         {% endif %}
 
@@ -57,7 +57,7 @@ with customer_emails as (
         on customer_emails.email = orders.email
         and customer_emails.source_relation = orders.source_relation
 
-    {% if var('shopify_using_abandoned_checkout', True) %}
+    {% if var('shopify_gql_using_abandoned_checkout', True) %}
     left join abandoned
         on customer_emails.email = abandoned.email
         and customer_emails.source_relation = abandoned.source_relation

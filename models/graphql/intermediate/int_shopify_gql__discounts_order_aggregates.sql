@@ -21,7 +21,7 @@ orders_aggregated as (
         avg(order_discount_code.value_amount) as avg_order_discount_amount,
         sum(coalesce(order_discount_code.value_amount, 0)) as total_order_discount_amount,
         max(orders.total_line_items_price_shop_amount) as total_order_line_items_price, -- summing would multiply the total by the # of discount codes applied to an order
-        max(orders.shipping_cost) as total_order_shipping_cost, -- summing would multiply the total by the # of discount codes applied to an order
+        max(orders.shipping_cost_shop_amount) as total_order_shipping_cost, -- summing would multiply the total by the # of discount codes applied to an order
         max(orders.refund_subtotal + orders.refund_total_tax) as total_order_refund_amount, -- summing would multiply the total by the # of discount codes applied to an order
         count(distinct customer_id) as count_customers,
         count(distinct email) as count_customer_emails,
