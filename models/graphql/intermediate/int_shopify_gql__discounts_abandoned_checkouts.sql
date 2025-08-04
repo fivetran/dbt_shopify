@@ -35,7 +35,6 @@ join_abandoned_checkout_discount_code as (
     left join discount_application
         on abandoned_checkout_discount_code.code = discount_application.code
         and abandoned_checkout_discount_code.source_relation = discount_application.source_relation
-        {# NEED CODE to prevent potential fanout #}
     where coalesce(discount_application.value_type, '') != ''
 ),
 

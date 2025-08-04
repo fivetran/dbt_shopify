@@ -27,8 +27,7 @@ joined as (
     from order_discount_code
     left join discount_application
         on order_discount_code.order_id = discount_application.order_id
-        {# OUTSTANDING: need code, or else some fanout will occur #}
-        {# and order_discount_code.index = discount_application.index #}
+        and order_discount_code.code = discount_application.code
         and order_discount_code.source_relation = discount_application.source_relation
 )
 
