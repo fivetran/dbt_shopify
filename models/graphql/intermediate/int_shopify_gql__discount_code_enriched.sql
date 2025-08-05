@@ -140,7 +140,7 @@ discounts_with_applications as (
         discount_applications.value_type
     from discounts_with_codes
     left join discount_applications 
-        on discounts_with_codes.code = discount_applications.code -- NEED this
+        on discounts_with_codes.code = discount_applications.code
         and discounts_with_codes.source_relation = discount_applications.source_relation
 )
 
