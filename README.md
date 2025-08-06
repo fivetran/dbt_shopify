@@ -50,7 +50,7 @@ Curious what these tables can do? Check out example visualizations from the [sho
 </p>
 
 ### Materialized Models
-Each Quickstart transformation job run materializes 107 models if all components of this data model are enabled and a REST API-based Shopify schema is being used. It will materialize 114 models if run on a GraphQL API-based schema. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
+Each Quickstart transformation job run materializes 107 models if all components of this data model are enabled and a REST API-based Shopify schema is being used. It will materialize 117 models if run on a GraphQL API-based schema. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
 <!--section-end-->
 
 ## How do I use the dbt package?

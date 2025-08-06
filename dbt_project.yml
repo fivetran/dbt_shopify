@@ -17,7 +17,15 @@ models:
         int_shopify_gql__customer_email_rollup:
           +materialized: view # so we can use the dbt_utils.star macro
         base:
-          +materialized: view # so we can use the dbt_utils.star macro
+          +materialized: ephemeral
+          int_shopify_gql__customer:
+            +materialized: view # so we can use the dbt_utils.star and dbt_utils.get_column_values macros
+          int_shopify_gql__collection:
+            +materialized: view # so we can use the dbt_utils.star and dbt_utils.get_column_values macros
+          int_shopify_gql__order:
+            +materialized: view # so we can use the dbt_utils.star and dbt_utils.get_column_values macros
+          int_shopify_gql__product_variant:
+            +materialized: view # so we can use the dbt_utils.star and dbt_utils.get_column_values macros
 
 vars:
   shopify:
