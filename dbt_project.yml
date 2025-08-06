@@ -1,15 +1,31 @@
 name: 'shopify'
-version: '0.19.1'
+version: '0.20.0'
 config-version: 2
 require-dbt-version: [">=1.3.0", "<2.0.0"]
 models:
   shopify:
     +schema: shopify
     +materialized: table
-    intermediate:
-      +materialized: ephemeral
-      int_shopify__customer_email_rollup:
-        +materialized: view # so we can use the dbt_utils.star macro
+    rest:
+      intermediate:
+        +materialized: ephemeral
+        int_shopify__customer_email_rollup:
+          +materialized: view # so we can use the dbt_utils.star macro
+    graphql:
+      intermediate:
+        +materialized: ephemeral
+        int_shopify_gql__customer_email_rollup:
+          +materialized: view # so we can use the dbt_utils.star macro
+        base:
+          +materialized: ephemeral
+          int_shopify_gql__customer:
+            +materialized: view # so we can use the dbt_utils.star and dbt_utils.get_column_values macros
+          int_shopify_gql__collection:
+            +materialized: view # so we can use the dbt_utils.star and dbt_utils.get_column_values macros
+          int_shopify_gql__order:
+            +materialized: view # so we can use the dbt_utils.star and dbt_utils.get_column_values macros
+          int_shopify_gql__product_variant:
+            +materialized: view # so we can use the dbt_utils.star and dbt_utils.get_column_values macros
 
 vars:
   shopify:
@@ -56,3 +72,52 @@ vars:
     shopify_order_discount_code: "{{ ref('stg_shopify__order_discount_code') }}"
     shopify_abandoned_checkout_shipping_line: "{{ ref('stg_shopify__abandoned_checkout_shipping_line') }}"
     shopify_fulfillment_event: "{{ ref('stg_shopify__fulfillment_event') }}"
+
+    shopify_gql_customer: "{{ ref('stg_shopify_gql__customer') }}"
+    shopify_gql_order: "{{ ref('stg_shopify_gql__order') }}"
+    shopify_gql_order_line: "{{ ref('stg_shopify_gql__order_line') }}"
+    shopify_gql_order_line_refund: "{{ ref('stg_shopify_gql__order_line_refund') }}"
+    shopify_gql_product: "{{ ref('stg_shopify_gql__product') }}"
+    shopify_gql_product_variant: "{{ ref('stg_shopify_gql__product_variant') }}"
+    shopify_gql_transaction: "{{ ref('stg_shopify_gql__transaction') }}"
+    shopify_gql_refund: "{{ ref('stg_shopify_gql__refund') }}"
+    shopify_gql_order_adjustment: "{{ ref('stg_shopify_gql__order_adjustment') }}"
+    shopify_gql_abandoned_checkout: "{{ ref('stg_shopify_gql__abandoned_checkout') }}"
+    shopify_gql_collection_product: "{{ ref('stg_shopify_gql__collection_product') }}"
+    shopify_gql_collection: "{{ ref('stg_shopify_gql__collection') }}"
+    shopify_gql_collection_rule: "{{ ref('stg_shopify_gql__collection_rule') }}"
+    shopify_gql_customer_address: "{{ ref('stg_shopify_gql__customer_address') }}"
+    shopify_gql_customer_tag: "{{ ref('stg_shopify_gql__customer_tag') }}"    
+    shopify_gql_customer_visit: "{{ ref('stg_shopify_gql__customer_visit') }}"
+    shopify_gql_discount_allocation: "{{ ref('stg_shopify_gql__discount_allocation') }}" 
+    shopify_gql_discount_application: "{{ ref('stg_shopify_gql__discount_application') }}" 
+    shopify_gql_discount_code_app: "{{ ref('stg_shopify_gql__discount_code_app') }}" 
+    shopify_gql_discount_code_basic: "{{ ref('stg_shopify_gql__discount_code_basic') }}" 
+    shopify_gql_discount_code_bxgy: "{{ ref('stg_shopify_gql__discount_code_bxgy') }}" 
+    shopify_gql_discount_code_free_shipping: "{{ ref('stg_shopify_gql__discount_code_free_shipping') }}" 
+    shopify_gql_discount_redeem_code: "{{ ref('stg_shopify_gql__discount_redeem_code') }}"         
+    shopify_gql_fulfillment: "{{ ref('stg_shopify_gql__fulfillment') }}"
+    shopify_gql_fulfillment_tracking_info: "{{ ref('stg_shopify_gql__fulfillment_tracking_info') }}"
+    shopify_gql_inventory_item: "{{ ref('stg_shopify_gql__inventory_item') }}"
+    shopify_gql_inventory_level: "{{ ref('stg_shopify_gql__inventory_level') }}"
+    shopify_gql_inventory_quantity: "{{ ref('stg_shopify_gql__inventory_quantity') }}"
+    shopify_gql_location: "{{ ref('stg_shopify_gql__location') }}"
+    shopify_gql_media: "{{ ref('stg_shopify_gql__media') }}"
+    shopify_gql_media_image: "{{ ref('stg_shopify_gql__media_image') }}"    
+    shopify_gql_metafield: "{{ ref('stg_shopify_gql__metafield') }}"
+    shopify_gql_order_note_attribute: "{{ ref('stg_shopify_gql__order_note_attribute') }}"
+    shopify_gql_order_shipping_line: "{{ ref('stg_shopify_gql__order_shipping_line') }}"
+    shopify_gql_order_shipping_tax_line: "{{ ref('stg_shopify_gql__order_shipping_tax_line') }}"
+    shopify_gql_order_tag: "{{ ref('stg_shopify_gql__order_tag') }}"
+    shopify_gql_order_url_tag: "{{ ref('stg_shopify_gql__order_url_tag') }}"
+    shopify_gql_product_media: "{{ ref('stg_shopify_gql__product_media') }}"
+    shopify_gql_product_variant_media: "{{ ref('stg_shopify_gql__product_variant_media') }}"
+    shopify_gql_product_tag: "{{ ref('stg_shopify_gql__product_tag') }}"
+    shopify_gql_shop: "{{ ref('stg_shopify_gql__shop') }}"
+    shopify_gql_tax_line: "{{ ref('stg_shopify_gql__tax_line') }}"
+    shopify_gql_tender_transaction: "{{ ref('stg_shopify_gql__tender_transaction') }}"
+    shopify_gql_abandoned_checkout_discount_code: "{{ ref('stg_shopify_gql__abandoned_checkout_discount_code') }}"
+    shopify_gql_order_discount_code: "{{ ref('stg_shopify_gql__order_discount_code') }}"
+    shopify_gql_abandoned_checkout_shipping_line: "{{ ref('stg_shopify_gql__abandoned_checkout_shipping_line') }}"
+    shopify_gql_fulfillment_event: "{{ ref('stg_shopify_gql__fulfillment_event') }}"
+    shopify_gql_fulfillment_order_line_item: "{{ ref('stg_shopify_gql__fulfillment_order_line_item') }}"
