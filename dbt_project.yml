@@ -17,8 +17,7 @@ models:
         int_shopify_gql__customer_email_rollup:
           +materialized: view # so we can use the dbt_utils.star macro
         base:
-          int_shopify_gql__customer:
-            +materialized: view # so we can use the dbt_utils.star macro
+          +materialized: view # so we can use the dbt_utils.star macro
 
 vars:
   shopify:
