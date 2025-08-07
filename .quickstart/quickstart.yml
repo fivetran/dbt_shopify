@@ -44,16 +44,16 @@ destination_configurations:
         search_order: [ 'spark_utils', 'dbt_utils' ]
 
 public_models: [
-  "shopify__customer_email_cohorts",
-  "shopify__customer_cohorts",
-  "shopify__discounts",
-  "shopify__customer_emails",
-  "shopify__inventory_levels",
-  "shopify__orders",
-  "shopify__daily_shop",
-  "shopify__products",
-  "shopify__transactions",
-  "shopify__customers",
-  "shopify__order_lines",
-  "shopify__line_item_enhanced"
+  "shopify_gql__customer_email_cohorts",
+  "shopify_gql__customer_cohorts",
+  "shopify_gql__discounts",
+  "shopify_gql__customer_emails",
+  "shopify_gql__inventory_levels",
+  "shopify_gql__orders",
+  "shopify_gql__daily_shop",
+  "shopify_gql__products",
+  "shopify_gql__transactions",
+  "shopify_gql__customers",
+  "shopify_gql__order_lines",
+  "shopify_gql__line_item_enhanced"
 ]

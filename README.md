@@ -158,7 +158,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=0.20.0", "<0.21.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: 0.21.0-a1
 ```
 
 Do **NOT** include the `shopify_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
@@ -174,13 +174,13 @@ dispatch:
 ### Step 3: Define REST API or GraphQL API Source
 Fivetran has released a version of the Shopify connector that leverages Shopify's newer [GraphQL](https://shopify.dev/docs/apps/build/graphql) API instead of the REST API, as Shopify deprecated the REST API in October 2024. The GraphQL and REST API-based schemas are slightly different, so this package is designed to run either or, not both. It will do so based on the value of the `shopify_api` variable.
 
-By default, `shopify_api` is set to `rest` and will run the `shopify__*` models in the [rest](https://github.com/fivetran/dbt_shopify/tree/main/models/rest) folder. If you would like to run the package on a GraphQL-based schema, adjust `shopify_api` accordingly. This will run the `shopify_gql__*` models in the [graphql](https://github.com/fivetran/dbt_shopify/tree/main/models/graphql) folder:
+By default for this `v0.21.0-a1` release, `shopify_api` is set to `graphql` and will run the `shopify_gql__*` models in the [graphql](https://github.com/fivetran/dbt_shopify/tree/main/models/graphql) folder. If you would like to run the package on a REST-based schema, adjust `shopify_api` accordingly or use [`v0.20.0`](https://github.com/fivetran/dbt_shopify/releases/tag/v0.20.0) of this package. This will run the `shopify__*` models in the [rest](https://github.com/fivetran/dbt_shopify/tree/main/models/rest) folder:
 
 > This variable is dynamically configured for you in Fivetran Quickstart based on your Shopify connection details.
 
 ```yml
 vars:
-  shopify_api: graphql # By default = rest. Must be lowercase
+  shopify_api: rest # By default = graphql. Must be lowercase
 ```
 
 Overall, the package aims for parity across the different API versions and aligns column names with their REST names, **if the fields are supported in GraphQL**. There will be a 1:1 relationship between REST API and GraphQL based end models, but please note that the following source tables are not present in GraphQL and will therefore not be included in any transformations:
@@ -392,7 +392,7 @@ This dbt package is dependent on the following dbt packages. These dependencies 
 ```yml
 packages:
     - package: fivetran/shopify_source
-      version: [">=0.19.0", "<0.20.0"]
+      version: 0.20.0-a1
 
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]

@@ -29,6 +29,8 @@ models:
 
 vars:
   shopify:
+    shopify_api: graphql # rest on official release
+    
     shopify_customer: "{{ ref('stg_shopify__customer') }}"
     shopify_order: "{{ ref('stg_shopify__order') }}"
     shopify_order_line: "{{ ref('stg_shopify__order_line') }}"
