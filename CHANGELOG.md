@@ -1,6 +1,6 @@
 # dbt_shopify_source v0.21.0-a1
 
-[PR #114](https://github.com/fivetran/dbt_shopify_source/pull/114) introduces the following changes:
+[PR #115](https://github.com/fivetran/dbt_shopify_source/pull/114) introduces the following changes:
 
 This pre-release adjusts v0.19.0 so that the GraphQL API-based models are run by default, rather than the REST API ones. It therefore updates the default value of the `shopify_api` variable to be `graphql` instead of its original `rest` value.
 
