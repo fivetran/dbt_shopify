@@ -3,12 +3,12 @@
 with refunds as (
 
     select *
-    from {{ var('shopify_refund') }}
+    from {{ ref('stg_shopify__refund') }}
 
 ), order_line_refunds as (
 
     select *
-    from {{ var('shopify_order_line_refund') }}
+    from {{ ref('stg_shopify__order_line_refund') }}
     
 ), refund_join as (
 

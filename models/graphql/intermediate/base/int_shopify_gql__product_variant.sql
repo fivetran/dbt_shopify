@@ -3,13 +3,13 @@
 with product_variants as (
 
     select *
-    from {{ var('shopify_gql_product_variant') }}
+    from {{ ref('stg_shopify_gql__product_variant') }}
 ),
 
 inventory_item as (
 
     select *
-    from {{ var('shopify_gql_inventory_item') }}
+    from {{ ref('stg_shopify_gql__inventory_item') }}
 ),
 
 joined as (

@@ -1,3 +1,24 @@
+# dbt_shopify v1.0.0
+[PR #117](https://github.com/fivetran/dbt_shopify/pull/117) includes the following updates:
+
+## Breaking Changes
+> A `--full-refresh` is required after upgrading to this release.
+
+### Source Package Consolidation
+- Consolidated `dbt_shopify_source` into this package.
+- All functionality from the source package has been merged into this transformation package. Be sure to:
+  - Remove `fivetran/shopify_source` from `packages.yml`
+  - Delete any `source:` overrides that reference the source package
+
+### dbt Fusion Compatibility Updates
+- For compatibility with dbt Fusion versions >= 1.10.6:
+    - Removed `dbt_utils.unique_combination_of_columns` tests
+    - Removed `accepted_values` tests
+    - In src_shopify.yml, moved `loaded_at_field: _fivetran_synced` under the `config:` block.
+
+### Schema Configuration Updates
+- Some customizations have changed, refer to the [README](https://github.com/fivetran/dbt_shopify/blob/main/README.md) for details.
+
 # dbt_shopify v0.20.0
 
 [PR #113](https://github.com/fivetran/dbt_shopify/pull/113) introduces the following updates:

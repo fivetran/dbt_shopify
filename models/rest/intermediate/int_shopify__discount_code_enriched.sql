@@ -3,13 +3,13 @@
 with discount_redeem_codes as (
     
     select *
-    from {{ var('shopify_discount_redeem_code') }}
+    from {{ ref('stg_shopify__discount_redeem_code') }}
 ),
 
 discount_applications as (
 
     select *
-    from {{ var('shopify_discount_application') }}
+    from {{ ref('stg_shopify__discount_application') }}
 ),
 
 unified_discount_codes as (
@@ -35,7 +35,7 @@ unified_discount_codes as (
         updated_at,
         usage_limit,
         source_relation
-    from {{ var('shopify_discount_code_basic') }}
+    from {{ ref('stg_shopify__discount_code_basic') }}
 
     union all
     
@@ -60,7 +60,7 @@ unified_discount_codes as (
         updated_at,
         usage_limit,
         source_relation
-    from {{ var('shopify_discount_code_bxgy') }}
+    from {{ ref('stg_shopify__discount_code_bxgy') }}
 
     union all
     
@@ -85,7 +85,7 @@ unified_discount_codes as (
         updated_at,
         usage_limit,
         source_relation
-    from {{ var('shopify_discount_code_free_shipping') }}
+    from {{ ref('stg_shopify__discount_code_free_shipping') }}
 
     {% if var('shopify_using_discount_code_app', False) %}
     
@@ -112,7 +112,7 @@ unified_discount_codes as (
         updated_at,
         usage_limit,
         source_relation
-    from {{ var('shopify_discount_code_app') }}
+    from {{ ref('stg_shopify__discount_code_app') }}
     {% endif %}
 ),
 

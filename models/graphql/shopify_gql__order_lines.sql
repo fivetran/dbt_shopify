@@ -21,7 +21,7 @@ with order_lines as (
 product_variant_media as (
 
     select *
-    from {{ var('shopify_gql_product_variant_media') }}
+    from {{ ref('stg_shopify_gql__product_variant_media') }}
 ),
 {% endif %}
 

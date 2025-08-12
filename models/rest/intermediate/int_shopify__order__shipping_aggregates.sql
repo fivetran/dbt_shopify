@@ -9,7 +9,7 @@ with order_shipping_line as (
         sum(price) as shipping_price,
         sum(discounted_price) as discounted_shipping_price
         
-    from {{ var('shopify_order_shipping_line') }}
+    from {{ ref('stg_shopify__order_shipping_line') }}
     group by 1,2,3
 
 ), order_shipping_tax_line as (
@@ -19,7 +19,7 @@ with order_shipping_line as (
         source_relation,
         sum(price) as shipping_tax
 
-    from {{ var('shopify_order_shipping_tax_line') }}
+    from {{ ref('stg_shopify__order_shipping_tax_line') }}
     group by 1,2 
 
 ), aggregated as (

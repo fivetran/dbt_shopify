@@ -3,7 +3,7 @@
 with fulfillment as (
 
     select *
-    from {{ var('shopify_gql_fulfillment') }}
+    from {{ ref('stg_shopify_gql__fulfillment') }}
 ),
 
 count_fulfillments as (
@@ -21,7 +21,7 @@ count_fulfillments as (
 fulfillment_tracking_info as (
 
     select *
-    from {{ var('shopify_gql_fulfillment_tracking_info') }}
+    from {{ ref('stg_shopify_gql__fulfillment_tracking_info') }}
 ),
 
 joined as (

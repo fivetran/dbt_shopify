@@ -3,7 +3,7 @@
 with fulfillment_event as (
 
     select *
-    from {{ var('shopify_gql_fulfillment_event') }}
+    from {{ ref('stg_shopify_gql__fulfillment_event') }}
 ),
 
 fulfillment_aggregates as (

@@ -3,13 +3,13 @@
 with order_line as (
     
     select *
-    from {{ var('shopify_gql_order_line') }}
+    from {{ ref('stg_shopify_gql__order_line') }}
 ),
 
 tax_line as (
 
     select *
-    from {{ var('shopify_gql_tax_line') }}
+    from {{ ref('stg_shopify_gql__tax_line') }}
 ),
 
 tax_line_aggregated as (
@@ -26,7 +26,7 @@ tax_line_aggregated as (
 fulfillment_order_line_item as (
 
     select *
-    from {{ var('shopify_gql_fulfillment_order_line_item') }}
+    from {{ ref('stg_shopify_gql__fulfillment_order_line_item') }}
 ),
 {% endif %}
 

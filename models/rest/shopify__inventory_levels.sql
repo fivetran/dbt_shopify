@@ -3,37 +3,37 @@
 with inventory_level as (
 
     select *
-    from {{ var('shopify_inventory_level') }}
+    from {{ ref('stg_shopify__inventory_level') }}
 ), 
 
 inventory_item as (
 
     select *
-    from {{ var('shopify_inventory_item') }}
+    from {{ ref('stg_shopify__inventory_item') }}
 ),
 
 inventory_quantity as (
 
     select *
-    from {{ var('shopify_inventory_quantity') }}
+    from {{ ref('stg_shopify__inventory_quantity') }}
 ),
 
 location as (
 
     select *
-    from {{ var('shopify_location') }}
+    from {{ ref('stg_shopify__location') }}
 ),
 
 product_variant as (
 
     select *
-    from {{ var('shopify_product_variant') }}
+    from {{ ref('stg_shopify__product_variant') }}
 ),
 
 product as (
 
     select *
-    from {{ var('shopify_product') }}
+    from {{ ref('stg_shopify__product') }}
 ),
 
 inventory_level_aggregated as (
@@ -46,7 +46,7 @@ inventory_level_aggregated as (
 product_variant_media as (
 
     select *
-    from {{ var('shopify_product_variant_media') }}
+    from {{ ref('stg_shopify__product_variant_media') }}
 ),
 {% endif %}
 

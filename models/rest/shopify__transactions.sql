@@ -4,12 +4,12 @@ with transactions as (
     select 
         *,
         {{ dbt_utils.generate_surrogate_key(['source_relation', 'transaction_id'])}} as transactions_unique_id
-    from {{ var('shopify_transaction') }} 
+    from {{ ref('stg_shopify__transaction') }} 
 
 ), tender_transactions as (
 
     select *
-    from {{ var('shopify_tender_transaction') }}
+    from {{ ref('stg_shopify__tender_transaction') }}
 
 ), joined as (
     select 
