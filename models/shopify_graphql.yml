@@ -307,11 +307,6 @@ models:
   
   - name: shopify_gql__customers
     description: Each record represents a customer in Shopify.
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - customer_id
-            - source_relation
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -394,11 +389,6 @@ models:
 
   - name: shopify_gql__customer_emails
     description: Each record represents a customer email in Shopify.
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - email
-            - source_relation
     columns:
       - name: last_fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -770,12 +760,6 @@ models:
       inventory items (which have a 1:1 relationship with product variants) and locations. 
       
       Inventory Level = Inventory item @ a Location.
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - inventory_item_id
-            - location_id
-            - source_relation
     columns:
       - name: inventory_level_id
         description: A globally unique identifier for the inventory level.
@@ -979,13 +963,6 @@ models:
   - name: shopify_gql__discounts
     description: >
       Each record represents a unique discount, enriched with discount metadata and metrics regarding orders and abandoned checkouts.
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - code
-            - source_relation
-          config:
-            severity: warn # best practice for codes to be unique
     columns:
       - name: unique_key
         description: Unique key representing a discount. Hashed on 'discount_code_id' and 'source_relation'.

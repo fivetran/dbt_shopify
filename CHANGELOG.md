@@ -1,3 +1,13 @@
+# dbt_shopify v0.21.0
+[PR #118](https://github.com/fivetran/dbt_shopify/pull/118) includes the following updates:
+
+### dbt Fusion Compatibility Updates
+- Updated package to maintain compatibility with dbt-core versions both before and after v1.10.6, which introduced a breaking change to multi-argument test syntax (e.g., `unique_combination_of_columns`).
+- Temporarily removed unsupported tests to avoid errors and ensure smoother upgrades across different dbt-core versions. These tests will be reintroduced once a safe migration path is available.
+  - Removed all `dbt_utils.unique_combination_of_columns` tests.
+  - Removed all `accepted_values` tests.
+  - Moved `loaded_at_field: _fivetran_synced` under the `config:` block in `src_shopify.yml`.
+
 # dbt_shopify v0.20.0
 
 [PR #113](https://github.com/fivetran/dbt_shopify/pull/113) introduces the following updates:
