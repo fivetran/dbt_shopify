@@ -154,7 +154,7 @@ joined_info as (
         and inventory_item.source_relation = product_variant.source_relation
 
     {% if var('shopify_gql_using_product_variant_media', False) %}
-    join product_variant_media 
+    left join product_variant_media 
         on product_variant.variant_id = product_variant_media.product_variant_id
         and product_variant.source_relation = product_variant_media.source_relation
     {% endif %}

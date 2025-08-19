@@ -1,4 +1,16 @@
 # dbt_shopify v0.21.0
+
+[PR #TBD](https://github.com/fivetran/dbt_shopify/pull/) includes the following updates:
+
+## Bug Fixes
+- Fixed the join to Product Variant Media in the `shopify__inventory_levels` and `shopify_gql__inventory_levels` (now a left join) models so inventory items aren’t incorrectly excluded when no media exists; unmatched records will have null media fields.
+  - This join fix is only relevant when either `shopify_using_product_variant_media` or `shopify_gql_using_product_variant_media` are enabled.
+
+## Under the Hood
+- Updated see data to properly recreate and test the `*__inventory_levels` bug when `*_using_product_variant_media` are enabled.
+- Added row_count consistency tests for the `*__inventory_levels` models.
+
+# dbt_shopify v0.21.0
 [PR #118](https://github.com/fivetran/dbt_shopify/pull/118) includes the following updates:
 
 ### dbt Fusion Compatibility Updates
