@@ -1,6 +1,6 @@
 # dbt_shopify v0.21.0
 
-[PR #TBD](https://github.com/fivetran/dbt_shopify/pull/) includes the following updates:
+[PR #119](https://github.com/fivetran/dbt_shopify/pull/119) includes the following updates:
 
 ## Bug Fixes
 - Fixed the join to Product Variant Media in the `shopify__inventory_levels` and `shopify_gql__inventory_levels` (now a left join) models so inventory items aren’t incorrectly excluded when no media exists; unmatched records will have null media fields.
