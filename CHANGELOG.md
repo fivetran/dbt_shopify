@@ -1,4 +1,4 @@
-# dbt_shopify v0.21.0
+# dbt_shopify v0.21.1
 
 [PR #119](https://github.com/fivetran/dbt_shopify/pull/119) includes the following updates:
 
@@ -7,7 +7,7 @@
   - This join fix is only relevant when either vars `shopify_using_product_variant_media` or `shopify_gql_using_product_variant_media` are set to true.
 
 ## Under the Hood
-- Updated seed data to properly recreate and test the `*__inventory_levels` bug when `*_using_product_variant_media` are enabled.
+- Updated seed data to properly recreate and test the `*__inventory_levels` bug when either of the `*_using_product_variant_media` variables are enabled.
 - Added row_count consistency tests for the `*__inventory_levels` models.
 
 # dbt_shopify v0.21.0
