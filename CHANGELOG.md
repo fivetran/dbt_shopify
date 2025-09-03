@@ -1,3 +1,38 @@
+# dbt_shopify v0.21.2-a1
+
+[PR #115](https://github.com/fivetran/dbt_shopify/pull/115) introduces the following changes:
+
+## Feature Update
+This pre-release ensures that the GraphQL API-based models are run by default, rather than the REST API ones. It therefore updates the default value of the `shopify_api` [variable](https://github.com/fivetran/dbt_shopify?tab=readme-ov-file#step-3-define-rest-api-or-graphql-api-source) to be `graphql` instead of its original `rest` value.
+
+This release is intended to be used by Fivetran Quickstart users who cannot manually adjust the `shopify_api` variable value and have GraphQL Shopify connections.
+
+> This pre-release merges updates from [v0.21.0](https://github.com/fivetran/dbt_shopify/blob/update/graphql/CHANGELOG.md#dbt_shopify-v0210) and [v0.21.1](https://github.com/fivetran/dbt_shopify/blob/update/graphql/CHANGELOG.md#dbt_shopify-v0211) into the pre-existing [v0.21.0-a1](https://github.com/fivetran/dbt_shopify/blob/update/graphql/CHANGELOG.md#dbt_shopify_source-v0200-a1) version.
+
+## Under the Hood
+With the above in mind, we have updated the `public_models` config in the `quickstart.yml` file to reflect the GraphQL end models only.
+
+# dbt_shopify v0.21.1
+
+[PR #119](https://github.com/fivetran/dbt_shopify/pull/119) includes the following updates:
+
+## Bug Fixes
+- Updated the join of the `product_variant_media` CTE in the `shopify__inventory_levels` and `shopify_gql__inventory_levels` models to use a left join. This ensures inventory items are not excluded when no media exists, and unmatched records will now display null media fields.
+  - This join fix is only relevant when either vars `shopify_using_product_variant_media` or `shopify_gql_using_product_variant_media` are set to true.
+
+## Under the Hood
+- Updated seed data to properly recreate and test the `*__inventory_levels` bug when either of the `*_using_product_variant_media` variables are enabled.
+- Added row_count consistency tests for the `*__inventory_levels` models.
+
+# dbt_shopify v0.21.0
+[PR #118](https://github.com/fivetran/dbt_shopify/pull/118) includes the following updates:
+
+### dbt Fusion Compatibility Updates
+- Updated package to maintain compatibility with dbt-core versions both before and after v1.10.6, which introduced a breaking change to multi-argument test syntax (e.g., `unique_combination_of_columns`).
+- Temporarily removed unsupported tests within this package and the upstream `dbt_shopify_source` to avoid errors and ensure smoother upgrades across different dbt-core versions. These tests will be reintroduced once a safe migration path is available.
+  - Removed all `dbt_utils.unique_combination_of_columns` tests.
+  - Removed all `accepted_values` tests.
+
 # dbt_shopify_source v0.21.0-a1
 
 [PR #115](https://github.com/fivetran/dbt_shopify_source/pull/114) introduces the following changes:
