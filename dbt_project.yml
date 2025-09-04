@@ -1,5 +1,5 @@
 name: 'shopify'
-version: '0.21.1'
+version: '0.21.2'
 config-version: 2
 require-dbt-version: [">=1.3.0", "<2.0.0"]
 models:
@@ -29,6 +29,8 @@ models:
 
 vars:
   shopify:
+    shopify_api: graphql # rest on official release
+    
     shopify_customer: "{{ ref('stg_shopify__customer') }}"
     shopify_order: "{{ ref('stg_shopify__order') }}"
     shopify_order_line: "{{ ref('stg_shopify__order_line') }}"

@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '0.21.1'
+version: '0.21.2'
 profile: 'integration_tests'
 config-version: 2
 
@@ -21,6 +21,7 @@ vars:
   
   shopify_schema: shopify_integration_tests_17
   shopify_api_override: rest
+  shopify_api: rest # so Buildkite will still run both sets of models
 
   shopify_source:
     shopify_customer_identifier: "shopify_customer_data"
