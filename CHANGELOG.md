@@ -1,3 +1,10 @@
+# dbt_shopify v0.22.0
+
+[PR #121](https://github.com/fivetran/dbt_shopify/pull/121) includes the following updates:
+
+## Under the Hood
+- Updates the `quickstart.yml` file so that GraphQL models are exposed and available to run in Fivetran Quickstart.
+
 # dbt_shopify v0.21.1
 
 [PR #119](https://github.com/fivetran/dbt_shopify/pull/119) includes the following updates:
