@@ -3,7 +3,7 @@
 with order_discount_code as (
 
     select *
-    from {{ var('shopify_order_discount_code') }}
+    from {{ ref('stg_shopify__order_discount_code') }}
 ),
 
 orders as (

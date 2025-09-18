@@ -3,14 +3,14 @@
 with collection as (
 
     select *
-    from {{ var('shopify_gql_collection') }}
+    from {{ ref('stg_shopify_gql__collection') }}
 )
 
 {% if var('shopify_gql_using_collection_rule', False) %}
 , collection_rule as (
 
     select *
-    from {{ var('shopify_gql_collection_rule') }}
+    from {{ ref('stg_shopify_gql__collection_rule') }}
 ),
 
 prep_collection_rule as (

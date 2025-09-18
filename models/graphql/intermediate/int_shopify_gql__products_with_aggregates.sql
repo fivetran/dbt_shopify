@@ -3,13 +3,13 @@
 with products as (
 
     select *
-    from {{ var('shopify_gql_product') }}
+    from {{ ref('stg_shopify_gql__product') }}
 ), 
 
 collection_product as (
 
     select *
-    from {{ var('shopify_gql_collection_product') }}
+    from {{ ref('stg_shopify_gql__collection_product') }}
 ),
 
 collection as (
@@ -22,19 +22,19 @@ collection as (
 product_tag as (
 
     select *
-    from {{ var('shopify_gql_product_tag') }}
+    from {{ ref('stg_shopify_gql__product_tag') }}
 ),
 
 product_variant as (
 
     select *
-    from {{ var('shopify_gql_product_variant') }}
+    from {{ ref('stg_shopify_gql__product_variant') }}
 ), 
 
 product_media as (
 
     select *
-    from {{ var('shopify_gql_product_media') }}
+    from {{ ref('stg_shopify_gql__product_media') }}
 ),
 
 collections_aggregated as (

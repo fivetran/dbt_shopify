@@ -3,7 +3,7 @@
 with orders as (
 
     select *
-    from {{ var('shopify_order') }}
+    from {{ ref('stg_shopify__order') }}
     where customer_id is not null
 
 ), order_aggregates as (

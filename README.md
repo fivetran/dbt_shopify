@@ -17,7 +17,7 @@
 
 ## What does this dbt package do?
 
-This package models Shopify data from [Fivetran's connector](https://fivetran.com/docs/applications/shopify). It uses data in the format described by [this ERD](https://fivetran.com/docs/applications/shopify#schemainformation) and builds off the output of our [Shopify source package](https://github.com/fivetran/dbt_shopify_source).
+This package models Shopify data from [Fivetran's connector](https://fivetran.com/docs/applications/shopify). It uses data in the format described by [this ERD](https://fivetran.com/docs/applications/shopify#schemainformation).
 
 The main focus of the package is to transform the core object tables into analytics-ready models, including a cohort model to understand how your customers are behaving over time.
 
@@ -158,10 +158,10 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=0.22.0", "<0.23.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=1.0.0", "<1.1.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
-Do **NOT** include the `shopify_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
+> All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/shopify_source` in your `packages.yml` since this package has been deprecated.
 
 #### Databricks dispatch configuration
 If you are using a Databricks destination with this package, you must add the following (or a variation of the following) dispatch configuration within your `dbt_project.yml`. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
@@ -283,7 +283,7 @@ This package includes all source columns defined in the macros folder. You can a
 # dbt_project.yml
 
 vars:
-  shopify_source:
+  shopify:
     customer_pass_through_columns:
       - name: "customer_custom_field"
         alias: "customer_field"
@@ -328,10 +328,10 @@ By default this package will build the Shopify staging models within a schema ti
 # dbt_project.yml
 
 models:
-  shopify:
-    +schema: my_new_schema_name # leave blank for just the target_schema
-  shopify_source:
-    +schema: my_new_schema_name # leave blank for just the target_schema
+    shopify:
+      +schema: my_new_schema_name # Leave +schema: blank to use the default target_schema.
+      staging:
+        +schema: my_new_schema_name # Leave +schema: blank to use the default target_schema.
 ```
 
 #### Change the source table references
@@ -391,9 +391,6 @@ This dbt package is dependent on the following dbt packages. These dependencies 
 
 ```yml
 packages:
-    - package: fivetran/shopify_source
-      version: [">=0.20.0", "<0.21.0"]
-
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]
 

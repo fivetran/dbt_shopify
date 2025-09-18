@@ -2,12 +2,12 @@
 
 with transactions as (
     select *
-    from {{ var('shopify_gql_transaction') }} 
+    from {{ ref('stg_shopify_gql__transaction') }} 
 
 ), tender_transactions as (
 
     select *
-    from {{ var('shopify_gql_tender_transaction') }}
+    from {{ ref('stg_shopify_gql__tender_transaction') }}
 
 ), orders as (
 

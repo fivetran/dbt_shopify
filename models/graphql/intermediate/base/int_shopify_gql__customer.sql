@@ -3,13 +3,13 @@
 with customer as (
 
     select *
-    from {{ var('shopify_gql_customer') }}
+    from {{ ref('stg_shopify_gql__customer') }}
 ),
 
 customer_address as (
 
     select *
-    from {{ var('shopify_gql_customer_address') }}
+    from {{ ref('stg_shopify_gql__customer_address') }}
 ),
 
 customer_default_address as (

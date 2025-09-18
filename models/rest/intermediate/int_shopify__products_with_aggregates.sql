@@ -3,38 +3,38 @@
 with products as (
 
     select *
-    from {{ var('shopify_product') }}
+    from {{ ref('stg_shopify__product') }}
 ), 
 
 collection_product as (
 
     select *
-    from {{ var('shopify_collection_product') }}
+    from {{ ref('stg_shopify__collection_product') }}
 ),
 
 collection as (
 
     select *
-    from {{ var('shopify_collection') }}
+    from {{ ref('stg_shopify__collection') }}
     where not coalesce(is_deleted, false) -- limit to only active collections
 ),
 
 product_tag as (
 
     select *
-    from {{ var('shopify_product_tag') }}
+    from {{ ref('stg_shopify__product_tag') }}
 ),
 
 product_variant as (
 
     select *
-    from {{ var('shopify_product_variant') }}
+    from {{ ref('stg_shopify__product_variant') }}
 ), 
 
 product_media as (
 
     select *
-    from {{ var('shopify_product_media') }}
+    from {{ ref('stg_shopify__product_media') }}
 ),
 
 collections_aggregated as (

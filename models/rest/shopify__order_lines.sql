@@ -5,12 +5,12 @@ with order_lines as (
     select 
         *,
         {{ dbt_utils.generate_surrogate_key(['source_relation', 'order_line_id']) }} as order_lines_unique_key
-    from {{ var('shopify_order_line') }}
+    from {{ ref('stg_shopify__order_line') }}
 
 ), product_variants as (
 
     select *
-    from {{ var('shopify_product_variant') }}
+    from {{ ref('stg_shopify__product_variant') }}
 
 ), refunds as (
 
@@ -23,7 +23,7 @@ with order_lines as (
 product_variant_media as (
 
     select *
-    from {{ var('shopify_product_variant_media') }}
+    from {{ ref('stg_shopify__product_variant_media') }}
 ),
 {% endif %}
 
@@ -41,7 +41,7 @@ refunds_aggregated as (
 ), tax_lines as (
 
     select *
-    from {{ var('shopify_tax_line')}}
+    from {{ ref('stg_shopify__tax_line') }}
 
 ), tax_lines_aggregated as (
 

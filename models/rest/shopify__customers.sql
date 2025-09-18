@@ -4,7 +4,7 @@ with customers as (
 
     select 
         {{ dbt_utils.star(from=ref('stg_shopify__customer'), except=["orders_count", "total_spent"]) }}
-    from {{ var('shopify_customer') }}
+    from {{ ref('stg_shopify__customer') }}
 
 ), orders as (
 
@@ -18,7 +18,7 @@ with customers as (
         customer_id,
         source_relation,
         count(distinct checkout_id) as lifetime_abandoned_checkouts
-    from {{ var('shopify_abandoned_checkout' )}}
+    from {{ ref('stg_shopify__abandoned_checkout') }}
     where customer_id is not null
     group by 1,2
 {% endif %}
@@ -30,7 +30,7 @@ with customers as (
         source_relation,
         {{ fivetran_utils.string_agg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags
 
-    from {{ var('shopify_customer_tag' )}}
+    from {{ ref('stg_shopify__customer_tag') }}
     group by 1,2
 
 ), joined as (

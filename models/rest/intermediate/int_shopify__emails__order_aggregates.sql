@@ -3,7 +3,7 @@
 with orders as (
 
     select *
-    from {{ var('shopify_order') }}
+    from {{ ref('stg_shopify__order') }}
 
 ), order_aggregates as (
 
@@ -37,7 +37,7 @@ with orders as (
         source_relation,
         email
 
-    from {{ var('shopify_customer') }}
+    from {{ ref('stg_shopify__customer') }}
     where email is not null
     {{ dbt_utils.group_by(n=3) }}
     

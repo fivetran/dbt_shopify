@@ -3,13 +3,13 @@
 with abandoned_checkout as (
 
     select *
-    from {{ var('shopify_gql_abandoned_checkout') }}
+    from {{ ref('stg_shopify_gql__abandoned_checkout') }}
 ),
 
 customer as (
 
     select *
-    from {{ var('shopify_gql_customer') }}
+    from {{ ref('stg_shopify_gql__customer') }}
 ),
 
 add_customer_email as (

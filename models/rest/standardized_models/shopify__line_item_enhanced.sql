@@ -3,17 +3,17 @@
 with line_items as (
 
     select * 
-    from {{ var('shopify_order_line')}}
+    from {{ ref('stg_shopify__order_line') }}
 
 ), orders as ( 
 
     select * 
-    from {{ var('shopify_order')}}
+    from {{ ref('stg_shopify__order') }}
 
 ), product as (
 
     select *
-    from {{ var('shopify_product')}}
+    from {{ ref('stg_shopify__product') }}
 
 ), transactions as (
 
@@ -25,7 +25,7 @@ with line_items as (
         {{ fivetran_utils.string_agg("cast (processed_timestamp as " ~ dbt.type_string() ~ ")", "', '") }} as processed_timestamp,
         {{ fivetran_utils.string_agg('gateway', "', '") }} as gateway
 
-    from {{ var('shopify_transaction')}}
+    from {{ ref('stg_shopify__transaction') }}
     where kind = 'capture'
     and status = 'success'
     group by 1,2,3
@@ -36,7 +36,7 @@ with line_items as (
         order_id,
         source_relation,
         sum(amount) as total_order_refund_amount
-    from {{ var('shopify_transaction')}}
+    from {{ ref('stg_shopify__transaction') }}
     where kind = 'refund' 
     group by 1,2
 
@@ -46,13 +46,13 @@ with line_items as (
         order_line_id,
         source_relation,
         sum(subtotal + total_tax) as total_refund_amount
-    from {{ var('shopify_order_line_refund')}}
+    from {{ ref('stg_shopify__order_line_refund') }}
     group by 1,2
 
 ), customer as (
 
     select *
-    from {{ var('shopify_customer')}}
+    from {{ ref('stg_shopify__customer') }}
 
 ), shipping as (
 

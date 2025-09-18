@@ -13,13 +13,13 @@ with abandoned_checkout as (
 discount_application as (
 
     select *
-    from {{ var('shopify_gql_discount_application') }}
+    from {{ ref('stg_shopify_gql__discount_application') }}
 ),
 
 abandoned_checkout_discount_code as (
 
     select *
-    from {{ var('shopify_gql_abandoned_checkout_discount_code') }}
+    from {{ ref('stg_shopify_gql__abandoned_checkout_discount_code') }}
 ),
 
 join_abandoned_checkout_discount_code as (

@@ -5,7 +5,7 @@ with orders as (
     select 
         *,
         {{ dbt_utils.generate_surrogate_key(['source_relation', 'order_id']) }} as orders_unique_key
-    from {{ var('shopify_order') }}
+    from {{ ref('stg_shopify__order') }}
  
 ), order_lines as (
 
@@ -15,7 +15,7 @@ with orders as (
 ), order_adjustments as (
 
     select *
-    from {{ var('shopify_order_adjustment') }}
+    from {{ ref('stg_shopify__order_adjustment') }}
 
 ), order_adjustments_aggregates as (
     select
@@ -43,7 +43,7 @@ with orders as (
 ), order_discount_code as (
     
     select *
-    from {{ var('shopify_order_discount_code') }}
+    from {{ ref('stg_shopify__order_discount_code') }}
 
 ), discount_aggregates as (
 
@@ -65,7 +65,7 @@ with orders as (
         source_relation,
         {{ fivetran_utils.string_agg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as order_tags
     
-    from {{ var('shopify_order_tag') }}
+    from {{ ref('stg_shopify__order_tag') }}
     group by 1,2
 
 ), order_url_tag as (
@@ -75,7 +75,7 @@ with orders as (
         source_relation,
         {{ fivetran_utils.string_agg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as order_url_tags
     
-    from {{ var('shopify_order_url_tag') }}
+    from {{ ref('stg_shopify__order_url_tag') }}
     group by 1,2
 
 ), fulfillments as (
@@ -88,7 +88,7 @@ with orders as (
         {{ fivetran_utils.string_agg("distinct cast(tracking_company as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_companies,
         {{ fivetran_utils.string_agg("distinct cast(tracking_number as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_numbers
 
-    from {{ var('shopify_fulfillment') }}
+    from {{ ref('stg_shopify__fulfillment') }}
     group by 1,2
 
 ), joined as (
