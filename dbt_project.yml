@@ -39,6 +39,7 @@ models:
 
 vars:
   shopify:
+    shopify_api: graphql
     customer_source: "{{ source('shopify','customer') }}"
     order_line_refund_source: "{{ source('shopify','order_line_refund') }}"
     order_line_source: "{{ source('shopify','order_line') }}"
