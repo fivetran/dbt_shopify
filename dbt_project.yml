@@ -11,6 +11,11 @@ models:
         +materialized: ephemeral
         int_shopify__customer_email_rollup:
           +materialized: view # so we can use the dbt_utils.star macro
+      staging:
+        +schema: stg_shopify
+        +materialized: view
+        stg_shopify__metafield:
+          +materialized: table
     graphql:
       intermediate:
         +materialized: ephemeral
@@ -26,13 +31,9 @@ models:
             +materialized: view # so we can use the dbt_utils.star and dbt_utils.get_column_values macros
           int_shopify_gql__product_variant:
             +materialized: view # so we can use the dbt_utils.star and dbt_utils.get_column_values macros
-    staging:
-      +schema: stg_shopify
-      +materialized: view
-      rest:
-        stg_shopify__metafield:
-          +materialized: table
-      graphql:
+      staging:
+        +schema: stg_shopify
+        +materialized: view
         stg_shopify__metafield:
           +materialized: table
 
