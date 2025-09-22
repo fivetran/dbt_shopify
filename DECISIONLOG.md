@@ -16,7 +16,7 @@ In a similar vein to the above, in the customer cohort and daily shop models, we
 
 Source tables related to `refunds`, `order_line_refunds`, `order_adjustments`, and `discount_codes` are created in the Shopify schema dyanmically. For example, if your shop has not incurred any refunds, you will not have a `refund` table yet until you do refund an order. 
 
-Thus, the source package will create empty (1 row of all `NULL` fields) staging models if these source tables do not exist in your Shopify schema yet, and the transform package will work seamlessly with these empty models. Once `refund`, `order_line_refund`, `order_adjustment`, or `discount_code` exists in your schema, the source and transform packages will automatically reference the new populated table(s). ([example](https://github.com/fivetran/dbt_shopify/blob/main/models/tmp/stg_shopify__refund_tmp.sql)). 
+Thus, the source package will create empty (1 row of all `NULL` fields) staging models if these source tables do not exist in your Shopify schema yet, and the transform package will work seamlessly with these empty models. Once `refund`, `order_line_refund`, `order_adjustment`, or `discount_code` exists in your schema, the source and transform packages will automatically reference the new populated table(s). ([example](https://github.com/fivetran/dbt_shopify/blob/main/models/rest/staging/tmp/stg_shopify__refund_tmp.sql)). 
 
 > In previous versions of the package, you had to manually enable or disable transforms of `refund`, `order_line_refund`, or `order_adjustment` through variables. Because this required you to monitor your Shopify account/schema and update the variable(s) accordingly, we decided to pursue a more automated solution.
 

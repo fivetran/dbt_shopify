@@ -21,7 +21,6 @@ vars:
   
   shopify_schema: shopify_integration_tests_17
   shopify_api_override: rest
-  shopify_api: rest
 
   shopify:
     shopify_customer_identifier: "shopify_customer_data"
