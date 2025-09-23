@@ -3,7 +3,7 @@
 with shop as (
 
     select *
-    from {{ var('shopify_shop') }}
+    from {{ ref('stg_shopify__shop') }}
 ),
 
 calendar as (

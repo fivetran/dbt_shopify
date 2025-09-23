@@ -9,13 +9,13 @@ with order_lines as (
 fulfillment as (
 
     select *
-    from {{ var('shopify_gql_fulfillment') }}
+    from {{ ref('stg_shopify_gql__fulfillment') }}
 ),
 
 orders as (
 
     select *
-    from {{ var('shopify_gql_order') }}
+    from {{ ref('stg_shopify_gql__order') }}
     where not coalesce(is_deleted, false)
 ), 
 

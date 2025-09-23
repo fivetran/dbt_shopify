@@ -1,3 +1,23 @@
+# dbt_shopify v1.0.0
+
+[PR #123](https://github.com/fivetran/dbt_shopify/pull/123) includes the following updates:
+
+## Schema/Data Change
+**1 total changes • 1 possible breaking changes**
+> A `--full-refresh` is required when upgrading to ensure the following change is properly applied.
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| `stg_shopify_gql__metafield` | materialization | view | table | Corrects the previous misconfiguration. |
+
+### Source Package Consolidation
+- Removed the dependency on the `fivetran/shopify_source` package.
+  - All functionality from the source package has been merged into this transformation package for improved maintainability and clarity.
+  - If you reference `fivetran/shopify_source` in your `packages.yml`, you must remove this dependency to avoid conflicts.
+  - Any source overrides referencing the `fivetran/shopify_source` package will also need to be removed or updated to reference this package.
+  - Update any shopify_source-scoped variables to be scoped to only under this package. See the [README](https://github.com/fivetran/dbt_shopify/blob/main/README.md) for how to configure the build schema of staging models.
+- As part of the consolidation, vars are no longer used to reference staging models, and only sources are represented by vars. Staging models are now referenced directly with `ref()` in downstream models.
+
 # dbt_shopify v0.22.0
 
 [PR #121](https://github.com/fivetran/dbt_shopify/pull/121) includes the following updates:

@@ -3,19 +3,19 @@
 with order_lines as (
 
     select *
-    from {{ var('shopify_order_line') }}
+    from {{ ref('stg_shopify__order_line') }}
 ),
 
 fulfillment as (
 
     select *
-    from {{ var('shopify_fulfillment') }}
+    from {{ ref('stg_shopify__fulfillment') }}
 ),
 
 orders as (
 
     select *
-    from {{ var('shopify_order') }}
+    from {{ ref('stg_shopify__order') }}
     where not coalesce(is_deleted, false)
 ), 
 

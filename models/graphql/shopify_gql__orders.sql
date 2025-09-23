@@ -68,7 +68,7 @@ with orders as (
         source_relation,
         {{ fivetran_utils.string_agg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as order_tags
     
-    from {{ var('shopify_gql_order_tag') }}
+    from {{ ref('stg_shopify_gql__order_tag') }}
     group by 1,2
 
 ), joined as (

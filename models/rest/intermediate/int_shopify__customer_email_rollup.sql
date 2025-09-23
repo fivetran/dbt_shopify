@@ -9,14 +9,14 @@ with customers as (
             order by created_timestamp desc) 
             as customer_index
 
-    from {{ var('shopify_customer') }}
+    from {{ ref('stg_shopify__customer') }}
     where email is not null -- nonsensical to include any null emails here
 
 ), customer_tags as (
 
     select 
         *
-    from {{ var('shopify_customer_tag' )}}
+    from {{ ref('stg_shopify__customer_tag') }}
 
 ), rollup_customers as (
 

@@ -3,14 +3,14 @@
 with orders as (
 
     select * 
-    from {{ var('shopify_gql_order') }}
+    from {{ ref('stg_shopify_gql__order') }}
 )
 
 {% if var('shopify_gql_using_customer_visit', True) %}
 , customer_visit as (
     
     select * 
-    from {{ var('shopify_gql_customer_visit') }}
+    from {{ ref('stg_shopify_gql__customer_visit') }}
 ),
 
 joined as (

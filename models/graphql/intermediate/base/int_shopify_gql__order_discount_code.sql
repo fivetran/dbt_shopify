@@ -3,13 +3,13 @@
 with order_discount_code as (
 
     select *
-    from {{ var('shopify_gql_order_discount_code') }}
+    from {{ ref('stg_shopify_gql__order_discount_code') }}
 ),
 
 discount_application as (
 
     select *
-    from {{ var('shopify_gql_discount_application') }}
+    from {{ ref('stg_shopify_gql__discount_application') }}
 ),
 
 joined as (

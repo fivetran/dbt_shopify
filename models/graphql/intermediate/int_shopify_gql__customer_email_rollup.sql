@@ -16,7 +16,7 @@ with customers as (
 
     select 
         *
-    from {{ var('shopify_gql_customer_tag' )}}
+    from {{ ref('stg_shopify_gql__customer_tag') }}
 
 ), rollup_customers as (
 

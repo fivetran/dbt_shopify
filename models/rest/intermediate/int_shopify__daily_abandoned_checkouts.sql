@@ -3,7 +3,7 @@
 with abandoned_checkout as (
 
     select *
-    from {{ var('shopify_abandoned_checkout') }}
+    from {{ ref('stg_shopify__abandoned_checkout') }}
 
     -- "deleted" abandoned checkouts do not appear to have any data tying them to customers,
     -- discounts, or products (and should therefore not get joined in) but let's filter them out here

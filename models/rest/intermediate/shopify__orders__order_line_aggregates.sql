@@ -3,13 +3,13 @@
 with order_line as (
 
     select *
-    from {{ var('shopify_order_line') }}
+    from {{ ref('stg_shopify__order_line') }}
 
 ), tax as (
 
     select
         *
-    from {{ var('shopify_tax_line') }}
+    from {{ ref('stg_shopify__tax_line') }}
 
 ), shipping as (
 

@@ -17,7 +17,7 @@
 
 ## What does this dbt package do?
 
-This package models Shopify data from [Fivetran's connector](https://fivetran.com/docs/applications/shopify). It uses data in the format described by [this ERD](https://fivetran.com/docs/applications/shopify#schemainformation) and builds off the output of our [Shopify source package](https://github.com/fivetran/dbt_shopify_source).
+This package models Shopify data from [Fivetran's connector](https://fivetran.com/docs/applications/shopify). It uses data in the format described by [this ERD](https://fivetran.com/docs/applications/shopify#schemainformation).
 
 The main focus of the package is to transform the core object tables into analytics-ready models, including a cohort model to understand how your customers are behaving over time.
 
@@ -158,10 +158,10 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=0.22.0", "<0.23.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=1.0.0", "<1.1.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
-Do **NOT** include the `shopify_source` package in this file. The transformation package itself has a dependency on it and will install the source package as well.
+> All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/shopify_source` in your `packages.yml` since this package has been deprecated.
 
 #### Databricks dispatch configuration
 If you are using a Databricks destination with this package, you must add the following (or a variation of the following) dispatch configuration within your `dbt_project.yml`. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
@@ -174,7 +174,7 @@ dispatch:
 ### Step 3: Define REST API or GraphQL API Source
 Fivetran has released a version of the Shopify connector that leverages Shopify's newer [GraphQL](https://shopify.dev/docs/apps/build/graphql) API instead of the REST API, as Shopify deprecated the REST API in October 2024. The GraphQL and REST API-based schemas are slightly different, so this package is designed to run either or, not both. It will do so based on the value of the `shopify_api` variable.
 
-By default, `shopify_api` is set to `rest` and will run the `shopify__*` models in the [rest](https://github.com/fivetran/dbt_shopify/tree/main/models/rest) folder. If you would like to run the package on a GraphQL-based schema, adjust `shopify_api` accordingly. This will run the `shopify_gql__*` models in the [graphql](https://github.com/fivetran/dbt_shopify/tree/main/models/graphql) folder:
+By default, `shopify_api` is set to `rest` and will run the `shopify__*` models in the [rest](https://github.com/fivetran/dbt_shopify/tree/main/models/rest) folder. If you would like to run the package on a GraphQL-based schema, adjust `shopify_api` accordingly.
 
 > This variable is dynamically configured for you in Fivetran Quickstart based on your Shopify connection details.
 
@@ -263,7 +263,7 @@ vars:
     shopify_timezone: "America/New_York" # Replace with your timezone
 ```
 
-> **Note**: This will only **numerically** convert timestamps to your target timezone. They will however have a "UTC" appended to them. This is a current limitation of the dbt-date `convert_timezone` [macro](https://github.com/calogica/dbt-date#convert_timezone-column-target_tznone-source_tznone) we have leveraged and replicated in the [shopify_source](https://github.com/fivetran/dbt_shopify_source/tree/main/macros/fivetran_date_macros/fivetran_convert_timezone.sql) package with minimal modifications.
+> **Note**: This will only **numerically** convert timestamps to your target timezone. They will however have a "UTC" appended to them. This is a current limitation of the dbt-date `convert_timezone` [macro](https://github.com/calogica/dbt-date#convert_timezone-column-target_tznone-source_tznone) we have leveraged and replicated in the [shopify](https://github.com/fivetran/dbt_shopify/tree/main/macros/fivetran_date_macros/fivetran_convert_timezone.sql) package with minimal modifications.
 
 ### (Optional) Step 7: Additional configurations
 <details open><summary>Expand/Collapse details</summary>
@@ -283,7 +283,7 @@ This package includes all source columns defined in the macros folder. You can a
 # dbt_project.yml
 
 vars:
-  shopify_source:
+  shopify:
     customer_pass_through_columns:
       - name: "customer_custom_field"
         alias: "customer_field"
@@ -328,16 +328,16 @@ By default this package will build the Shopify staging models within a schema ti
 # dbt_project.yml
 
 models:
-  shopify:
-    +schema: my_new_schema_name # leave blank for just the target_schema
-  shopify_source:
-    +schema: my_new_schema_name # leave blank for just the target_schema
+    shopify:
+      +schema: my_new_schema_name # Leave +schema: blank to use the default target_schema.
+      staging:
+        +schema: my_new_schema_name # Leave +schema: blank to use the default target_schema.
 ```
 
 #### Change the source table references
 If an individual source table has a different name than the package expects, add the table name as it appears in your destination to the respective variable:
 
-> IMPORTANT: See this project's [`dbt_project.yml`](https://github.com/fivetran/dbt_shopify_source/blob/main/dbt_project.yml) variable declarations to see the expected names.
+> IMPORTANT: See this project's [`dbt_project.yml`](https://github.com/fivetran/dbt_shopify/blob/main/dbt_project.yml) variable declarations to see the expected names.
 
 ```yml
 # dbt_project.yml
@@ -391,9 +391,6 @@ This dbt package is dependent on the following dbt packages. These dependencies 
 
 ```yml
 packages:
-    - package: fivetran/shopify_source
-      version: [">=0.20.0", "<0.21.0"]
-
     - package: fivetran/fivetran_utils
       version: [">=0.4.0", "<0.5.0"]
 

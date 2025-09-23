@@ -3,7 +3,7 @@
 with orders as (
 
     select *
-    from {{ var('shopify_gql_order') }}
+    from {{ ref('stg_shopify_gql__order') }}
 
 ), order_aggregates as (
 
@@ -37,7 +37,7 @@ with orders as (
         source_relation,
         email
 
-    from {{ var('shopify_gql_customer') }}
+    from {{ ref('stg_shopify_gql__customer') }}
     where email is not null
     group by 1, 2, 3
     

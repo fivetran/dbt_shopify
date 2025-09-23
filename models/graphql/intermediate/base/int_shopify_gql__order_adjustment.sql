@@ -3,13 +3,13 @@
 with order_adjustment as (
 
     select *
-    from {{ var('shopify_gql_order_adjustment') }}
+    from {{ ref('stg_shopify_gql__order_adjustment') }}
 ),
 
 refund as (
 
     select *
-    from {{ var('shopify_gql_refund') }}
+    from {{ ref('stg_shopify_gql__refund') }}
 ),
 
 joined as (
