@@ -2,8 +2,13 @@
 
 [PR #123](https://github.com/fivetran/dbt_shopify/pull/123) includes the following updates:
 
-## Breaking Changes
-- Changed the materialization of `stg_shopify_gql__metafield` from a view to a table. This corrects the previous misconfiguration where it was set as a view.
+## Schema/Data Change
+**1 total changes • 1 possible breaking changes**
+> A `--full-refresh` is required when upgrading to ensure the following change is properly applied.
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| `stg_shopify_gql__metafield` | materialization | view | table | Corrects the previous misconfiguration. |
 
 ### Source Package Consolidation
 - Removed the dependency on the `fivetran/shopify_source` package.
