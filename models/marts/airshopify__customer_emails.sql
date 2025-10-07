@@ -25,7 +25,7 @@ with customer_emails as (
         sum(order_total_shipping_tax) as lifetime_total_shipping_tax,
         avg(order_total_shipping_tax) as avg_shipping_tax_per_order
 
-    from {{ ref('shopify__orders') }}
+    from {{ ref('airshopify__orders') }}
     where email is not null
     group by 1, 2
 

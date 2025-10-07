@@ -1,0 +1,562 @@
+version: 2
+
+models:
+  - name: airshopify__calendar
+    description: A calendar table with one row per day from 2019-01-01 to one year in the future.
+    columns:
+      - name: date_day
+        description: The calendar date.
+        tests:
+          - unique
+          - not_null
+
+  - name: airshopify__customer_cohorts
+    description: Each record represents a customer's performance in a calendar month, built from Airbyte raw data.
+    columns:
+      - name: customer_cohort_id
+        description: Unique key representing a customer in a given month. Hashed on 'date_month', 'customer_id', and 'source_relation'.
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: The ID of the related customer.
+      - name: date_month
+        description: The calendar month the customer stats relate to.
+      - name: cohort_month
+        description: The month the cohort belongs to, i.e the first month the customer had an order.
+      - name: cohort_month_number
+        description: The 'number' of the date_month of the record, i.e. how many months from their start month this cohort occurred.
+      - name: first_order_timestamp
+        description: The timestamp of the customer's first order.
+      - name: line_item_count_in_month
+        description: Number of line items purchased in the date_month.
+      - name: line_item_count_lifetime
+        description: Number of line items purchased up until and including this date_month.
+      - name: order_count_in_month
+        description: Number of orders purchased in the date_month.
+      - name: order_count_lifetime
+        description: Number of orders purchased up until and including this date_month.
+      - name: total_price_in_month
+        description: Total amount (in shop currency) purchased in the date_month.
+      - name: total_price_lifetime
+        description: Total amount (in shop currency) up until and including this date_month.
+      - name: source_relation
+        description: The source relation identifier (e.g., 'airbyte').
+
+  - name: airshopify__customer_email_cohorts
+    description: Each record represents a customer's (on the EMAIL grain) performance in a calendar month, built from Airbyte raw data.
+    columns:
+      - name: customer_cohort_id
+        description: Unique key representing a customer email in a given month. Hashed on 'date_month', 'email', and 'source_relation'.
+        tests:
+          - unique
+          - not_null
+      - name: email
+        description: The email address of the customer.
+      - name: date_month
+        description: The calendar month the customer stats relate to.
+      - name: cohort_month
+        description: The month the cohort belongs to, i.e the first month the customer had an order.
+      - name: cohort_month_number
+        description: The 'number' of the date_month of the record, i.e. how many months from their start month this cohort occurred.
+      - name: first_order_timestamp
+        description: The timestamp of the customer's first order.
+      - name: line_item_count_in_month
+        description: Number of line items purchased in the date_month.
+      - name: line_item_count_lifetime
+        description: Number of line items purchased up until and including this date_month.
+      - name: order_count_in_month
+        description: Number of orders purchased in the date_month.
+      - name: order_count_lifetime
+        description: Number of orders purchased up until and including this date_month.
+      - name: total_price_in_month
+        description: Total amount (in shop currency) purchased in the date_month.
+      - name: total_price_lifetime
+        description: Total amount (in shop currency) up until and including this date_month.
+      - name: source_relation
+        description: The source relation identifier (e.g., 'airbyte').
+
+  - name: airshopify__customer_emails
+    description: Each record represents a unique customer email with lifetime aggregated order metrics, built from Airbyte raw data.
+    columns:
+      - name: email
+        description: The email address of the customer.
+      - name: source_relation
+        description: The source relation identifier (e.g., 'airbyte').
+      - name: first_order_timestamp
+        description: Timestamp of the customer's first order.
+      - name: most_recent_order_timestamp
+        description: Timestamp of the customer's most recent order.
+      - name: lifetime_count_orders
+        description: Total number of orders placed by this email.
+      - name: avg_order_value
+        description: Average order value across all orders.
+      - name: lifetime_total_spent
+        description: Total amount spent across all orders.
+      - name: lifetime_total_refunded
+        description: Total amount refunded across all orders.
+      - name: avg_quantity_per_order
+        description: Average quantity of items per order.
+      - name: lifetime_total_tax
+        description: Total tax paid across all orders.
+      - name: avg_tax_per_order
+        description: Average tax per order.
+      - name: lifetime_total_discount
+        description: Total discount amount across all orders.
+      - name: avg_discount_per_order
+        description: Average discount per order.
+      - name: lifetime_total_shipping
+        description: Total shipping cost across all orders.
+      - name: avg_shipping_per_order
+        description: Average shipping cost per order.
+      - name: lifetime_total_shipping_with_discounts
+        description: Total shipping cost after discounts across all orders.
+      - name: avg_shipping_with_discounts_per_order
+        description: Average shipping cost after discounts per order.
+      - name: lifetime_total_shipping_tax
+        description: Total shipping tax across all orders.
+      - name: avg_shipping_tax_per_order
+        description: Average shipping tax per order.
+      - name: lifetime_abandoned_checkouts
+        description: Total number of abandoned checkouts by this email.
+
+  - name: airshopify__customers
+    description: Each record represents a customer in Shopify with lifetime aggregated metrics, built from Airbyte raw data.
+    columns:
+      - name: customer_id
+        description: The unique identifier for the customer.
+        tests:
+          - unique
+          - not_null
+      - name: source_relation
+        description: The source relation identifier (e.g., 'airbyte').
+      - name: email
+        description: The customer's email address.
+      - name: first_name
+        description: The customer's first name.
+      - name: last_name
+        description: The customer's last name.
+      - name: phone
+        description: The customer's phone number.
+      - name: created_timestamp
+        description: When the customer record was created.
+      - name: updated_timestamp
+        description: When the customer record was last updated.
+      - name: accepts_marketing
+        description: Whether the customer has consented to receive marketing material.
+      - name: accepts_marketing_updated_at
+        description: When the customer's marketing consent was last updated.
+      - name: marketing_opt_in_level
+        description: The customer's marketing opt-in level.
+      - name: tax_exempt
+        description: Whether the customer is exempt from taxes.
+      - name: orders_count
+        description: The number of orders associated with this customer (from raw data).
+      - name: total_spent
+        description: The total amount the customer has spent (from raw data).
+      - name: verified_email
+        description: Whether the customer's email has been verified.
+      - name: note
+        description: Notes about the customer.
+      - name: customer_tags
+        description: Comma-separated list of tags associated with this customer.
+      - name: default_address_id
+        description: The ID of the customer's default address.
+      - name: first_order_timestamp
+        description: Timestamp of the customer's first order.
+      - name: most_recent_order_timestamp
+        description: Timestamp of the customer's most recent order.
+      - name: avg_order_value
+        description: Average order value across all orders.
+      - name: lifetime_total_spent
+        description: Total amount spent across all orders.
+      - name: lifetime_total_refunded
+        description: Total amount refunded across all orders.
+      - name: lifetime_count_orders
+        description: Total number of orders placed by this customer.
+      - name: avg_quantity_per_order
+        description: Average quantity of items per order.
+      - name: lifetime_total_tax
+        description: Total tax paid across all orders.
+      - name: avg_tax_per_order
+        description: Average tax per order.
+      - name: lifetime_total_discount
+        description: Total discount amount across all orders.
+      - name: avg_discount_per_order
+        description: Average discount per order.
+      - name: lifetime_total_shipping
+        description: Total shipping cost across all orders.
+      - name: avg_shipping_per_order
+        description: Average shipping cost per order.
+      - name: lifetime_total_shipping_with_discounts
+        description: Total shipping cost after discounts across all orders.
+      - name: avg_shipping_with_discounts_per_order
+        description: Average shipping cost after discounts per order.
+      - name: lifetime_total_shipping_tax
+        description: Total shipping tax across all orders.
+      - name: avg_shipping_tax_per_order
+        description: Average shipping tax per order.
+      - name: lifetime_abandoned_checkouts
+        description: Total number of abandoned checkouts by this customer.
+
+  - name: airshopify__daily_shop
+    description: Each record represents daily shop-level aggregated metrics, built from Airbyte raw data.
+    columns:
+      - name: date_day
+        description: The calendar date.
+      - name: source_relation
+        description: The source relation identifier (e.g., 'airbyte').
+      - name: shop_id
+        description: The unique identifier for the shop.
+      - name: shop_name
+        description: The name of the shop.
+      - name: domain
+        description: The shop's domain.
+      - name: count_orders
+        description: Number of orders placed on this day.
+      - name: sum_total_price
+        description: Total order value for this day.
+      - name: count_line_items
+        description: Total number of line items ordered on this day.
+      - name: sum_line_item_total
+        description: Total line item value for this day.
+      - name: count_customers
+        description: Number of unique customers who ordered on this day.
+      - name: count_new_customers
+        description: Number of new customers (first order) on this day.
+      - name: count_repeat_customers
+        description: Number of repeat customers on this day.
+      - name: count_abandoned_checkouts
+        description: Number of abandoned checkouts on this day.
+
+  - name: airshopify__discounts
+    description: Each record represents a discount code with performance metrics, built from Airbyte raw data.
+    columns:
+      - name: order_discount_code_id
+        description: Unique identifier for the discount code usage.
+      - name: code
+        description: The discount code.
+      - name: order_id
+        description: The order ID where this discount was applied.
+      - name: source_relation
+        description: The source relation identifier (e.g., 'airbyte').
+      - name: amount
+        description: The discount amount.
+      - name: type
+        description: The type of discount (percentage, fixed_amount, shipping).
+      - name: order_created_at
+        description: When the order was created.
+      - name: total_price
+        description: The total order price.
+      - name: subtotal_price
+        description: The order subtotal.
+      - name: total_tax
+        description: The total tax on the order.
+
+  - name: airshopify__inventory_levels
+    description: Each record represents inventory levels at a location for a product variant, with sales metrics, built from Airbyte raw data.
+    columns:
+      - name: inventory_item_id
+        description: The unique identifier for the inventory item.
+      - name: location_id
+        description: The unique identifier for the location.
+      - name: source_relation
+        description: The source relation identifier (e.g., 'airbyte').
+      - name: available
+        description: The quantity of inventory available at this location.
+      - name: updated_at
+        description: When the inventory level was last updated.
+      - name: product_id
+        description: The unique identifier for the product.
+      - name: variant_id
+        description: The unique identifier for the product variant.
+      - name: sku
+        description: The SKU of the inventory item.
+      - name: requires_shipping
+        description: Whether the item requires shipping.
+      - name: cost
+        description: The cost of the inventory item.
+      - name: country_code_of_origin
+        description: The country code where the item originated.
+      - name: location_name
+        description: The name of the location.
+      - name: quantity_sold
+        description: Total quantity sold.
+      - name: subtotal_sold
+        description: Total subtotal revenue from sales.
+      - name: quantity_sold_net_refunds
+        description: Total quantity sold minus refunds.
+      - name: subtotal_sold_net_refunds
+        description: Total subtotal revenue minus refunds.
+      - name: first_order_timestamp
+        description: Timestamp of first order containing this variant.
+      - name: most_recent_order_timestamp
+        description: Timestamp of most recent order containing this variant.
+      - name: avg_quantity_per_order_line
+        description: Average quantity per order line.
+      - name: variant_total_discount
+        description: Total discount amount for this variant.
+      - name: variant_avg_discount_per_order_line
+        description: Average discount per order line for this variant.
+      - name: variant_total_tax
+        description: Total tax for this variant.
+      - name: variant_avg_tax_per_order_line
+        description: Average tax per order line for this variant.
+
+  - name: airshopify__order_lines
+    description: Each record represents an order line item in Shopify, built from Airbyte raw data.
+    columns:
+      - name: order_line_id
+        description: Unique identifier for the order line.
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: The ID of the related order.
+      - name: source_relation
+        description: The source relation identifier (e.g., 'airbyte').
+      - name: product_id
+        description: The ID of the product.
+      - name: variant_id
+        description: The ID of the product variant.
+      - name: name
+        description: The name of the line item.
+      - name: title
+        description: The title of the line item.
+      - name: variant_title
+        description: The title of the product variant.
+      - name: quantity
+        description: The quantity ordered.
+      - name: price
+        description: The price per unit.
+      - name: sku
+        description: The SKU of the product variant.
+      - name: fulfillable_quantity
+        description: The quantity that can be fulfilled.
+      - name: fulfillment_status
+        description: The fulfillment status of the line item.
+      - name: requires_shipping
+        description: Whether the line item requires shipping.
+      - name: taxable
+        description: Whether the line item is taxable.
+      - name: gift_card
+        description: Whether the line item is a gift card.
+      - name: pre_tax_price
+        description: The price before tax.
+      - name: total_discount
+        description: The total discount on this line item.
+      - name: refunded_quantity
+        description: The quantity that was refunded.
+      - name: refunded_subtotal
+        description: The subtotal amount that was refunded.
+      - name: quantity_net_refunds
+        description: The quantity minus refunds.
+      - name: subtotal_net_refunds
+        description: The subtotal minus refunds.
+      - name: order_line_tax
+        description: The total tax on this line item.
+
+  - name: airshopify__orders
+    description: Each record represents an order in Shopify with aggregated metrics, built from Airbyte raw data.
+    columns:
+      - name: orders_unique_key
+        description: Unique key representing an order. Hashed on 'order_id' and 'source_relation'.
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: The unique identifier for the order.
+      - name: source_relation
+        description: The source relation identifier (e.g., 'airbyte').
+      - name: created_timestamp
+        description: When the order was created.
+      - name: updated_timestamp
+        description: When the order was last updated.
+      - name: processed_timestamp
+        description: When the order was processed.
+      - name: cancelled_timestamp
+        description: When the order was cancelled.
+      - name: closed_timestamp
+        description: When the order was closed.
+      - name: customer_id
+        description: The ID of the customer who placed the order.
+      - name: email
+        description: The email address associated with the order.
+      - name: name
+        description: The order name (e.g., #1001).
+      - name: order_number
+        description: The order number.
+      - name: total_price
+        description: The total price of the order.
+      - name: subtotal_price
+        description: The subtotal price of the order.
+      - name: total_tax
+        description: The total tax on the order.
+      - name: total_discounts
+        description: The total discount amount on the order.
+      - name: total_line_items_price
+        description: The total price of line items.
+      - name: financial_status
+        description: The financial status of the order.
+      - name: fulfillment_status
+        description: The fulfillment status of the order.
+      - name: currency
+        description: The currency of the order.
+      - name: test
+        description: Whether this is a test order.
+      - name: confirmed
+        description: Whether the order is confirmed.
+      - name: taxes_included
+        description: Whether taxes are included in the prices.
+      - name: cancel_reason
+        description: The reason the order was cancelled.
+      - name: note
+        description: Notes about the order.
+      - name: note_attributes
+        description: JSON array of custom note attributes.
+      - name: discount_codes
+        description: JSON array of discount codes applied.
+      - name: line_item_count
+        description: Number of line items in the order.
+      - name: shipping_cost
+        description: The shipping cost for the order.
+      - name: order_adjustment_amount
+        description: Total order adjustment amount from refunds.
+      - name: order_adjustment_tax_amount
+        description: Total order adjustment tax amount from refunds.
+      - name: refund_subtotal
+        description: Total refund subtotal.
+      - name: refund_total_tax
+        description: Total refund tax.
+      - name: order_adjusted_total
+        description: The order total adjusted for refunds and adjustments.
+      - name: shipping_discount_amount
+        description: Total shipping discount amount.
+      - name: percentage_calc_discount_amount
+        description: Total percentage-based discount amount.
+      - name: fixed_amount_discount_amount
+        description: Total fixed amount discount.
+      - name: count_discount_codes_applied
+        description: Number of discount codes applied.
+      - name: order_total_shipping_tax
+        description: Total shipping tax.
+      - name: order_tags
+        description: Comma-separated list of order tags.
+      - name: order_url_tags
+        description: Comma-separated list of URL tags.
+      - name: number_of_fulfillments
+        description: Number of fulfillments for this order.
+      - name: fulfillment_services
+        description: Comma-separated list of fulfillment services.
+      - name: tracking_companies
+        description: Comma-separated list of tracking companies.
+      - name: tracking_numbers
+        description: Comma-separated list of tracking numbers.
+      - name: customer_order_seq_number
+        description: The sequence number of this order for the customer.
+      - name: new_vs_repeat
+        description: Whether this is a new or repeat customer order.
+
+  - name: airshopify__products
+    description: Each record represents a product in Shopify with sales metrics, built from Airbyte raw data.
+    columns:
+      - name: product_id
+        description: The unique identifier for the product.
+        tests:
+          - unique
+          - not_null
+      - name: source_relation
+        description: The source relation identifier (e.g., 'airbyte').
+      - name: title
+        description: The title of the product.
+      - name: handle
+        description: The URL-friendly handle of the product.
+      - name: product_type
+        description: The type of product.
+      - name: vendor
+        description: The vendor of the product.
+      - name: created_timestamp
+        description: When the product was created.
+      - name: updated_timestamp
+        description: When the product was last updated.
+      - name: published_timestamp
+        description: When the product was published.
+      - name: published_scope
+        description: The scope where the product is published.
+      - name: status
+        description: The status of the product (active, draft, archived).
+      - name: product_tags
+        description: Comma-separated list of product tags.
+      - name: total_quantity_sold
+        description: Total quantity sold across all variants.
+      - name: subtotal_sold
+        description: Total subtotal revenue.
+      - name: quantity_sold_net_refunds
+        description: Total quantity sold minus refunds.
+      - name: subtotal_sold_net_refunds
+        description: Total subtotal revenue minus refunds.
+      - name: first_order_timestamp
+        description: Timestamp of first order containing this product.
+      - name: most_recent_order_timestamp
+        description: Timestamp of most recent order containing this product.
+      - name: avg_quantity_per_order_line
+        description: Average quantity per order line.
+      - name: product_total_discount
+        description: Total discount amount for this product.
+      - name: product_avg_discount_per_order_line
+        description: Average discount per order line.
+      - name: product_total_tax
+        description: Total tax for this product.
+      - name: product_avg_tax_per_order_line
+        description: Average tax per order line.
+
+  - name: airshopify__transactions
+    description: Each record represents a transaction in Shopify with payment method and exchange rate details, built from Airbyte raw data.
+    columns:
+      - name: transactions_unique_id
+        description: Unique key for the transaction. Hashed on 'transaction_id' and 'source_relation'.
+        tests:
+          - unique
+          - not_null
+      - name: transaction_id
+        description: The unique identifier for the transaction.
+      - name: source_relation
+        description: The source relation identifier (e.g., 'airbyte').
+      - name: order_id
+        description: The ID of the related order.
+      - name: created_timestamp
+        description: When the transaction was created.
+      - name: status
+        description: The status of the transaction.
+      - name: kind
+        description: The kind of transaction (sale, refund, authorization, capture, void).
+      - name: gateway
+        description: The payment gateway used.
+      - name: amount
+        description: The transaction amount.
+      - name: currency
+        description: The currency of the transaction.
+      - name: error_code
+        description: The error code if the transaction failed.
+      - name: message
+        description: Additional message about the transaction.
+      - name: test
+        description: Whether this is a test transaction.
+      - name: authorization
+        description: The authorization code.
+      - name: payment_method
+        description: The payment method used.
+      - name: parent_id
+        description: The ID of the parent transaction if this is a child transaction.
+      - name: parent_created_timestamp
+        description: When the parent transaction was created.
+      - name: parent_kind
+        description: The kind of the parent transaction.
+      - name: parent_amount
+        description: The amount of the parent transaction.
+      - name: parent_status
+        description: The status of the parent transaction.
+      - name: exchange_rate
+        description: The currency exchange rate applied.
+      - name: currency_exchange_calculated_amount
+        description: The amount after applying exchange rate.

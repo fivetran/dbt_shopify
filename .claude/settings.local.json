@@ -1,9 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(source:*)",
-      "Bash(dbt list:*)",
-      "Bash(dbt compile:*)"
+      "Bash(do mv \"$file\" \"$file/shopify__/airshopify__\")",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

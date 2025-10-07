@@ -12,18 +12,18 @@
 with calendar as (
 
     select *
-    from {{ ref('shopify__calendar') }}
+    from {{ ref('airshopify__calendar') }}
     where cast(date_day as date) = date_trunc(date_day, month)
 
 ), customers as (
 
     select *
-    from {{ ref('shopify__customers') }}
+    from {{ ref('airshopify__customers') }}
 
 ), orders as (
 
     select *
-    from {{ ref('shopify__orders') }}
+    from {{ ref('airshopify__orders') }}
 
 ), customer_calendar as (
 

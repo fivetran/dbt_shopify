@@ -5,7 +5,7 @@ with shop as (
 ), calendar as (
 
     select *
-    from {{ ref('shopify__calendar') }}
+    from {{ ref('airshopify__calendar') }}
     where cast(date_day as date) = date_day
 
 ), daily_orders as (

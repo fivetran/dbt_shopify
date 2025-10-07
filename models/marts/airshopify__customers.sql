@@ -6,7 +6,7 @@ with customers as (
 ), orders as (
 
     select *
-    from {{ ref('shopify__customers__order_aggregates' )}}
+    from {{ ref('airshopify__customers__order_aggregates' )}}
 
 ), abandoned as (
 

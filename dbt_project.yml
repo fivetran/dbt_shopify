@@ -6,65 +6,15 @@ profile: 'wow_ai_transformation'
 
 on-run-start:
   - "CREATE SCHEMA IF NOT EXISTS `{{ target.project }}.{{ target.dataset }}_stg_shopify`"
-  - "CREATE SCHEMA IF NOT EXISTS `{{ target.project }}.{{ target.dataset }}_shopify`"
+  - "CREATE SCHEMA IF NOT EXISTS `{{ target.project }}.{{ target.dataset }}_airshopify`"
 models:
   shopify:
-    +schema: shopify
+    +schema: airshopify
     +materialized: table
+    staging:
+      +schema: stg_shopify
+      +materialized: view
     intermediate:
       +materialized: ephemeral
       int_shopify__customer_email_rollup:
         +materialized: view # so we can use the dbt_utils.star macro
-
-vars:
-  shopify:
-    shopify_customer: "{{ ref('stg_shopify__customer') }}"
-    shopify_order: "{{ ref('stg_shopify__order') }}"
-    shopify_order_line: "{{ ref('stg_shopify__order_line') }}"
-    shopify_order_line_refund: "{{ ref('stg_shopify__order_line_refund') }}"
-    shopify_product: "{{ ref('stg_shopify__product') }}"
-    shopify_product_variant: "{{ ref('stg_shopify__product_variant') }}"
-    shopify_transaction: "{{ ref('stg_shopify__transaction') }}"
-    shopify_refund: "{{ ref('stg_shopify__refund') }}"
-    shopify_order_adjustment: "{{ ref('stg_shopify__order_adjustment') }}"
-    shopify_abandoned_checkout: "{{ ref('stg_shopify__abandoned_checkout') }}"
-    shopify_collection_product: "{{ ref('stg_shopify__collection_product') }}"
-    shopify_collection: "{{ ref('stg_shopify__collection') }}"
-    shopify_customer_tag: "{{ ref('stg_shopify__customer_tag') }}"    
-    shopify_discount_allocation: "{{ ref('stg_shopify__discount_allocation') }}" 
-    shopify_discount_application: "{{ ref('stg_shopify__discount_application') }}" 
-    shopify_discount_code_app: "{{ ref('stg_shopify__discount_code_app') }}" 
-    shopify_discount_code_basic: "{{ ref('stg_shopify__discount_code_basic') }}" 
-    shopify_discount_code_bxgy: "{{ ref('stg_shopify__discount_code_bxgy') }}" 
-    shopify_discount_code_free_shipping: "{{ ref('stg_shopify__discount_code_free_shipping') }}" 
-    shopify_discount_redeem_code: "{{ ref('stg_shopify__discount_redeem_code') }}"         
-    shopify_fulfillment: "{{ ref('stg_shopify__fulfillment') }}"
-    shopify_inventory_item: "{{ ref('stg_shopify__inventory_item') }}"
-    shopify_inventory_level: "{{ ref('stg_shopify__inventory_level') }}"
-    shopify_inventory_quantity: "{{ ref('stg_shopify__inventory_quantity') }}"
-    shopify_location: "{{ ref('stg_shopify__location') }}"
-    shopify_media: "{{ ref('stg_shopify__media') }}"
-    shopify_media_image: "{{ ref('stg_shopify__media_image') }}"    
-    shopify_metafield: "{{ ref('stg_shopify__metafield') }}"
-    shopify_order_note_attribute: "{{ ref('stg_shopify__order_note_attribute') }}"
-    shopify_order_shipping_line: "{{ ref('stg_shopify__order_shipping_line') }}"
-    shopify_order_shipping_tax_line: "{{ ref('stg_shopify__order_shipping_tax_line') }}"
-    shopify_order_tag: "{{ ref('stg_shopify__order_tag') }}"
-    shopify_order_url_tag: "{{ ref('stg_shopify__order_url_tag') }}"
-    shopify_product_media: "{{ ref('stg_shopify__product_media') }}"
-    shopify_product_variant_media: "{{ ref('stg_shopify__product_variant_media') }}"
-    shopify_product_tag: "{{ ref('stg_shopify__product_tag') }}"
-    shopify_shop: "{{ ref('stg_shopify__shop') }}"
-    shopify_tax_line: "{{ ref('stg_shopify__tax_line') }}"
-    shopify_tender_transaction: "{{ ref('stg_shopify__tender_transaction') }}"
-    shopify_abandoned_checkout_discount_code: "{{ ref('stg_shopify__abandoned_checkout_discount_code') }}"
-    shopify_order_discount_code: "{{ ref('stg_shopify__order_discount_code') }}"
-    shopify_abandoned_checkout_shipping_line: "{{ ref('stg_shopify__abandoned_checkout_shipping_line') }}"
-    shopify_fulfillment_event: "{{ ref('stg_shopify__fulfillment_event') }}"
-  shopify_schema: vitrine
-  # Uncomment and set if vitrine dataset is in a different BigQuery project
-  # shopify_database: your_bigquery_project_id
-  
-  # Table identifier overrides for discount tables
-  shopify_discount_code_bxgy_identifier: discount_code_bxgy
-  shopify_discount_code_free_shipping_identifier: discount_code_free_shipping

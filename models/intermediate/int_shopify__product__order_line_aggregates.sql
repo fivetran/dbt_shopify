@@ -1,6 +1,6 @@
 with order_lines as (
 
-    select * from {{ ref('shopify__order_lines') }}
+    select * from {{ ref('airshopify__order_lines') }}
 
 ), aggregated as (
 
