@@ -40,9 +40,7 @@ with products as (
     select
         products.* except(tags),
         product_tags.tags as product_tags,
-        cast(null as string) as collections, -- TODO: join with collections
         coalesce(product_variants.count_variants, 0) as count_variants,
-        cast(null as bool) as has_product_media, -- TODO: determine if product has media
         coalesce(product_order_lines.quantity_sold,0) as total_quantity_sold,
         coalesce(product_order_lines.subtotal_sold,0) as subtotal_sold,
         coalesce(product_order_lines.quantity_sold_net_refunds,0) as quantity_sold_net_refunds,

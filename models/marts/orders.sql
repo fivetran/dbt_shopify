@@ -103,7 +103,6 @@ with orders as (
         coalesce(discount_aggregates.count_discount_codes_applied, 0) as count_discount_codes_applied,
         coalesce(order_lines.order_total_shipping_tax, 0) as order_total_shipping_tax,
         order_tag.order_tags,
-        cast(null as string) as order_url_tags, -- TODO: parse from landing_site URL
         fulfillments.number_of_fulfillments,
         fulfillments.fulfillment_services,
         fulfillments.tracking_companies,
@@ -135,7 +134,7 @@ with orders as (
     select
         *,
         row_number() over (
-            partition by cast(customer_id as int64), source_relation
+            partition by customer_id, source_relation
             order by created_timestamp)
             as customer_order_seq_number
     from joined

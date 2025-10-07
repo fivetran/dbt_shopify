@@ -49,15 +49,6 @@ with inventory_level as (
         inventory_item.duplicate_sku_count,
         inventory_item.harmonized_system_code,
 
-        -- inventory level specific fields (not available in new schema)
-        cast(null as string) as inventory_history_url,
-        cast(null as int64) as legacy_resource_id,
-        cast(null as int64) as measurement_id,
-        cast(null as numeric) as measurement_weight_value,
-        cast(null as string) as measurement_weight_unit,
-        cast(null as bool) as is_tracked_editable_locked,
-        cast(null as string) as tracked_editable_reason,
-
         -- location fields
         location.location_name,
         location.is_location_deleted,
@@ -98,9 +89,6 @@ with inventory_level as (
         product_variant.variant_updated_at,
         product_variant.variant_is_available_for_sale,
         product_variant.variant_display_name,
-        cast(null as int64) as variant_legacy_resource_id,
-        cast(null as bool) as variant_has_components_required,
-        cast(null as int64) as variant_sellable_online_quantity,
 
         -- sales aggregates
         coalesce(inventory_level_aggregated.subtotal_sold, 0) as subtotal_sold,
@@ -119,15 +107,9 @@ with inventory_level as (
         coalesce(inventory_level_aggregated.count_fulfillment_error, 0) as count_fulfillment_error,
         coalesce(inventory_level_aggregated.count_fulfillment_failure, 0) as count_fulfillment_failure,
 
-        -- inventory quantities (simplified - new schema doesn't have detailed breakdown)
-        cast(null as int64) as incoming_quantity,
+        -- inventory quantities (available from raw data)
         inventory_level.available as on_hand_quantity,
         inventory_level.available as available_quantity,
-        cast(null as int64) as committed_quantity,
-        cast(null as int64) as reserved_quantity,
-        cast(null as int64) as damaged_quantity,
-        cast(null as int64) as safety_stock_quantity,
-        cast(null as int64) as quality_control_quantity,
 
         -- net metrics
         coalesce(inventory_level_aggregated.net_subtotal_sold, 0) as net_subtotal_sold,

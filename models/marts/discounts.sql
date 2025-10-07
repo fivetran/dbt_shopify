@@ -54,13 +54,7 @@ with discount_codes as (
         discount_codes.discount_type,
         discount_codes.applies_once_per_customer,
         discount_codes.usage_count,
-        cast(null as int64) as codes_count, -- not available in new schema
-        cast(null as string) as codes_precision, -- not available in new schema
-        cast(null as bool) as combines_with_order_discounts, -- not available
-        cast(null as bool) as combines_with_product_discounts, -- not available
-        cast(null as bool) as combines_with_shipping_discounts, -- not available
         discount_codes.created_at,
-        cast(null as bool) as customer_selection_all_customers, -- not available
         discount_codes.ends_at,
         discount_codes.starts_at,
         discount_codes.status,
@@ -70,13 +64,6 @@ with discount_codes as (
         discount_codes.updated_at,
         discount_codes.usage_limit,
         discount_codes.source_relation,
-        cast(null as string) as allocation_method, -- not available
-        cast(null as string) as description, -- not available
-        cast(null as string) as target_selection, -- not available
-        cast(null as string) as target_type, -- not available
-        cast(null as string) as application_type, -- not available
-        cast(null as numeric) as value, -- not available
-        cast(null as string) as value_type, -- not available
         {{ dbt_utils.generate_surrogate_key(['discount_codes.code', 'discount_codes.source_relation']) }} as discounts_unique_key,
 
         -- order aggregates

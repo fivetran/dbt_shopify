@@ -83,7 +83,6 @@ with order_line as (
         product_variants.position as variant_position,
         product_variants.inventory_policy as variant_inventory_policy,
         product_variants.compare_at_price as variant_compare_at_price,
-        cast(null as string) as variant_fulfillment_service, -- not available in Airbyte schema
         product_variants.taxable as variant_is_taxable,
         product_variants.barcode as variant_barcode,
         product_variants.grams as variant_grams,
@@ -96,9 +95,6 @@ with order_line as (
         product_variants.tax_code as variant_tax_code,
         product_variants.available_for_sale as variant_is_available_for_sale,
         product_variants.display_name as variant_display_name,
-        cast(null as int64) as variant_legacy_resource_id, -- not available in new schema
-        cast(null as bool) as variant_has_components_required, -- not available in new schema
-        cast(null as int64) as variant_sellable_online_quantity, -- not available in new schema
 
         -- tax
         coalesce(tax_lines.order_line_tax, 0) as order_line_tax
