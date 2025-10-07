@@ -26,3 +26,5 @@ sources:
         identifier: inventory_items
       - name: locations
         identifier: locations
+      - name: fulfillments
+        identifier: fulfillments
