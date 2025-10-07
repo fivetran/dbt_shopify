@@ -28,3 +28,7 @@ sources:
         identifier: locations
       - name: fulfillments
         identifier: fulfillments
+      - name: shop
+        identifier: shop
+      - name: discount_codes
+        identifier: discount_codes
