@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(source:*)",
+      "Bash(dbt list:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

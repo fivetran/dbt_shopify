@@ -3,13 +3,13 @@
 with order_line as (
 
     select *
-    from {{ var('shopify_order_line') }}
+    from {{ ref('stg_shopify__order_line') }}
 
 ), tax as (
 
     select
         *
-    from {{ var('shopify_tax_line') }}
+    from {{ ref('stg_shopify__tax_line') }}
 
 ), shipping as (
 
@@ -29,12 +29,12 @@ with order_line as (
 
 ), order_line_aggregates as (
 
-    select 
+    select
         order_line.order_id,
         order_line.source_relation,
         count(*) as line_item_count,
         sum(order_line.quantity) as order_total_quantity,
-        sum(tax_aggregates.price) as order_total_tax,
+        sum(coalesce(tax_aggregates.price, 0)) as order_total_tax,
         sum(order_line.total_discount) as order_total_discount
 
     from order_line
@@ -52,9 +52,9 @@ with order_line as (
         order_line_aggregates.order_total_quantity,
         order_line_aggregates.order_total_tax,
         order_line_aggregates.order_total_discount,
-        shipping.shipping_price as order_total_shipping,
-        shipping.discounted_shipping_price as order_total_shipping_with_discounts,
-        shipping.shipping_tax as order_total_shipping_tax
+        coalesce(shipping.shipping_price, 0) as order_total_shipping,
+        coalesce(shipping.discounted_shipping_price, 0) as order_total_shipping_with_discounts,
+        coalesce(shipping.shipping_tax, 0) as order_total_shipping_tax
 
     from order_line_aggregates
     left join shipping

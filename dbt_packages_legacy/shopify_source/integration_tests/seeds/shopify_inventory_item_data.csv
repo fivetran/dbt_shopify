@@ -1,0 +1,6 @@
+id,country_code_of_origin,created_at,duplicate_sku_count,harmonized_system_code,inventory_history_url,legacy_resource_id,measurement_id,measurement_weight_value,measurement_weight_unit,province_code_of_origin,requires_shipping,sku,tracked,tracked_editable_locked,tracked_editable_reason,unit_cost_amount,unit_cost_currency_code,updated_at,_fivetran_deleted,_fivetran_synced
+43985459707940,,2024-11-06 07:29:31.000000,1,,shopify.com,43985459707940,42943762858020,0,POUNDS,,TRUE,ITEM15,TRUE,,,,,,FALSE,2024-12-20 00:31:25.048000
+43985392533540,,2024-11-06 06:57:30.000000,1,,shopify.com,43985392533540,42943695683620,0,POUNDS,,TRUE,ITEM24,TRUE,,,,,,FALSE,2024-12-20 00:31:24.899000
+43985392762916,,2024-11-06 06:57:41.000000,1,,shopify.com,43985392762916,42943695912996,0,POUNDS,,TRUE,ITEM31,TRUE,,,,,,FALSE,2024-12-20 00:31:24.910000
+43985403084836,,2024-11-06 07:02:33.000000,1,,shopify.com,43985403084836,42943706234916,0,POUNDS,,TRUE,ITEM45,TRUE,,,,,,FALSE,2024-12-20 00:31:24.927000
+43985467768868,,2024-11-06 07:31:51.000000,1,,shopify.com,43985467768868,42943770918948,0,POUNDS,,TRUE,ITEM99,TRUE,,,,,,FALSE,2024-12-20 00:31:25.052000

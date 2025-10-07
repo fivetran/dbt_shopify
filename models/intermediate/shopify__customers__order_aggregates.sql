@@ -1,7 +1,7 @@
 with orders as (
 
     select *
-    from {{ var('shopify_order') }}
+    from {{ ref('stg_shopify__order') }}
     where customer_id is not null
 
 ), order_aggregates as (
@@ -20,14 +20,14 @@ with orders as (
 
 ), transaction_aggregates as (
     -- this is necessary as customers can pay via multiple payment gateways
-    select 
+    select
         order_id,
         source_relation,
         lower(kind) as kind,
         sum(currency_exchange_calculated_amount) as currency_exchange_calculated_amount
 
     from transactions
-    {{ dbt_utils.group_by(n=3) }}
+    group by 1, 2, 3
 
 ), aggregated as (
 
@@ -53,7 +53,7 @@ with orders as (
         avg(order_aggregates.order_total_shipping_tax) as avg_shipping_tax_per_order
 
     from orders
-    left join transaction_aggregates 
+    left join transaction_aggregates
         on orders.order_id = transaction_aggregates.order_id
         and orders.source_relation = transaction_aggregates.source_relation
         and transaction_aggregates.kind in ('sale','capture')
@@ -64,8 +64,9 @@ with orders as (
     left join order_aggregates
         on orders.order_id = order_aggregates.order_id
         and orders.source_relation = order_aggregates.source_relation
-    
-    {{ dbt_utils.group_by(n=2) }}
+
+    group by 1, 2
+
 )
 
 select *

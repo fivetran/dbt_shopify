@@ -1,0 +1,28 @@
+version: 2
+
+sources:
+  - name: shopify_raw
+    description: Raw Shopify data from Airbyte
+    database: wow-ai-461911
+    schema: vitrine
+    tables:
+      - name: customers
+        identifier: customers
+      - name: orders
+        identifier: orders
+      - name: transactions
+        identifier: transactions
+      - name: order_refunds
+        identifier: order_refunds
+      - name: abandoned_checkouts
+        identifier: abandoned_checkouts
+      - name: products
+        identifier: products
+      - name: product_variants
+        identifier: product_variants
+      - name: inventory_levels
+        identifier: inventory_levels
+      - name: inventory_items
+        identifier: inventory_items
+      - name: locations
+        identifier: locations
