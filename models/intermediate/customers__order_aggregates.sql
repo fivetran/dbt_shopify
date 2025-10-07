@@ -7,12 +7,12 @@ with orders as (
 ), order_aggregates as (
 
     select *
-    from {{ ref('airshopify__orders__order_line_aggregates') }}
+    from {{ ref('orders__order_line_aggregates') }}
 
 ), transactions as (
 
     select *
-    from {{ ref('airshopify__transactions')}}
+    from {{ ref('transactions')}}
 
     where lower(status) = 'success'
     and lower(kind) not in ('authorization', 'void')

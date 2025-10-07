@@ -8,7 +8,7 @@ with discount_codes as (
 
 ), orders as (
 
-    select * from {{ ref('airshopify__orders') }}
+    select * from {{ ref('orders') }}
 
 ), order_aggregates as (
 

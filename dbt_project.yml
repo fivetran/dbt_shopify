@@ -9,11 +9,16 @@ on-run-start:
   - "CREATE SCHEMA IF NOT EXISTS `{{ target.project }}.{{ target.dataset }}_airshopify`"
 models:
   shopify:
-    +schema: airshopify
     +materialized: table
     staging:
       +schema: stg_shopify
       +materialized: view
+    marts:
+      +schema: airshopify
+      +materialized: table
+    utils:
+      +schema: airshopify
+      +materialized: table
     intermediate:
       +materialized: ephemeral
       int_shopify__customer_email_rollup:

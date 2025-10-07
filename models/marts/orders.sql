@@ -8,7 +8,7 @@ with orders as (
 ), order_lines as (
 
     select *
-    from {{ ref('airshopify__orders__order_line_aggregates') }}
+    from {{ ref('orders__order_line_aggregates') }}
 
 ), order_adjustments as (
 
@@ -27,7 +27,7 @@ with orders as (
 ), refunds as (
 
     select *
-    from {{ ref('airshopify__orders__order_refunds') }}
+    from {{ ref('orders__order_refunds') }}
 
 ), refund_aggregates as (
     select

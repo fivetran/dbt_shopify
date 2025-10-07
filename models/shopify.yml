@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: airshopify__calendar
+  - name: calendar
     description: A calendar table with one row per day from 2019-01-01 to one year in the future.
     columns:
       - name: date_day
@@ -10,7 +10,7 @@ models:
           - unique
           - not_null
 
-  - name: airshopify__customer_cohorts
+  - name: customer_cohorts
     description: Each record represents a customer's performance in a calendar month, built from Airbyte raw data.
     columns:
       - name: customer_cohort_id
@@ -43,7 +43,7 @@ models:
       - name: source_relation
         description: The source relation identifier (e.g., 'airbyte').
 
-  - name: airshopify__customer_email_cohorts
+  - name: customer_email_cohorts
     description: Each record represents a customer's (on the EMAIL grain) performance in a calendar month, built from Airbyte raw data.
     columns:
       - name: customer_cohort_id
@@ -76,7 +76,7 @@ models:
       - name: source_relation
         description: The source relation identifier (e.g., 'airbyte').
 
-  - name: airshopify__customer_emails
+  - name: customer_emails
     description: Each record represents a unique customer email with lifetime aggregated order metrics, built from Airbyte raw data.
     columns:
       - name: email
@@ -120,7 +120,7 @@ models:
       - name: lifetime_abandoned_checkouts
         description: Total number of abandoned checkouts by this email.
 
-  - name: airshopify__customers
+  - name: customers
     description: Each record represents a customer in Shopify with lifetime aggregated metrics, built from Airbyte raw data.
     columns:
       - name: customer_id
@@ -199,7 +199,7 @@ models:
       - name: lifetime_abandoned_checkouts
         description: Total number of abandoned checkouts by this customer.
 
-  - name: airshopify__daily_shop
+  - name: daily_shop
     description: Each record represents daily shop-level aggregated metrics, built from Airbyte raw data.
     columns:
       - name: date_day
@@ -229,7 +229,7 @@ models:
       - name: count_abandoned_checkouts
         description: Number of abandoned checkouts on this day.
 
-  - name: airshopify__discounts
+  - name: discounts
     description: Each record represents a discount code with performance metrics, built from Airbyte raw data.
     columns:
       - name: order_discount_code_id
@@ -253,7 +253,7 @@ models:
       - name: total_tax
         description: The total tax on the order.
 
-  - name: airshopify__inventory_levels
+  - name: inventory_levels
     description: Each record represents inventory levels at a location for a product variant, with sales metrics, built from Airbyte raw data.
     columns:
       - name: inventory_item_id
@@ -303,7 +303,7 @@ models:
       - name: variant_avg_tax_per_order_line
         description: Average tax per order line for this variant.
 
-  - name: airshopify__order_lines
+  - name: order_lines
     description: Each record represents an order line item in Shopify, built from Airbyte raw data.
     columns:
       - name: order_line_id
@@ -356,7 +356,7 @@ models:
       - name: order_line_tax
         description: The total tax on this line item.
 
-  - name: airshopify__orders
+  - name: orders
     description: Each record represents an order in Shopify with aggregated metrics, built from Airbyte raw data.
     columns:
       - name: orders_unique_key
@@ -457,7 +457,7 @@ models:
       - name: new_vs_repeat
         description: Whether this is a new or repeat customer order.
 
-  - name: airshopify__products
+  - name: products
     description: Each record represents a product in Shopify with sales metrics, built from Airbyte raw data.
     columns:
       - name: product_id
@@ -510,7 +510,7 @@ models:
       - name: product_avg_tax_per_order_line
         description: Average tax per order line.
 
-  - name: airshopify__transactions
+  - name: transactions
     description: Each record represents a transaction in Shopify with payment method and exchange rate details, built from Airbyte raw data.
     columns:
       - name: transactions_unique_id

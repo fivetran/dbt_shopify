@@ -1,8 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(do mv \"$file\" \"$file/shopify__/airshopify__\")",
-      "Bash(find:*)"
+      "Bash(do mv \"$file\" \"$file#airshopify__\")"
     ],
     "deny": [],
     "ask": []
