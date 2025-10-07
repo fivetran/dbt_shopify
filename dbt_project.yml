@@ -5,8 +5,8 @@ require-dbt-version: [">=1.3.0", "<2.0.0"]
 profile: 'wow_ai_transformation'
 
 on-run-start:
-  - "CREATE SCHEMA IF NOT EXISTS `{{ target.project }}.{{ target.dataset }}_stg_shopify`"
-  - "CREATE SCHEMA IF NOT EXISTS `{{ target.project }}.{{ target.dataset }}_airshopify`"
+  - "CREATE SCHEMA IF NOT EXISTS `{{ target.project }}.{{ target.dataset }}_stg_shopify` OPTIONS(location='{{ target.location }}')"
+  - "CREATE SCHEMA IF NOT EXISTS `{{ target.project }}.{{ target.dataset }}_airshopify` OPTIONS(location='{{ target.location }}')"
 models:
   shopify:
     +materialized: table

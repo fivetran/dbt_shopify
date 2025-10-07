@@ -1,27 +1,31 @@
 wow_ai_transformation:
   outputs:
-    vitrine_dev:
-      dataset: vitrine_test
+    worood_dev:
+      dataset: worood_test
+      location: EU  # Change to your actual region: EU, us-central1, europe-west1, etc.
       method: oauth
       project: wow-ai-461911
       threads: 4
       type: bigquery
-    vitrine_prod:
-      dataset: vitrine_reports
+    worood_prod:
+      dataset: worood_reports
+      location: EU  # Change to your actual region
       method: oauth
       project: wow-ai-461911
       threads: 4
       type: bigquery
     breathe_dev:
       dataset: breathe_test
+      location: EU  # Change to your actual region
       method: oauth
       project: wow-ai-461911
       threads: 4
       type: bigquery
     breathe_prod:
       dataset: breathe_reports
+      location: EU  # Change to your actual region
       method: oauth
       project: wow-ai-461911
       threads: 4
       type: bigquery
-  target: vitrine_dev
+  target: worood_dev

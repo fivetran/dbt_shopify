@@ -4,7 +4,7 @@ sources:
   - name: shopify_raw
     description: Raw Shopify data from Airbyte
     database: wow-ai-461911
-    schema: vitrine
+    schema: shopify_worood
     tables:
       - name: customers
         identifier: customers
