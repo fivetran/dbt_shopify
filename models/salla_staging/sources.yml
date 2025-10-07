@@ -1,0 +1,44 @@
+version: 2
+
+sources:
+  - name: salla_raw
+    description: Raw Salla data from Airbyte
+    database: wow-ai-461911
+    schema: salla_demo
+    quoting:
+      database: true
+      schema: true
+      identifier: true
+    tables:
+      - name: orders
+        identifier: orders
+      - name: order_items
+        identifier: order_items
+      - name: customers
+        identifier: customers
+      - name: products
+        identifier: products
+      - name: product_variants
+        identifier: product_variants
+      - name: transactions
+        identifier: transactions
+      - name: coupons
+        identifier: coupons
+      - name: coupon_codes
+        identifier: coupon_codes
+      - name: abandoned_carts
+        identifier: abandoned_carts
+      - name: brands
+        identifier: brands
+      - name: categories
+        identifier: categories
+      - name: order_shipments
+        identifier: order_shipments
+      - name: order_statuses
+        identifier: order_statuses
+      - name: order_histories
+        identifier: order_histories
+      - name: product_quantities
+        identifier: product_quantities
+      - name: branches
+        identifier: branches

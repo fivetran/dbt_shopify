@@ -12,6 +12,8 @@ quoting:
 on-run-start:
   - "CREATE SCHEMA IF NOT EXISTS `{{ target.project }}.{{ target.dataset }}_stg_shopify` OPTIONS(location='{{ target.location }}')"
   - "CREATE SCHEMA IF NOT EXISTS `{{ target.project }}.{{ target.dataset }}_airshopify` OPTIONS(location='{{ target.location }}')"
+  - "CREATE SCHEMA IF NOT EXISTS `{{ target.project }}.{{ target.dataset }}_stg_salla` OPTIONS(location='{{ target.location }}')"
+  - "CREATE SCHEMA IF NOT EXISTS `{{ target.project }}.{{ target.dataset }}_airsalla` OPTIONS(location='{{ target.location }}')"
 models:
   shopify:
     +materialized: table
@@ -28,3 +30,16 @@ models:
       +materialized: ephemeral
       int_shopify__customer_email_rollup:
         +materialized: view # so we can use the dbt_utils.star macro
+    salla_staging:
+      +schema: stg_salla
+      +materialized: view
+    salla_marts:
+      +schema: airsalla
+      +materialized: table
+    salla_utils:
+      +schema: airsalla
+      +materialized: table
+    salla_intermediate:
+      +materialized: ephemeral
+      int_salla__customer_email_rollup:
+        +materialized: view

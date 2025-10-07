@@ -1,31 +1,51 @@
 wow_ai_transformation:
   outputs:
-    worood_dev:
-      dataset: worood_test
-      location: EU  # Change to your actual region: EU, us-central1, europe-west1, etc.
+    # Shopify - Worood Store
+    shopify_worood_dev:
+      dataset: shopify_worood_test
+      location: EU
       method: oauth
       project: wow-ai-461911
       threads: 4
       type: bigquery
-    worood_prod:
-      dataset: worood_reports
-      location: EU  # Change to your actual region
+    shopify_worood_prod:
+      dataset: shopify_worood_reports
+      location: EU
       method: oauth
       project: wow-ai-461911
       threads: 4
       type: bigquery
+
+    # Salla - Demo Store
+    salla_demo_dev:
+      dataset: salla_demo_test
+      location: EU
+      method: oauth
+      project: wow-ai-461911
+      threads: 4
+      type: bigquery
+    salla_demo_prod:
+      dataset: salla_demo_reports
+      location: EU
+      method: oauth
+      project: wow-ai-461911
+      threads: 4
+      type: bigquery
+
+    # Legacy profiles (keep for backward compatibility)
     breathe_dev:
       dataset: breathe_test
-      location: EU  # Change to your actual region
+      location: EU
       method: oauth
       project: wow-ai-461911
       threads: 4
       type: bigquery
     breathe_prod:
       dataset: breathe_reports
-      location: EU  # Change to your actual region
+      location: EU
       method: oauth
       project: wow-ai-461911
       threads: 4
       type: bigquery
-  target: worood_dev
+
+  target: shopify_worood_dev

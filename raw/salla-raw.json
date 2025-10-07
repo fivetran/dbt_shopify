@@ -1,0 +1,139 @@
+[{
+  "table_name": "abandoned_carts",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), items (JSON), total (JSON), coupon (JSON), customer (JSON), subtotal (JSON), created_at (TIMESTAMP), updated_at (TIMESTAMP), checkout_url (STRING), age_in_minutes (NUMERIC), total_discount (JSON), _airbyte_cursor_updated_at (TIMESTAMP)"
+}, {
+  "table_name": "advertisements",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), link (STRING), image (STRING), title (STRING), is_active (BOOL), created_at (TIMESTAMP), updated_at (TIMESTAMP), description (STRING)"
+}, {
+  "table_name": "affiliates",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), code (STRING), name (STRING), email (STRING), is_active (BOOL), created_at (TIMESTAMP), updated_at (TIMESTAMP), total_earnings (NUMERIC), commission_rate (NUMERIC), commission_type (STRING)"
+}, {
+  "table_name": "available_currencies",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), country_code (STRING), currency_code (STRING), country_name_ar (STRING), country_name_en (STRING), currency_name_ar (STRING), currency_name_en (STRING)"
+}, {
+  "table_name": "banks",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), iban (STRING), name (STRING), is_active (BOOL), created_at (TIMESTAMP), swift_code (STRING), account_number (STRING)"
+}, {
+  "table_name": "branches",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), name (STRING), email (STRING), phone (STRING), status (STRING), address (STRING), city_id (INT64), country_id (INT64), created_at (TIMESTAMP), is_default (BOOL), updated_at (TIMESTAMP), coordinates (JSON), working_hours (JSON)"
+}, {
+  "table_name": "brands",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), logo (STRING), name (STRING), banner (STRING), ar_char (STRING), en_char (STRING), metadata (JSON), created_at (TIMESTAMP), updated_at (TIMESTAMP), description (STRING)"
+}, {
+  "table_name": "categories",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), name (STRING), image (STRING), status (STRING), parent_id (INT64), created_at (TIMESTAMP), sort_order (INT64), updated_at (TIMESTAMP), sub_categories (JSON)"
+}, {
+  "table_name": "category_children",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), name (STRING), slug (STRING), image (STRING), is_active (BOOL), parent_id (INT64), created_at (TIMESTAMP), sort_order (INT64)"
+}, {
+  "table_name": "category_products",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), sku (STRING), name (STRING), sort_order (INT64), category_id (INT64), is_featured (BOOL)"
+}, {
+  "table_name": "category_search",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), name (STRING), path (STRING), slug (STRING), level (INT64), parent_id (INT64)"
+}, {
+  "table_name": "cities",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), code (STRING), name (STRING), country_id (INT64), is_default (BOOL)"
+}, {
+  "table_name": "countries",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), code (STRING), flag (STRING), name (STRING), currency (STRING), is_default (BOOL), calling_code (STRING)"
+}, {
+  "table_name": "coupon_codes",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), code (STRING), coupon_id (INT64), is_active (BOOL), created_at (TIMESTAMP), updated_at (TIMESTAMP), usage_count (INT64)"
+}, {
+  "table_name": "coupons",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), code (STRING), name (STRING), type (STRING), value (NUMERIC), is_active (BOOL), starts_at (TIMESTAMP), created_at (TIMESTAMP), expires_at (TIMESTAMP), updated_at (TIMESTAMP), used_count (INT64), usage_limit (INT64), minimum_amount (NUMERIC)"
+}, {
+  "table_name": "currencies",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), code (STRING), name (STRING), amount (NUMERIC), status (STRING), symbol (STRING)"
+}, {
+  "table_name": "customer_groups",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), name (STRING), features (JSON), conditions (JSON), created_at (TIMESTAMP), is_default (BOOL), updated_at (TIMESTAMP), description (STRING)"
+}, {
+  "table_name": "customer_loyalty_prizes",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), status (STRING), claimed_at (TIMESTAMP), created_at (TIMESTAMP), expires_at (TIMESTAMP), prize_type (STRING), customer_id (INT64), prize_value (NUMERIC), points_required (INT64)"
+}, {
+  "table_name": "customers",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), city (STRING), email (STRING), avatar (STRING), gender (STRING), groups (JSON), mobile (NUMERIC), country (STRING), last_name (STRING), created_at (TIMESTAMP), first_name (STRING), updated_at (TIMESTAMP), mobile_code (STRING), _airbyte_cursor_updated_at (TIMESTAMP)"
+}, {
+  "table_name": "employees",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), name (STRING), role (STRING), email (STRING), is_active (BOOL), created_at (TIMESTAMP), updated_at (TIMESTAMP), permissions (JSON)"
+}, {
+  "table_name": "feedbacks",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), type (STRING), reply (STRING), rating (INT64), status (STRING), comment (STRING), created_at (TIMESTAMP), product_id (INT64), updated_at (TIMESTAMP), customer_id (INT64), is_published (BOOL)"
+}, {
+  "table_name": "languages",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), name (STRING), status (STRING), iso_code (STRING), is_default (BOOL), sort_order (INT64), auto_translate (BOOL)"
+}, {
+  "table_name": "loyalty_points",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), balance (INT64), order_id (INT64), created_at (TIMESTAMP), action_type (STRING), customer_id (INT64), description (STRING), points_spent (INT64), points_earned (INT64)"
+}, {
+  "table_name": "order_assigned_employees",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), role (STRING), order_id (INT64), assigned_at (TIMESTAMP), employee_id (INT64), employee_name (STRING), assignment_type (STRING)"
+}, {
+  "table_name": "order_assignment_rules",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), name (STRING), priority (INT64), is_active (BOOL), conditions (JSON), created_at (TIMESTAMP), updated_at (TIMESTAMP), employee_id (INT64)"
+}, {
+  "table_name": "order_histories",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), note (STRING), order_id (INT64), status_id (INT64), created_at (TIMESTAMP), created_by (INT64), status_name (STRING), previous_status_id (INT64), previous_status_name (STRING)"
+}, {
+  "table_name": "order_invoices",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), items (JSON), amount (NUMERIC), status (STRING), sent_at (TIMESTAMP), order_id (INT64), created_at (TIMESTAMP), invoice_number (STRING)"
+}, {
+  "table_name": "order_items",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), order_id (INT64), quantity (INT64), created_at (TIMESTAMP), product_id (INT64), unit_price (NUMERIC), variant_id (INT64), product_sku (STRING), total_price (NUMERIC), product_name (STRING), product_options (JSON)"
+}, {
+  "table_name": "order_shipments",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), cost (NUMERIC), status (STRING), weight (NUMERIC), order_id (INT64), courier_id (INT64), created_at (TIMESTAMP), pickup_date (TIMESTAMP), delivery_date (TIMESTAMP), tracking_number (STRING)"
+}, {
+  "table_name": "order_statuses",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), name (STRING), slug (STRING), color (STRING), is_custom (BOOL), created_at (TIMESTAMP), is_default (BOOL), sort_order (INT64), updated_at (TIMESTAMP)"
+}, {
+  "table_name": "order_tags",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), name (STRING), color (STRING), created_at (TIMESTAMP)"
+}, {
+  "table_name": "orders",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), date (TIMESTAMP), items (JSON), total (JSON), status (JSON), created_at (TIMESTAMP), updated_at (TIMESTAMP), customer_id (INT64), reference_id (STRING), payment_method (STRING), _airbyte_cursor_date (TIMESTAMP)"
+}, {
+  "table_name": "payment_methods",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), fees (JSON), logo (STRING), name (STRING), slug (STRING), status (STRING), is_online (BOOL), currencies (JSON)"
+}, {
+  "table_name": "product_option_templates",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), name (STRING), options (JSON), created_at (TIMESTAMP), updated_at (TIMESTAMP)"
+}, {
+  "table_name": "product_quantities",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), branch_id (INT64), product_id (INT64), variant_id (INT64), last_updated (TIMESTAMP), incoming_quantity (INT64), available_quantity (INT64), committed_quantity (INT64)"
+}, {
+  "table_name": "product_tags",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), name (STRING), slug (STRING), created_at (TIMESTAMP)"
+}, {
+  "table_name": "product_variants",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), sku (STRING), image (STRING), price (NUMERIC), status (STRING), weight (NUMERIC), barcode (STRING), options (JSON), quantity (INT64), created_at (TIMESTAMP), dimensions (STRING), product_id (INT64), sale_price (NUMERIC), updated_at (TIMESTAMP)"
+}, {
+  "table_name": "products",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), sku (STRING), name (STRING), type (STRING), price (NUMERIC), images (JSON), status (STRING), weight (NUMERIC), options (JSON), brand_id (INT64), quantity (INT64), variants (JSON), created_at (TIMESTAMP), dimensions (STRING), is_digital (BOOL), sale_price (NUMERIC), updated_at (TIMESTAMP), category_id (INT64), description (STRING)"
+}, {
+  "table_name": "quantity_audit",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), reason (STRING), branch_id (INT64), created_at (TIMESTAMP), product_id (INT64), variant_id (INT64), employee_id (INT64), new_quantity (INT64), old_quantity (INT64), change_amount (INT64)"
+}, {
+  "table_name": "quantity_change_reasons",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), name (STRING), type (STRING), is_default (BOOL)"
+}, {
+  "table_name": "reviews",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), type (STRING), reply (STRING), rating (INT64), status (STRING), comment (STRING), created_at (TIMESTAMP), product_id (INT64), updated_at (TIMESTAMP), customer_id (INT64), is_published (BOOL)"
+}, {
+  "table_name": "seo_settings",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), image (STRING), title (STRING), robots (STRING), keywords (STRING), description (STRING)"
+}, {
+  "table_name": "store_info",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), name (STRING), plan (JSON), email (STRING), domain (STRING), status (STRING), currency (STRING), settings (JSON), timezone (STRING), created_at (TIMESTAMP), updated_at (TIMESTAMP)"
+}, {
+  "table_name": "taxes",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), name (STRING), rate (NUMERIC), type (STRING), status (STRING), created_at (TIMESTAMP), is_default (BOOL), updated_at (TIMESTAMP)"
+}, {
+  "table_name": "transactions",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), type (STRING), amount (NUMERIC), status (STRING), currency (STRING), order_id (INT64), created_at (TIMESTAMP), updated_at (TIMESTAMP), processed_at (TIMESTAMP), payment_method (STRING), transaction_id (STRING), gateway_response (JSON)"
+}, {
+  "table_name": "user_info",
+  "columns_and_types": "_airbyte_raw_id (STRING), _airbyte_extracted_at (TIMESTAMP), _airbyte_meta (JSON), _airbyte_generation_id (INT64), id (INT64), name (STRING), role (STRING), email (STRING), store (JSON), avatar (STRING), mobile (STRING), permissions (JSON)"
+}]
