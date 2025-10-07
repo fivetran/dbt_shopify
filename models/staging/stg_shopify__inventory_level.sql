@@ -7,8 +7,8 @@ with source as (
 renamed as (
 
     select
-        -- ids
-        cast(id as int64) as inventory_level_id,
+        -- ids (Airbyte uses composite key "inventory_item_id|location_id" as id)
+        {{ dbt_utils.generate_surrogate_key(['inventory_item_id', 'location_id']) }} as inventory_level_id,
         inventory_item_id,
         location_id,
 

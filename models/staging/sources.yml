@@ -5,6 +5,10 @@ sources:
     description: Raw Shopify data from Airbyte
     database: wow-ai-461911
     schema: shopify_worood
+    quoting:
+      database: true
+      schema: true
+      identifier: true
     tables:
       - name: customers
         identifier: customers

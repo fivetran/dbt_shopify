@@ -54,7 +54,7 @@ renamed as (
         -- ids
         order_id,
         order_line_id,
-        row_number() over (partition by order_id, order_line_id order by tax_line) as tax_line_index,
+        row_number() over (partition by order_id, order_line_id order by (select null)) as tax_line_index,
 
         -- tax details
         json_extract_scalar(tax_line, '$.title') as title,

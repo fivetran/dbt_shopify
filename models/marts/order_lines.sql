@@ -83,7 +83,7 @@ with order_line as (
         product_variants.position as variant_position,
         product_variants.inventory_policy as variant_inventory_policy,
         product_variants.compare_at_price as variant_compare_at_price,
-        product_variants.fulfillment_service as variant_fulfillment_service,
+        cast(null as string) as variant_fulfillment_service, -- not available in Airbyte schema
         product_variants.taxable as variant_is_taxable,
         product_variants.barcode as variant_barcode,
         product_variants.grams as variant_grams,

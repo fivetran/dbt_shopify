@@ -30,7 +30,7 @@ renamed as (
         -- marketing
         accepts_marketing as marketing_consent_state, -- boolean in new schema, was string in old
         marketing_opt_in_level,
-        cast(accepts_marketing_updated_at as timestamp) as marketing_consent_updated_at, -- JSON in raw, need to cast
+        parse_timestamp('%Y-%m-%dT%H:%M:%E*SZ', json_extract_scalar(accepts_marketing_updated_at, '$')) as marketing_consent_updated_at, -- JSON string to timestamp
 
         -- default address (JSON column - extract id)
         cast(json_extract_scalar(default_address, '$.id') as int64) as default_address_id,

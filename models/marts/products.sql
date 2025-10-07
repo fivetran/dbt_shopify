@@ -15,23 +15,31 @@ with products as (
     select *
     from {{ ref('int_shopify__product__order_line_aggregates')}}
 
+), product_tags_source as (
+
+    select
+        product_id,
+        source_relation,
+        tags
+    from {{ ref('stg_shopify__product') }}
+    where tags is not null
+
 ), product_tags as (
 
     select
         product_id,
-        'airbyte' as source_relation,
+        source_relation,
         string_agg(distinct trim(tag), ', ') as tags
 
-    from {{ ref('stg_shopify__product') }},
+    from product_tags_source,
     unnest(split(tags, ',')) as tag
-    where tags is not null
     group by 1, 2
 
 ), joined as (
 
     select
-        products.*,
-        product_tags.tags,
+        products.* except(tags),
+        product_tags.tags as product_tags,
         cast(null as string) as collections, -- TODO: join with collections
         coalesce(product_variants.count_variants, 0) as count_variants,
         cast(null as bool) as has_product_media, -- TODO: determine if product has media

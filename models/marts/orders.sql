@@ -135,7 +135,7 @@ with orders as (
     select
         *,
         row_number() over (
-            partition by customer_id, source_relation
+            partition by cast(customer_id as int64), source_relation
             order by created_timestamp)
             as customer_order_seq_number
     from joined

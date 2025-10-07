@@ -16,7 +16,7 @@ with customers as (
         count(distinct id) as lifetime_abandoned_checkouts
     from {{ source('shopify_raw', 'abandoned_checkouts') }}
     where customer is not null
-    group by 1, 2
+    group by cast(json_extract_scalar(customer, '$.id') as int64), source_relation
 
 ), customer_tags_aggregated as (
 

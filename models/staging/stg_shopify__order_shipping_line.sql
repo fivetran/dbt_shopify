@@ -26,8 +26,8 @@ renamed as (
     select
         -- generate synthetic id from order_id + index (shipping lines don't have their own id)
         order_id,
-        row_number() over (partition by order_id order by shipping_line) as shipping_line_index,
-        row_number() over (partition by order_id order by shipping_line) as order_shipping_line_id,
+        row_number() over (partition by order_id order by (select null)) as shipping_line_index,
+        row_number() over (partition by order_id order by (select null)) as order_shipping_line_id,
 
         -- shipping details
         json_extract_scalar(shipping_line, '$.code') as code,

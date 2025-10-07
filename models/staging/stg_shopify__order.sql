@@ -10,7 +10,7 @@ renamed as (
         -- ids
         id as order_id,
         user_id,
-        customer_id,
+        cast(json_extract_scalar(customer, '$.id') as int64) as customer_id,  -- Extract customer id from JSON object
         location_id,
 
         -- order identifiers
