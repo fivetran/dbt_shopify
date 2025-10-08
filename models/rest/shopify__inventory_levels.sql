@@ -24,10 +24,12 @@ location as (
     from {{ ref('stg_shopify__location') }}
 ),
 
+{% set metafields_enabled = var('shopify_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_product_variant_metafields', True)) %}
+
 product_variant as (
 
     select *
-    from {{ ref('stg_shopify__product_variant') }}
+    from {{ ref('shopify__product_variant_metafields') if metafields_enabled else ref('stg_shopify__product_variant') }}
 ),
 
 product as (
@@ -41,6 +43,16 @@ inventory_level_aggregated as (
     select *
     from {{ ref('int_shopify__inventory_level__aggregates') }}
 ),
+
+{# {% set metafields_enabled = var('shopify_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_product_variant_metafields', True)) %}
+{% if metafields_enabled %}
+
+metafields as (
+
+    select *
+    from {{ ref('shopify__product_variant_metafields') }}
+),
+{% endif %} #}
 
 {% if var('shopify_using_product_variant_media', False) %}
 product_variant_media as (
@@ -155,6 +167,16 @@ joined_info as (
         product_variant.has_components_required as variant_has_components_required,
         product_variant.sellable_online_quantity as variant_sellable_online_quantity
 
+        {% if metafields_enabled -%} 
+            {%- set metafield_columns = adapter.get_columns_in_relation(ref('shopify__product_variant_metafields')) -%}
+
+            {%- for column in metafield_columns -%}
+                {% if column.name.startswith('metafield_') %}
+        , product_variant.{{ column.name }} as metafield_variant_{{ column.name }}
+                {% endif %}
+            {%- endfor %}
+        {% endif %}
+
         {{ fivetran_utils.persist_pass_through_columns('product_variant_pass_through_columns', identifier='product_variant') }}
 
     from inventory_level
@@ -173,6 +195,12 @@ joined_info as (
         on product_variant.variant_id = product_variant_media.product_variant_id
         and product_variant.source_relation = product_variant_media.source_relation
     {% endif %}
+
+    {# {% if metafields_enabled %}
+    left join metafields 
+        on product_variant.source_relation = metafields.source_relation
+        and product_variant.variant_id = metafields.variant_id
+    {% endif %} #}
 ),
 
 joined_aggregates as (

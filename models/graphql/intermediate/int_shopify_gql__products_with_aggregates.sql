@@ -1,9 +1,11 @@
 {{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
+{% set product_metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_product_metafields', True)) %}
+
 with products as (
 
     select *
-    from {{ ref('stg_shopify_gql__product') }}
+    from {{ ref('shopify_gql__product_metafields') if product_metafields_enabled else ref('stg_shopify_gql__product') }}
 ), 
 
 collection_product as (
@@ -12,10 +14,12 @@ collection_product as (
     from {{ ref('stg_shopify_gql__collection_product') }}
 ),
 
+{% set collection_metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_collection_metafields', True)) %}
+
 collection as (
 
     select *
-    from {{ ref('int_shopify_gql__collection') }}
+    from {{ ref('shopify_gql__collection_metafields') if collection_metafields_enabled else ref('int_shopify_gql__collection') }}
     where not coalesce(is_deleted, false) -- limit to only active collections
 ),
 
@@ -37,16 +41,46 @@ product_media as (
     from {{ ref('stg_shopify_gql__product_media') }}
 ),
 
+{# {% set collection_metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_collection_metafields', True)) %}
+{% if collection_metafields_enabled %}
+
+collection_metafields as (
+
+    select *
+    from {{ ref('shopify_gql__collection_metafields') }}
+),
+{% endif %} #}
+
 collections_aggregated as (
+
+{%- set collection_metafield_columns = adapter.get_columns_in_relation(ref('shopify_gql__collection_metafields')) if collection_metafields_enabled else [] -%}
 
     select
         collection_product.product_id,
         collection_product.source_relation,
         {{ fivetran_utils.string_agg(field_to_agg='collection.title', delimiter="', '") }} as collections
+
+        {% if collection_metafields_enabled -%} 
+            {%- for column in collection_metafield_columns -%}
+                {% if column.name.startswith('metafield_') %}
+
+        , {{ fivetran_utils.string_agg(field_to_agg='distinct collection.' ~ column.name, delimiter="', '") }} as metafield_collection_{{ column.name }}
+
+                {% endif %}
+            {%- endfor %}
+        {% endif %}
+
     from collection_product 
     join collection 
         on collection_product.collection_id = collection.collection_id
         and collection_product.source_relation = collection.source_relation
+
+    {# {% if collection_metafields_enabled %}
+    left join collection_metafields
+        on collection.source_relation = collection_metafields.source_relation
+        and collection.variant_id = collection_metafields.collection_id
+    {% endif %} #}
+
     group by 1,2
 ),
 
@@ -88,6 +122,17 @@ joined as (
     select
         products.*,
         collections_aggregated.collections,
+
+        {% if collection_metafields_enabled %}
+            {%- for column in collection_metafield_columns -%}
+                {% if column.name.startswith('metafield_') %}
+
+        collections_aggregated.metafield_collection_{{ column.name }},
+
+                {% endif %}
+            {%- endfor %}
+        {% endif %}
+
         tags_aggregated.tags,
         variants_aggregated.count_variants,
         coalesce(media_aggregated.count_media, 0) > 0 as has_product_media

@@ -1,16 +1,28 @@
 {{ config(enabled=var('shopify_api', 'rest') == 'rest') }}
 
+{% set metafields_enabled = var('shopify_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_order_metafields', True)) %}
+
 with orders as (
 
     select 
         *,
         {{ dbt_utils.generate_surrogate_key(['source_relation', 'order_id']) }} as orders_unique_key
-    from {{ ref('stg_shopify__order') }}
- 
+    from {{ ref('shopify__order_metafields') if metafields_enabled else ref('stg_shopify__order') }}
+
 ), order_lines as (
 
     select *
     from {{ ref('shopify__orders__order_line_aggregates') }}
+
+{# {% set metafields_enabled = var('shopify_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_order_metafields', True)) %}
+{% if metafields_enabled %}
+
+), metafields as (
+
+    select *
+    from {{ ref('shopify__order_metafields') }}
+
+{% endif %} #}
 
 ), order_adjustments as (
 
@@ -163,8 +175,36 @@ with orders as (
             else 'repeat'
         end as new_vs_repeat
     from windows
-
 )
 
 select *
 from new_vs_repeat
+
+{# {% if metafields_enabled -%} 
+
+{%- set metafield_columns = adapter.get_columns_in_relation(ref('shopify__order_metafields')) -%}
+
+, add_metafields as (
+    select 
+        new_vs_repeat.*
+        {%- for column in metafield_columns -%}
+            {% if column.name.startswith('metafield_') %}
+                , metafields.{{ column.name }}
+            {% endif %}
+        {%- endfor %}
+
+    from new_vs_repeat 
+    left join metafields
+        on new_vs_repeat.order_id = metafields.order_id
+        and new_vs_repeat.source_relation = metafields.source_relation
+
+)
+
+select *
+from add_metafields
+
+{% else %}
+
+select *
+from new_vs_repeat
+{% endif %} #}

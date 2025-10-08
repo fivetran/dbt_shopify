@@ -27,7 +27,7 @@ with customer_emails as (
 ), joined as (
 
     select 
-        customer_emails.*,
+        customer_emails.*, -- contains customer metafields
 
         {% if var('shopify_using_abandoned_checkout', True) %}
         coalesce(abandoned.lifetime_abandoned_checkouts, 0) as lifetime_abandoned_checkouts,

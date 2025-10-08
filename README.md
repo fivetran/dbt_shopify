@@ -158,7 +158,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=1.0.0", "<1.1.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=1.1.0", "<1.2.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 > All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/shopify_source` in your `packages.yml` since this package has been deprecated.
@@ -304,7 +304,9 @@ vars:
 ```
 
 #### Adding Metafields
-In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) the Shopify connector included support for the [metafield resource](https://shopify.dev/api/admin-rest/2023-01/resources/metafield). If you would like to take advantage of these metafields, this package offers corresponding mapping models which append these metafields to the respective source object for the following tables: collection, customer, order, product_image, product, product_variant, shop. If enabled, these models will materialize as `shopify__[object]_metafields` for each respective supported object. To enable these metafield mapping models, you may use the following configurations within your `dbt_project.yml`.
+In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) the Shopify connector introduced support for the [metafield resource](https://shopify.dev/api/admin-rest/2023-01/resources/metafield).
+
+If you would like to take advantage of these metafields, this package offers corresponding mapping models which append these metafields to the respective source object for the following tables: collection, customer, order, product_image, product, product_variant, shop. If enabled, these models will materialize as `shopify__[object]_metafields` for each respective supported object. To enable these metafield mapping models, you may use the following configurations within your `dbt_project.yml`.
 
 >**Note 1**: These metafield models will contain all the same records as the corresponding staging models with the exception of the metafield columns being added.
 
@@ -312,13 +314,13 @@ In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) 
 
 ```yml
 vars:
-  shopify_using_all_metafields: True ## False by default. Will enable ALL metafield models. FYI - This will override all other metafield variables.
-  shopify_using_collection_metafields: True ## False by default. Will enable ONLY the collection metafield model.
-  shopify_using_customer_metafields: True ## False by default. Will enable ONLY the customer metafield model.
-  shopify_using_order_metafields: True ## False by default. Will enable ONLY the order metafield model.
-  shopify_using_product_metafields: True ## False by default. Will enable ONLY the product metafield model.
-  shopify_using_product_variant_metafields: True ## False by default. Will enable ONLY the product variant metafield model.
-  shopify_using_shop_metafields: True ## False by default. Will enable ONLY the shop metafield model.
+  shopify_using_all_metafields: False ## True by default. Will enable/disable ALL metafield models. FYI - This will override all other metafield variables.
+  shopify_using_collection_metafields: False ## True by default. Will enable/disable ONLY the collection metafield model.
+  shopify_using_customer_metafields: False ## True by default. Will enable/disable ONLY the customer metafield model.
+  shopify_using_order_metafields: False ## True by default. Will enable/disable ONLY the order metafield model.
+  shopify_using_product_metafields: False ## True by default. Will enable/disable ONLY the product metafield model.
+  shopify_using_product_variant_metafields: False ## True by default. Will enable/disable ONLY the product variant metafield model.
+  shopify_using_shop_metafields: False ## True by default. Will enable/disable ONLY the shop metafield model.
 ```
 
 #### Changing the Build Schema
