@@ -38,16 +38,6 @@ product as (
     from {{ ref('stg_shopify_gql__product') }}
 ),
 
-{# {% set metafields_enabled = var('shopify_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_product_variant_metafields', True)) %}
-{% if metafields_enabled %}
-
-metafields as (
-
-    select *
-    from {{ ref('shopify__product_variant_metafields') }}
-),
-{% endif %} #}
-
 inventory_level_aggregated as (
 
     select *
@@ -180,12 +170,6 @@ joined_info as (
         on product_variant.variant_id = product_variant_media.product_variant_id
         and product_variant.source_relation = product_variant_media.source_relation
     {% endif %}
-
-    {# {% if metafields_enabled %}
-    left join metafields 
-        on product_variant.source_relation = metafields.source_relation
-        and product_variant.variant_id = metafields.variant_id
-    {% endif %} #}
 ),
 
 joined_aggregates as (

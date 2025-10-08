@@ -22,16 +22,6 @@ with orders as (
     select *
     from {{ ref('int_shopify_gql__order_adjustment') }}
 
-{# {% set metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_order_metafields', True)) %}
-{% if metafields_enabled %}
-
-), metafields as (
-
-    select *
-    from {{ ref('shopify_gql__order_metafields') }}
-
-{% endif %} #}
-
 ), order_adjustments_aggregates as (
     select
         order_id,
@@ -154,32 +144,3 @@ with orders as (
 
 select *
 from new_vs_repeat
-
-{# {% if metafields_enabled -%} 
-
-{%- set metafield_columns = adapter.get_columns_in_relation(ref('shopify_gql__order_metafields')) -%}
-
-, add_metafields as (
-    select 
-        new_vs_repeat.*
-        {%- for column in metafield_columns -%}
-            {% if column.name.startswith('metafield_') %}
-                , metafields.{{ column.name }}
-            {% endif %}
-        {%- endfor %}
-
-    from new_vs_repeat 
-    left join metafields
-        on new_vs_repeat.order_id = metafields.order_id
-        and new_vs_repeat.source_relation = metafields.source_relation
-
-)
-
-select *
-from add_metafields
-
-{% else %}
-
-select *
-from new_vs_repeat
-{% endif %} #}

@@ -41,16 +41,6 @@ product_media as (
     from {{ ref('stg_shopify_gql__product_media') }}
 ),
 
-{# {% set collection_metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_collection_metafields', True)) %}
-{% if collection_metafields_enabled %}
-
-collection_metafields as (
-
-    select *
-    from {{ ref('shopify_gql__collection_metafields') }}
-),
-{% endif %} #}
-
 collections_aggregated as (
 
 {%- set collection_metafield_columns = adapter.get_columns_in_relation(ref('shopify_gql__collection_metafields')) if collection_metafields_enabled else [] -%}
@@ -74,12 +64,6 @@ collections_aggregated as (
     join collection 
         on collection_product.collection_id = collection.collection_id
         and collection_product.source_relation = collection.source_relation
-
-    {# {% if collection_metafields_enabled %}
-    left join collection_metafields
-        on collection.source_relation = collection_metafields.source_relation
-        and collection.variant_id = collection_metafields.collection_id
-    {% endif %} #}
 
     group by 1,2
 ),

@@ -13,16 +13,6 @@ with customers as (
     select *
     from {{ ref('int_shopify_gql__customers_order_aggregates' )}}
 
-{# {% set metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_customer_metafields', True)) %}
-{% if metafields_enabled %}
-
-), metafields as (
-
-    select *
-    from {{ ref('shopify_gql__customer_metafields') }}
-
-{% endif %} #}
-
 {% if var('shopify_gql_using_abandoned_checkout', True) %}
 ), abandoned as (
 
@@ -92,32 +82,3 @@ with customers as (
 
 select *
 from joined
-
-{# {% if metafields_enabled -%} 
-
-{%- set metafield_columns = adapter.get_columns_in_relation(ref('shopify_gql__customer_metafields')) -%}
-
-, add_metafields as (
-    select 
-        joined.*
-        {%- for column in metafield_columns -%}
-            {% if column.name.startswith('metafield_') %}
-                , metafields.{{ column.name }}
-            {% endif %}
-        {%- endfor %}
-
-    from joined 
-    left join metafields
-        on joined.customer_id = metafields.customer_id
-        and joined.source_relation = metafields.source_relation
-
-)
-
-select *
-from add_metafields
-
-{% else %}
-
-select *
-from joined
-{% endif %} #}

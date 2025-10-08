@@ -306,11 +306,22 @@ vars:
 #### Adding Metafields
 In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) the Shopify connector introduced support for the [metafield resource](https://shopify.dev/api/admin-rest/2023-01/resources/metafield).
 
-If you would like to take advantage of these metafields, this package offers corresponding mapping models which append these metafields to the respective source object for the following tables: collection, customer, order, product_image, product, product_variant, shop. If enabled, these models will materialize as `shopify__[object]_metafields` for each respective supported object. To enable these metafield mapping models, you may use the following configurations within your `dbt_project.yml`.
+>**Note**: Please ensure that the `shopify_using_metafield` is not disabled to use metafields. (Enabled by default)
 
->**Note 1**: These metafield models will contain all the same records as the corresponding staging models with the exception of the metafield columns being added.
+By default, the packge will pivot out metafields associated with the following source objects in `shopify...__[object]_metafields` models and subsequently join them into the appropriate end models:
 
->**Note 2**: Please ensure that the `shopify_using_metafield` is not disabled. (Enabled by default)
+|  Source Object | Metafield Pivoting Model | End Model Joined Into  |
+|----------------|---------------------------|---------------------------|
+| `COLLECTION`   | `shopify_<gql>__collection_metafields` | `shopify_<gql>__products` |
+| `CUSTOMER`     | `shopify_<gql>__customer_metafields` | `shopify_<gql>__customers` and `shopify_<gql>__customer_emails` |
+| `ORDER`        | `shopify_<gql>__order_metafields` | `shopify_<gql>__orders` |
+| `PRODUCT`      | `shopify_<gql>__product__metafields` | `shopify_<gql>__products` |
+| `PRODUCT_VARIANT` | `shopify_<gql>__product_variant_metafields` | `shopify_<gql>__inventory_levels` |
+| `SHOP`         | `shopify_<gql>__shop_metafields` | `shopify_<gql>__daily_shop` |
+
+>**Note**: The `shopify...__[object]_metafields` models will contain all the same records as the corresponding staging models with the exception of the metafield columns being added.
+
+If you would like to disable this behavior, add the following configurations within your `dbt_project.yml`.
 
 ```yml
 vars:

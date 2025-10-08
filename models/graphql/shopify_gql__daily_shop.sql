@@ -21,16 +21,6 @@ daily_orders as (
     from {{ ref('int_shopify_gql__daily_orders') }}
 ),
 
-{# {% set metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_shop_metafields', True)) %}
-{% if metafields_enabled %}
-
-metafields as (
-
-    select *
-    from {{ ref('shopify_gql__shop_metafields') }}
-),
-{% endif %} #}
-
 {% if var('shopify_gql_using_abandoned_checkout', True) %}
 daily_abandoned_checkouts as (
 
@@ -129,16 +119,6 @@ final as (
             {% endfor %}
         {% endif %}
 
-        {# {% if metafields_enabled -%} 
-            {%- set metafield_columns = adapter.get_columns_in_relation(ref('shopify_gql__shop_metafields')) -%}
-
-            {%- for column in metafield_columns -%}
-                {% if column.name.startswith('metafield_') %}
-        , metafields.{{ column.name }}
-                {% endif %}
-            {%- endfor %}
-        {% endif %} #}
-
     from shop_calendar
     left join daily_orders 
         on shop_calendar.source_relation = daily_orders.source_relation
@@ -155,12 +135,6 @@ final as (
         on shop_calendar.source_relation = daily_fulfillment.source_relation
         and shop_calendar.date_day = daily_fulfillment.date_day
     {% endif %}
-{# 
-    {% if metafields_enabled %}
-    left join metafields 
-        on shop_calendar.source_relation = metafields.source_relation
-        and shop_calendar.shop_id = metafields.shop_id
-    {% endif %} #}
 )
 
 
