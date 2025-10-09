@@ -325,7 +325,7 @@ If you would like to disable this behavior, add the following configurations wit
 
 ```yml
 vars:
-  shopify_using_all_metafields: False ## True by default. Will enable/disable ALL metafield models. FYI - This will override all other metafield variables.
+  shopify_using_all_metafields: False ## True by default. Will enable/disable ALL metafield models. If you are disabling any of the below variables, this MUST also be set to False.
   shopify_using_collection_metafields: False ## True by default. Will enable/disable ONLY the collection metafield model.
   shopify_using_customer_metafields: False ## True by default. Will enable/disable ONLY the customer metafield model.
   shopify_using_order_metafields: False ## True by default. Will enable/disable ONLY the order metafield model.
