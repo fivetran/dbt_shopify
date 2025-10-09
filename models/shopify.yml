@@ -72,7 +72,7 @@ models:
         description: "{{ doc('source_relation') }}"
         
   - name: shopify__orders
-    description: Each record represents an order in Shopify.
+    description: Each record represents an order in Shopify. Will also include `ORDER` metafields if enabled.
     columns:
       - name: orders_unique_key
         description: Unique key representing an order. Hashed on 'order_id' and 'source_relation'.
@@ -288,7 +288,7 @@ models:
         description: The ID of the order placed on the originating platform. This value doesn't correspond to the Shopify ID that's generated from a completed draft.
   
   - name: shopify__customers
-    description: Each record represents a customer in Shopify.
+    description: Each record represents a customer in Shopify. Will also include `CUSTOMER` metafields if enabled.
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -370,7 +370,7 @@ models:
           field and the deprecated `accepts_marketing` field. Records with the old field will be marked with '(legacy)'.
 
   - name: shopify__customer_emails
-    description: Each record represents a customer email in Shopify.
+    description: Each record represents a customer email in Shopify. Will also include `CUSTOMER` metafields if enabled.
     columns:
       - name: last_fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -460,7 +460,7 @@ models:
           field and the deprecated `accepts_marketing` field. Records with the old field will be marked with '(legacy)'.
 
   - name: shopify__products
-    description: Each record represents a product in Shopify.
+    description: Each record represents a product in Shopify. Will also include `PRODUCT` and `COLLECTION` metafields if enabled.
     columns:
       - name: is_deleted
         description: Whether the record has been deleted in the source system.
@@ -748,6 +748,8 @@ models:
       inventory items (which have a 1:1 relationship with product variants) and locations. 
       
       Inventory Level = Inventory item @ a Location.
+
+      Will also include `PRODUCT_VARIANT` metafields if enabled.
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -1063,7 +1065,7 @@ models:
 
   - name: shopify__daily_shop
     description: >
-      Each record represents a day in your Shop, enriched with a suite of metrics.
+      Each record represents a day in your Shop, enriched with a suite of metrics. Will also include `SHOP` metafields if enabled.
     columns:
       - name: date_day
         description: Day for which the shop activity is being measured.

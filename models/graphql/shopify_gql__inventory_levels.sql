@@ -147,7 +147,7 @@ joined_info as (
 
             {%- for column in metafield_columns -%}
                 {% if column.name.startswith('metafield_') %}
-        , product_variant.{{ column.name }} as metafield_variant_{{ column.name }}
+        , product_variant.{{ column.name }} as variant_{{ column.name }}
                 {% endif %}
             {%- endfor %}
         {% endif %}

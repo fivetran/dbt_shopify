@@ -60,7 +60,7 @@ with customers as (
             {%- for column in metafield_columns -%}
                 {% if column.name.startswith('metafield_') %}
 
-        , {{ fivetran_utils.string_agg(field_to_agg='distinct customers.' ~ column.name, delimiter="', '") }} as metafield_{{ column.name }}
+        , {{ fivetran_utils.string_agg(field_to_agg='distinct customers.' ~ column.name, delimiter="', '") }} as {{ column.name }}
 
                 {% endif %}
             {%- endfor %}

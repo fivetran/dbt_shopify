@@ -41,16 +41,6 @@ product_media as (
     from {{ ref('stg_shopify__product_media') }}
 ),
 
-{# {% set collection_metafields_enabled = var('shopify_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_collection_metafields', True)) %}
-{% if collection_metafields_enabled %}
-
-collection_metafields as (
-
-    select *
-    from {{ ref('shopify__collection_metafields') }}
-),
-{% endif %} #}
-
 collections_aggregated as (
 
 {%- set collection_metafield_columns = adapter.get_columns_in_relation(ref('shopify__collection_metafields')) if collection_metafields_enabled else [] -%}
@@ -64,7 +54,7 @@ collections_aggregated as (
             {%- for column in collection_metafield_columns -%}
                 {% if column.name.startswith('metafield_') %}
 
-        , {{ fivetran_utils.string_agg(field_to_agg='distinct collection.' ~ column.name, delimiter="', '") }} as metafield_collection_{{ column.name }}
+        , {{ fivetran_utils.string_agg(field_to_agg='distinct collection.' ~ column.name, delimiter="', '") }} as collection_{{ column.name }}
 
                 {% endif %}
             {%- endfor %}
@@ -74,12 +64,6 @@ collections_aggregated as (
     join collection 
         on collection_product.collection_id = collection.collection_id
         and collection_product.source_relation = collection.source_relation
-
-    {# {% if collection_metafields_enabled %}
-    left join collection_metafields
-        on collection.source_relation = collection_metafields.source_relation
-        and collection.variant_id = collection_metafields.collection_id
-    {% endif %} #}
 
     group by 1,2
 ),
@@ -127,7 +111,7 @@ joined as (
             {%- for column in collection_metafield_columns -%}
                 {% if column.name.startswith('metafield_') %}
 
-        collections_aggregated.metafield_collection_{{ column.name }},
+        collections_aggregated.collection_{{ column.name }},
 
                 {% endif %}
             {%- endfor %}

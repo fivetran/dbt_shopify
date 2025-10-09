@@ -19,7 +19,7 @@ vars:
   # shopify_gql_using_fulfillment_tracking_info: true # @docs-include
   # shopify_gql_using_product_variant_media: true # @docs-include
   
-  shopify_schema: shopify_integration_tests_17
+  shopify_schema: shopify_integration_tests
   shopify_api_override: rest
 
   shopify:

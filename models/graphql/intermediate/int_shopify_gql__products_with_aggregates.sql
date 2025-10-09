@@ -54,7 +54,7 @@ collections_aggregated as (
             {%- for column in collection_metafield_columns -%}
                 {% if column.name.startswith('metafield_') %}
 
-        , {{ fivetran_utils.string_agg(field_to_agg='distinct collection.' ~ column.name, delimiter="', '") }} as metafield_collection_{{ column.name }}
+        , {{ fivetran_utils.string_agg(field_to_agg='distinct collection.' ~ column.name, delimiter="', '") }} as collection_{{ column.name }}
 
                 {% endif %}
             {%- endfor %}
@@ -111,7 +111,7 @@ joined as (
             {%- for column in collection_metafield_columns -%}
                 {% if column.name.startswith('metafield_') %}
 
-        collections_aggregated.metafield_collection_{{ column.name }},
+        collections_aggregated.collection_{{ column.name }},
 
                 {% endif %}
             {%- endfor %}

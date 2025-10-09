@@ -72,7 +72,7 @@ models:
         description: "{{ doc('source_relation') }}"
         
   - name: shopify_gql__orders
-    description: Each record represents an order in Shopify.
+    description: Each record represents an order in Shopify. Will also include `ORDER` metafields if enabled.
     columns:
       - name: unique_key
         description: Unique key representing an order. Hashed on 'order_id' and 'source_relation'.
@@ -306,7 +306,7 @@ models:
         description: The ID of the order placed on the originating platform. This value doesn't correspond to the Shopify ID that's generated from a completed draft.
   
   - name: shopify_gql__customers
-    description: Each record represents a customer in Shopify.
+    description: Each record represents a customer in Shopify. Will also include `CUSTOMER` metafields if enabled.
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -388,7 +388,7 @@ models:
           field and the deprecated `accepts_marketing` field. Records with the old field will be marked with '(legacy)'.
 
   - name: shopify_gql__customer_emails
-    description: Each record represents a customer email in Shopify.
+    description: Each record represents a customer email in Shopify. Will also include `CUSTOMER` metafields if enabled.
     columns:
       - name: last_fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -478,7 +478,7 @@ models:
           field and the deprecated `accepts_marketing` field. Records with the old field will be marked with '(legacy)'.
 
   - name: shopify_gql__products
-    description: Each record represents a product in Shopify.
+    description: Each record represents a product in Shopify. Will also include `PRODUCT` and `COLLECTION` metafields if enabled.
     columns:
       - name: unique_key
         description: Unique key representing a product. Hashed on 'product_id' and 'source_relation'.
@@ -760,6 +760,8 @@ models:
       inventory items (which have a 1:1 relationship with product variants) and locations. 
       
       Inventory Level = Inventory item @ a Location.
+
+      Will also include `PRODUCT_VARIANT` metafields if enabled.
     columns:
       - name: inventory_level_id
         description: A globally unique identifier for the inventory level.
@@ -1056,7 +1058,7 @@ models:
 
   - name: shopify_gql__daily_shop
     description: >
-      Each record represents a day in your Shop, enriched with a suite of metrics.
+      Each record represents a day in your Shop, enriched with a suite of metrics. Will also include `SHOP` metafields if enabled.
     columns:
       - name: date_day
         description: Day for which the shop activity is being measured.
