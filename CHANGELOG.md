@@ -1,6 +1,6 @@
 # dbt_shopify v1.1.0
 
-[PR #124](https://github.com/fivetran/dbt_shopify/pull/124) includes the following updates:
+[PR #132](https://github.com/fivetran/dbt_shopify/pull/132) includes the following updates:
 
 ## Schema/Data Change
 **12 total changes • 12 possible breaking changes**
@@ -26,6 +26,7 @@
 
 ## Under the Hood
 - Adjusted seed data to adequately test the incorporation of metafields.
+- Added consistency validation tests for all GQL models.
 
 # dbt_shopify v1.0.0
 

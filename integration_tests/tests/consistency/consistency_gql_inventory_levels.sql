@@ -6,19 +6,19 @@
 with prod as (
     select 
         {{ dbt_utils.star(
-            from=ref('shopify__customers'), 
-            except=var('consistency_test_customer_exclude_fields', [])) 
+            from=ref('shopify_gql__inventory_levels'), 
+            except=var('consistency_test_gql_inventory_level_exclude_fields', [])) 
         }}
-    from {{ target.schema }}_shopify_prod.shopify__customers
+    from {{ target.schema }}_shopify_prod.shopify_gql__inventory_levels
 ),
 
 dev as (
     select 
         {{ dbt_utils.star(
-            from=ref('shopify__customers'), 
-            except=var('consistency_test_customer_exclude_fields', [])) 
+            from=ref('shopify_gql__inventory_levels'), 
+            except=var('consistency_test_gql_inventory_level_exclude_fields', [])) 
         }}
-    from {{ target.schema }}_shopify_dev.shopify__customers
+    from {{ target.schema }}_shopify_dev.shopify_gql__inventory_levels
 ), 
 
 prod_not_in_dev as (

@@ -4,12 +4,20 @@
 ) }}
 
 with prod as (
-    select *
+    select 
+        {{ dbt_utils.star(
+            from=ref('shopify__inventory_levels'), 
+            except=var('consistency_test_inventory_level_exclude_fields', [])) 
+        }}
     from {{ target.schema }}_shopify_prod.shopify__inventory_levels
 ),
 
 dev as (
-    select *
+    select 
+        {{ dbt_utils.star(
+            from=ref('shopify__inventory_levels'), 
+            except=var('consistency_test_inventory_level_exclude_fields', [])) 
+        }}
     from {{ target.schema }}_shopify_dev.shopify__inventory_levels
 ), 
 

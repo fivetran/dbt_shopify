@@ -4,12 +4,20 @@
 ) }}
 
 with prod as (
-    select *
+    select 
+        {{ dbt_utils.star(
+            from=ref('shopify__orders'), 
+            except=var('consistency_test_order_exclude_fields', [])) 
+        }}
     from {{ target.schema }}_shopify_prod.shopify__orders
 ),
 
 dev as (
-    select *
+    select 
+        {{ dbt_utils.star(
+            from=ref('shopify__orders'), 
+            except=var('consistency_test_order_exclude_fields', [])) 
+        }}
     from {{ target.schema }}_shopify_dev.shopify__orders
 ), 
 

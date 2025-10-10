@@ -1,24 +1,16 @@
 {{ config(
     tags="fivetran_validations",
-    enabled=var('fivetran_validation_tests_enabled', false)
+    enabled=var('fivetran_validation_tests_enabled', false) and var('shopify__standardized_billing_model_enabled', false)
 ) }}
 
 with prod as (
-    select 
-        {{ dbt_utils.star(
-            from=ref('shopify__customers'), 
-            except=var('consistency_test_customer_exclude_fields', [])) 
-        }}
-    from {{ target.schema }}_shopify_prod.shopify__customers
+    select *
+    from {{ target.schema }}_shopify_prod.shopify_gql__line_item_enhanced
 ),
 
 dev as (
-    select 
-        {{ dbt_utils.star(
-            from=ref('shopify__customers'), 
-            except=var('consistency_test_customer_exclude_fields', [])) 
-        }}
-    from {{ target.schema }}_shopify_dev.shopify__customers
+    select *
+    from {{ target.schema }}_shopify_dev.shopify_gql__line_item_enhanced
 ), 
 
 prod_not_in_dev as (
