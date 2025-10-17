@@ -14,12 +14,10 @@ collection_product as (
     from {{ ref('stg_shopify_gql__collection_product') }}
 ),
 
-{% set collection_metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_collection_metafields', True)) %}
-
 collection as (
 
     select *
-    from {{ ref('shopify_gql__collection_metafields') if collection_metafields_enabled else ref('int_shopify_gql__collection') }}
+    from {{ ref('int_shopify_gql__collection') }}
     where not coalesce(is_deleted, false) -- limit to only active collections
 ),
 
@@ -43,22 +41,10 @@ product_media as (
 
 collections_aggregated as (
 
-{%- set collection_metafield_columns = adapter.get_columns_in_relation(ref('shopify_gql__collection_metafields')) if collection_metafields_enabled else [] -%}
-
     select
         collection_product.product_id,
         collection_product.source_relation,
         {{ fivetran_utils.string_agg(field_to_agg='collection.title', delimiter="', '") }} as collections
-
-        {% if collection_metafields_enabled -%} 
-            {%- for column in collection_metafield_columns -%}
-                {% if column.name.startswith('metafield_') %}
-
-        , {{ fivetran_utils.string_agg(field_to_agg='distinct collection.' ~ column.name, delimiter="', '") }} as collection_{{ column.name }}
-
-                {% endif %}
-            {%- endfor %}
-        {% endif %}
 
     from collection_product 
     join collection 
@@ -106,17 +92,6 @@ joined as (
     select
         products.*,
         collections_aggregated.collections,
-
-        {% if collection_metafields_enabled %}
-            {%- for column in collection_metafield_columns -%}
-                {% if column.name.startswith('metafield_') %}
-
-        collections_aggregated.collection_{{ column.name }},
-
-                {% endif %}
-            {%- endfor %}
-        {% endif %}
-
         tags_aggregated.tags,
         variants_aggregated.count_variants,
         coalesce(media_aggregated.count_media, 0) > 0 as has_product_media

@@ -1,7 +1,5 @@
 {{ config(enabled=var('shopify_api', 'rest') == 'rest') }}
 
-{% set metafields_enabled = var('shopify_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_customer_metafields', True)) %}
-
 with customers as (
 
     select 
@@ -11,7 +9,7 @@ with customers as (
             order by created_timestamp desc) 
             as customer_index
 
-    from {{ ref('shopify__customer_metafields') if metafields_enabled else ref('stg_shopify__customer') }}
+    from {{ ref('stg_shopify__customer') }}
     where email is not null -- nonsensical to include any null emails here
 
 ), customer_tags as (
@@ -53,18 +51,6 @@ with customers as (
             , max(case when customers.customer_index = 1 then customers.{{ col.column }} else null end) as {{ col.column }}
             {% endif %}
         {% endfor %}
-
-        -- string agg metafields
-        {% if metafields_enabled -%} 
-            {%- set metafield_columns = adapter.get_columns_in_relation(ref('shopify__customer_metafields')) -%}
-            {%- for column in metafield_columns -%}
-                {% if column.name.startswith('metafield_') %}
-
-        , {{ fivetran_utils.string_agg(field_to_agg='distinct customers.' ~ column.name, delimiter="', '") }} as {{ column.name }}
-
-                {% endif %}
-            {%- endfor %}
-        {% endif %}
 
     from customers 
     left join customer_tags

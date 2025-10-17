@@ -388,7 +388,7 @@ models:
           field and the deprecated `accepts_marketing` field. Records with the old field will be marked with '(legacy)'.
 
   - name: shopify_gql__customer_emails
-    description: Each record represents a customer email in Shopify. Will also include `CUSTOMER` metafields if enabled.
+    description: Each record represents a customer email in Shopify. Does **not** include `CUSTOMER` metafields.
     columns:
       - name: last_fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -478,7 +478,7 @@ models:
           field and the deprecated `accepts_marketing` field. Records with the old field will be marked with '(legacy)'.
 
   - name: shopify_gql__products
-    description: Each record represents a product in Shopify. Will also include `PRODUCT` and `COLLECTION` metafields if enabled.
+    description: Each record represents a product in Shopify. Will also include `PRODUCT` metafields if enabled.
     columns:
       - name: unique_key
         description: Unique key representing a product. Hashed on 'product_id' and 'source_relation'.
