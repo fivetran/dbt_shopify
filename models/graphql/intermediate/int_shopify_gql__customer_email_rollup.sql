@@ -9,7 +9,7 @@ with customers as (
             order by created_timestamp desc) 
             as customer_index
 
-    from {{  ref('int_shopify_gql__customer') }}
+    from {{ ref('int_shopify_gql__customer') }}
     where email is not null -- nonsensical to include any null emails here
 
 ), customer_tags as (

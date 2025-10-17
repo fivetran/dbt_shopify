@@ -2,10 +2,10 @@ version: 2
 
 models:
   - name: shopify__collection_metafields
-    description: Replica of the `stg_shopify__collection` model with the addition of metafields pivoted out from the `stg_shopify__metafield` model. Metafields are joined into the `shopify__products` end model downstream.
+    description: Replica of the `stg_shopify__collection` model with the addition of metafields pivoted out from the `stg_shopify__metafield` model.
 
   - name: shopify__customer_metafields
-    description: Replica of the `stg_shopify__customer` model with the addition of metafields pivoted out from the `stg_shopify__metafield` model. Metafields are joined into the `shopify__customers` and `shopify__customers_emails` end models downstream.
+    description: Replica of the `stg_shopify__customer` model with the addition of metafields pivoted out from the `stg_shopify__metafield` model. Metafields are joined into the `shopify__customers` end model downstream.
 
   - name: shopify__order_metafields
     description: Replica of the `stg_shopify__order` model with the addition of metafields pivoted out from the `stg_shopify__metafield` model. Metafields are joined into the `shopify__orders` end model downstream.
