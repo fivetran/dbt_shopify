@@ -1,6 +1,7 @@
 {{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
 {% set product_metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_product_metafields', True)) %}
+{% set collection_metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_collection_metafields', True)) %}
 
 with products as (
 
@@ -17,7 +18,7 @@ collection_product as (
 collection as (
 
     select *
-    from {{ ref('int_shopify_gql__collection') }}
+    from {{ ref('shopify_gql__collection_metafields') if collection_metafields_enabled else ref('int_shopify_gql__collection') }}
     where not coalesce(is_deleted, false) -- limit to only active collections
 ),
 
