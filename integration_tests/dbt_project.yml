@@ -115,17 +115,6 @@ vars:
     shopify_gql_refund_line_item_identifier: "shopify_gql_refund_line_item_data"
     shopify_gql_refund_identifier: "shopify_gql_refund_data"
 
-# Remove metafields before merging - only relevant to this update
-  consistency_test_gql_customer_exclude_fields: ['customer_tags', 'metafield_bea81c1795a612d8fc3a232b156467be_bwrtbnwrj', 'metafield_bea81c1795a612d8fc3a232b156467c4_brewbrewbre']
-  consistency_test_gql_inventory_level_exclude_fields: ['variant_metafield_bea81c1795a612d8fc3a232b156467c1_gterwbvre', 'variant_metafield_bea81c1795a612d8fc3a232b156467c1_extra_field']
-  consistency_test_gql_order_exclude_fields: ['metafield_htynetnbw', 'metafield_b4wrebrterhrbe']
-  consistency_test_gql_product_exclude_fields: ['metafield_bea81c1795a612d8fc3a232b156467bc_brenbre', 'metafield_bea81c1795a612d8fc3a232b156467c2_gtbrwhbwbg42', 'collection_metafield_bea81c1795a612d8fc3a232b156467bd_a_field', 'collection_metafield_bea81c1795a612d8fc3a232b156467c3_another_field']
-
-  consistency_test_customer_exclude_fields: ['customer_ids', 'metafield_star_wars_firstname', 'metafield_star_wars_lastname', 'metafield_star_wars_fullname', 'metafield_star_wars_isjedi']
-  consistency_test_inventory_level_exclude_fields: ['variant_metafield_blade_runner_returnauthorizations', 'variant_metafield_avengers_wherearethey', 'variant_metafield_star_wars_wheninspace']
-  consistency_test_order_exclude_fields: ['metafield_blade_runner_returnauthorizations', 'metafield_avengers_howmany', 'metafield_star_wars_isinspace']
-  consistency_test_product_exclude_fields: ['metafield_numbersequels', 'metafield_fullname', 'collection_metafield_isphoto', 'collection_metafield_fullname']
-
 dispatch:
   - macro_namespace: dbt_utils
     search_order: ['spark_utils', 'dbt_utils']
