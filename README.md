@@ -28,16 +28,16 @@ The following table provides a detailed list of all tables materialized within t
 | **Table**                 | **Description**                                                                                                    |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | [shopify__customer_cohorts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_cohorts) or<br>[shopify_gql__customer_cohorts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customer_cohorts)  | Each record represents the monthly performance of a customer (based on `customer_id`), including fields for the month of their 'cohort'.    |
-| [shopify__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customers) or<br>[shopify_gql__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customers)        | Each record represents a distinct `customer_id`, with additional dimensions like lifetime value and number of orders.            |
+| [shopify__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customers) or<br>[shopify_gql__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customers)        | Each record represents a distinct `customer_id`, with additional dimensions like lifetime value and number of orders. Includes `CUSTOMER` metafields if enabled.            |
 | [shopify__customer_email_cohorts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_email_cohorts) or<br>[shopify_gql__customer_email_cohorts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customer_email_cohorts)  | Each record represents the monthly performance of a customer (based on `email`), including fields for the month of their 'cohort'.    |
 | [shopify__customer_emails](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_emails.sql) or<br>[shopify_gql__customer_emails](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customer_emails.sql)        | Each record represents a distinct customer `email`, with additional dimensions like lifetime value and number of orders.            |
-| [shopify__orders](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__orders) or<br>[shopify_gql__orders](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__orders)           | Each record represents an order, with additional dimensions like whether it is a new or repeat purchase.           |
+| [shopify__orders](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__orders) or<br>[shopify_gql__orders](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__orders)           | Each record represents an order, with additional dimensions like whether it is a new or repeat purchase. Includes `ORDER` metafields if enabled.           |
 | [shopify__order_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__order_lines) or<br>[shopify_gql__order_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__order_lines)     | Each record represents an order line item, with additional dimensions like how many items were refunded.           |
-| [shopify__products](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__products) or<br>[shopify_gql__products](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__products)         | Each record represents a product, with additional dimensions like most recent order date and order volume.         |
+| [shopify__products](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__products) or<br>[shopify_gql__products](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__products)         | Each record represents a product, with additional dimensions like most recent order date and order volume. Includes `PRODUCT` metafields if enabled.         |
 | [shopify__transactions](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__transactions) or<br>[shopify_gql__transactions](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__transactions)     | Each record represents a transaction with additional calculations to handle exchange rates.                        |
-| [shopify__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__daily_shop) or<br>[shopify_gql__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__daily_shop)     | Each record represents a day of activity for each of your shops, conveyed by a suite of daily metrics about customers, orders, abandoned checkouts, fulfillment events, and more.                        |
+| [shopify__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__daily_shop) or<br>[shopify_gql__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__daily_shop)     | Each record represents a day of activity for each of your shops, conveyed by a suite of daily metrics about customers, orders, abandoned checkouts, fulfillment events, and more. Includes `SHOP` metafields if enabled.                        |
 | [shopify__discounts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__discounts) or<br>[shopify_gql__discounts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__discounts)    | Each record represents a unique discount, enriched with discount metadata and metrics regarding orders and abandoned checkouts.                        |
-| [shopify__inventory_levels](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__inventory_levels) or<br>[shopify_gql__inventory_levels](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__inventory_levels)     | Each record represents an inventory level (unique pairing of inventory items and locations), enriched with information about its products, orders, and fulfillments.                        |
+| [shopify__inventory_levels](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__inventory_levels) or<br>[shopify_gql__inventory_levels](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__inventory_levels)     | Each record represents an inventory level (unique pairing of inventory items and locations), enriched with information about its products, orders, and fulfillments. Includes `PRODUCT_VARIANT` metafields if enabled.                        |
 | [shopify__line_item_enhanced](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__line_item_enhanced) or<br>[shopify_gql__line_item_enhanced](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__line_item_enhanced)       | This model constructs a comprehensive, denormalized analytical table that enables reporting on key revenue, customer, and product metrics from your billing platform. It’s designed to align with the schema of the `*__line_item_enhanced` model found in Shopify, Recharge, Stripe, Zuora, and Recurly, offering standardized reporting across various billing platforms. To see the kinds of insights this model can generate, explore example visualizations in the [Fivetran Billing Model Streamlit App](https://fivetran-billing-model.streamlit.app/). Visit the app for more details.  |
 
 ### Example Visualizations
@@ -158,7 +158,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=1.0.0", "<1.1.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=1.1.0", "<1.2.0"] # we recommend using ranges to capture non-breaking changes automatically
 ```
 
 > All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/shopify_source` in your `packages.yml` since this package has been deprecated.
@@ -304,21 +304,34 @@ vars:
 ```
 
 #### Adding Metafields
-In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) the Shopify connector included support for the [metafield resource](https://shopify.dev/api/admin-rest/2023-01/resources/metafield). If you would like to take advantage of these metafields, this package offers corresponding mapping models which append these metafields to the respective source object for the following tables: collection, customer, order, product_image, product, product_variant, shop. If enabled, these models will materialize as `shopify__[object]_metafields` for each respective supported object. To enable these metafield mapping models, you may use the following configurations within your `dbt_project.yml`.
+In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) the Shopify connector introduced support for the [metafield resource](https://shopify.dev/api/admin-rest/2023-01/resources/metafield).
 
->**Note 1**: These metafield models will contain all the same records as the corresponding staging models with the exception of the metafield columns being added.
+By default, the packge will pivot out metafields associated with the following source objects in `shopify...__[object]_metafields` models and subsequently join them into the appropriate end models:
 
->**Note 2**: Please ensure that the `shopify_using_metafield` is not disabled. (Enabled by default)
+>**Note**: Please ensure that the `shopify_using_metafield` is not disabled to use metafields. (Enabled by default)
+
+|  Source Object | Metafield Pivoting Model | End Model Joined Into  |
+|----------------|---------------------------|---------------------------|
+| `CUSTOMER`     | `shopify_<gql>__customer_metafields` | `shopify_<gql>__customers` |
+| `ORDER`        | `shopify_<gql>__order_metafields` | `shopify_<gql>__orders` |
+| `PRODUCT`      | `shopify_<gql>__product__metafields` | `shopify_<gql>__products` |
+| `PRODUCT_VARIANT` | `shopify_<gql>__product_variant_metafields` | `shopify_<gql>__inventory_levels` |
+| `SHOP`         | `shopify_<gql>__shop_metafields` | `shopify_<gql>__daily_shop` |
+| `COLLECTION`   | `shopify_<gql>__collection_metafields` | NA |
+
+>**Note**: The `shopify...__[object]_metafields` models will contain all the same records as the corresponding staging models with the exception of the metafield columns being added.
+
+If you would like to disable this behavior, add the following configurations within your `dbt_project.yml`.
 
 ```yml
 vars:
-  shopify_using_all_metafields: True ## False by default. Will enable ALL metafield models. FYI - This will override all other metafield variables.
-  shopify_using_collection_metafields: True ## False by default. Will enable ONLY the collection metafield model.
-  shopify_using_customer_metafields: True ## False by default. Will enable ONLY the customer metafield model.
-  shopify_using_order_metafields: True ## False by default. Will enable ONLY the order metafield model.
-  shopify_using_product_metafields: True ## False by default. Will enable ONLY the product metafield model.
-  shopify_using_product_variant_metafields: True ## False by default. Will enable ONLY the product variant metafield model.
-  shopify_using_shop_metafields: True ## False by default. Will enable ONLY the shop metafield model.
+  shopify_using_all_metafields: False ## True by default. Will enable/disable ALL metafield models. If you are disabling any of the below variables, this MUST also be set to False.
+  shopify_using_collection_metafields: False ## True by default. Will enable/disable ONLY the collection metafield model.
+  shopify_using_customer_metafields: False ## True by default. Will enable/disable ONLY the customer metafield model.
+  shopify_using_order_metafields: False ## True by default. Will enable/disable ONLY the order metafield model.
+  shopify_using_product_metafields: False ## True by default. Will enable/disable ONLY the product metafield model.
+  shopify_using_product_variant_metafields: False ## True by default. Will enable/disable ONLY the product variant metafield model.
+  shopify_using_shop_metafields: False ## True by default. Will enable/disable ONLY the shop metafield model.
 ```
 
 #### Changing the Build Schema

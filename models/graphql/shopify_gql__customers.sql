@@ -1,10 +1,12 @@
 {{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
+{% set metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_customer_metafields', True)) %}
+
 with customers as (
 
     select 
-        {{ dbt_utils.star(from=ref('int_shopify_gql__customer'), except=["orders_count", "total_spent", "unique_key"]) }}
-    from {{ ref('int_shopify_gql__customer') }}
+        {{ dbt_utils.star(from=(ref('shopify_gql__customer_metafields') if metafields_enabled else ref('int_shopify_gql__customer')), except=["orders_count", "total_spent", "unique_key"]) }}
+    from {{ ref('shopify_gql__customer_metafields') if metafields_enabled else ref('int_shopify_gql__customer') }}
 
 ), orders as (
 

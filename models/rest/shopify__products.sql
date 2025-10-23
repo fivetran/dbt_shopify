@@ -10,10 +10,12 @@ with products as (
     select *
     from {{ ref('int_shopify__product__order_line_aggregates')}}
 
+
 ), joined as (
 
     select
-        products.*,
+        products.*, -- contains product metafields
+
         coalesce(product_order_lines.quantity_sold,0) as total_quantity_sold,
         coalesce(product_order_lines.subtotal_sold,0) as subtotal_sold,
         coalesce(product_order_lines.quantity_sold_net_refunds,0) as quantity_sold_net_refunds,

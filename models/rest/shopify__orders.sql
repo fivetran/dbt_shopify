@@ -1,12 +1,14 @@
 {{ config(enabled=var('shopify_api', 'rest') == 'rest') }}
 
+{% set metafields_enabled = var('shopify_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_order_metafields', True)) %}
+
 with orders as (
 
     select 
         *,
         {{ dbt_utils.generate_surrogate_key(['source_relation', 'order_id']) }} as orders_unique_key
-    from {{ ref('stg_shopify__order') }}
- 
+    from {{ ref('shopify__order_metafields') if metafields_enabled else ref('stg_shopify__order') }}
+
 ), order_lines as (
 
     select *
@@ -163,7 +165,6 @@ with orders as (
             else 'repeat'
         end as new_vs_repeat
     from windows
-
 )
 
 select *

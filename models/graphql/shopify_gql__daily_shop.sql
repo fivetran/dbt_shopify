@@ -1,9 +1,11 @@
 {{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
+{% set metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_shop_metafields', True)) %}
+
 with shop as (
 
     select *
-    from {{ ref('stg_shopify_gql__shop') }}
+    from {{ ref('shopify_gql__shop_metafields') if metafields_enabled else ref('stg_shopify_gql__shop') }}
 ),
 
 calendar as (
@@ -48,6 +50,16 @@ shop_calendar as (
         shop.iana_timezone,
         shop.created_at,
         shop.source_relation
+
+        {% if metafields_enabled -%} 
+            {%- set metafield_columns = adapter.get_columns_in_relation(ref('shopify_gql__shop_metafields')) -%}
+
+            {%- for column in metafield_columns -%}
+                {% if column.name.startswith('metafield_') %}
+        , shop.{{ column.name }}
+                {% endif %}
+            {%- endfor %}
+        {% endif %}
 
     from calendar
     join shop 
@@ -123,7 +135,6 @@ final as (
         on shop_calendar.source_relation = daily_fulfillment.source_relation
         and shop_calendar.date_day = daily_fulfillment.date_day
     {% endif %}
-    
 )
 
 

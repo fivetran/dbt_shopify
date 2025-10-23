@@ -1,10 +1,12 @@
 {{ config(enabled=var('shopify_api', 'rest') == 'rest') }}
 
+{% set metafields_enabled = var('shopify_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_customer_metafields', True)) %}
+
 with customers as (
 
     select 
-        {{ dbt_utils.star(from=ref('stg_shopify__customer'), except=["orders_count", "total_spent"]) }}
-    from {{ ref('stg_shopify__customer') }}
+        {{ dbt_utils.star(from=(ref('shopify__customer_metafields') if metafields_enabled else ref('stg_shopify__customer')), except=["orders_count", "total_spent"]) }}
+    from {{ ref('shopify__customer_metafields') if metafields_enabled else ref('stg_shopify__customer') }}
 
 ), orders as (
 

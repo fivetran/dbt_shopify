@@ -4,12 +4,20 @@
 ) }}
 
 with prod as (
-    select *
+    select 
+        {{ dbt_utils.star(
+            from=ref('shopify__customers'), 
+            except=var('consistency_test_customer_exclude_fields', [])) 
+        }}
     from {{ target.schema }}_shopify_prod.shopify__customers
 ),
 
 dev as (
-    select *
+    select 
+        {{ dbt_utils.star(
+            from=ref('shopify__customers'), 
+            except=var('consistency_test_customer_exclude_fields', [])) 
+        }}
     from {{ target.schema }}_shopify_dev.shopify__customers
 ), 
 

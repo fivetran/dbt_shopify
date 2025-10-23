@@ -1,9 +1,12 @@
 {{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
+{% set product_metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_product_metafields', True)) %}
+{% set collection_metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_collection_metafields', True)) %}
+
 with products as (
 
     select *
-    from {{ ref('stg_shopify_gql__product') }}
+    from {{ ref('shopify_gql__product_metafields') if product_metafields_enabled else ref('stg_shopify_gql__product') }}
 ), 
 
 collection_product as (
@@ -15,7 +18,7 @@ collection_product as (
 collection as (
 
     select *
-    from {{ ref('int_shopify_gql__collection') }}
+    from {{ ref('shopify_gql__collection_metafields') if collection_metafields_enabled else ref('int_shopify_gql__collection') }}
     where not coalesce(is_deleted, false) -- limit to only active collections
 ),
 
@@ -43,10 +46,12 @@ collections_aggregated as (
         collection_product.product_id,
         collection_product.source_relation,
         {{ fivetran_utils.string_agg(field_to_agg='collection.title', delimiter="', '") }} as collections
+
     from collection_product 
     join collection 
         on collection_product.collection_id = collection.collection_id
         and collection_product.source_relation = collection.source_relation
+
     group by 1,2
 ),
 

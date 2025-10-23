@@ -36,6 +36,32 @@ table_variables:
     - fulfillment_tracking_info
   shopify_gql_using_product_variant_media:
     - product_variant_media
+  shopify_using_all_metafields:
+    - metafield
+    - collection
+    - customer
+    - order
+    - product
+    - product_variant
+    - shop
+  shopify_using_collection_metafields:
+    - metafield
+    - collection
+  shopify_using_customer_metafields:
+    - metafield
+    - customer
+  shopify_using_order_metafields:
+    - metafield
+    - order
+  shopify_using_product_metafields:
+    - metafield
+    - product
+  shopify_using_product_variant_metafields:
+    - metafield
+    - product_variant
+  shopify_using_shop_metafields:
+    - metafield
+    - shop
 
 destination_configurations:
   databricks:

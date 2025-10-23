@@ -1,9 +1,11 @@
 {{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
+{% set metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_order_metafields', True)) %}
+
 with orders as (
 
     select *
-    from {{ ref('int_shopify_gql__order') }}
+    from {{ ref('shopify_gql__order_metafields') if metafields_enabled else ref('int_shopify_gql__order') }}
 
 ), order_lines as (
 

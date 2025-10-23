@@ -1,3 +1,33 @@
+# dbt_shopify v1.1.0
+
+[PR #132](https://github.com/fivetran/dbt_shopify/pull/132) includes the following updates:
+
+## Schema/Data Change
+**11 total changes • 11 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| [shopify__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customers)<br>[shopify_gql__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customers) | New Columns | | `CUSTOMER` metafields | Disable by setting the `shopify_using_customer_metafields` and `shopify_using_all_metafields` variables to `False`. |
+| [shopify__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__daily_shop) or<br>[shopify_gql__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__daily_shop) | New Columns | Metafields not included | `SHOP` metafields included | Can be disabled by setting the `shopify_using_shop_metafields` and `shopify_using_all_metafields` variables to False. |
+| [shopify__inventory_levels](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__inventory_levels) or<br>[shopify_gql__inventory_levels](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__inventory_levels) | New Columns | Metafields not included | `PRODUCT_VARIANT` metafields included | Can be disabled by setting the `shopify_using_product_variant_metafields` and `shopify_using_all_metafields` variables to False. |
+| [shopify__orders](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__orders) or<br>[shopify_gql__orders](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__orders) | New Columns | Metafields not included | `ORDER` metafields included | Can be disabled by setting the `shopify_using_order_metafields` and `shopify_using_all_metafields` variables to False. |
+| [shopify__products](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__products) or<br>[shopify_gql__products](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__products) | New Columns | Metafields not included | `PRODUCT` metafields included | Can be disabled by setting the `shopify_using_product_metafields` and `shopify_using_all_metafields` variables to False. |
+| [shopify__collection_metafields](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__collection_metafields) or<br>[shopify_gql__collection_metafields](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__collection_metafields) | Default Enablement | Disabled | Enabled | The default value of `shopify_using_collection_metafields` is now True (previously False). Currently, `COLLECTION` metafields are not included in any other end models. |
+| [shopify__customer_metafields](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_metafields) or<br>[shopify_gql__customer_metafields](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customer_metafields) | Default Enablement | Disabled | Enabled | The default value of `shopify_using_customer_metafields` is now True (previously False). |
+| [shopify__order_metafields](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__order_metafields) or<br>[shopify_gql__order_metafields](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__order_metafields) | Default Enablement | Disabled | Enabled | The default value of `shopify_using_order_metafields` is now True (previously False). |
+| [shopify__product_metafields](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__product_metafields) or<br>[shopify_gql__product_metafields](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__product_metafields) | Default Enablement | Disabled | Enabled | The default value of `shopify_using_product_metafields` is now True (previously False). |
+| [shopify__product_variant_metafields](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__product_variant_metafields) or<br>[shopify_gql__product_variant_metafields](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__product_variant_metafields) | Default Enablement | Disabled | Enabled | The default value of `shopify_using_product_variant_metafields` is now True (previously False). |
+| [shopify__shop_metafields](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__shop_metafields) or<br>[shopify_gql__shop_metafields](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__shop_metafields) | Default Enablement | Disabled | Enabled | The default value of `shopify_using_shop_metafields` is now True (previously False). |
+
+> Note: If you are running the package via Fivetran Quickstart, the `shopify_using_[object]_metafields` variables are automatically configured based on the presence of relevant source data in your warehouse.
+> 
+> Please refer to the [README](https://github.com/fivetran/dbt_shopify?tab=readme-ov-file#adding-metafields) for more details on these variables.
+
+## Under the Hood
+- Adjusts seed data to test the incorporation of metafields.
+- Adds consistency validation tests for all GraphQL models.
+- Adds metafield variables to `quickstart.yml` to enable dynamic configuration in Fivetran Quickstart.
+
 # dbt_shopify v1.0.0
 
 [PR #123](https://github.com/fivetran/dbt_shopify/pull/123) includes the following updates:

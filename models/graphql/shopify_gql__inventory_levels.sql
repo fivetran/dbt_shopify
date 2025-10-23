@@ -24,10 +24,12 @@ location as (
     from {{ ref('stg_shopify_gql__location') }}
 ),
 
+{% set metafields_enabled = var('shopify_gql_using_metafield', True) and (var('shopify_using_all_metafields', True) or var('shopify_using_product_variant_metafields', True)) %}
+
 product_variant as (
 
     select *
-    from {{ ref('stg_shopify_gql__product_variant') }}
+    from {{ ref('shopify_gql__product_variant_metafields') if metafields_enabled else ref('stg_shopify_gql__product_variant') }}
 ),
 
 product as (
@@ -139,6 +141,16 @@ joined_info as (
         product_variant.legacy_resource_id as variant_legacy_resource_id,
         product_variant.has_components_required as variant_has_components_required,
         product_variant.sellable_online_quantity as variant_sellable_online_quantity
+
+        {% if metafields_enabled -%} 
+            {%- set metafield_columns = adapter.get_columns_in_relation(ref('shopify_gql__product_variant_metafields')) -%}
+
+            {%- for column in metafield_columns -%}
+                {% if column.name.startswith('metafield_') %}
+        , product_variant.{{ column.name }} as variant_{{ column.name }}
+                {% endif %}
+            {%- endfor %}
+        {% endif %}
 
         {{ fivetran_utils.persist_pass_through_columns('product_variant_pass_through_columns', identifier='product_variant') }}
 
