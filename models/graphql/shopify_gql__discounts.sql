@@ -3,7 +3,7 @@
 with discounts_enriched as (
 
     select *,
-        {{ dbt_utils.generate_surrogate_key(['source_relation', 'code']) }} as unique_key
+        {{ dbt_utils.generate_surrogate_key(['source_relation', 'discount_code_id']) }} as unique_key
     from {{ ref('int_shopify_gql__discount_code_enriched')}}
 ),
 
