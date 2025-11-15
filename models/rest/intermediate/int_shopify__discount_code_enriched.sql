@@ -150,7 +150,11 @@ discounts_with_applications as (
         discount_applications.type as application_type,
         discount_applications.value,
         discount_applications.value_type,
-        {{ dbt_utils.generate_surrogate_key(['source_relation', 'discount_code_id', 'discount_redeem_code_id', 'discount_id', 'discount_type', 'discount_applications_key']) }} as discounts_unique_key
+        {{ dbt_utils.generate_surrogate_key(['discounts_with_codes.source_relation', 'discounts_with_codes.discount_code_id', 
+            'discounts_with_codes.discount_redeem_code_id', 'discounts_with_codes.discount_id', 'discounts_with_codes.discount_type',
+            'discount_applications.discount_applications_key']) }}
+        as discounts_unique_key
+
     from discounts_with_codes
     left join discount_applications 
         on discounts_with_codes.code = discount_applications.code
