@@ -1,3 +1,10 @@
+# dbt_shopify v1.1.1
+[PR #135](https://github.com/fivetran/dbt_shopify/pull/135) includes the following updates:
+
+## Bug Fixes
+- Fixes an issue where `discounts_unique_key` in `shopify__discounts` could have duplicates when multiple codes shared the same `discount_id`. 
+  - The surrogate key now includes the `code` field to ensure uniqueness.
+
 # dbt_shopify v1.1.0
 
 [PR #132](https://github.com/fivetran/dbt_shopify/pull/132) includes the following updates:

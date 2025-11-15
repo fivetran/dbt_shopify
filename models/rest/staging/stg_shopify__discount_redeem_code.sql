@@ -27,7 +27,7 @@ fields as (
 final as (
 
     select
-        id as discount_code_id,
+        id as discount_redeem_code_id,
         async_usage_count,
         code,
         created_by_description,
@@ -36,7 +36,6 @@ final as (
         discount_id,
         discount_type,
         source_relation
-
     from fields
 )
 
