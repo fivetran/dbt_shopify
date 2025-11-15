@@ -2,9 +2,7 @@
 
 with discount_redeem_codes as (
 
-    select
-        *,
-        {{ dbt_utils.generate_surrogate_key(['source_relation', 'discount_redeem_code_id', 'discount_id', 'discount_type']) }} as discount_redeem_code_key
+    select *
     from {{ ref('stg_shopify__discount_redeem_code') }}
 ),
 
@@ -20,7 +18,7 @@ discount_applications as (
         type,
         value,
         value_type,
-        {{ dbt_utils.generate_surrogate_key(['source_relation', 'code', 'allocation_method', 'description', 'target_selection', 'target_type', 'type', 'value', 'value_type']) }} as discount_application_key
+        {{ dbt_utils.generate_surrogate_key(['source_relation', 'code', 'allocation_method', 'description', 'target_selection', 'target_type', 'type', 'value', 'value_type']) }} as discount_applications_key
     from {{ ref('stg_shopify__discount_application') }}
 ),
 
@@ -133,7 +131,8 @@ discounts_with_codes as (
     select
         unified_discount_codes.*,
         discount_redeem_codes.code,
-        discount_redeem_codes.discount_redeem_code_key
+        discount_redeem_codes.discount_redeem_code_id,
+        discount_redeem_codes.discount_id
     from unified_discount_codes 
     left join discount_redeem_codes 
         on unified_discount_codes.discount_code_id = discount_redeem_codes.discount_id
@@ -144,22 +143,19 @@ discounts_with_applications as (
 
     select
         discounts_with_codes.*,
-        discount_applications.discount_application_key,
         discount_applications.allocation_method,
         discount_applications.description,
         discount_applications.target_selection,
         discount_applications.target_type,
         discount_applications.type as application_type,
         discount_applications.value,
-        discount_applications.value_type
+        discount_applications.value_type,
+        {{ dbt_utils.generate_surrogate_key(['source_relation', 'discount_code_id', 'discount_redeem_code_id', 'discount_id', 'discount_type', 'discount_applications_key']) }} as discounts_unique_key
     from discounts_with_codes
     left join discount_applications 
         on discounts_with_codes.code = discount_applications.code
         and discounts_with_codes.source_relation = discount_applications.source_relation
-
 )
 
-select 
-    *,
-    {{ dbt_utils.generate_surrogate_key(['source_relation', 'discount_code_id', 'discount_redeem_code_key', 'discount_application_key']) }} as discounts_unique_key
+select *
 from discounts_with_applications
