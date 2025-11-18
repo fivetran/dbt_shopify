@@ -1,9 +1,13 @@
-# dbt_shopify v1.1.1
+# dbt_shopify v1.2.0
 [PR #135](https://github.com/fivetran/dbt_shopify/pull/135) includes the following updates:
 
-## Bug Fixes
-- Fixes an issue where `discounts_unique_key` in `shopify__discounts` could have duplicates when multiple codes shared the same `discount_id`. 
-  - The surrogate key now includes the `code` field to ensure uniqueness.
+## Schema/Data Change
+**2 total changes • 2 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| `shopify__discounts`<br>`int_shopify__discount_code_enriched` | Updated surrogate key | `discounts_unique_key` = <br>`source_relation`<br>+ `discount_code_id` | `discounts_unique_key` = <br>`source_relation`<br>+ `discount_code_id`<br>+ `discount_redeem_code_id`<br>+ `discount_id`<br>+ `discount_type`<br>+ `code`<br>+ `allocation_method`<br>+ `description`<br>+ `target_selection`<br>+ `target_type`<br>+ `type`<br>+ `value`<br>+ `value_type` | Fixes uniqueness test failure. |
+| `shopify_gql__discounts`<br>`int_shopify_gql__discount_code_enriched` | Updated surrogate key | `unique_key` = <br>`source_relation`<br>+ `discount_code_id` | `unique_key` = <br>`source_relation`<br>+ `discount_code_id`<br>+ `discount_redeem_code_id`<br>+ `discount_id`<br>+ `discount_type`<br>+ `code`<br>+ `allocation_method`<br>+ `target_selection`<br>+ `target_type`<br>+ `value_amount`<br>+ `value_currency_code`<br>+ `value_percentage`<br>+ `value_type` | Fixes uniqueness test failures. |
 
 # dbt_shopify v1.1.0
 
