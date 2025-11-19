@@ -3,13 +3,16 @@
     enabled=var('fivetran_validation_tests_enabled', false)
 ) }}
 
+{% set exclude_cols = var('consistency_test_exclude_metrics', []) %}
+
+-- this test ensures the shopify__order_lines end model matches the prior version
 with prod as (
-    select *
+    select {{ dbt_utils.star(from=ref('shopify__order_lines'), except=exclude_cols) }}
     from {{ target.schema }}_shopify_prod.shopify__order_lines
 ),
 
 dev as (
-    select *
+    select {{ dbt_utils.star(from=ref('shopify__order_lines'), except=exclude_cols) }}
     from {{ target.schema }}_shopify_dev.shopify__order_lines
 ), 
 

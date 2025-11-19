@@ -1758,7 +1758,7 @@ models:
   - name: stg_shopify__discount_redeem_code
     description: Table storing individual redeem codes that customers can use at checkout to receive a discount. Each redeem code is tied to a parent discount and may be created by an app or manually.
     columns:
-      - name: discount_redeem_code_id
+      - name: discount_code_id
         description: The unique ID of the redeem code.
         tests:
           - not_null

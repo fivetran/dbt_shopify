@@ -825,7 +825,7 @@ models:
         tests:
           - unique
           - not_null
-      - name: discount_redeem_code_id
+      - name: discount_code_id
         description: The unique ID of the redeem code.
         tests:
           - not_null
