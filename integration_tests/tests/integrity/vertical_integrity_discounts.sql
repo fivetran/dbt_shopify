@@ -40,7 +40,7 @@ discount_codes_unioned as (
     {% if var('shopify_using_discount_code_app', False) %}
 
     union all
-
+ 
     select
         discount_code_id,
         source_relation 

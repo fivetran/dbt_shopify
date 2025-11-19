@@ -9,7 +9,7 @@ with discount_redeem_codes as (
             'discount_code_id',
             'discount_id',
             'discount_type'
-        ]) }} as discount_redeem_codes_unique_key
+        ]) }} as discount_redeem_codes_key
 
     from {{ ref('stg_shopify_gql__discount_redeem_code') }}
 ),
@@ -149,7 +149,7 @@ discounts_with_codes as (
     select
         unified_discount_codes.*,
         discount_redeem_codes.code, 
-        discount_redeem_codes.discount_redeem_codes_unique_key
+        discount_redeem_codes.discount_redeem_codes_key
     from unified_discount_codes 
     left join discount_redeem_codes 
         on unified_discount_codes.discount_code_id = discount_redeem_codes.discount_id
@@ -190,7 +190,7 @@ discounts_with_applications as (
         {{ dbt_utils.generate_surrogate_key([
             'discounts_with_codes.source_relation',
             'discounts_with_codes.discount_code_id',
-            'discounts_with_codes.discount_redeem_codes_unique_key',
+            'discounts_with_codes.discount_redeem_codes_key',
             'discount_applications.discount_applications_key'
         ]) }} as unique_key
 
