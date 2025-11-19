@@ -972,9 +972,10 @@ models:
     columns:
       - name: discounts_unique_key
         description: |
-          Unique key representing a discount. Hashed on 'source_relation', 'discount_code_id', 'discount_code_id', 
-          'discount_id', 'discount_type', 'code', 'allocation_method', 'description', 'target_selection', 'target_type', 
-          'type', 'value', and 'value_type'.
+          Unique key representing a discount. Hashed on base: 'source_relation', 'discount_code_id';
+          stg_shopify__discount_redeem_code: 'discount_code_id', 'discount_id', 'discount_type';
+          stg_shopify__discount_application: 'code', 'allocation_method', 'description', 'target_selection',
+          'target_type', 'type', 'value', 'value_type'.
         tests:
           - unique
           - not_null
