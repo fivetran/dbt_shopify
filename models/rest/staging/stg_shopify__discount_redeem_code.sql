@@ -36,6 +36,7 @@ final as (
         discount_id,
         discount_type,
         source_relation
+
     from fields
 )
 
