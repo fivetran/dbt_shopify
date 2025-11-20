@@ -3,11 +3,13 @@
     enabled=var('fivetran_validation_tests_enabled', false)
 ) }}
 
+{% set exclude_cols = var('consistency_test_exclude_metrics', []) %}
+
 with prod as (
     select 
         {{ dbt_utils.star(
             from=ref('shopify_gql__orders'), 
-            except=var('consistency_test_gql_order_exclude_fields', [])) 
+            except=exclude_cols) 
         }}
     from {{ target.schema }}_shopify_prod.shopify_gql__orders
 ),
@@ -15,8 +17,8 @@ with prod as (
 dev as (
     select 
         {{ dbt_utils.star(
-            from=ref('shopify_gql__invshopify_gql__ordersentory_levels'), 
-            except=var('consistency_test_gql_order_exclude_fields', [])) 
+            from=ref('shopify_gql__orders'), 
+            except=exclude_cols) 
         }}
     from {{ target.schema }}_shopify_dev.shopify_gql__orders
 ), 
