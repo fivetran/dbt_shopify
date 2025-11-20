@@ -9,6 +9,9 @@
 | REST:<br>`shopify__discounts` | Updated surrogate key | `discounts_unique_key`:<br><br><ul><li>`source_relation`</li><li>`discount_code_id`</li></ul> | `discounts_unique_key`:<br><br>base:<br><ul><li>`source_relation`</li><li>`discount_code_id`</li></ul>stg_shopify__discount_redeem_code:<br><ul><li>`discount_code_id`</li><li>`discount_id`</li><li>`discount_type`</li></ul>stg_shopify__discount_application:<br><ul><li>`code`</li><li>`allocation_method`</li><li>`description`</li><li>`target_selection`</li><li>`target_type`</li><li>`type`</li><li>`value`</li><li>`value_type`</li></ul> | Fixes uniqueness test failure. |
 | GraphQL:<br>`shopify_gql__discounts` | Updated surrogate key | `unique_key`:<br><br><ul><li>`source_relation`</li><li>`discount_code_id`</li></ul> | `unique_key`:<br><br>base:<br><ul><li>`source_relation`</li><li>`discount_code_id`</li></ul>stg_shopify_gql__discount_redeem_code:<br><ul><li>`discount_redeem_code_id`</li><li>`discount_id`</li><li>`discount_type`</li></ul>stg_shopify_gql__discount_application:<br><ul><li>`code`</li><li>`allocation_method`</li><li>`target_selection`</li><li>`target_type`</li><li>`value_amount`</li><li>`value_currency_code`</li><li>`value_percentage`</li><li>`value_type`</li></ul> | Fixes uniqueness test failures. |
 
+## Under the Hood
+- Updates consistency tests to improve managing the columns included in testing.
+
 # dbt_shopify v1.1.0
 
 [PR #132](https://github.com/fivetran/dbt_shopify/pull/132) includes the following updates:
