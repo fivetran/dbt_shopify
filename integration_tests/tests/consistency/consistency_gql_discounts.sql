@@ -3,13 +3,16 @@
     enabled=var('fivetran_validation_tests_enabled', false)
 ) }}
 
+{% set exclude_cols = var('consistency_test_exclude_metrics', []) %}
+
+-- this test ensures the shopify_gql__discounts end model matches the prior version
 with prod as (
-    select *
+    select {{ dbt_utils.star(from=ref('shopify_gql__discounts'), except=exclude_cols) }}
     from {{ target.schema }}_shopify_prod.shopify_gql__discounts
 ),
 
 dev as (
-    select *
+    select {{ dbt_utils.star(from=ref('shopify_gql__discounts'), except=exclude_cols) }}
     from {{ target.schema }}_shopify_dev.shopify_gql__discounts
 ), 
 

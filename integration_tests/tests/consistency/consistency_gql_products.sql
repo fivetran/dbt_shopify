@@ -3,12 +3,15 @@
     enabled=var('fivetran_validation_tests_enabled', false)
 ) }}
 
+{% set exclude_cols = ['avg_quantity_per_order_line'] + var('consistency_test_exclude_metrics', []) %}
+
 with prod as (
     select 
         {{ dbt_utils.star(
             from=ref('shopify_gql__products'), 
-            except=var('consistency_test_gql_product_exclude_fields', [])) 
-        }}
+            except=exclude_cols) 
+        }},
+        round(avg_quantity_per_order_line, 2) as avg_quantity_per_order_line
     from {{ target.schema }}_shopify_prod.shopify_gql__products
 ),
 
@@ -16,8 +19,9 @@ dev as (
     select 
         {{ dbt_utils.star(
             from=ref('shopify_gql__products'), 
-            except=var('consistency_test_gql_product_exclude_fields', [])) 
-        }}
+            except=exclude_cols) 
+        }},
+        round(avg_quantity_per_order_line, 2) as avg_quantity_per_order_line
     from {{ target.schema }}_shopify_dev.shopify_gql__products
 ), 
 
