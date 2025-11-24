@@ -2,13 +2,41 @@
 
 with discount_redeem_codes as (
     
-    select *
+    select 
+        *,
+        {{ dbt_utils.generate_surrogate_key([
+            'source_relation',
+            'discount_code_id',
+            'discount_id',
+            'discount_type'
+        ]) }} as discount_redeem_codes_key
+
     from {{ ref('stg_shopify_gql__discount_redeem_code') }}
 ),
 
 discount_applications as (
 
-    select *
+    select distinct
+        source_relation,
+        code,
+        allocation_method,
+        target_selection,
+        target_type,
+        value_amount,
+        value_currency_code,
+        value_percentage,
+        value_type,
+        {{ dbt_utils.generate_surrogate_key([
+            'source_relation',
+            'code',
+            'allocation_method',
+            'target_selection',
+            'target_type',
+            'value_amount',
+            'value_currency_code',
+            'value_percentage',
+            'value_type']) }} as discount_applications_key
+
     from {{ ref('stg_shopify_gql__discount_application') }}
 ),
 
@@ -119,8 +147,9 @@ unified_discount_codes as (
 discounts_with_codes as (
 
     select
-        discount_redeem_codes.code,
-        unified_discount_codes.*
+        unified_discount_codes.*,
+        discount_redeem_codes.code, 
+        discount_redeem_codes.discount_redeem_codes_key
     from unified_discount_codes 
     left join discount_redeem_codes 
         on unified_discount_codes.discount_code_id = discount_redeem_codes.discount_id
@@ -130,14 +159,41 @@ discounts_with_codes as (
 discounts_with_applications as (
 
     select
-        discounts_with_codes.*,
+        discounts_with_codes.source_relation,
+        discounts_with_codes.discount_code_id,
+        discounts_with_codes.discount_type,
+        discounts_with_codes.applies_once_per_customer,
+        discounts_with_codes.usage_count,
+        discounts_with_codes.codes_count,
+        discounts_with_codes.codes_precision,
+        discounts_with_codes.combines_with_order_discounts,
+        discounts_with_codes.combines_with_product_discounts,
+        discounts_with_codes.combines_with_shipping_discounts,
+        discounts_with_codes.created_at,
+        discounts_with_codes.customer_selection_all_customers,
+        discounts_with_codes.ends_at,
+        discounts_with_codes.starts_at,
+        discounts_with_codes.status,
+        discounts_with_codes.title,
+        discounts_with_codes.total_sales_amount,
+        discounts_with_codes.total_sales_currency_code,
+        discounts_with_codes.updated_at,
+        discounts_with_codes.usage_limit,
+        discounts_with_codes.code,
         discount_applications.allocation_method,
         discount_applications.target_selection,
         discount_applications.target_type,
         discount_applications.value_amount,
         discount_applications.value_currency_code,
         discount_applications.value_percentage,
-        discount_applications.value_type
+        discount_applications.value_type,
+        {{ dbt_utils.generate_surrogate_key([
+            'discounts_with_codes.source_relation',
+            'discounts_with_codes.discount_code_id',
+            'discounts_with_codes.discount_redeem_codes_key',
+            'discount_applications.discount_applications_key'
+        ]) }} as unique_key
+
     from discounts_with_codes
     left join discount_applications 
         on discounts_with_codes.code = discount_applications.code

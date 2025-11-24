@@ -967,7 +967,11 @@ models:
       Each record represents a unique discount, enriched with discount metadata and metrics regarding orders and abandoned checkouts.
     columns:
       - name: unique_key
-        description: Unique key representing a discount. Hashed on 'discount_code_id' and 'source_relation'.
+        description: |
+          Unique key representing a discount.
+          Hashed on 'source_relation', 'discount_code_id', 'discount_id', 'discount_type',
+          'code', 'allocation_method', 'target_selection', 'target_type', 'value_amount',
+          'value_currency_code', 'value_percentage', 'value_type'.
         tests:
           - unique
           - not_null
