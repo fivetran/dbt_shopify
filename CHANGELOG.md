@@ -1,3 +1,10 @@
+# dbt_shopify v1.3.0
+
+[PR #136](https://github.com/fivetran/dbt_shopify/pull/136) includes the following updates:
+
+## Features
+  - Increases the required dbt version upper limit to v3.0.0
+
 # dbt_shopify v1.2.0
 [PR #135](https://github.com/fivetran/dbt_shopify/pull/135) includes the following updates:
 
