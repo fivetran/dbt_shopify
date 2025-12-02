@@ -1408,14 +1408,16 @@ models:
     description: Table storing custom attributes placed on orders.
     columns:
       - name: unique_key
-        description: Surrogate key hashed on `order_id`, `name`, and `source_relation`.
+        description: Surrogate key hashed on `order_id`, `key`, and `source_relation`.
         tests:
           - unique
           - not_null
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: name
-        description: Name of the attribute.
+        description: Name of the attribute. Will be deprecated in favor of `key`.
+      - name: key
+        description: Name of the attribute. Replaces `name`.
         tests:
           - not_null
       - name: order_id

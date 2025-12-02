@@ -2,7 +2,7 @@
 
 {{
     shopify.shopify_union_data(
-        table_identifier='order_line_refund', 
+        table_identifier='refund_line_item' if var('shopify_gql__using_refund_line_item', shopify.does_table_exist('refund_line_item', 'shopify_graphql')) else 'order_line_refund', 
         database_variable='shopify_database', 
         schema_variable='shopify_schema', 
         default_database=target.database,

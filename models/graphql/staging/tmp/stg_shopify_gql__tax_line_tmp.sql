@@ -2,7 +2,7 @@
 
 {{
     shopify.shopify_union_data(
-        table_identifier='tax_line', 
+        table_identifier='order_line_tax_line' if var('shopify_gql__using_order_line_tax_line', shopify.does_table_exist('order_line_tax_line', 'shopify_graphql')) else 'tax_line', 
         database_variable='shopify_database', 
         schema_variable='shopify_schema', 
         default_database=target.database,
