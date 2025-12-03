@@ -1415,7 +1415,7 @@ models:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: name
-        description: Name of the attribute. Will be deprecated in favor of `key`.
+        description: Name of the attribute. Deprecated in favor of `key`.
       - name: key
         description: Name of the attribute. Replaces `name`.
         tests:

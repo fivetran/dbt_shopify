@@ -1,3 +1,20 @@
+# dbt_shopify v1.3.1
+
+## Schema/Data Change
+**4 total changes • 0 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ---------- | ----------- | -------- | -------- | ----- |
+| `stg_shopify_gql__order_note_attribute` | Column rename | `name` | `key` | Aligns with connector updates by renaming `name` to `key`. The `name` column will be fully deprecated and removed from the model in January 2025. |
+| `stg_shopify_gql__tax_line` | Updated source table names | `TAX_LINE` | `TAX_LINE` or `ORDER_LINE_TAX_LINE` | For newer Shopify conections, the source table has been renamed to `ORDER_LINE_TAX_LINE`. The model will dynamically determine which table you have and transform your data accordingly. |
+| `stg_shopify_gql__order_line_refund` | Updated source table names | `ORDER_LINE_REFUND` | `ORDER_LINE_REFUND` or `REFUND_LINE_ITEM` | For newer Shopify conections, the source table has been renamed to `REFUND_LINE_ITEM`. The model will dynamically determine which table you have and transform your data accordingly. |
+| `stg_shopify_gql__order_note_attribute` | Updated source table names | `ORDER_NOTE_ATTRIBUTE` | `ORDER_NOTE_ATTRIBUTE` or `ORDER_CUSTOM_ATTRIBUTE` | For newer Shopify conections, the source table has been renamed to `ORDER_CUSTOM_ATTRIBUTE`. The model will dynamically determine which table you have and transform your data accordingly. |
+
+## Under the Hood
+- Adds `does_table_exist` macro to dynamically detect table availability and enable automatic switching between old and new table naming conventions.
+- Updates integration test seed files to match new table structures.
+- 
+
 # dbt_shopify v1.3.0
 
 [PR #136](https://github.com/fivetran/dbt_shopify/pull/136) includes the following updates:
