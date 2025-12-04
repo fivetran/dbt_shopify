@@ -15,8 +15,7 @@
 {% set pivot_fields = dbt_utils.get_column_values(
     table=ref(lookup_object),
     column=key_field,
-    where="lower(" ~ reference_field ~ ") in (" ~ reference_values_clause ~ ")"
-) %}
+    where="lower(" ~ reference_field ~ ") in (" ~ reference_values_clause ~ ")") | unique %}
 
 {% set source_columns = adapter.get_columns_in_relation(ref(source_object)) %}
 {% set source_column_count = source_columns | length %}
