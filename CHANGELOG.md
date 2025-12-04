@@ -8,9 +8,9 @@
 | Data Model(s) | Change type | Old | New | Notes |
 | ---------- | ----------- | -------- | -------- | ----- |
 | `stg_shopify_gql__order_note_attribute` | New column |  | `key` | Aligns with connector updates by renaming `name` to `key`. The `name` column has been retained but will be fully deprecated and removed from the model in January 2025. |
-| `stg_shopify_gql__tax_line` | Updated source table names | `TAX_LINE` | `TAX_LINE` or `ORDER_LINE_TAX_LINE` | For newer Shopify conections, the source table has been renamed to `ORDER_LINE_TAX_LINE`. The model will dynamically determine which table you have and transform your data accordingly. |
-| `stg_shopify_gql__order_line_refund` | Updated source table names | `ORDER_LINE_REFUND` | `ORDER_LINE_REFUND` or `REFUND_LINE_ITEM` | For newer Shopify conections, the source table has been renamed to `REFUND_LINE_ITEM`. The model will dynamically determine which table you have and transform your data accordingly. |
-| `stg_shopify_gql__order_note_attribute` | Updated source table names | `ORDER_NOTE_ATTRIBUTE` | `ORDER_NOTE_ATTRIBUTE` or `ORDER_CUSTOM_ATTRIBUTE` | For newer Shopify conections, the source table has been renamed to `ORDER_CUSTOM_ATTRIBUTE`. The model will dynamically determine which table you have and transform your data accordingly. |
+| `stg_shopify_gql__tax_line` | Updated source table names | `TAX_LINE` | `TAX_LINE` or `ORDER_LINE_TAX_LINE` | For newer Shopify connections, the source table has been renamed to `ORDER_LINE_TAX_LINE`. The model will dynamically determine which table you have and transform your data accordingly. |
+| `stg_shopify_gql__order_line_refund` | Updated source table names | `ORDER_LINE_REFUND` | `ORDER_LINE_REFUND` or `REFUND_LINE_ITEM` | For newer Shopify connections, the source table has been renamed to `REFUND_LINE_ITEM`. The model will dynamically determine which table you have and transform your data accordingly. |
+| `stg_shopify_gql__order_note_attribute` | Updated source table names | `ORDER_NOTE_ATTRIBUTE` | `ORDER_NOTE_ATTRIBUTE` or `ORDER_CUSTOM_ATTRIBUTE` | For newer Shopify connections, the source table has been renamed to `ORDER_CUSTOM_ATTRIBUTE`. The model will dynamically determine which table you have and transform your data accordingly. |
 
 ## Feature Update
 - Adds automatic detection and support for new GraphQL table naming conventions introduced by Shopify for connections created after November 2025. Models will automatically use the new table names when available while maintaining backward compatibility with existing connections.

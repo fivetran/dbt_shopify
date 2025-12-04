@@ -270,7 +270,7 @@ sources:
           - name: total_discount_set_pres_amount
             description: The total discount allocated to the line item in *presentment* currency, including the total allocated to refunded and removed quantities. This value doesn't include order-level discounts.
           - name: total_discount_set_shop_currency_code
-            description: The three-letter code (ISO å4217 format) for the shop currency used to display the total discount.
+            description: The three-letter code (ISO 4217 format) for the shop currency used to display the total discount.
           - name: total_discount_set_pres_currency_code
             description: The three-letter code (ISO 4217 format) for the currency currency used to display the total discount.
           - name: variant_id
@@ -975,7 +975,7 @@ sources:
           - name: name
             description: Name of the attribute. Deprecated in favor of `key`.
           - name: key
-            description: Name of the attribute. Repaces `name`.
+            description: Name of the attribute. Replaces `name`.
           - name: order_id
             description: ID referencing the order the note attribute belongs to.
           - name: value

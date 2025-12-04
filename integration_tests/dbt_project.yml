@@ -276,10 +276,6 @@ seeds:
       +column_types:
         price: float
         rate: float
-    shopify_order_line_tax_line_data:
-      +column_types:
-        price: float
-        rate: float
     shopify_collection_data:
       +column_types:
         disjunctive: boolean
