@@ -115,7 +115,6 @@ vars:
     shopify_gql_customer_visit_identifier: "shopify_gql_customer_visit_data"
     shopify_gql_customer_address_identifier: "shopify_gql_customer_address_data"
     shopify_gql_collection_rule_identifier: "shopify_gql_collection_rule_data"
-    shopify_gql_refund_line_item_identifier: "shopify_gql_refund_line_item_data"
     shopify_gql_refund_identifier: "shopify_gql_refund_data"
 
 dispatch:
@@ -178,6 +177,9 @@ seeds:
         product_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         variant_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
     shopify_gql_order_line_refund_data:
+      +column_types:
+        quantity: float
+    shopify_gql_refund_line_item_data:
       +column_types:
         quantity: float
     shopify_order_line_refund_data:
@@ -271,6 +273,10 @@ seeds:
       +column_types:
         phone: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
     shopify_tax_line_data:
+      +column_types:
+        price: float
+        rate: float
+    shopify_order_line_tax_line_data:
       +column_types:
         price: float
         rate: float

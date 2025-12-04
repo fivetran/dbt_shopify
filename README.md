@@ -353,7 +353,7 @@ vars:
   shopify_inventory_states: ['available', 'committed'] # Default: ['incoming', 'on_hand', 'available', 'committed', 'reserved', 'damaged', 'safety_stock', 'quality_control']
 ```
 
-### Leveraging Legacy Connector Table Names (GraphQL Only)
+#### Leveraging Legacy Connector Table Names (GraphQL Only)
 For Fivetran Shopify connections created after November 2025, the following tables have been renamed:
 - `ORDER_NOTE_ATTRIBUTE` -> `ORDER_CUSTOM_ATTRIBUTE`
 - `TAX_LINE` -> `ORDER_LINE_TAX_LINE`
