@@ -364,9 +364,9 @@ This package prioritizes using the new tables if available, but will dynamically
 ```yml
 vars:
   shopify:
-    shopify_gql__using_order_custom_attribute: false # If false, will use ORDER_NOTE_ATTRIBUTE even if ORDER_CUSTOM_ATTRIBUTE is present
-    shopify_gql__using_order_line_tax_line: false # If false, will use TAX_LINE even if ORDER_LINE_TAX_LINE is present
-    shopify_gql__using_refund_line_item: false # If false, will use ORDER_LINE_REFUND even if REFUND_LINE_ITEM is present
+    shopify_gql_using_order_custom_attribute: false # If false, will use ORDER_NOTE_ATTRIBUTE even if ORDER_CUSTOM_ATTRIBUTE is present
+    shopify_gql_using_order_line_tax_line: false # If false, will use TAX_LINE even if ORDER_LINE_TAX_LINE is present
+    shopify_gql_using_refund_line_item: false # If false, will use ORDER_LINE_REFUND even if REFUND_LINE_ITEM is present
 ```
 
 #### Changing the Build Schema

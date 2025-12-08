@@ -36,11 +36,11 @@ table_variables:
     - fulfillment_tracking_info
   shopify_gql_using_product_variant_media:
     - product_variant_media
-  shopify_gql__using_order_custom_attribute:
+  shopify_gql_using_order_custom_attribute:
     - order_custom_attribute
-  shopify_gql__using_order_line_tax_line:
+  shopify_gql_using_order_line_tax_line:
     - order_line_tax_line
-  shopify_gql__using_refund_line_item:
+  shopify_gql_using_refund_line_item:
     - refund_line_item
   
   shopify_using_all_metafields:

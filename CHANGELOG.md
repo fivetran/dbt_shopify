@@ -7,7 +7,7 @@
 
 | Data Model(s) | Change type | Old | New | Notes |
 | ---------- | ----------- | -------- | -------- | ----- |
-| `stg_shopify_gql__order_note_attribute` | New column |  | `key` | Aligns with connector updates by renaming `name` to `key`. The `name` column has been retained but will be fully deprecated and removed from the model in January 2025. |
+| `stg_shopify_gql__order_note_attribute` | New column |  | `key` | Aligns with connector updates by renaming `name` to `key`. The `name` column has been retained but will be fully deprecated and removed from the model in January 2026. |
 | `stg_shopify_gql__tax_line` | Updated source table names | `TAX_LINE` | `TAX_LINE` or `ORDER_LINE_TAX_LINE` | For newer Shopify connections, the source table has been renamed to `ORDER_LINE_TAX_LINE`. The model will dynamically determine which table you have and transform your data accordingly. |
 | `stg_shopify_gql__order_line_refund` | Updated source table names | `ORDER_LINE_REFUND` | `ORDER_LINE_REFUND` or `REFUND_LINE_ITEM` | For newer Shopify connections, the source table has been renamed to `REFUND_LINE_ITEM`. The model will dynamically determine which table you have and transform your data accordingly. |
 | `stg_shopify_gql__order_note_attribute` | Updated source table names | `ORDER_NOTE_ATTRIBUTE` | `ORDER_NOTE_ATTRIBUTE` or `ORDER_CUSTOM_ATTRIBUTE` | For newer Shopify connections, the source table has been renamed to `ORDER_CUSTOM_ATTRIBUTE`. The model will dynamically determine which table you have and transform your data accordingly. |
@@ -15,9 +15,9 @@
 ## Feature Update
 - Adds automatic detection and support for new GraphQL table naming conventions introduced by Shopify for connections created after November 2025. Models will automatically use the new table names when available while maintaining backward compatibility with existing connections.
 - Adds the following variables to override the above dynamic behavior if desired. See the [README](https://github.com/fivetran/dbt_shopify/tree/main?tab=readme-ov-file#leveraging-legacy-connector-table-names-graphql-only) for more details.
-  - `shopify_gql__using_order_custom_attribute`
-  - `shopify_gql__using_order_line_tax_line`
-  - `shopify_gql__using_refund_line_item`
+  - `shopify_gql_using_order_custom_attribute`
+  - `shopify_gql_using_order_line_tax_line`
+  - `shopify_gql_using_refund_line_item`
 
 ## Under the Hood
 - Adds `does_table_exist` macro to dynamically detect table availability and enable automatic switching between old and new table naming conventions.
