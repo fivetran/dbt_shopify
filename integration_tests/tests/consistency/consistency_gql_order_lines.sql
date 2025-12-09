@@ -1,6 +1,6 @@
 {{ config(
     tags="fivetran_validations",
-    enabled=var('fivetran_validation_tests_enabled', false)
+    enabled=var('fivetran_validation_tests_enabled', false) and var('shopify_api', 'rest') == 'graphql'
 ) }}
 
 with prod as (

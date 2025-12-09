@@ -270,7 +270,7 @@ sources:
           - name: total_discount_set_pres_amount
             description: The total discount allocated to the line item in *presentment* currency, including the total allocated to refunded and removed quantities. This value doesn't include order-level discounts.
           - name: total_discount_set_shop_currency_code
-            description: The three-letter code (ISO å4217 format) for the shop currency used to display the total discount.
+            description: The three-letter code (ISO 4217 format) for the shop currency used to display the total discount.
           - name: total_discount_set_pres_currency_code
             description: The three-letter code (ISO 4217 format) for the currency currency used to display the total discount.
           - name: variant_id
@@ -280,8 +280,43 @@ sources:
           - name: variant_title
             description: The title of the product variant.
 
-      - name: order_line_refund
-        identifier: "{{ var('shopify_gql_order_line_refund_identifier', 'gql_order_line_refund') }}"
+      - name: order_line_refund # applies to Shopify connections created before November 2025
+        identifier: "{{ var('shopify_gql_order_line_refund_identifier', 'order_line_refund') }}"
+        description: Each record represents a line item refund in Shopify.
+        columns:
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+          - name: id
+            description: The unique identifier of the line item in the refund.
+          - name: location_id
+            description: The unique identifier of the location where the items will be restocked.
+          - name: order_line_id
+            description: The ID of the related line item in the order.
+          - name: quantity
+            description: The quantity of the associated line item that was returned.
+          - name: refund_id
+            description: The ID of the related refund.
+          - name: subtotal_set_pres_amount
+            description: The refunded subtotal amount of a line item in currency the customer paid in.
+          - name: subtotal_set_pres_currency_code
+            description: The three letter currency code for the subtotal the customer paid in.
+          - name: subtotal_set_shop_amount
+            description: The refunded subtotal amount of a line item in the currency of the shop.         
+          - name: subtotal_set_shop_currency_code
+            description: The three letter currency code for the subtotal in the currency of the shop.   
+          - name: total_tax_set_pres_amount
+            description: The total tax amount of a line item in currency the customer paid in.
+          - name: total_tax_set_pres_currency_code
+            description: The three letter currency code of the tax the customer paid in.          
+          - name: total_tax_set_shop_amount
+            description: The total tax amount of a line item in the currency of the shop.
+          - name: total_tax_set_shop_currency_code
+            description: The three letter currency code of the tax in the currency of the shop.
+          - name: restock_type
+            description: How this refund line item affects inventory levels.
+
+      - name: refund_line_item # applies to Shopify connections created after November 2025
+        identifier: "{{ var('shopify_gql_refund_line_item_identifier', 'refund_line_item') }}"
         description: Each record represents a line item refund in Shopify.
         columns:
           - name: _fivetran_synced
@@ -918,7 +953,7 @@ sources:
           - name: value_type
             description: DEPRECATED as of [June 2022](https://fivetran.com/docs/applications/shopify/changelog#june2022). Use `type` instead.
 
-      - name: order_note_attribute
+      - name: order_note_attribute # applies to Shopify connections created before November 2025
         description: Table storing custom attributes placed on orders. 
         identifier: "{{ var('shopify_gql_order_note_attribute_identifier', 'order_note_attribute') }}"
         columns:
@@ -926,6 +961,21 @@ sources:
             description: "{{ doc('_fivetran_synced') }}"
           - name: name
             description: Name of the attribute.
+          - name: order_id
+            description: ID referencing the order the note attribute belongs to.
+          - name: value
+            description: Value of the attribute.
+
+      - name: order_custom_attribute # applies to Shopify connections created after November 2025
+        description: Table storing custom attributes placed on orders. 
+        identifier: "{{ var('shopify_gql_order_custom_attribute_identifier', 'order_custom_attribute') }}"
+        columns:
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+          - name: name
+            description: Name of the attribute. Deprecated in favor of `key`.
+          - name: key
+            description: Name of the attribute. Replaces `name`.
           - name: order_id
             description: ID referencing the order the note attribute belongs to.
           - name: value
@@ -1317,9 +1367,32 @@ sources:
           - name: zip
             description: The zip code of the location where the fulfillment event occurred.
             
-      - name: tax_line
+      - name: tax_line # applies to Shopify connections created before November 2025
         description: Represents a single tax applied to the associated line item.
         identifier: "{{ var('shopify_gql_tax_line_identifier', 'tax_line') }}"
+        columns:
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+          - name: index
+            description: The index of the tax line.
+          - name: order_line_id
+            description: The order line that this tax line is associated with. 
+          - name: price_set_pres_amount
+            description: The amount of tax in customer currency after discounts and before returns.
+          - name: price_set_pres_currency_code
+            description: The three letter currency code for the tax the customer pays.
+          - name: price_set_shop_amount
+            description: The amount of tax in shop currency after discounts and before returns.
+          - name: price_set_shop_currency_code
+            description: The three letter currency code for the tax from the shop.
+          - name: rate
+            description: The proportion of the line item price that the tax represents as a decimal.
+          - name: title
+            description: The name of the tax.
+
+      - name: order_line_tax_line # applies to Shopify connections created after November 2025
+        description: Represents a single tax applied to the associated line item.
+        identifier: "{{ var('shopify_gql_order_line_tax_line_identifier', 'order_line_tax_line') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"

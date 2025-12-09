@@ -1,6 +1,6 @@
 {{ config(
     tags="fivetran_validations",
-    enabled=var('fivetran_validation_tests_enabled', false)
+    enabled=var('fivetran_validation_tests_enabled', false) and var('shopify_api', 'rest') == 'rest'
 ) }}
 
 {% set exclude_cols = ['pre_tax_price_set', 'price_set', 'total_discount_set', 'properties'] + var('consistency_test_exclude_metrics', []) %}

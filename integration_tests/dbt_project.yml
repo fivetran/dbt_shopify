@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '1.3.0'
+version: '1.3.1'
 profile: 'integration_tests'
 config-version: 2
 
@@ -91,7 +91,9 @@ vars:
     shopify_gql_order_adjustment_identifier: "shopify_gql_order_adjustment_data"
     shopify_gql_order_line_identifier: "shopify_gql_order_line_data"
     shopify_gql_order_line_refund_identifier: "shopify_gql_order_line_refund_data"
+    shopify_gql_refund_line_item_identifier: "shopify_gql_refund_line_item_data"
     shopify_gql_order_note_attribute_identifier: "shopify_gql_order_note_attribute_data"
+    shopify_gql_order_custom_attribute_identifier: "shopify_gql_order_custom_attribute_data"
     shopify_gql_order_shipping_line_identifier: "shopify_gql_order_shipping_line_data"
     shopify_gql_order_shipping_tax_line_identifier: "shopify_gql_order_shipping_tax_line_data"
     shopify_gql_order_tag_identifier: "shopify_gql_order_tag_data"
@@ -107,12 +109,12 @@ vars:
     shopify_gql_order_discount_code_identifier: "shopify_gql_order_discount_code_data"
     shopify_gql_fulfillment_event_identifier: "shopify_gql_fulfillment_event_data"
     shopify_gql_tax_line_identifier: "shopify_gql_tax_line_data"
+    shopify_gql_order_line_tax_line_identifier: "shopify_gql_order_line_tax_line_data"
     shopify_gql_fulfillment_tracking_info_identifier: "shopify_gql_fulfillment_tracking_info_data"
     shopify_gql_fulfillment_order_line_item_identifier: "shopify_gql_fulfillment_order_line_item_data"
     shopify_gql_customer_visit_identifier: "shopify_gql_customer_visit_data"
     shopify_gql_customer_address_identifier: "shopify_gql_customer_address_data"
     shopify_gql_collection_rule_identifier: "shopify_gql_collection_rule_data"
-    shopify_gql_refund_line_item_identifier: "shopify_gql_refund_line_item_data"
     shopify_gql_refund_identifier: "shopify_gql_refund_data"
 
 dispatch:
@@ -175,6 +177,9 @@ seeds:
         product_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
         variant_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
     shopify_gql_order_line_refund_data:
+      +column_types:
+        quantity: float
+    shopify_gql_refund_line_item_data:
       +column_types:
         quantity: float
     shopify_order_line_refund_data:

@@ -1,5 +1,5 @@
 name: 'shopify'
-version: '1.3.0'
+version: '1.3.1'
 config-version: 2
 require-dbt-version: [">=1.3.0", "<3.0.0"]
 models:
@@ -103,7 +103,9 @@ vars:
     gql_media_image_source: "{{ source('shopify_graphql','media_image') }}"
     gql_metafield_source: "{{ source('shopify_graphql','metafield') }}"
     gql_order_line_refund_source: "{{ source('shopify_graphql','order_line_refund') }}" 
+    gql_refund_line_item_source: "{{ source('shopify_graphql','refund_line_item') }}" 
     gql_order_note_attribute_source: "{{ source('shopify_graphql','order_note_attribute') }}"
+    gql_order_custom_attribute_source: "{{ source('shopify_graphql','order_custom_attribute') }}"
     gql_order_shipping_line_source: "{{ source('shopify_graphql','order_shipping_line') }}"
     gql_order_shipping_tax_line_source: "{{ source('shopify_graphql','order_shipping_tax_line') }}"
     gql_order_tag_source: "{{ source('shopify_graphql','order_tag') }}"
@@ -116,6 +118,7 @@ vars:
     gql_order_discount_code_source: "{{ source('shopify_graphql','order_discount_code') }}" 
     gql_fulfillment_event_source: "{{ source('shopify_graphql', 'fulfillment_event') }}"
     gql_tax_line_source: "{{ source('shopify_graphql', 'tax_line') }}"
+    gql_order_line_tax_line_source: "{{ source('shopify_graphql', 'order_line_tax_line') }}"
     gql_fulfillment_tracking_info_source: "{{ source('shopify_graphql', 'fulfillment_tracking_info') }}"
     gql_fulfillment_order_line_item_source: "{{ source('shopify_graphql', 'fulfillment_order_line_item') }}"
     gql_customer_visit_source: "{{ source('shopify_graphql', 'customer_visit') }}"

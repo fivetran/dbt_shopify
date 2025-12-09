@@ -334,6 +334,41 @@ vars:
   shopify_using_shop_metafields: False ## True by default. Will enable/disable ONLY the shop metafield model.
 ```
 
+#### Change the calendar start date
+Our date-based models start at `2019-01-01` by default. To customize the start date, add the following variable to your `dbt_project.yml` file:
+
+```yml
+vars:
+  shopify:
+    shopify__calendar_start_date: 'yyyy-mm-dd' # default is 2019-01-01
+```
+
+#### Customizing Inventory States
+You can customize the inventory quantity states included in the `shopify__inventory_levels` model to control which `*_quantity` fields are created. [See the list of expected values](https://shopify.dev/docs/apps/build/orders-fulfillment/inventory-management-apps#inventory-states).  
+
+To override the default list, define the following variable in your `dbt_project.yml` file:  
+
+```yml
+vars:
+  shopify_inventory_states: ['available', 'committed'] # Default: ['incoming', 'on_hand', 'available', 'committed', 'reserved', 'damaged', 'safety_stock', 'quality_control']
+```
+
+#### Leveraging Legacy Connector Table Names (GraphQL Only)
+For Fivetran Shopify connections created after November 2025, the following tables have been renamed:
+- `ORDER_NOTE_ATTRIBUTE` -> `ORDER_CUSTOM_ATTRIBUTE`
+- `TAX_LINE` -> `ORDER_LINE_TAX_LINE`
+- `ORDER_LINE_REFUND` -> `REFUND_LINE_ITEM`
+
+This package prioritizes using the new tables if available, but will dynamically fall back to the old names otherwise. If you have both old and new tables in your schema and would like to specify this package to leverage the older tables, you can set the following variables to false in your `dbt_project.yml`:
+
+```yml
+vars:
+  shopify:
+    shopify_gql_using_order_custom_attribute: false # If false, will use ORDER_NOTE_ATTRIBUTE even if ORDER_CUSTOM_ATTRIBUTE is present
+    shopify_gql_using_order_line_tax_line: false # If false, will use TAX_LINE even if ORDER_LINE_TAX_LINE is present
+    shopify_gql_using_refund_line_item: false # If false, will use ORDER_LINE_REFUND even if REFUND_LINE_ITEM is present
+```
+
 #### Changing the Build Schema
 By default this package will build the Shopify staging models within a schema titled (<target_schema> + `_stg_shopify`) and the Shopify final models within a schema titled (<target_schema> + `_shopify`) in your target database. If this is not where you would like your modeled Shopify data to be written to, add the following configuration to your `dbt_project.yml` file:
 
@@ -368,25 +403,6 @@ To change the default lookback window, add the following variable to your `dbt_p
 vars:
   shopify:
     lookback_window: number_of_days # default is 7
-```
-
-#### Change the calendar start date
-Our date-based models start at `2019-01-01` by default. To customize the start date, add the following variable to your `dbt_project.yml` file:
-
-```yml
-vars:
-  shopify:
-    shopify__calendar_start_date: 'yyyy-mm-dd' # default is 2019-01-01
-```
-
-#### Customizing Inventory States
-You can customize the inventory quantity states included in the `shopify__inventory_levels` model to control which `*_quantity` fields are created. [See the list of expected values](https://shopify.dev/docs/apps/build/orders-fulfillment/inventory-management-apps#inventory-states).  
-
-To override the default list, define the following variable in your `dbt_project.yml` file:  
-
-```yml
-vars:
-  shopify_inventory_states: ['available', 'committed'] # Default: ['incoming', 'on_hand', 'available', 'committed', 'reserved', 'damaged', 'safety_stock', 'quality_control']
 ```
 
 </details>

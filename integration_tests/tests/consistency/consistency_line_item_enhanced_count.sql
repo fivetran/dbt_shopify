@@ -1,6 +1,6 @@
 {{ config(
     tags="fivetran_validations",
-    enabled=var('fivetran_validation_tests_enabled', false) and var('shopify__standardized_billing_model_enabled', false)
+    enabled=var('fivetran_validation_tests_enabled', false) and var('shopify__standardized_billing_model_enabled', false) and var('shopify_api', 'rest') == 'rest'
 ) }}
 
 -- this test is to make sure the rows counts are the same between versions

@@ -28,14 +28,16 @@ final as (
     
     select 
         order_id,
-        name,
+        coalesce(key, name) as name, -- Will be deprecated, use key instead
+        coalesce(key, name) as key,
         value,
         {{ shopify.fivetran_convert_timezone(column='cast(_fivetran_synced as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as _fivetran_synced,
-        source_relation,
-        {{ dbt_utils.generate_surrogate_key(['order_id', 'name', 'source_relation']) }} as unique_key
-        
+        source_relation
+
     from fields
 )
 
-select *
+select 
+    *,
+    {{ dbt_utils.generate_surrogate_key(['order_id', 'key', 'source_relation']) }} as unique_key
 from final
