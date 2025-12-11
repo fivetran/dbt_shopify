@@ -1,39 +1,39 @@
-{% macro get_metafields(source_object, reference_values, id_column, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource") %}
+{%- macro get_metafields(source_object, reference_values, id_column, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource") -%}
     {{ return(adapter.dispatch('get_metafields', 'shopify')(source_object, reference_values, id_column, lookup_object, key_field, key_value, reference_field)) }} 
-{%- endmacro %}
+{%- endmacro -%}
 
-{% macro default__get_metafields(source_object, reference_values, id_column, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource") %}
+{%- macro default__get_metafields(source_object, reference_values, id_column, lookup_object="stg_shopify__metafield", key_field="metafield_reference", key_value="value", reference_field="owner_resource") -%}
 
 {# Manually quote and join reference values #}
-{% set quoted_values = [] %}
-{% for value in reference_values %}
-    {% do quoted_values.append("'" ~ value | lower | trim ~ "'") %}
-{% endfor %}
-{% set reference_values_clause = quoted_values | join(", ") %}
+{%- set quoted_values = [] -%}
+{%- for value in reference_values -%}
+    {%- do quoted_values.append("'" ~ value | lower | trim ~ "'") -%}
+{%- endfor -%}
+{%- set reference_values_clause = quoted_values | join(", ") -%}
 
-{% set source_columns = adapter.get_columns_in_relation(ref(source_object)) %}
-{% set source_column_count = source_columns | length %}
+{%- set source_columns = adapter.get_columns_in_relation(ref(source_object)) -%}
+{%- set source_column_count = source_columns | length -%}
 
 {# Get the pivot fields dynamically based on the reference values #}
-{% set pivot_fields = dbt_utils.get_column_values(
+{%- set pivot_fields = dbt_utils.get_column_values(
     table=ref(lookup_object),
     column=key_field,
     max_records=shopify.max_columns(source_column_count),
-    where="lower(" ~ reference_field ~ ") in (" ~ reference_values_clause ~ ")") %}
+    where="lower(" ~ reference_field ~ ") in (" ~ reference_values_clause ~ ")") -%}
     
-{% set pivot_field_slugs = [] %}
+{%- set pivot_field_slugs = [] -%}
 
-{% for field in pivot_fields %}
-    {% do pivot_field_slugs.append(dbt_utils.slugify(field)) %}
-{% endfor %}
-{% set pivot_field_slugs = pivot_field_slugs | unique | list %}
+{%- for field in pivot_fields -%}
+    {%- do pivot_field_slugs.append(dbt_utils.slugify(field)) -%}
+{%- endfor -%}
+{%- set pivot_field_slugs = pivot_field_slugs | unique | list -%}
 
 with source_table as (
     select *
     from {{ ref(source_object) }}
 )
 
-{% if pivot_field_slugs is not none %},
+{%- if pivot_field_slugs is not none -%},
 lookup_object as (
     select 
         *,
@@ -52,12 +52,12 @@ lookup_object as (
 
 final as (
     select
-        {% for column in source_columns %}
-            source_table.{{ column.name }}{% if not loop.last %},{% endif %}
-        {% endfor %}
-        {% for field in pivot_field_slugs %}
+        {% for column in source_columns -%}
+            source_table.{{ column.name }}{%- if not loop.last %},{% endif %}
+        {% endfor -%}
+        {%- for field in pivot_field_slugs %}
             , max(lookup_object.{{ field }}) as metafield_{{ field }}
-        {% endfor %}
+        {%- endfor %}
     from source_table
     left join lookup_object 
         on lookup_object.{{ reference_field }}_id = source_table.{{ id_column }}
@@ -67,9 +67,9 @@ final as (
 
 select *
 from final
-{% else %}
+{%- else -%}
 
 select *
 from source_table
-{% endif %}
-{% endmacro %}
+{%- endif -%}
+{%- endmacro -%}
