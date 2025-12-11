@@ -11,10 +11,14 @@
 {% endfor %}
 {% set reference_values_clause = quoted_values | join(", ") %}
 
+{% set source_columns = adapter.get_columns_in_relation(ref(source_object)) %}
+{% set source_column_count = source_columns | length %}
+
 {# Get the pivot fields dynamically based on the reference values #}
 {% set pivot_fields = dbt_utils.get_column_values(
     table=ref(lookup_object),
     column=key_field,
+    max_records=shopify.max_columns(source_column_count),
     where="lower(" ~ reference_field ~ ") in (" ~ reference_values_clause ~ ")") %}
     
 {% set pivot_field_slugs = [] %}
@@ -23,9 +27,6 @@
     {% do pivot_field_slugs.append(dbt_utils.slugify(field)) %}
 {% endfor %}
 {% set pivot_field_slugs = pivot_field_slugs | unique | list %}
-
-{% set source_columns = adapter.get_columns_in_relation(ref(source_object)) %}
-{% set source_column_count = source_columns | length %}
 
 with source_table as (
     select *
