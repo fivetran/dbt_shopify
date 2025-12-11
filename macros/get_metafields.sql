@@ -15,7 +15,14 @@
 {% set pivot_fields = dbt_utils.get_column_values(
     table=ref(lookup_object),
     column=key_field,
-    where="lower(" ~ reference_field ~ ") in (" ~ reference_values_clause ~ ")") | unique | list %}
+    where="lower(" ~ reference_field ~ ") in (" ~ reference_values_clause ~ ")") %}
+    
+{% set pivot_field_slugs = [] %}
+
+{% for field in pivot_fields %}
+    {% do pivot_field_slugs.append(dbt_utils.slugify(field)) %}
+{% endfor %}
+{% set pivot_field_slugs = pivot_field_slugs | unique | list %}
 
 {% set source_columns = adapter.get_columns_in_relation(ref(source_object)) %}
 {% set source_column_count = source_columns | length %}
@@ -25,13 +32,13 @@ with source_table as (
     from {{ ref(source_object) }}
 )
 
-{% if pivot_fields is not none %},
+{% if pivot_field_slugs is not none %},
 lookup_object as (
     select 
         *,
         {{ dbt_utils.pivot(
                 column=key_field, 
-                values=pivot_fields, 
+                values=pivot_field_slugs, 
                 agg='', 
                 then_value=key_value, 
                 else_value="null",
@@ -47,8 +54,8 @@ final as (
         {% for column in source_columns %}
             source_table.{{ column.name }}{% if not loop.last %},{% endif %}
         {% endfor %}
-        {% for fields in pivot_fields %}
-            , max(lookup_object.{{ dbt_utils.slugify(fields) }}) as metafield_{{ dbt_utils.slugify(fields) }}
+        {% for field in pivot_field_slugs %}
+            , max(lookup_object.{{ field }}) as metafield_{{ field }}
         {% endfor %}
     from source_table
     left join lookup_object 
