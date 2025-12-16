@@ -18,15 +18,18 @@
 {%- set pivot_fields = dbt_utils.get_column_values(
     table=ref(lookup_object),
     column=key_field,
-    max_records=shopify.max_columns(source_column_count),
+    max_records=shopify.max_columns(source_column_count, id_column),
     where="lower(" ~ reference_field ~ ") in (" ~ reference_values_clause ~ ")") -%}
     
 {%- set pivot_field_slugs = [] -%}
-
-{%- for field in pivot_fields -%}
-    {%- do pivot_field_slugs.append(dbt_utils.slugify(field)) -%}
-{%- endfor -%}
-{%- set pivot_field_slugs = pivot_field_slugs | unique | list -%}
+{%- if pivot_fields is not none -%}
+    {%- for field in pivot_fields -%}
+        {%- do pivot_field_slugs.append(dbt_utils.slugify(field)) -%}
+    {%- endfor -%}
+    {%- set pivot_field_slugs = pivot_field_slugs | unique | list -%}
+{%- else -%}
+    {%- set pivot_field_slugs = pivot_fields -%}
+{%- endif -%}
 
 with source_table as (
     select *
