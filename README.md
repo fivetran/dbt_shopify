@@ -359,14 +359,14 @@ For Fivetran Shopify connections created after November 2025, the following tabl
 - `TAX_LINE` -> `ORDER_LINE_TAX_LINE`
 - `ORDER_LINE_REFUND` -> `REFUND_LINE_ITEM`
 
-This package prioritizes using the new tables if available, but will dynamically fall back to the old names otherwise. If you have both old and new tables in your schema and would like to specify this package to leverage the older tables, you can set the following variables to false in your `dbt_project.yml`:
+This package prioritizes using the new tables if available, but dynamically falls back to the old names otherwise. If you have both old and new tables in your schema and would like to specify this package to leverage the older tables, you can set the following variables to false in your `dbt_project.yml`:
 
 ```yml
 vars:
   shopify:
-    shopify_gql_using_order_custom_attribute: false # If false, will use ORDER_NOTE_ATTRIBUTE even if ORDER_CUSTOM_ATTRIBUTE is present
-    shopify_gql_using_order_line_tax_line: false # If false, will use TAX_LINE even if ORDER_LINE_TAX_LINE is present
-    shopify_gql_using_refund_line_item: false # If false, will use ORDER_LINE_REFUND even if REFUND_LINE_ITEM is present
+    shopify_gql_using_order_custom_attribute: false # If false, uses ORDER_NOTE_ATTRIBUTE even if ORDER_CUSTOM_ATTRIBUTE is present
+    shopify_gql_using_order_line_tax_line: false # If false, uses TAX_LINE even if ORDER_LINE_TAX_LINE is present
+    shopify_gql_using_refund_line_item: false # If false, uses ORDER_LINE_REFUND even if REFUND_LINE_ITEM is present
 ```
 
 #### Changing the Build Schema

@@ -3,13 +3,17 @@
 [PR #141](https://github.com/fivetran/dbt_shopify/pull/141) includes the following updates:
 
 ## Bug Fixes
-- Applies the following warehouse-dependent limits on the number of metafields that will be pivoted into columns. Metafields will be included based on their popularity/prevalence in your Shopify data:
+- Applies the following warehouse-dependent limits on the number of metafields that are pivoted into columns. Metafields are included based on their popularity/prevalence in your Shopify data:
   - BigQuery: 10,000
   - Redshift: 1,600
   - Postgres: 1,600
   - Databricks: 32,768
   - Snowflake: No limit
-- Deduplicates metafields whose "slugs" are identical (ex: `my-first-metafield` and `my_first_metafield`) to avoid ambiguous column errors.
+- Deduplicates metafields with identical slugs (for example, `my-first-metafield` and `my_first_metafield`) to prevent ambiguous column errors.
+
+## Under the Hood
+- Adds data validation tests for metafield models.
+- Adjusts metafield seed data to test for duplicate slugs/column names.
 
 # dbt_shopify v1.3.1
 

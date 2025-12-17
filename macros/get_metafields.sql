@@ -14,7 +14,7 @@
 {%- set source_columns = adapter.get_columns_in_relation(ref(source_object)) -%}
 {%- set source_column_count = source_columns | length -%}
 
-{# Get the pivot fields dynamically based on the reference values #}
+{# Get the pivot fields dynamically based on the reference values while respecting warehouse column limits #}
 {%- set pivot_fields = dbt_utils.get_column_values(
     table=ref(lookup_object),
     column=key_field,
@@ -31,6 +31,32 @@
     {%- set pivot_field_slugs = pivot_fields -%}
 {%- endif -%}
 
+{# Create slug:[field] dictionary #}
+{%- set slug_to_fields = {} -%}
+{%- if pivot_fields is not none -%}
+    {%- for field in pivot_fields -%}
+        {%- set slug = dbt_utils.slugify(field) -%}
+
+        {%- if slug in slug_to_fields -%}
+            {% set existing = slug_to_fields[slug] %}
+        {%-else -%}
+            {% set existing = [] %}
+        {%- endif -%}
+
+        {%- set new_list = existing + [field] -%}
+
+        {%- do slug_to_fields.update({ slug: new_list }) -%}
+        
+    {%- endfor -%}
+{%- endif -%}
+
+{# Resolve collisions by picking the first field for each slug #}
+{# {%- set pivot_field_slugs = [] -%}
+{%- for slug, fields in slug_to_fields.items() -%}
+    {%- do pivot_field_slugs.append(fields[0]) -%}
+{%- endfor -%}
+{%- set pivot_field_slugs = pivot_field_slugs | unique | list -%} #}
+
 with source_table as (
     select *
     from {{ ref(source_object) }}
@@ -40,9 +66,9 @@ with source_table as (
 lookup_object as (
     select 
         *,
-        {{ dbt_utils.pivot(
+        {{ shopify.pivot_metafields(
                 column=key_field, 
-                values=pivot_field_slugs, 
+                values_dict=slug_to_fields, 
                 agg='', 
                 then_value=key_value, 
                 else_value="null",
