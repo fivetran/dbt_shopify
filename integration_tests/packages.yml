@@ -1,3 +1,2 @@
 packages:
-  - package: fivetran/shopify
-    version: '>=0.0.0'
+  - local: ../
