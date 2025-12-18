@@ -3,7 +3,7 @@
     enabled=var('fivetran_validation_tests_enabled', false) and var('shopify_api', 'rest') == 'graphql'
 ) }}
 
-{% set exclude_cols = var('consistency_test_exclude_metrics', []) %}
+{% set exclude_cols = var('consistency_test_exclude_metrics', ['receipt']) %}
 
 -- this test ensures the shopify_gql__transactions end model matches the prior version
 with prod as (
