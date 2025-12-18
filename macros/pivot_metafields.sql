@@ -66,7 +66,7 @@ Arguments:
                else_value=0,
                quote_identifiers=True,
                distinct=False) %}
-  {% for slug,names_list in values_dict.items() %}
+  {% for slug, names_list in values_dict.items() %}
     {{ agg }}(
       {% if distinct %} distinct {% endif %}
       case

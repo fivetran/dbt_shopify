@@ -21,54 +21,37 @@
     max_records=shopify.max_columns(source_column_count, id_column),
     where="lower(" ~ reference_field ~ ") in (" ~ reference_values_clause ~ ")") -%}
     
-{%- set pivot_field_slugs = [] -%}
-{%- if pivot_fields is not none -%}
-    {%- for field in pivot_fields -%}
-        {%- do pivot_field_slugs.append(dbt_utils.slugify(field)) -%}
-    {%- endfor -%}
-    {%- set pivot_field_slugs = pivot_field_slugs | unique | list -%}
-{%- else -%}
-    {%- set pivot_field_slugs = pivot_fields -%}
-{%- endif -%}
-
-{# Create slug:[field] dictionary #}
-{%- set slug_to_fields = {} -%}
+{# Create slug:[metafields] dictionary #}
+{%- set slug_to_field_dict = {} -%}
 {%- if pivot_fields is not none -%}
     {%- for field in pivot_fields -%}
         {%- set slug = dbt_utils.slugify(field) -%}
 
-        {%- if slug in slug_to_fields -%}
-            {% set existing = slug_to_fields[slug] %}
+        {%- if slug in slug_to_field_dict -%}
+            {% set existing = slug_to_field_dict[slug] %}
         {%-else -%}
             {% set existing = [] %}
         {%- endif -%}
 
         {%- set new_list = existing + [field] -%}
 
-        {%- do slug_to_fields.update({ slug: new_list }) -%}
+        {%- do slug_to_field_dict.update({ slug: new_list }) -%}
         
     {%- endfor -%}
 {%- endif -%}
-
-{# Resolve collisions by picking the first field for each slug #}
-{# {%- set pivot_field_slugs = [] -%}
-{%- for slug, fields in slug_to_fields.items() -%}
-    {%- do pivot_field_slugs.append(fields[0]) -%}
-{%- endfor -%}
-{%- set pivot_field_slugs = pivot_field_slugs | unique | list -%} #}
 
 with source_table as (
     select *
     from {{ ref(source_object) }}
 )
 
-{%- if pivot_field_slugs is not none -%},
+{%- if slug_to_field_dict is not none -%},
 lookup_object as (
     select 
         *,
         {{ shopify.pivot_metafields(
                 column=key_field, 
-                values_dict=slug_to_fields, 
+                values_dict=slug_to_field_dict, 
                 agg='', 
                 then_value=key_value, 
                 else_value="null",
@@ -84,8 +67,8 @@ final as (
         {% for column in source_columns -%}
             source_table.{{ column.name }}{%- if not loop.last %},{% endif %}
         {% endfor -%}
-        {%- for field in pivot_field_slugs %}
-            , max(lookup_object.{{ field }}) as metafield_{{ field }}
+        {%- for slug, fields in slug_to_field_dict.items() %}
+            , max(lookup_object.{{ slug }}) as metafield_{{ slug }}
         {%- endfor %}
     from source_table
     left join lookup_object 

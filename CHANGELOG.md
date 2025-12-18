@@ -10,6 +10,7 @@
   - Databricks: 32,768
   - Snowflake: No limit
 - Deduplicates metafields with identical slugs (for example, `my-first-metafield` and `my_first_metafield`) to prevent ambiguous column errors.
+- Ensures the `stg_shopify_gql__shop.enabled_presentment_currencies` and `stg_shopify_gql__transaction.receipt` fields are strings.
 
 ## Under the Hood
 - Adds data validation tests for metafield models.
