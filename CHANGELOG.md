@@ -7,13 +7,13 @@
 
 | Data Model(s) | Change type | Old | New | Notes |
 | ---------- | ----------- | -------- | -------- | ----- |
-| `shopify_<gql>__customers`<br>`shopify_<gql>__orders`<br>`shopify_<gql>__products`<br>`shopify_<gql>__inventory_levels`<br>`shopify_<gql>__daily_shop`<br>`shopify_<gql>__collection_metafields`<br>`shopify_<gql>__customer_metafields`<br>`shopify_<gql>__order_metafields`<br>`shopify_<gql>__product_metafields`<br>`shopify_<gql>__product_variant_metafields`<br>`shopify_<gql>__shop_metafields` | Metafield columns | Unlimited | 50 (configurable) | The 50 most commonly used metafields are pivoted into columns by default. You can adjust this number via the `shopify_max_metafields` variable. <br><br>If necessary, the package automatically caps metafields to respect data warehouse column limits. |
+| `shopify_<gql>__customers`<br>`shopify_<gql>__orders`<br>`shopify_<gql>__products`<br>`shopify_<gql>__inventory_levels`<br>`shopify_<gql>__daily_shop`<br>`shopify_<gql>__collection_metafields`<br>`shopify_<gql>__customer_metafields`<br>`shopify_<gql>__order_metafields`<br>`shopify_<gql>__product_metafields`<br>`shopify_<gql>__product_variant_metafields`<br>`shopify_<gql>__shop_metafields` | Metafield columns | Unlimited | 50 (configurable) | The 50 most commonly used metafields are pivoted into columns by default. You can adjust this number via the `shopify_max_metafields` variable. |
 
 ## Feature Updates
 - Introduces the `shopify_max_metafields` variable to configure the number of metafields pivoted into columns. Configure it as follows (see [README](https://github.com/fivetran/dbt_shopify/tree/main?tab=readme-ov-file#configure-the-number-of-metafields) for details):
 ```yml
 vars:
-  shopify_max_metafields: 200 # Default is 50
+  shopify_max_metafields: 200 # (Any positive integer) Default is 50
 ```
 
 ## Bug Fixes

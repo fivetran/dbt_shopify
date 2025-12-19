@@ -342,7 +342,7 @@ To decrease or increase this number, adjust the `shopify_max_metafields` variabl
 
 ```yml
 vars:
-  shopify_max_metafields: 200 # Default is 50
+  shopify_max_metafields: 200 # (Any positive integer) Default is 50
 ```
 
 The package automatically adheres to the following data warehouse column limits. The total column count includes both source/model columns and metafield columns. If this total would exceed your warehouse limit, the package will cap the number of metafields to avoid failure:
