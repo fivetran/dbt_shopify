@@ -18,9 +18,9 @@
 {%- set pivot_fields = dbt_utils.get_column_values(
     table=ref(lookup_object),
     column=key_field,
-    max_records=shopify.max_columns(source_column_count, id_column),
+    max_records= [var('shopify_max_metafields', 50), shopify.max_columns(source_column_count, id_column)]|sort|first,
     where="lower(" ~ reference_field ~ ") in (" ~ reference_values_clause ~ ")") -%}
-    
+
 {# Create slug:[metafields] dictionary #}
 {%- set slug_to_field_dict = {} -%}
 {%- if pivot_fields is not none -%}

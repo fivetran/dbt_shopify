@@ -1,16 +1,30 @@
-# dbt_shopify v1.3.2
+# dbt_shopify v1.4.0
 
 [PR #141](https://github.com/fivetran/dbt_shopify/pull/141) includes the following updates:
 
+## Schema/Data Changes
+**11 total changes • 11 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ---------- | ----------- | -------- | -------- | ----- |
+| `shopify_<gql>__customers`<br>`shopify_<gql>__orders`<br>`shopify_<gql>__products`<br>`shopify_<gql>__inventory_levels`<br>`shopify_<gql>__daily_shop`<br>`shopify_<gql>__collection_metafields`<br>`shopify_<gql>__customer_metafields`<br>`shopify_<gql>__order_metafields`<br>`shopify_<gql>__product_metafields`<br>`shopify_<gql>__product_variant_metafields`<br>`shopify_<gql>__shop_metafields` | Metafield columns | Unlimited | 50 (configurable) | The 50 most commonly used metafields are pivoted into columns by default. You can adjust this number via the `shopify_max_metafields` variable. <br><br>The package automatically caps metafields to respect data warehouse column limits. |
+
+## Feature Updates
+- Introduces the `shopify_max_metafields` variable to configure the number of metafields pivoted into columns. Configure it as follows:
+```yml
+vars:
+  shopify_max_metafields: 200 # Default is 50
+```
+
 ## Bug Fixes
-- Applies the following warehouse-dependent limits on the number of metafields that are pivoted into columns. Metafields are included based on their popularity/prevalence in your Shopify data:
+- Deduplicates metafields with identical slugs (for example, `my-first-metafield` and `my_first_metafield`) to prevent ambiguous column errors.
+- Ensures the `stg_shopify_gql__shop.enabled_presentment_currencies` and `stg_shopify_gql__transaction.receipt` fields are strings.
+- Applies the following warehouse-dependent limits on the number of metafields that are pivoted into columns, regardless of the value of `shopify_max_metafields`. Metafields are included based on their prevalence in your Shopify `METAFIELD` table:
   - BigQuery: 10,000
   - Redshift: 1,600
   - Postgres: 1,600
   - Databricks: 32,768
   - Snowflake: No limit
-- Deduplicates metafields with identical slugs (for example, `my-first-metafield` and `my_first_metafield`) to prevent ambiguous column errors.
-- Ensures the `stg_shopify_gql__shop.enabled_presentment_currencies` and `stg_shopify_gql__transaction.receipt` fields are strings.
 
 ## Under the Hood
 - Adds data validation tests for metafield models.
