@@ -12,7 +12,7 @@
 {%- set reference_values_clause = quoted_values | join(", ") -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(ref(source_object)) -%}
-{%- set source_column_count = source_columns | length -%}
+{%- set source_column_count = source_columns | length if source_columns is not none else 0 -%}
 
 {# Get the pivot fields dynamically based on the reference values while respecting warehouse column limits #}
 {%- set pivot_fields = dbt_utils.get_column_values(
