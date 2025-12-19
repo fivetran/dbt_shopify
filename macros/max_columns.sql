@@ -2,24 +2,24 @@
     Returns the maximum number of columns that can be added via metafields based on
     the source table's column count and additional columns joined or added downstream
 #}
-{%- macro max_columns(source_table_column_count, id_coumn) -%}
-    {{ return(adapter.dispatch('max_columns', 'shopify')(source_table_column_count, id_coumn)) }} 
+{%- macro max_columns(source_table_column_count, id_column) -%}
+    {{ return(adapter.dispatch('max_columns', 'shopify')(source_table_column_count, id_column)) }} 
 {%- endmacro -%}
 
-{%- macro default__max_columns(source_table_column_count, id_coumn) -%}
+{%- macro default__max_columns(source_table_column_count, id_column) -%}
 {# Snowflake #}
 {{ return(none) }}
 {%- endmacro -%}
 
-{%- macro bigquery__max_columns(source_table_column_count, id_coumn) -%}
+{%- macro bigquery__max_columns(source_table_column_count, id_column) -%}
 {{ return(10000 - source_table_column_count - downstream_model_column_count(id_column)) }}
 {%- endmacro -%}
 
-{%- macro postgres__max_columns(source_table_column_count, id_coumn) -%}
+{%- macro postgres__max_columns(source_table_column_count, id_column) -%}
 {{ return(1600 - source_table_column_count - downstream_model_column_count(id_column)) }}
 {%- endmacro -%}
 
-{%- macro spark__max_columns(source_table_column_count, id_coumn) -%}
+{%- macro spark__max_columns(source_table_column_count, id_column) -%}
 {{ return(32768 - source_table_column_count - downstream_model_column_count(id_column)) }}
 {%- endmacro -%}
 
