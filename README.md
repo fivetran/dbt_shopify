@@ -306,7 +306,7 @@ vars:
 #### Adding Metafields
 In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) the Shopify connector introduced support for the [metafield resource](https://shopify.dev/api/admin-rest/2023-01/resources/metafield).
 
-By default, the packge will pivot out metafields associated with the following source objects into columns in `shopify...__[object]_metafields` models and subsequently join them into the appropriate end models:
+By default, the package will pivot out metafields associated with the following source objects into columns in `shopify...__[object]_metafields` models and subsequently join them into the appropriate end models:
 
 >**Note**: Please ensure that the `shopify_using_metafield` is not disabled to use metafields. (Enabled by default)
 
@@ -321,7 +321,7 @@ By default, the packge will pivot out metafields associated with the following s
 
 >**Note**: The `shopify...__[object]_metafields` models will contain all the same records as the corresponding staging models with the exception of the metafield columns being added.
 
-If you would like to totally disable this behavior, add the following configurations within your `dbt_project.yml`.
+If you would like to disable this behavior, add the following configurations within your `dbt_project.yml`.
 
 ```yml
 vars:

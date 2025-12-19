@@ -77,7 +77,7 @@ Arguments:
     )
     {% if alias %}
       {% if quote_identifiers %}
-            as {{ adapter.quote(prefix ~ value ~ suffix) }}
+            as {{ adapter.quote(prefix ~ slug ~ suffix) }}
       {% else %}
         as {{ slug }}
       {% endif %}
