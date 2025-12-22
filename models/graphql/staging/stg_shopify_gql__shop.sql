@@ -1,5 +1,7 @@
 {{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
+{% set source_columns_in_relation = adapter.get_columns_in_relation(ref('stg_shopify_gql__shop_tmp')) %}
+
 with base as (
 
     select * 
