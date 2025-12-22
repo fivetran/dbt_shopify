@@ -1,4 +1,4 @@
-# dbt_shopify v1.4.0
+# dbt_shopify v1.4.0-a1
 
 [PR #141](https://github.com/fivetran/dbt_shopify/pull/141) includes the following updates:
 
