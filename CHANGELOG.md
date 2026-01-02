@@ -29,6 +29,7 @@ vars:
 ## Under the Hood
 - Adds data validation tests for metafield models.
 - Adjusts metafield seed data to test for duplicate slugs/column names.
+- Creates `max_columns()` and `downstream_model_column_count()` [macros](https://github.com/fivetran/dbt_shopify/blob/main/macros/max_columns.sql) to support adherence to warehouse column limits when pivoting metafields.
 
 # dbt_shopify v1.4.0-a1
 
