@@ -51,7 +51,7 @@
         {%- elif id_column == 'variant_id' -%}
             {# shopify__inventory_levels #}
             {%- set inventory_states = var('shopify_inventory_states', ['incoming', 'on_hand', 'available', 'committed', 'reserved', 'damaged', 'safety_stock', 'quality_control']) -%}
-            {{ return(84 + inventory_states | length + (1 if var('shopify_using_product_variant_media', False) else 0) )}}
+            {{ return(60 + inventory_states | length + (1 if var('shopify_using_product_variant_media', False) else 0) )}}
 
         {%- elif id_column == 'shop_id' %}
             {# shopify__daily_shop #}
@@ -79,7 +79,7 @@
         {%- elif id_column == 'variant_id' -%}
             {# shopify_gql__inventory_levels #}
             {%- set inventory_states = var('shopify_inventory_states', ['incoming', 'on_hand', 'available', 'committed', 'reserved', 'damaged', 'safety_stock', 'quality_control']) -%}
-            {{ return(77 + inventory_states | length + (1 if var('shopify_gql_using_product_variant_media', False) else 0) )}}
+            {{ return(61 + inventory_states | length + (1 if var('shopify_gql_using_product_variant_media', False) else 0) )}}
 
         {%- elif id_column == 'shop_id' %}
             {# shopify_gql__daily_shop #}
