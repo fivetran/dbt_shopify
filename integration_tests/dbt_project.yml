@@ -122,7 +122,7 @@ dispatch:
     search_order: ['spark_utils', 'dbt_utils']
 
 models:
-  +schema: "{{ 'shopify_integrations_tests_sqlw' if target.name == 'databricks-sql' else 'shopify' }}"
+  +schema: "{{ 'shopify_integration_tests_sqlw' if target.name == 'databricks-sql' else 'shopify' }}"
   # +schema: "shopify_{{ var('directed_schema','dev') }}" ## To be used for validation tests
 
 seeds:
