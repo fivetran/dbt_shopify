@@ -23,6 +23,7 @@ Before marking this PR as "ready for review":
 - 
 
 ### Submission Checklist  
+- [ ] **SHOPIFY-SPECIFIC**: If you added a field to any [model with metafields](https://github.com/fivetran/dbt_shopify?tab=readme-ov-file#adding-metafields), did you increase the relevant column count in the `downstream_model_column_count` [macro](https://github.com/fivetran/dbt_shopify/tree/main/macros/max_columns.sql#L27)?
 - [ ] Alignment meeting with the reviewer (if needed)  
   - [ ] Timeline and validation requirements discussed  
 - [ ] Provide validation details:  

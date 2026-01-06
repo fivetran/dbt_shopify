@@ -1,7 +1,7 @@
 version: 2
 
 sources:
-  - name: shopify_graphql # This source will only be used if you are using a single Shopify source connector. If multiple sources are being unioned, their tables will be directly referenced via adatper.get_relation
+  - name: shopify_graphql # This source will only be used if you are using a single Shopify source connector. If multiple sources are being unioned, their tables will be directly referenced via adapter.get_relation
     schema: "{{ var('shopify_schema', 'shopify') }}"
     database: "{% if target.type not in ('spark') %}{{ var('shopify_database', target.database) }}{% endif %}"
     config:

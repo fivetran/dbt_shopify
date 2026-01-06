@@ -158,7 +158,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=1.3.0", "<1.4.0"] # we recommend using ranges to capture non-breaking changes automatically
+    version: [">=1.4.0", "<1.5.0"]
 ```
 
 > All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/shopify_source` in your `packages.yml` since this package has been deprecated.
@@ -306,7 +306,7 @@ vars:
 #### Adding Metafields
 In [May 2021](https://fivetran.com/docs/applications/shopify/changelog#may2021) the Shopify connector introduced support for the [metafield resource](https://shopify.dev/api/admin-rest/2023-01/resources/metafield).
 
-By default, the packge will pivot out metafields associated with the following source objects in `shopify...__[object]_metafields` models and subsequently join them into the appropriate end models:
+By default, the package will pivot out metafields associated with the following source objects into columns in `shopify...__[object]_metafields` models and subsequently join them into the appropriate end models:
 
 >**Note**: Please ensure that the `shopify_using_metafield` is not disabled to use metafields. (Enabled by default)
 
@@ -314,7 +314,7 @@ By default, the packge will pivot out metafields associated with the following s
 |----------------|---------------------------|---------------------------|
 | `CUSTOMER`     | `shopify_<gql>__customer_metafields` | `shopify_<gql>__customers` |
 | `ORDER`        | `shopify_<gql>__order_metafields` | `shopify_<gql>__orders` |
-| `PRODUCT`      | `shopify_<gql>__product__metafields` | `shopify_<gql>__products` |
+| `PRODUCT`      | `shopify_<gql>__product_metafields` | `shopify_<gql>__products` |
 | `PRODUCT_VARIANT` | `shopify_<gql>__product_variant_metafields` | `shopify_<gql>__inventory_levels` |
 | `SHOP`         | `shopify_<gql>__shop_metafields` | `shopify_<gql>__daily_shop` |
 | `COLLECTION`   | `shopify_<gql>__collection_metafields` | NA |
@@ -333,6 +333,24 @@ vars:
   shopify_using_product_variant_metafields: False ## True by default. Will enable/disable ONLY the product variant metafield model.
   shopify_using_shop_metafields: False ## True by default. Will enable/disable ONLY the shop metafield model.
 ```
+
+##### Configure the Number of Metafields
+
+By default, the package pivots out the 50 most commonly used metafields per object. Metafields are ranked by their frequency in the `METAFIELD` source table, with the most prevalent selected first.
+
+To decrease or increase this number, adjust the `shopify_max_metafields` variable:
+
+```yml
+vars:
+  shopify_max_metafields: 200 # (Any positive integer) Default is 50
+```
+
+The package automatically adheres to the following data warehouse column limits. The total column count includes both source/model columns and metafield columns. If this total would exceed your warehouse limit, the package will cap the number of metafields to avoid failure:
+- BigQuery: 10,000
+- Redshift: 1,600
+- Postgres: 1,600
+- Databricks: 32,768
+- Snowflake: No limit
 
 #### Change the calendar start date
 Our date-based models start at `2019-01-01` by default. To customize the start date, add the following variable to your `dbt_project.yml` file:
@@ -359,14 +377,14 @@ For Fivetran Shopify connections created after November 2025, the following tabl
 - `TAX_LINE` -> `ORDER_LINE_TAX_LINE`
 - `ORDER_LINE_REFUND` -> `REFUND_LINE_ITEM`
 
-This package prioritizes using the new tables if available, but will dynamically fall back to the old names otherwise. If you have both old and new tables in your schema and would like to specify this package to leverage the older tables, you can set the following variables to false in your `dbt_project.yml`:
+This package prioritizes using the new tables if available, but dynamically falls back to the old names otherwise. If you have both old and new tables in your schema and would like to specify this package to leverage the older tables, you can set the following variables to false in your `dbt_project.yml`:
 
 ```yml
 vars:
   shopify:
-    shopify_gql_using_order_custom_attribute: false # If false, will use ORDER_NOTE_ATTRIBUTE even if ORDER_CUSTOM_ATTRIBUTE is present
-    shopify_gql_using_order_line_tax_line: false # If false, will use TAX_LINE even if ORDER_LINE_TAX_LINE is present
-    shopify_gql_using_refund_line_item: false # If false, will use ORDER_LINE_REFUND even if REFUND_LINE_ITEM is present
+    shopify_gql_using_order_custom_attribute: false # If false, uses ORDER_NOTE_ATTRIBUTE even if ORDER_CUSTOM_ATTRIBUTE is present
+    shopify_gql_using_order_line_tax_line: false # If false, uses TAX_LINE even if ORDER_LINE_TAX_LINE is present
+    shopify_gql_using_refund_line_item: false # If false, uses ORDER_LINE_REFUND even if REFUND_LINE_ITEM is present
 ```
 
 #### Changing the Build Schema
