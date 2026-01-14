@@ -135,27 +135,27 @@ public_models: [
 supported_vars:
   customer_pass_through_columns:
     type: dictionary
-    description: "Addtional `CUSTOMER` columns to include in `shopify_[gql]__customers` and `shopify_[gql]__customer_emails`"
+    description: "Additional `CUSTOMER` columns to include in `shopify_[gql]__customers` and `shopify_[gql]__customer_emails`"
     display_name: "Additional Customer Columns"
 
   order_line_pass_through_columns:
     type: dictionary
-    description: "Addtional `ORDER_LINE` columns to include in `shopify_[gql]__order_lines`"
+    description: "Additional `ORDER_LINE` columns to include in `shopify_[gql]__order_lines`"
     display_name: "Additional Order Line Columns"
 
   order_pass_through_columns:
     type: dictionary
-    description: "Addtional `ORDER` columns to include in `shopify_[gql]__orders`"
+    description: "Additional `ORDER` columns to include in `shopify_[gql]__orders`"
     display_name: "Additional Order Columns"
 
   product_pass_through_columns:
     type: dictionary
-    description: "Addtional `PRODUCT` columns to include in `shopify_[gql]__products`"
+    description: "Additional `PRODUCT` columns to include in `shopify_[gql]__products`"
     display_name: "Additional Product Columns"
 
   product_variant_pass_through_columns:
     type: dictionary
-    description: "Addtional `PRODUCT_VARIANT` columns to include in `shopify_[gql]__inventory_levels`"
+    description: "Additional `PRODUCT_VARIANT` columns to include in `shopify_[gql]__inventory_levels`"
     display_name: "Additional Product Variant Columns"
 
   shopify_inventory_states:
