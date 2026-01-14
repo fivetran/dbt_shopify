@@ -1,3 +1,15 @@
+# dbt_shopify v1.5.0
+
+[PR #142](https://github.com/fivetran/dbt_shopify/pull/142) includes the following updates:
+
+## Documentation
+- Updates README with standardized Fivetran formatting
+
+## Under the Hood
+- In the `.quickstart.yml` file:
+  - Adds `table_variables` for relevant sources to prevent missing sources from blocking downstream Quickstart models.
+  - Adds `supported_vars` for Quickstart UI customization,
+
 # dbt_shopify v1.4.0
 
 [PR #141](https://github.com/fivetran/dbt_shopify/pull/141) includes the following updates:

@@ -17,6 +17,35 @@ table_variables:
   shopify_using_product_variant_media:
     - product_variant_media
 
+  _fivetran_quickstart_customer_address:
+    - customer_address
+  _fivetran_quickstart_customer_tag:
+    - customer_tag
+  _fivetran_quickstart_discount_allocation:
+    - discount_allocation
+  _fivetran_quickstart_discount_code_bxgy:
+    - discount_code_bxgy
+  _fivetran_quickstart_discount_code_free_shipping:
+    - discount_code_free_shipping
+  _fivetran_quickstart_discount_code_app:
+    - discount_code_app
+  _fivetran_quickstart_discount_redeem_code:
+    - discount_redeem_code
+  _fivetran_quickstart_fulfillment:
+    - fulfillment
+  _fivetran_quickstart_media:
+    - media
+  _fivetran_quickstart_media_image:
+    - media_image
+  _fivetran_quickstart_order_note_attribute:
+    - order_note_attribute
+  _fivetran_quickstart_order_tag:
+    - order_tag
+  _fivetran_quickstart_order_url_tag:
+    - order_url_tag
+  _fivetran_quickstart_product_tag:
+    - product_tag
+
   shopify_gql_using_abandoned_checkout:
     - abandoned_checkout
     - abandoned_checkout_discount_code
@@ -102,3 +131,62 @@ public_models: [
   "shopify_gql__order_lines",
   "shopify_gql__line_item_enhanced"
 ]
+
+supported_vars:
+  customer_pass_through_columns:
+    type: dictionary
+    description: "Addtional `CUSTOMER` columns to include in `shopify_[gql]__customers` and `shopify_[gql]__customer_emails`"
+    display_name: "Additional Customer Columns"
+
+  order_line_pass_through_columns:
+    type: dictionary
+    description: "Addtional `ORDER_LINE` columns to include in `shopify_[gql]__order_lines`"
+    display_name: "Additional Order Line Columns"
+
+  order_pass_through_columns:
+    type: dictionary
+    description: "Addtional `ORDER` columns to include in `shopify_[gql]__orders`"
+    display_name: "Additional Order Columns"
+
+  product_pass_through_columns:
+    type: dictionary
+    description: "Addtional `PRODUCT` columns to include in `shopify_[gql]__products`"
+    display_name: "Additional Product Columns"
+
+  product_variant_pass_through_columns:
+    type: dictionary
+    description: "Addtional `PRODUCT_VARIANT` columns to include in `shopify_[gql]__inventory_levels`"
+    display_name: "Additional Product Variant Columns"
+
+  shopify_inventory_states:
+    type: list
+    value:
+      - "incoming"
+      - "on_hand"
+      - "available"
+      - "committed"
+      - "reserved"
+      - "damaged"
+      - "safety_stock"
+      - "quality_control"
+    description: "`INVENTORY_QUANTITY.name` states aggregated in `_quantity` fields in `shopify_[gql]__inventory_levels`"
+    display_name: "Aggregated Inventory States"
+
+  shopify__calendar_start_date:
+    type: string
+    value: "2019-01-01"
+    description: "Start date for the window of data included in time-based models (YYYY-MM-DD format)"
+    display_name: "Date Range Start"
+
+  lookback_window:
+    type: integer
+    value: 7
+    description: "Number of days into the past that the models will look back to capture late-arriving records on incremental runs"
+    display_name: "Incremental Run Lookback Window (Days)"
+
+  shopify_max_metafields:
+    type: integer
+    value: 50
+    description: "The number of metafields that will be pivoted out into columns. The most frequently used metafields will be prioritized."
+    display_name: "Maximum Metafield Columns"
+
