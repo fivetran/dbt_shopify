@@ -106,7 +106,105 @@ dispatch:
 ```
 
 ### Define REST API or GraphQL API Source
-Fivetran has released a version of the Shopify connector that leverages Shopify's newer [GraphQL](https://shopify.dev/docs/apps/build/graphql) API instead of the REST API, as Shopify deprecated the REST API in October 2024. The GraphQL and REST API-based schemas are slightly different, so this package is designed to run either or, not both. It will do so based on the value of the `shopify_api` variable.
+Fivetran has released a version of the Shopify connector that leverages Shopify's newer [GraphQL](https://shopify.dev/docs/apps/build/graphql) API instead of the REST API, as Shopify deprecated the REST API in October 2024. 
+
+To use this dbt package, you must have either at least one Fivetran REST API-based Shopify connection or one Fivetran GraphQL-based Shopify connection syncing these respective tables to your destination:
+
+> If any table is not present, the package will create an empty staging model to ensure the success of downstream transformations. This behavior can be circumvented for select tables (see [Step 5](https://github.com/fivetran/dbt_shopify?tab=readme-ov-file#step-5-disable-models-for-non-existent-sources)).
+
+#### Shopify REST API
+- customer
+- order_line_refund
+- order_line
+- order
+- product
+- product_variant
+- transaction
+- refund
+- order_adjustment
+- abandoned_checkout
+- collection_product
+- collection
+- customer_tag
+- discount_allocation
+- discount_application
+- discount_code_app
+- discount_code_basic
+- discount_code_bxgy
+- discount_code_free_shipping
+- discount_redeem_code
+- fulfillment
+- inventory_item
+- inventory_level
+- inventory_quantity
+- location
+- media
+- media_image
+- metafield
+- order_note_attribute
+- order_shipping_line
+- order_shipping_tax_line
+- order_tag
+- order_url_tag
+- product_media
+- product_variant_media
+- product_tag
+- shop
+- tender_transaction
+- abandoned_checkout_discount_code
+- order_discount_code
+- abandoned_checkout_shipping_line
+- fulfillment_event
+- tax_line
+
+#### Shopify GraphQL
+- collection_product
+- collection
+- customer_tag
+- discount_allocation
+- discount_application
+- discount_code_app
+- discount_code_basic
+- discount_code_bxgy
+- discount_code_free_shipping
+- discount_redeem_code
+- fulfillment
+- inventory_item
+- inventory_level
+- inventory_quantity
+- location
+- media
+- media_image
+- metafield
+- order_note_attribute
+- order_shipping_line
+- order_shipping_tax_line
+- order_tag
+- product_media
+- product_variant_media
+- product_tag
+- shop
+- tender_transaction
+- tax_line
+- order_discount_code
+- abandoned_checkout
+- abandoned_checkout_discount_code
+- fulfillment_event
+- fulfillment_tracking_info
+- fulfillment_order_line_item
+- customer_visit
+- customer_address
+- collection_rule
+
+#### Database Compatibility
+To use this package, you will need to have one of the following kinds of destinations:
+- [BigQuery](https://fivetran.com/docs/destinations/bigquery)
+- [Snowflake](https://fivetran.com/docs/destinations/snowflake)
+- [Redshift](https://fivetran.com/docs/destinations/redshift)
+- [PostgreSQL](https://fivetran.com/docs/destinations/postgresql)
+- [Databricks](https://fivetran.com/docs/destinations/databricks) with [Databricks Runtime](https://docs.databricks.com/en/compute/index.html#databricks-runtime)
+
+The GraphQL and REST API-based schemas are slightly different, so this package is designed to run either or, not both. It will do so based on the value of the `shopify_api` variable.
 
 By default, `shopify_api` is set to `rest` and will run the `shopify__*` models in the [rest](https://github.com/fivetran/dbt_shopify/tree/main/models/rest) folder. If you would like to run the package on a GraphQL-based schema, adjust `shopify_api` accordingly.
 
