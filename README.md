@@ -76,7 +76,7 @@ Many of the above reports are now configurable for [visualization via Streamlit]
 To use this dbt package, you must have the following:
 
 - At least one Fivetran Shopify connection syncing data into your destination.
-- A [BigQuery](https://fivetran.com/docs/destinations/bigquery), [Snowflake](https://fivetran.com/docs/destinations/snowflake), [Redshift](https://fivetran.com/docs/destinations/redshift), [PostgreSQL](https://fivetran.com/docs/destinations/postgresql), or [Databricks](https://fivetran.com/docs/destinations/databricks) destination.
+- A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination.
 
 ## How do I use the dbt package?
 You can either add this dbt package in the Fivetran dashboard or import it into your dbt project:
