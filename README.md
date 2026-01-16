@@ -1,4 +1,5 @@
-# Shopify Transformation dbt Package ([Docs](https://fivetran.github.io/dbt_shopify/))
+<!--section="shopify_transformation_model"-->
+# Shopify dbt Package
 
 <p align="left">
     <a alt="License"
@@ -11,26 +12,44 @@
     <a alt="PRs">
         <img src="https://img.shields.io/badge/Contributions-welcome-blueviolet" /></a>
     <a alt="Fivetran Quickstart Compatible"
-        href="https://fivetran.com/docs/transformations/dbt/quickstart">
+        href="https://fivetran.com/docs/transformations/data-models/quickstart-management#quickstartmanagement">
         <img src="https://img.shields.io/badge/Fivetran_Quickstart_Compatible%3F-yes-green.svg" /></a>
 </p>
 
+This dbt package transforms data from Fivetran's Shopify connector into analytics-ready tables.
+
+## Resources
+
+- Number of materialized models¹: 107 (REST API) / 117 (GraphQL API)
+- Connector documentation
+  - [Shopify connector documentation](https://fivetran.com/docs/connectors/applications/shopify)
+  - [Shopify ERD](https://fivetran.com/docs/connectors/applications/shopify#schemainformation)
+- dbt package documentation
+  - [GitHub repository](https://github.com/fivetran/dbt_shopify)
+  - [dbt Docs](https://fivetran.github.io/dbt_shopify/#!/overview)
+  - [DAG](https://fivetran.github.io/dbt_shopify/#!/overview?g_v=1)
+  - [Changelog](https://github.com/fivetran/dbt_shopify/blob/main/CHANGELOG.md)
+
 ## What does this dbt package do?
+This package enables you to transform core object tables into analytics-ready models and understand customer behavior over time through cohort analysis. It creates enriched models with metrics focused on customer retention, product performance, and revenue analysis.
 
-This package models Shopify data from [Fivetran's connector](https://fivetran.com/docs/applications/shopify). It uses data in the format described by [this ERD](https://fivetran.com/docs/applications/shopify#schemainformation).
+### Output schema
+Final output tables are generated in the following target schema:
 
-The main focus of the package is to transform the core object tables into analytics-ready models, including a cohort model to understand how your customers are behaving over time.
+```
+<your_database>.<connector/schema_name>_shopify
+```
 
-<!--section="shopify_transformation_model"-->
-The following table provides a detailed list of all tables materialized within this package by default. There is a REST API version of each model (ex: `shopify__customer_cohorts`) and a GraphQL version as well (ex: `shopify_gql__customer_cohorts`).
-> TIP: See more details about these tables in the package's [dbt docs site](https://fivetran.github.io/dbt_shopify/#!/overview/shopify).
+### Final output tables
 
-| **Table**                | **Description**                                                                                                                                |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+By default, this package materializes the following final tables:
+
+| Table | Description |
+| :---- | :---- |
 | [shopify__customer_cohorts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_cohorts) or<br>[shopify_gql__customer_cohorts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customer_cohorts) | Monthly customer behavior tracking by acquisition cohorts, showing retention rates, spending patterns, and lifetime value progression for each customer ID. <br><br>**Example Analytics Questions:**<br>• What is the month-over-month retention rate for customers by their first purchase month?<br>• Which customer cohorts have the highest lifetime value progression over their first 12 months? |
 | [shopify__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customers) or<br>[shopify_gql__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customers) | Complete customer profiles with lifetime spending, order history, abandoned checkouts, and customer tags. Includes `CUSTOMER` metafields if enabled. <br><br>**Example Analytics Questions:**<br>• Who are the top 100 customers by lifetime spending and what are their purchase patterns?<br>• How many customers have abandoned checkouts but never completed a purchase? |
 | [shopify__customer_email_cohorts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_email_cohorts) or<br>[shopify_gql__customer_email_cohorts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customer_email_cohorts) | Email-based cohort analysis showing retention and purchasing behavior grouped by email address rather than customer ID, useful for tracking guest checkout behavior. <br><br>**Example Analytics Questions:**<br>• How does email-based customer retention compare across different acquisition months?<br>• What is the average time between first and second purchase for email addresses acquired in each cohort month? |
-| [shopify__customer_emails](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_emails.sql) or<br>[shopify_gql__customer_emails](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customer_emails.sql) | Email address performance summary with lifetime value, order count, and purchase timing metrics, perfect for email marketing segmentation. <br><br>**Example Analytics Questions:**<br>• Which email addresses have the highest lifetime value and how many orders have they placed?<br>• What percentage of customer emails have made repeat purchases vs one-time purchases? |
+| [shopify__customer_emails](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_emails) or<br>[shopify_gql__customer_emails](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customer_emails) | Email address performance summary with lifetime value, order count, and purchase timing metrics, perfect for email marketing segmentation. <br><br>**Example Analytics Questions:**<br>• Which email addresses have the highest lifetime value and how many orders have they placed?<br>• What percentage of customer emails have made repeat purchases vs one-time purchases? |
 | [shopify__orders](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__orders) or<br>[shopify_gql__orders](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__orders) | Enhanced order details with shipping costs, discounts, refunds, fulfillment tracking, and new vs repeat customer classification. Includes `ORDER` metafields if enabled. <br><br>**Example Analytics Questions:**<br>• What is the distribution of order values and how many orders are new vs repeat customer purchases?<br>• Which fulfillment services have the fastest processing times and lowest shipping costs? |
 | [shopify__order_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__order_lines) or<br>[shopify_gql__order_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__order_lines) | Individual line items from orders with product details, quantities, pricing, refunds, and variant information for detailed product performance analysis. <br><br>**Example Analytics Questions:**<br>• Which product variants generate the highest revenue per order line and have the lowest refund rates?<br>• What is the average quantity and tax amount per order line for different product categories? |
 | [shopify__products](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__products) or<br>[shopify_gql__products](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__products) | Product performance summary with sales volume, revenue, discounts, refunds, and order timing for inventory and marketing optimization. Includes `PRODUCT` metafields if enabled. <br><br>**Example Analytics Questions:**<br>• Which products have the highest profit margins based on quantity sold vs total discount given?<br>• What products have been selling consistently but haven't been ordered recently (potential inventory issues)? |
@@ -40,8 +59,12 @@ The following table provides a detailed list of all tables materialized within t
 | [shopify__inventory_levels](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__inventory_levels) or<br>[shopify_gql__inventory_levels](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__inventory_levels) | Product variant inventory tracking by location with sales performance, stock levels, and fulfillment metrics for supply chain optimization. Includes `PRODUCT_VARIANT` metafields if enabled. <br><br>**Example Analytics Questions:**<br>• Which product variants have the lowest inventory levels relative to their sales velocity?<br>• What is the total inventory value by location and which locations are most profitable? |
 | [shopify__line_item_enhanced](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__line_item_enhanced) or<br>[shopify_gql__line_item_enhanced](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__line_item_enhanced) | Standardized billing model that aligns with other platforms (Recharge, Stripe, Zuora, Recurly) for cross-platform revenue analysis and reporting. This comprehensive view enables consistent reporting across billing platforms. To see example insights, explore the [Fivetran Billing Model Streamlit App](https://fivetran-billing-model.streamlit.app/). <br><br>**Example Analytics Questions:**<br>• What are the monthly recurring revenue trends and how do subscription vs one-time purchase patterns compare?<br>• Which product categories and customer segments drive the highest lifetime value and retention rates? |
 
-### Example Visualizations
-Curious what these tables can do? Check out example visualizations from the [shopify__line_item_enhanced](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__line_item_enhanced)/[shopify_gql__line_item_enhanced](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__line_item_enhanced) table in the [Fivetran Billing Model Streamlit App](https://fivetran-billing-model.streamlit.app/), and see how you can use these tables in your own reporting. Below is a screenshot of an example report—explore the app for more.
+¹ Each Quickstart transformation job run materializes these models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
+
+---
+
+## Visualizations
+Many of the above reports are now configurable for [visualization via Streamlit](https://github.com/fivetran/streamlit_shopify). Check out some [sample reports here](https://fivetran-shopify.streamlit.app/).
 
 <p align="center">
 <a href="https://fivetran-billing-model.streamlit.app/">
@@ -49,13 +72,42 @@ Curious what these tables can do? Check out example visualizations from the [sho
 </a>
 </p>
 
-### Materialized Models
-Each Quickstart transformation job run materializes 107 models if all components of this data model are enabled and a REST API-based Shopify schema is being used. It will materialize 117 models if run on a GraphQL API-based schema. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
-<!--section-end-->
+## Prerequisites
+To use this dbt package, you must have the following:
+
+- At least one Fivetran Shopify connection syncing data into your destination.
+- A **BigQuery**, **Snowflake**, **Redshift**, **PostgreSQL**, or **Databricks** destination.
 
 ## How do I use the dbt package?
+You can either add this dbt package in the Fivetran dashboard or import it into your dbt project:
 
-### Step 1: Prerequisites
+- To add the package in the Fivetran dashboard, follow our [Quickstart guide](https://fivetran.com/docs/transformations/data-models/quickstart-management#quickstartmanagement).
+- To add the package to your dbt project, follow the setup instructions in the dbt package's [README file](https://github.com/fivetran/dbt_shopify/blob/main/README.md#how-do-i-use-the-dbt-package) to use this package.
+
+<!--section-end-->
+
+### Install the package (skip if also using the `shopify_holistic_reporting` package)
+If you are **not** using the [Shopify Holistic reporting package](https://github.com/fivetran/dbt_shopify_holistic_reporting), include the following shopify package version in your `packages.yml` file:
+> TIP: Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+```yml
+packages:
+  - package: fivetran/shopify
+    version: [">=1.5.0", "<1.6.0"]
+```
+
+> All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/shopify_source` in your `packages.yml` since this package has been deprecated.
+
+#### Databricks dispatch configuration
+If you are using a Databricks destination with this package, you must add the following (or a variation of the following) dispatch configuration within your `dbt_project.yml`. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
+```yml
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['spark_utils', 'dbt_utils']
+```
+
+### Define REST API or GraphQL API Source
+Fivetran has released a version of the Shopify connector that leverages Shopify's newer [GraphQL](https://shopify.dev/docs/apps/build/graphql) API instead of the REST API, as Shopify deprecated the REST API in October 2024. 
+
 To use this dbt package, you must have either at least one Fivetran REST API-based Shopify connection or one Fivetran GraphQL-based Shopify connection syncing these respective tables to your destination:
 
 > If any table is not present, the package will create an empty staging model to ensure the success of downstream transformations. This behavior can be circumvented for select tables (see [Step 5](https://github.com/fivetran/dbt_shopify?tab=readme-ov-file#step-5-disable-models-for-non-existent-sources)).
@@ -152,27 +204,7 @@ To use this package, you will need to have one of the following kinds of destina
 - [PostgreSQL](https://fivetran.com/docs/destinations/postgresql)
 - [Databricks](https://fivetran.com/docs/destinations/databricks) with [Databricks Runtime](https://docs.databricks.com/en/compute/index.html#databricks-runtime)
 
-### Step 2: Install the package (skip if also using the `shopify_holistic_reporting` package)
-If you are **not** using the [Shopify Holistic reporting package](https://github.com/fivetran/dbt_shopify_holistic_reporting), include the following shopify package version in your `packages.yml` file:
-> TIP: Check [dbt Hub](https://hub.getdbt.com/) for the latest installation instructions or [read the dbt docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
-```yml
-packages:
-  - package: fivetran/shopify
-    version: [">=1.4.0", "<1.5.0"]
-```
-
-> All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/shopify_source` in your `packages.yml` since this package has been deprecated.
-
-#### Databricks dispatch configuration
-If you are using a Databricks destination with this package, you must add the following (or a variation of the following) dispatch configuration within your `dbt_project.yml`. This is required in order for the package to accurately search for macros within the `dbt-labs/spark_utils` then the `dbt-labs/dbt_utils` packages respectively.
-```yml
-dispatch:
-  - macro_namespace: dbt_utils
-    search_order: ['spark_utils', 'dbt_utils']
-```
-
-### Step 3: Define REST API or GraphQL API Source
-Fivetran has released a version of the Shopify connector that leverages Shopify's newer [GraphQL](https://shopify.dev/docs/apps/build/graphql) API instead of the REST API, as Shopify deprecated the REST API in October 2024. The GraphQL and REST API-based schemas are slightly different, so this package is designed to run either or, not both. It will do so based on the value of the `shopify_api` variable.
+The GraphQL and REST API-based schemas are slightly different, so this package is designed to run either or, not both. It will do so based on the value of the `shopify_api` variable.
 
 By default, `shopify_api` is set to `rest` and will run the `shopify__*` models in the [rest](https://github.com/fivetran/dbt_shopify/tree/main/models/rest) folder. If you would like to run the package on a GraphQL-based schema, adjust `shopify_api` accordingly.
 
@@ -187,7 +219,7 @@ Overall, the package aims for parity across the different API versions and align
 - `ABANDONED_CHECKOUT_SHIPPING_LINE`: The absence of this table will result in no `shopify_gql__discounts.total_abandoned_checkout_shipping_price` field.
 - `ORDER_URL_TAG`: The absence of this table will result in no `shopify_gql__orders.order_url_tags` field.
 
-### Step 4: Define database and schema variables
+### Define database and schema variables
 #### Single connection
 By default, this package runs using your destination and the `shopify` schema. If this is not where your Shopify data is (for example, if your Shopify schema is named `shopify_fivetran`), add the following configuration to your root `dbt_project.yml` file:
 
@@ -212,7 +244,7 @@ vars:
 
 To connect your multiple schema/database sources to the package models, follow the steps outlined in the [Union Data Defined Sources Configuration](https://github.com/fivetran/dbt_fivetran_utils/tree/releases/v0.4.latest#union_data-source) section of the Fivetran Utils documentation for the union_data macro. This will ensure a proper configuration and correct visualization of connections in the DAG.
 
-### Step 5: Disable models for non-existent sources
+### Disable models for non-existent sources
 
 The Shopify package will automatically create null staging models for missing tables so as to not break downstream transformations. However, you may avoid the creation of certain null tables by leveraging the following variable configurations.
 
@@ -252,7 +284,7 @@ vars:
     shopify_gql_using_product_variant_media: true # FALSE by default.
 ```
 
-### Step 6: Setting your timezone
+### Setting your timezone
 By default, the data in your Shopify schema is in UTC. However, you may want reporting to reflect a specific timezone for more realistic analysis or data validation.
 
 To convert the timezone of **all** timestamps in the package, update the `shopify_timezone` variable to your target zone in [IANA tz Database format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones):
@@ -265,11 +297,11 @@ vars:
 
 > **Note**: This will only **numerically** convert timestamps to your target timezone. They will however have a "UTC" appended to them. This is a current limitation of the dbt-date `convert_timezone` [macro](https://github.com/calogica/dbt-date#convert_timezone-column-target_tznone-source_tznone) we have leveraged and replicated in the [shopify](https://github.com/fivetran/dbt_shopify/tree/main/macros/fivetran_date_macros/fivetran_convert_timezone.sql) package with minimal modifications.
 
-### (Optional) Step 7: Additional configurations
+### (Optional) Additional configurations
 <details open><summary>Expand/Collapse details</summary>
 
 #### Enabling Standardized Billing Model
-This package contains the `shopify__line_item_enhanced` model which constructs a comprehensive, denormalized analytical table that enables reporting on key revenue, subscription, customer, and product metrics from your billing platform. It’s designed to align with the schema of the `*__line_item_enhanced` model found in Recurly, Recharge, Stripe, Shopify, and Zuora, offering standardized reporting across various billing platforms. To see the kinds of insights this model can generate, explore example visualizations in the [Fivetran Billing Model Streamlit App](https://fivetran-billing-model.streamlit.app/). For the time being, this model is disabled by default. If you would like to enable this model you will need to adjust the `shopify__standardized_billing_model_enabled` variable to be `true` within your `dbt_project.yml`:
+This package contains the `shopify__line_item_enhanced` model which constructs a comprehensive, denormalized analytical table that enables reporting on key revenue, subscription, customer, and product metrics from your billing platform. It's designed to align with the schema of the `*__line_item_enhanced` model found in Recurly, Recharge, Stripe, Shopify, and Zuora, offering standardized reporting across various billing platforms. To see the kinds of insights this model can generate, explore example visualizations in the [Fivetran Billing Model Streamlit App](https://fivetran-billing-model.streamlit.app/). For the time being, this model is disabled by default. If you would like to enable this model you will need to adjust the `shopify__standardized_billing_model_enabled` variable to be `true` within your `dbt_project.yml`:
 
 ```yml
 vars:
@@ -425,11 +457,11 @@ vars:
 
 </details>
 
-### (Optional) Step 8: Orchestrate your models with Fivetran Transformations for dbt Core™
+### (Optional) Orchestrate your models with Fivetran Transformations for dbt Core™
 <details><summary>Expand for details</summary>
 <br>
 
-Fivetran offers the ability for you to orchestrate your dbt project through [Fivetran Transformations for dbt Core™](https://fivetran.com/docs/transformations/dbt). Learn how to set up your project for orchestration through Fivetran in our [Transformations for dbt Core setup guides](https://fivetran.com/docs/transformations/dbt#setupguide).
+Fivetran offers the ability for you to orchestrate your dbt project through [Fivetran Transformations for dbt Core™](https://fivetran.com/docs/transformations/dbt#transformationsfordbtcore). Learn how to set up your project for orchestration through Fivetran in our [Transformations for dbt Core setup guides](https://fivetran.com/docs/transformations/dbt/setup-guide#transformationsfordbtcoresetupguide).
 </details>
 
 ## Does this package have dependencies?
@@ -447,14 +479,19 @@ packages:
     - package: dbt-labs/spark_utils
       version: [">=0.3.0", "<0.4.0"]
 ```
+
+<!--section="shopify_maintenance"-->
 ## How is this package maintained and can I contribute?
+
 ### Package Maintenance
-The Fivetran team maintaining this package _only_ maintains the latest version of the package. We highly recommend you stay consistent with the [latest version](https://hub.getdbt.com/fivetran/shopify/latest/) of the package and refer to the [CHANGELOG](https://github.com/fivetran/dbt_shopify/blob/main/CHANGELOG.md) and release notes for more information on changes across versions.
+The Fivetran team maintaining this package only maintains the [latest version](https://hub.getdbt.com/fivetran/shopify/latest/) of the package. We highly recommend you stay consistent with the latest version of the package and refer to the [CHANGELOG](https://github.com/fivetran/dbt_shopify/blob/main/CHANGELOG.md) and release notes for more information on changes across versions.
 
 ### Contributions
 A small team of analytics engineers at Fivetran develops these dbt packages. However, the packages are made better by community contributions.
 
-We highly encourage and welcome contributions to this package. Check out [this dbt Discourse article](https://discourse.getdbt.com/t/contributing-to-a-dbt-package/657) on the best workflow for contributing to a package.
+We highly encourage and welcome contributions to this package. Learn how to contribute to a package in dbt's [Contributing to an external dbt package article](https://discourse.getdbt.com/t/contributing-to-a-dbt-package/657).
+
+<!--section-end-->
 
 ## Are there any resources available?
 - If you have questions or want to reach out for help, see the [GitHub Issue](https://github.com/fivetran/dbt_shopify/issues/new/choose) section to find the right avenue of support for you.
