@@ -1,3 +1,10 @@
+# dbt_shopify v1.5.1
+
+[PR #143](https://github.com/fivetran/dbt_shopify/pull/143) includes the following updates:
+
+## Under the Hood
+- Adjusts the data type of `shopify__calendar_start_date` in the `quickstart.yml` from string to date.
+
 # dbt_shopify v1.5.0
 
 [PR #142](https://github.com/fivetran/dbt_shopify/pull/142) includes the following updates:
