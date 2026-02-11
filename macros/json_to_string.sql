@@ -3,7 +3,7 @@
 {%- endmacro -%}
 
 {%- macro default__json_to_string(column, column_list) -%}
-    {{ column }}
+    cast({{ column }} as {{ dbt.type_string() }})
 {%- endmacro -%}
 
 {%- macro bigquery__json_to_string(column, column_list) -%}

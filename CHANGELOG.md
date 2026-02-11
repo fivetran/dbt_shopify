@@ -1,3 +1,14 @@
+# dbt_shopify v1.5.2
+
+[PR #144](https://github.com/fivetran/dbt_shopify/pull/144) includes the following updates:
+
+## Bug Fixes
+- Resolves trailing comma bug for users that have the `METAFIELD` table but lack records for a particular object (e.g. order, shop).
+- Converts JSON fields to strings in non-BigQuery warehouses.
+
+## Under the Hood
+- Adjusts REST `METAFIELD` seed data to test the case where an object does not have associated metafield records.
+
 # dbt_shopify v1.5.1
 
 [PR #143](https://github.com/fivetran/dbt_shopify/pull/143) includes the following updates:
