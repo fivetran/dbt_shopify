@@ -1778,3 +1778,36 @@ models:
         description: The type of discount the redeem code is associated with (e.g., `discount_code_basic`, `discount_code_app`).
       - name: source_relation
         description: "{{ doc('source_relation') }}"
+
+  - name: stg_shopify__return_line_item
+    description: Each record represents a line item from a customer return in Shopify. Contains return reasons, customer feedback, and restock details for inventory reconciliation.
+    columns:
+      - name: return_line_item_id
+        description: The unique identifier of the return line item.
+        tests:
+          - not_null
+          - unique
+      - name: return_id
+        description: The unique identifier of the parent return.
+      - name: fulfillment_line_item_id
+        description: The ID of the related fulfillment line item. Used to link returns to refunds.
+      - name: quantity
+        description: The quantity of items being returned.
+      - name: refundable_quantity
+        description: The quantity eligible for refund. May differ from returned quantity in partial refund scenarios.
+      - name: refunded_quantity
+        description: The quantity that has been refunded to the customer. Gap between refundable_quantity and refunded_quantity indicates pending refunds.
+      - name: return_reason
+        description: >
+          The reason code for the return. Common values include: 'defective', 'unwanted', 'size_too_small', 'size_too_large',
+          'color', 'style', 'better_price_available', 'product_not_as_described', 'received_wrong_product', 'no_longer_needed'.
+      - name: return_reason_note
+        description: Customer-provided explanation for the return. Free-form text field containing valuable feedback for product quality analysis.
+      - name: restock_type
+        description: >
+          How this return affects inventory levels. Values: 'return' (item restocked), 'cancel' (cancelled order, restocked),
+          'no_restock' (damaged/lost item, not restocked). Used for inventory reconciliation.
+      - name: _fivetran_synced
+        description: "{{ doc('_fivetran_synced') }}"
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"

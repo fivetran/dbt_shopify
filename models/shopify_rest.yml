@@ -1,0 +1,198 @@
+version: 2
+
+models:
+  - name: shopify__refund_events
+    description: >
+      Canonical refund events model providing line-level refund data with accurate date attribution and return context.
+      This model combines Phase 1 data quality fixes (gift card filtering, refund discrepancies), Phase 2 refund date
+      attribution (uses refund.created_at instead of order date), and Phase 3 return analytics (return reasons, restock details).
+
+      Use this model for daily refund metrics, return reason analysis, customer feedback mining, and inventory restock tracking.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - refund_id
+            - order_line_id
+            - source_relation
+    columns:
+      - name: refund_id
+        description: The unique identifier of the refund.
+        tests:
+          - not_null
+
+      - name: order_id
+        description: The unique identifier of the original order.
+
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+
+      - name: refund_created_at
+        description: The timestamp when the refund was created. Use this for accurate date attribution (Phase 2).
+
+      - name: refund_date
+        description: The calendar date of the refund (truncated from refund_created_at). Use this for daily aggregations instead of order date.
+
+      - name: order_line_id
+        description: The unique identifier of the order line item being refunded.
+
+      - name: order_line_refund_id
+        description: The unique identifier of the refund line item.
+
+      - name: refunded_quantity
+        description: The quantity of items refunded.
+
+      - name: is_gift_card
+        description: Boolean indicating if this refund line is for a gift card. Gift card refunds are tracked separately (Phase 1 Fix #3).
+
+      - name: restock_type
+        description: >
+          How this refund affects inventory levels. Values: 'return' (item restocked), 'cancel' (cancelled order, restocked),
+          'no_restock' (damaged/lost item, not restocked). Used for inventory reconciliation.
+
+      - name: refund_subtotal
+        description: The subtotal amount refunded (excludes tax). Gift card refunds are excluded from this field (Phase 1 Fix #3).
+
+      - name: refund_tax
+        description: The tax amount refunded. Gift card refund taxes are excluded from this field (Phase 1 Fix #3).
+
+      - name: refund_total
+        description: The total amount refunded (subtotal + tax). Calculated field.
+
+      - name: gift_card_refund_subtotal
+        description: The subtotal amount of gift card refunds only. Tracked separately for transparency (Phase 1 Fix #3).
+
+      - name: gift_card_refund_tax
+        description: The tax amount of gift card refunds only. Tracked separately for transparency (Phase 1 Fix #3).
+
+      - name: order_refund_discrepancy_amount
+        description: >
+          Refund discrepancy adjustments at the order level. These are accounting adjustments that Shopify Analytics EXCLUDES
+          from Returns metrics (Phase 1 Fix #4). Aggregated across all refunds for the order.
+
+      - name: order_refund_discrepancy_tax
+        description: Tax portion of refund discrepancy adjustments (Phase 1 Fix #4).
+
+      - name: refund_note
+        description: Staff notes about the refund.
+
+      - name: refund_staff_member_id
+        description: The ID of the staff member who processed the refund.
+
+      - name: return_reason
+        description: >
+          The reason code for the return (Phase 3). Common values: 'defective', 'unwanted', 'size_too_small', 'size_too_large',
+          'color', 'style', 'better_price_available', 'product_not_as_described', 'received_wrong_product', 'no_longer_needed'.
+          NULL if no return data exists (not all refunds have associated returns).
+
+      - name: return_reason_note
+        description: >
+          Customer-provided explanation for the return (Phase 3). Free-form text field containing valuable feedback for
+          product quality analysis. NULL if no return exists or customer did not provide feedback.
+
+      - name: refundable_quantity
+        description: The quantity eligible for refund from the return (Phase 3). NULL if no return exists.
+
+      - name: return_refunded_quantity
+        description: >
+          The quantity from the return that has been refunded (Phase 3). Gap between refundable_quantity and
+          return_refunded_quantity indicates pending refunds. NULL if no return exists.
+
+      - name: was_restocked
+        description: >
+          Boolean flag indicating if the refunded item was restocked to inventory (Phase 3). TRUE if restock_type is
+          'return' or 'cancel', FALSE otherwise. Use for inventory reconciliation.
+
+  - name: shopify__inventory_levels
+    description: >
+      Each record represents a product variant at a specific warehouse location. Enhanced with Phase 3 return/restock
+      tracking to enable inventory accuracy analysis. Includes lifetime restock metrics aggregated from refund events.
+    columns:
+      - name: inventory_level_id
+        description: The unique identifier of the inventory level.
+        tests:
+          - not_null
+          - unique
+
+      - name: inventory_item_id
+        description: The unique identifier of the inventory item (product variant).
+
+      - name: location_id
+        description: The unique identifier of the warehouse location.
+
+      - name: variant_id
+        description: The unique identifier of the product variant.
+
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+
+      # Existing fields omitted for brevity - see base model for full list
+
+      - name: lifetime_restocked_quantity
+        description: >
+          **NEW (Phase 3):** Total quantity of items restocked to this inventory location from returns and cancellations.
+          Aggregated from refund_events where was_restocked = TRUE. Use for inventory accuracy tracking.
+
+      - name: lifetime_not_restocked_quantity
+        description: >
+          **NEW (Phase 3):** Total quantity of items refunded but NOT restocked (damaged, lost, or no_restock type).
+          Aggregated from refund_events where was_restocked = FALSE. Indicates inventory shrinkage.
+
+      - name: lifetime_restock_events
+        description: >
+          **NEW (Phase 3):** Count of distinct refund events that resulted in restocking to this location.
+          Use to track operational restock activity frequency.
+
+      - name: lifetime_total_returned_quantity
+        description: >
+          **NEW (Phase 3):** Total quantity of items returned (restocked + not restocked). Calculated as
+          lifetime_restocked_quantity + lifetime_not_restocked_quantity. Use for total return volume analysis.
+
+  - name: int_shopify__discount_aggregates
+    description: >
+      Aggregates discount amounts from DISCOUNT_ALLOCATION table by order. This intermediate model implements Phase 1
+      Customer Fix #2, replacing the unreliable ORDER_LINE.total_discount field (which is 99%+ NULL due to Fivetran
+      connector limitations). DISCOUNT_ALLOCATION is the source of truth for actual discount amounts.
+    columns:
+      - name: order_id
+        description: The unique identifier of the order.
+        tests:
+          - not_null
+          - unique:
+              config:
+                where: "source_relation is not null"
+
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+
+      - name: order_total_discount
+        description: >
+          Total discount amount for the order, aggregated from DISCOUNT_ALLOCATION table. This is the accurate
+          discount amount, unlike ORDER_LINE.total_discount which is unreliable (Phase 1 Fix #2).
+
+  - name: int_shopify__refund_adjustments_aggregates
+    description: >
+      Aggregates refund adjustments by order, specifically filtering for 'refund_discrepancy' type. This intermediate
+      model implements Phase 1 Customer Fix #4. Refund discrepancies are accounting adjustments included in
+      ORDER_LINE_REFUND.subtotal but Shopify Analytics EXCLUDES them from the Returns metric.
+    columns:
+      - name: order_id
+        description: The unique identifier of the order.
+        tests:
+          - not_null
+          - unique:
+              config:
+                where: "source_relation is not null"
+
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+
+      - name: order_refund_discrepancy_amount
+        description: >
+          Total refund discrepancy amount for the order (kind = 'refund_discrepancy'). These are accounting
+          adjustments that must be subtracted from return totals to match Shopify Analytics (Phase 1 Fix #4).
+
+      - name: order_refund_discrepancy_tax
+        description: Tax portion of refund discrepancy adjustments (Phase 1 Fix #4).
+
+      - name: order_other_adjustment_amount
+        description: Total of all other adjustment types (not refund_discrepancy). Tracked for transparency.

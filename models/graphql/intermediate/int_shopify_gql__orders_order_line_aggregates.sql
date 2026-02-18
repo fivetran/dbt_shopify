@@ -1,7 +1,18 @@
 {{ config(
-    materialized='table', 
+    materialized='table',
     enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')
 ) }}
+
+/*
+    CRITICAL UPDATES:
+    1. Gift cards are now EXCLUDED from revenue calculations (is_gift_card = FALSE)
+       - Matches Shopify Analytics behavior
+       - Gift card sales tracked separately for transparency
+
+    2. REMOVED order_total_discount field (was using unreliable ORDER_LINE.total_discount)
+       - Now calculated from DISCOUNT_ALLOCATION via int_shopify_gql__discount_aggregates
+       - See shopify_gql__orders for discount integration
+*/
 
 with order_line as (
 
@@ -32,15 +43,43 @@ with order_line as (
 
 ), order_line_aggregates as (
 
-    select 
+    select
         order_line.order_id,
         order_line.source_relation,
         count(*) as line_item_count,
         sum(coalesce(order_line.quantity, 0)) as order_total_quantity,
         sum(coalesce(tax_aggregates.price, 0)) as order_total_tax,
-        sum(coalesce(order_line.total_discount_shop_amount, 0)) as order_total_discount,
-        sum(coalesce(price_pres_amount, 0)) as total_line_items_price_pres_amount,
-        sum(coalesce(price_shop_amount, 0)) as total_line_items_price_shop_amount,
+
+        -- UPDATED: Exclude gift cards from revenue
+        sum(coalesce(
+            case when order_line.is_gift_card = false
+                 then price_pres_amount
+                 else 0
+            end, 0)
+        ) as total_line_items_price_pres_amount,
+
+        sum(coalesce(
+            case when order_line.is_gift_card = false
+                 then price_shop_amount
+                 else 0
+            end, 0)
+        ) as total_line_items_price_shop_amount,
+
+        --Track gift card sales separately
+        sum(coalesce(
+            case when order_line.is_gift_card = true
+                 then price_shop_amount
+                 else 0
+            end, 0)
+        ) as total_gift_card_sales_shop_amount,
+
+        sum(coalesce(
+            case when order_line.is_gift_card = true
+                 then price_pres_amount
+                 else 0
+            end, 0)
+        ) as total_gift_card_sales_pres_amount,
+
         {{ fivetran_utils.string_agg("distinct cast(order_line.price_pres_currency_code as " ~ dbt.type_string() ~ ")", "', '") }} as total_line_items_price_pres_currency_codes,
         {{ fivetran_utils.string_agg("distinct cast(order_line.price_shop_currency_code as " ~ dbt.type_string() ~ ")", "', '") }} as total_line_items_price_shop_currency_codes
 
@@ -58,9 +97,10 @@ with order_line as (
         order_line_aggregates.line_item_count,
         order_line_aggregates.order_total_quantity,
         order_line_aggregates.order_total_tax,
-        order_line_aggregates.order_total_discount,
         order_line_aggregates.total_line_items_price_pres_amount,
         order_line_aggregates.total_line_items_price_shop_amount,
+        order_line_aggregates.total_gift_card_sales_shop_amount,
+        order_line_aggregates.total_gift_card_sales_pres_amount,
         order_line_aggregates.total_line_items_price_pres_currency_codes,
         order_line_aggregates.total_line_items_price_shop_currency_codes,
         shipping.shipping_price as order_total_shipping,

@@ -220,13 +220,56 @@ joined_aggregates as (
         and joined_info.source_relation = inventory_quantity_aggregated.source_relation
 ),
 
+-- Phase 3: Restock tracking from refund events
+refund_events as (
+
+    select *
+    from {{ ref('shopify__refund_events') }}
+
+),
+
+order_lines as (
+
+    select *
+    from {{ ref('shopify__order_lines') }}
+
+),
+
+restocks_by_variant as (
+
+    select
+        order_lines.variant_id,
+        refund_events.source_relation,
+        sum(case when refund_events.was_restocked then refund_events.refunded_quantity else 0 end) as total_restocked_quantity,
+        sum(case when not refund_events.was_restocked then refund_events.refunded_quantity else 0 end) as total_not_restocked_quantity,
+        count(distinct case when refund_events.was_restocked then refund_events.refund_id end) as restock_event_count
+
+    from refund_events
+    left join order_lines
+        on refund_events.order_line_id = order_lines.order_line_id
+        and refund_events.source_relation = order_lines.source_relation
+    where refund_events.refunded_quantity > 0  -- Only actual refunds
+    group by 1, 2
+
+),
+
 final as (
 
-    select 
-        *,
+    select
+        joined_aggregates.*,
         subtotal_sold - subtotal_sold_refunds as net_subtotal_sold,
-        quantity_sold - quantity_sold_refunds as net_quantity_sold
+        quantity_sold - quantity_sold_refunds as net_quantity_sold,
+
+        -- Phase 3: Restock tracking from refund events
+        coalesce(restocks_by_variant.total_restocked_quantity, 0) as lifetime_restocked_quantity,
+        coalesce(restocks_by_variant.total_not_restocked_quantity, 0) as lifetime_not_restocked_quantity,
+        coalesce(restocks_by_variant.restock_event_count, 0) as lifetime_restock_events,
+        coalesce(restocks_by_variant.total_restocked_quantity, 0) + coalesce(restocks_by_variant.total_not_restocked_quantity, 0) as lifetime_total_returned_quantity
+
     from joined_aggregates
+    left join restocks_by_variant
+        on joined_aggregates.variant_id = restocks_by_variant.variant_id
+        and joined_aggregates.source_relation = restocks_by_variant.source_relation
 )
 
 select * 

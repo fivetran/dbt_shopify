@@ -1,0 +1,9 @@
+id,return_id,fulfillment_line_item_id,quantity,refundable_quantity,refunded_quantity,return_reason,return_reason_note,restock_type,_fivetran_synced
+201,101,301,2,2,2,defective,Product arrived damaged - screen cracked,return,2024-01-15 10:30:00
+202,101,302,1,1,1,size_too_small,Ordered wrong size - too small,return,2024-01-15 10:30:00
+203,102,303,1,1,0,unwanted,Changed mind about purchase,no_restock,2024-01-16 14:22:00
+204,103,304,3,3,3,defective,Battery not working properly,return,2024-01-18 09:15:00
+205,104,305,1,1,1,color,Color did not match photo,return,2024-01-20 16:45:00
+206,105,306,2,2,2,style,Not as expected from description,return,2024-01-22 11:30:00
+207,106,307,1,1,0,unwanted,Duplicate order,no_restock,2024-01-23 13:20:00
+208,107,308,1,1,1,defective,Seams falling apart,return,2024-01-25 08:50:00

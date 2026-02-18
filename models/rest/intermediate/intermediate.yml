@@ -3,7 +3,60 @@ version: 2
 models:
   - name: shopify__customers__order_aggregates
   - name: shopify__orders__order_line_aggregates
+
   - name: shopify__orders__order_refunds
+    description: >
+      UPDATED (Phase 1): Line-level refund data with gift card filtering. This model joins refunds to order lines
+      to check the is_gift_card flag and filters out gift card refunds to match Shopify Analytics behavior (Customer Fix #3).
+      Gift card refunds are tracked separately for transparency.
+    columns:
+      - name: refund_id
+        description: The unique identifier of the refund.
+      - name: order_line_id
+        description: The unique identifier of the order line item being refunded.
+      - name: subtotal
+        description: >
+          **UPDATED (Phase 1 Fix #3):** Subtotal amount of the refund, EXCLUDING gift card refunds.
+          Only includes refunds where is_gift_card = FALSE.
+      - name: total_tax
+        description: >
+          **UPDATED (Phase 1 Fix #3):** Tax amount of the refund, EXCLUDING gift card refund taxes.
+          Only includes refunds where is_gift_card = FALSE.
+      - name: gift_card_refund_subtotal
+        description: >
+          **NEW (Phase 1 Fix #3):** Subtotal amount of gift card refunds only. Tracked separately for transparency.
+      - name: gift_card_refund_tax
+        description: >
+          **NEW (Phase 1 Fix #3):** Tax amount of gift card refunds only. Tracked separately for transparency.
+      - name: is_gift_card
+        description: >
+          **NEW (Phase 1 Fix #3):** Boolean flag from ORDER_LINE indicating if this refund is for a gift card.
+          Used to filter gift card refunds from main refund metrics.
+
+  - name: int_shopify__discount_aggregates
+    description: >
+      **NEW (Phase 1):** Aggregates discount amounts from DISCOUNT_ALLOCATION table. Implements Customer Fix #2,
+      replacing unreliable ORDER_LINE.total_discount field (99%+ NULL). DISCOUNT_ALLOCATION is the source of truth.
+    columns:
+      - name: order_id
+        description: The unique identifier of the order.
+      - name: order_total_discount
+        description: Total discount amount for the order from DISCOUNT_ALLOCATION.
+
+  - name: int_shopify__refund_adjustments_aggregates
+    description: >
+      **NEW (Phase 1):** Aggregates refund adjustments, filtering for 'refund_discrepancy' type. Implements
+      Customer Fix #4. Refund discrepancies must be subtracted from returns to match Shopify Analytics.
+    columns:
+      - name: order_id
+        description: The unique identifier of the order.
+      - name: order_refund_discrepancy_amount
+        description: Total refund discrepancy amount (kind = 'refund_discrepancy').
+      - name: order_refund_discrepancy_tax
+        description: Tax portion of refund discrepancies.
+      - name: order_other_adjustment_amount
+        description: Total of all other adjustment types (not refund_discrepancy).
+
   - name: int_shopify__emails__order_aggregates
   - name: int_shopify__customer_email_rollup
   - name: int_shopify__inventory_level__aggregates
