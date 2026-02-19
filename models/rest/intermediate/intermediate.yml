@@ -39,19 +39,6 @@ models:
       - name: source_relation
         description: "{{ doc('source_relation') }}"
 
-  - name: int_shopify__refund_adjustments_aggregates
-    description: >
-      Aggregates refund adjustments, filtering for 'refund_discrepancy' type. Refund discrepancies must be subtracted from returns to match Shopify Analytics.
-    columns:
-      - name: order_id
-        description: The unique identifier of the order.
-      - name: order_refund_discrepancy_amount
-        description: Total refund discrepancy amount (kind = 'refund_discrepancy').
-      - name: order_refund_discrepancy_tax
-        description: Tax portion of refund discrepancies.
-      - name: order_other_adjustment_amount
-        description: Total of all other adjustment types (not refund_discrepancy).
-
   - name: int_shopify__emails__order_aggregates
   - name: int_shopify__customer_email_rollup
   - name: int_shopify__inventory_level__aggregates
