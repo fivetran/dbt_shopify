@@ -128,9 +128,11 @@ with orders as (
         coalesce(discount_code_aggregates.fixed_amount_discount_amount, 0) as fixed_amount_discount_amount,
         coalesce(discount_code_aggregates.count_discount_codes_applied, 0) as count_discount_codes_applied,
 
-        -- Actual discount amount from DISCOUNT_ALLOCATION 
-        coalesce(discount_aggregates.order_total_discount_shop_amount, 0) as total_discounts_shop_amount,
-        coalesce(discount_aggregates.order_total_discount_pres_amount, 0) as total_discounts_pres_amount,
+        -- Actual discount amount from DISCOUNT_ALLOCATION (replaces unreliable orders.total_discounts_*)
+        -- Note: orders.* includes old total_discounts_shop/pres_amount from ORDER table (unreliable, 99% NULL)
+        -- This accurate version from DISCOUNT_ALLOCATION takes precedence
+        coalesce(discount_aggregates.order_total_discount_shop_amount, 0) as discount_allocated_shop_amount,
+        coalesce(discount_aggregates.order_total_discount_pres_amount, 0) as discount_allocated_pres_amount,
 
         coalesce(order_lines.order_total_shipping_tax, 0) as order_total_shipping_tax,
         order_tag.order_tags,

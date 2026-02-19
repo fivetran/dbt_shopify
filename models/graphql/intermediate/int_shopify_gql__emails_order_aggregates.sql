@@ -10,6 +10,11 @@ with orders as (
     select *
     from {{ ref('int_shopify_gql__orders_order_line_aggregates') }}
 
+), discount_aggregates as (
+
+    select *
+    from {{ ref('int_shopify_gql__discount_aggregates') }}
+
 ), transactions as (
 
     select *
@@ -55,8 +60,8 @@ with orders as (
         avg(order_aggregates.order_total_quantity) as avg_quantity_per_order,
         sum(order_aggregates.order_total_tax) as lifetime_total_tax,
         avg(order_aggregates.order_total_tax) as avg_tax_per_order,
-        sum(order_aggregates.order_total_discount) as lifetime_total_discount,
-        avg(order_aggregates.order_total_discount) as avg_discount_per_order,
+        sum(discount_aggregates.order_total_discount_shop_amount) as lifetime_total_discount,
+        avg(discount_aggregates.order_total_discount_shop_amount) as avg_discount_per_order,
         sum(order_aggregates.order_total_shipping) as lifetime_total_shipping,
         avg(order_aggregates.order_total_shipping) as avg_shipping_per_order,
         sum(order_aggregates.order_total_shipping_with_discounts) as lifetime_total_shipping_with_discounts,
@@ -78,6 +83,9 @@ with orders as (
     left join order_aggregates
         on orders.order_id = order_aggregates.order_id
         and orders.source_relation = order_aggregates.source_relation
+    left join discount_aggregates
+        on orders.order_id = discount_aggregates.order_id
+        and orders.source_relation = discount_aggregates.source_relation
 
     group by 1,2
 
