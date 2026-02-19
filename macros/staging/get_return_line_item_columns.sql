@@ -13,8 +13,6 @@
     {"name": "restock_type", "datatype": dbt.type_string()}
 ] %}
 
-{{ fivetran_utils.add_pass_through_columns(columns, var('return_line_item_pass_through_columns')) }}
-
 {{ return(columns) }}
 
 {% endmacro %}
