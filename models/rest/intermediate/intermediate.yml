@@ -6,9 +6,7 @@ models:
 
   - name: shopify__orders__order_refunds
     description: >
-      UPDATED (Phase 1): Line-level refund data with gift card filtering. This model joins refunds to order lines
-      to check the is_gift_card flag and filters out gift card refunds to match Shopify Analytics behavior (Customer Fix #3).
-      Gift card refunds are tracked separately for transparency.
+      Line-level refund data for orders, separating out gift card refunds, as they are not part of Shopify refund reporting.
     columns:
       - name: refund_id
         description: The unique identifier of the refund.
@@ -16,37 +14,34 @@ models:
         description: The unique identifier of the order line item being refunded.
       - name: subtotal
         description: >
-          **UPDATED (Phase 1 Fix #3):** Subtotal amount of the refund, EXCLUDING gift card refunds.
-          Only includes refunds where is_gift_card = FALSE.
+          Subtotal amount of the refund.
       - name: total_tax
         description: >
-          **UPDATED (Phase 1 Fix #3):** Tax amount of the refund, EXCLUDING gift card refund taxes.
-          Only includes refunds where is_gift_card = FALSE.
+          Tax amount of the refund.
       - name: gift_card_refund_subtotal
         description: >
-          **NEW (Phase 1 Fix #3):** Subtotal amount of gift card refunds only. Tracked separately for transparency.
+          Subtotal amount of gift card refunds only.
       - name: gift_card_refund_tax
         description: >
-          **NEW (Phase 1 Fix #3):** Tax amount of gift card refunds only. Tracked separately for transparency.
+          Tax amount of gift card refunds only.
       - name: is_gift_card
         description: >
-          **NEW (Phase 1 Fix #3):** Boolean flag from ORDER_LINE indicating if this refund is for a gift card.
-          Used to filter gift card refunds from main refund metrics.
+          Boolean flag indicating if this refund is for a gift card.
 
   - name: int_shopify__discount_aggregates
     description: >
-      **NEW (Phase 1):** Aggregates discount amounts from DISCOUNT_ALLOCATION table. Implements Customer Fix #2,
-      replacing unreliable ORDER_LINE.total_discount field (99%+ NULL). DISCOUNT_ALLOCATION is the source of truth.
+      Aggregates discount amounts from DISCOUNT_ALLOCATION table.
     columns:
       - name: order_id
         description: The unique identifier of the order.
       - name: order_total_discount
-        description: Total discount amount for the order from DISCOUNT_ALLOCATION.
+        description: Total discount amount for the order.
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
 
   - name: int_shopify__refund_adjustments_aggregates
     description: >
-      **NEW (Phase 1):** Aggregates refund adjustments, filtering for 'refund_discrepancy' type. Implements
-      Customer Fix #4. Refund discrepancies must be subtracted from returns to match Shopify Analytics.
+      Aggregates refund adjustments, filtering for 'refund_discrepancy' type. Refund discrepancies must be subtracted from returns to match Shopify Analytics.
     columns:
       - name: order_id
         description: The unique identifier of the order.
@@ -65,3 +60,25 @@ models:
   - name: int_shopify__order__shipping_aggregates
   - name: int_shopify__product__order_line_aggregates
   - name: int_shopify__products_with_aggregates
+ 
+  - name: int_shopify__refund_adjustments_aggregates
+    description: >
+      Aggregates refund adjustments by order.
+    columns:
+      - name: order_id
+        description: The unique identifier of the order.
+        tests:
+          - not_null 
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+
+      - name: order_refund_discrepancy_amount
+        description: >
+          Total refund discrepancy amount for the order (kind = 'refund_discrepancy'). These are accounting
+          adjustments that must be subtracted from return totals to match Shopify Analytics reporting.
+
+      - name: order_refund_discrepancy_tax
+        description: Tax portion of refund discrepancy adjustments.
+
+      - name: order_other_adjustment_amount
+        description: Total of all other adjustment types (not refund_discrepancy).

@@ -1,14 +1,5 @@
 {{ config(enabled=var('shopify_api', 'rest') == 'rest') }}
 
-/*
-    This model aggregates discount amounts from DISCOUNT_ALLOCATION table.
-
-    IMPORTANT: ORDER_LINE.total_discount is unreliable (99%+ records show $0) due to
-    Fivetran connector limitations. Always use DISCOUNT_ALLOCATION as the source of truth.
-
-    This implements the customer's discount_by_order CTE logic.
-*/
-
 with discount_allocation as (
 
     select *
@@ -25,8 +16,7 @@ with discount_allocation as (
         order_line.order_id,
         order_line.order_line_id,
         order_line.source_relation,
-        -- Sum all discount allocations for this order line
-        -- REST API uses 'amount' field directly (no shop/pres split)
+        -- Sum all discount allocations for this order line 
         sum(coalesce(discount_allocation.amount, 0)) as line_discount_amount
 
     from order_line

@@ -52,7 +52,7 @@ with orders as (
 
 ), discount_code_aggregates as (
 
-    -- This aggregates discount CODE metadata (type, count)
+    -- Aggregates discount code metadata
     select
         order_id,
         source_relation,
@@ -66,13 +66,13 @@ with orders as (
 
 ), discount_aggregates as (
 
-    -- NEW: Actual discount amounts from DISCOUNT_ALLOCATION (Customer Fix #2)
+    -- Actual discount amounts from DISCOUNT_ALLOCATION
     select *
     from {{ ref('int_shopify_gql__discount_aggregates') }}
 
 ), refund_adjustments as (
 
-    -- NEW: Refund discrepancy adjustments (Customer Fix #4)
+    -- Refund discrepancy adjustments
     select *
     from {{ ref('int_shopify_gql__refund_adjustments_aggregates') }}
 
@@ -95,11 +95,11 @@ with orders as (
         refund_aggregates.refund_subtotal,
         refund_aggregates.refund_total_tax,
 
-        -- NEW: Include refund discrepancy adjustment fields (Customer Fix #4)
+        -- Include refund discrepancy adjustment fields
         refund_adjustments.order_refund_discrepancy_amount,
         refund_adjustments.order_refund_discrepancy_tax,
 
-        -- UPDATED: order_adjusted_total now accounts for refund discrepancies (Customer Fix #4)
+        -- Now account for refund discrepancies 
         (orders.total_price_shop_amount
             + coalesce(order_adjustments_aggregates.order_adjustment_amount,0)
             + coalesce(order_adjustments_aggregates.order_adjustment_tax_amount,0)
@@ -111,24 +111,24 @@ with orders as (
 
         order_lines.line_item_count,
 
-        -- UPDATED: These now exclude gift cards (Customer Fix #1)
+        -- Gift cards excluded
         order_lines.total_line_items_price_pres_amount,
         order_lines.total_line_items_price_shop_amount,
 
-        -- NEW: Gift card sales tracked separately for transparency (Customer Fix #1)
+        -- Gift card sales tracked separately for transparency
         order_lines.total_gift_card_sales_shop_amount,
         order_lines.total_gift_card_sales_pres_amount,
 
         order_lines.total_line_items_price_pres_currency_codes,
         order_lines.total_line_items_price_shop_currency_codes,
 
-        -- Discount code metadata (unchanged)
+        -- Discount code metadata
         coalesce(discount_code_aggregates.shipping_discount_amount, 0) as shipping_discount_amount,
         coalesce(discount_code_aggregates.percentage_calc_discount_amount, 0) as percentage_calc_discount_amount,
         coalesce(discount_code_aggregates.fixed_amount_discount_amount, 0) as fixed_amount_discount_amount,
         coalesce(discount_code_aggregates.count_discount_codes_applied, 0) as count_discount_codes_applied,
 
-        -- NEW: Actual discount amount from DISCOUNT_ALLOCATION (Customer Fix #2)
+        -- Actual discount amount from DISCOUNT_ALLOCATION 
         coalesce(discount_aggregates.order_total_discount_shop_amount, 0) as total_discounts_shop_amount,
         coalesce(discount_aggregates.order_total_discount_pres_amount, 0) as total_discounts_pres_amount,
 
@@ -149,22 +149,15 @@ with orders as (
     left join order_adjustments_aggregates
         on orders.order_id = order_adjustments_aggregates.order_id
         and orders.source_relation = order_adjustments_aggregates.source_relation
-
-    -- NEW: Join to refund discrepancy adjustments (Customer Fix #4)
     left join refund_adjustments
         on orders.order_id = refund_adjustments.order_id
         and orders.source_relation = refund_adjustments.source_relation
-
-    -- Discount code aggregates (metadata only)
     left join discount_code_aggregates
         on orders.order_id = discount_code_aggregates.order_id
         and orders.source_relation = discount_code_aggregates.source_relation
-
-    -- NEW: Actual discount amounts from DISCOUNT_ALLOCATION (Customer Fix #2)
     left join discount_aggregates
         on orders.order_id = discount_aggregates.order_id
         and orders.source_relation = discount_aggregates.source_relation
-
     left join order_tag
         on orders.order_id = order_tag.order_id
         and orders.source_relation = order_tag.source_relation

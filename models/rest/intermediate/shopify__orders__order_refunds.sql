@@ -1,14 +1,5 @@
 {{ config(enabled=var('shopify_api', 'rest') == 'rest') }}
 
-/*
-    CRITICAL UPDATE: Gift cards are now EXCLUDED from refund calculations.
-
-    This model joins to ORDER_LINE to check is_gift_card flag and filters out
-    gift card refunds to match Shopify Analytics behavior (Customer Fix #3).
-
-    Gift card refunds are tracked separately for transparency.
-*/
-
 with refunds as (
 
     select *
@@ -37,7 +28,7 @@ with refunds as (
         order_line_refunds.restock_type,
         order_line_refunds.quantity,
 
-        -- UPDATED: Only include non-gift-card refunds in main subtotal (Customer Fix #3)
+        -- Only include non-gift-card refunds in main subtotal
         case when order_line.is_gift_card = false
              then order_line_refunds.subtotal
              else 0
@@ -48,7 +39,7 @@ with refunds as (
              else 0
         end as total_tax,
 
-        -- NEW: Track gift card refunds separately for transparency
+        -- Track gift card refunds separately for transparency
         case when order_line.is_gift_card = true
              then order_line_refunds.subtotal
              else 0
@@ -65,8 +56,6 @@ with refunds as (
     left join order_line_refunds
         on refunds.refund_id = order_line_refunds.refund_id
         and refunds.source_relation = order_line_refunds.source_relation
-
-    -- NEW: Join to order_line to get gift_card flag (Customer Fix #3)
     left join order_line
         on order_line_refunds.order_line_id = order_line.order_line_id
         and order_line_refunds.source_relation = order_line.source_relation

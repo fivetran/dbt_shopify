@@ -3,17 +3,6 @@
     enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')
 ) }}
 
-/*
-    CRITICAL UPDATES:
-    1. Gift cards are now EXCLUDED from revenue calculations (is_gift_card = FALSE)
-       - Matches Shopify Analytics behavior
-       - Gift card sales tracked separately for transparency
-
-    2. REMOVED order_total_discount field (was using unreliable ORDER_LINE.total_discount)
-       - Now calculated from DISCOUNT_ALLOCATION via int_shopify_gql__discount_aggregates
-       - See shopify_gql__orders for discount integration
-*/
-
 with order_line as (
 
     select *
@@ -50,7 +39,7 @@ with order_line as (
         sum(coalesce(order_line.quantity, 0)) as order_total_quantity,
         sum(coalesce(tax_aggregates.price, 0)) as order_total_tax,
 
-        -- UPDATED: Exclude gift cards from revenue
+        --Exclude gift cards from revenue
         sum(coalesce(
             case when order_line.is_gift_card = false
                  then price_pres_amount

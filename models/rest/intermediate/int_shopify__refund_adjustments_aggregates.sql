@@ -1,17 +1,5 @@
 {{ config(enabled=var('shopify_api', 'rest') == 'rest') }}
 
-/*
-    This model aggregates refund adjustments, specifically filtering for 'refund_discrepancy' type.
-
-    KEY INSIGHT: Refund discrepancies are included in ORDER_LINE_REFUND.subtotal but Shopify
-    Analytics EXCLUDES them from the Returns metric.
-
-    This implements the customer's adjustments_daily CTE logic.
-
-    NOTE: The REST connector uses 'kind' field (though 'reason' is also available).
-    We check for 'refund_discrepancy' in the kind field for REST.
-*/
-
 with order_adjustment as (
 
     select *
@@ -29,7 +17,7 @@ with order_adjustment as (
         refund.order_id,
         refund.source_relation,
 
-        -- Sum adjustments by type (Customer Fix #4)
+        -- Sum adjustments by type
         sum(case when order_adjustment.kind = 'refund_discrepancy'
                  then order_adjustment.amount
                  else 0

@@ -1,17 +1,5 @@
 {{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
-/*
-    This model aggregates refund adjustments, specifically filtering for 'refund_discrepancy' type.
-
-    KEY INSIGHT: Refund discrepancies are included in ORDER_LINE_REFUND.subtotal but Shopify
-    Analytics EXCLUDES them from the Returns metric. 
-
-    This implements the customer's adjustments_daily CTE logic.
-
-    NOTE: The GraphQL connector uses 'reason' field. The REST connector uses 'kind' field.
-    We check for 'refund_discrepancy' in the reason field for GraphQL.
-*/
-
 with order_adjustment as (
 
     select *
@@ -29,7 +17,7 @@ with order_adjustment as (
         refund.order_id,
         refund.source_relation,
 
-        -- Sum adjustments by type (Customer Fix #4)
+        -- Sum adjustments by type
         sum(case when order_adjustment.reason = 'refund_discrepancy'
                  then order_adjustment.amount_shop
                  else 0
@@ -40,7 +28,7 @@ with order_adjustment as (
                  else 0
             end) as refund_discrepancy_tax,
 
-        -- Track other adjustment types for transparency
+        -- Track other adjustment types
         sum(case when order_adjustment.reason != 'refund_discrepancy'
                       or order_adjustment.reason is null
                  then order_adjustment.amount_shop

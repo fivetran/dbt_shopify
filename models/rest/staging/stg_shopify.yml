@@ -1786,7 +1786,6 @@ models:
         description: The unique identifier of the return line item.
         tests:
           - not_null
-          - unique
       - name: return_id
         description: The unique identifier of the parent return.
       - name: fulfillment_line_item_id

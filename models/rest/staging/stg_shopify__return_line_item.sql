@@ -1,5 +1,4 @@
 {{ config(enabled=var('shopify_api', 'rest') == 'rest') }}
--- this model will be all NULL until you create a return in Shopify
 
 with base as (
 
