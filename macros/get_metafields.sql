@@ -45,7 +45,7 @@ with source_table as (
     from {{ ref(source_object) }}
 )
 
-{%- if slug_to_field_dict is not none -%},
+{%- if slug_to_field_dict != {} -%},
 lookup_object as (
     select 
         *,

@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '1.5.1'
+version: '1.5.2'
 profile: 'integration_tests'
 config-version: 2
 
@@ -122,6 +122,9 @@ dispatch:
     search_order: ['spark_utils', 'dbt_utils']
 
 models:
+  +persist_docs:
+    relation: true
+    columns: "{{ false if target.type in ('databricks') else true }}"
   +schema: "{{ 'shopify_integration_tests_sqlw' if target.name == 'databricks-sql' else 'shopify' }}"
   # +schema: "shopify_{{ var('directed_schema','dev') }}" ## To be used for validation tests
 
