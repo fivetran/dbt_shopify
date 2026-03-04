@@ -16,6 +16,10 @@ target/
 *.swp
 *.swo
 
+# Claude
+.claude/
+CLAUDE.md
+
 # Jupyter Notebook
 .ipynb_checkpoints
 
