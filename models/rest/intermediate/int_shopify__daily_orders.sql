@@ -8,6 +8,13 @@ with orders as (
     where not coalesce(is_deleted, false)
 ),
 
+order_refunds as (
+
+    select *
+    from {{ ref('shopify__orders__order_refunds') }}
+
+),
+
 order_lines as(
 
     select *
@@ -29,8 +36,6 @@ order_aggregates as (
         sum(shipping_cost) as shipping_cost,
         sum(order_adjustment_amount) as order_adjustment_amount,
         sum(order_adjustment_tax_amount) as order_adjustment_tax_amount,
-        sum(refund_subtotal) as refund_subtotal,
-        sum(refund_total_tax) as refund_total_tax,
         sum(total_discounts) as total_discounts,
         avg(total_discounts) as avg_discount,
         sum(shipping_discount_amount) as shipping_discount_amount,
@@ -42,12 +47,25 @@ order_aggregates as (
         sum(count_discount_codes_applied) as count_discount_codes_applied,
         count(distinct location_id) as count_locations_ordered_from,
         sum(case when count_discount_codes_applied > 0 then 1 else 0 end) as count_orders_with_discounts,
-        sum(case when refund_subtotal > 0 then 1 else 0 end) as count_orders_with_refunds,
         min(created_timestamp) as first_order_timestamp,
         max(created_timestamp) as last_order_timestamp
 
     from orders
     group by 1,2
+
+),
+
+refund_aggregates as (
+
+    select
+        source_relation,
+        cast({{ dbt.date_trunc('day', 'created_at') }} as date) as date_day,
+        sum(subtotal) as refund_subtotal,
+        sum(total_tax) as refund_total_tax,
+        count(distinct order_id) as count_orders_with_refunds
+
+    from order_refunds
+    group by 1, 2
 
 ),
 
@@ -76,8 +94,11 @@ order_line_aggregates as (
 
 final as (
 
-    select 
+    select
         order_aggregates.*,
+        coalesce(refund_aggregates.refund_subtotal, 0) as refund_subtotal,
+        coalesce(refund_aggregates.refund_total_tax, 0) as refund_total_tax,
+        coalesce(refund_aggregates.count_orders_with_refunds, 0) as count_orders_with_refunds,
         order_line_aggregates.quantity_sold,
         order_line_aggregates.quantity_refunded,
         order_line_aggregates.quantity_net,
@@ -89,6 +110,9 @@ final as (
         order_line_aggregates.avg_quantity_net
 
     from order_aggregates
+    left join refund_aggregates
+        on order_aggregates.date_day = refund_aggregates.date_day
+        and order_aggregates.source_relation = refund_aggregates.source_relation
     left join order_line_aggregates
         on order_aggregates.date_day = order_line_aggregates.date_day
         and order_aggregates.source_relation = order_line_aggregates.source_relation
