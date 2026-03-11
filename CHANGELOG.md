@@ -3,7 +3,7 @@
 [PR #152](https://github.com/fivetran/dbt_shopify/pull/152) includes the following updates:
 
 ## Schema/Data Changes
-**3 total changes • 3 possible breaking changes** 
+**3 total changes • 3 possible breaking changes**
 
 | Data Model(s) | Change type | Field | Old | New | Notes |
 | --- | --- | --- | --- | --- | --- |
