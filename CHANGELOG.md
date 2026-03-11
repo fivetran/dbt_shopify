@@ -2,9 +2,12 @@
 
 [PR #152](https://github.com/fivetran/dbt_shopify/pull/152) includes the following updates:
 
-## Bug Fix
-- Fixes an issue in the `shopify_gql__customer_cohorts` and `shopify_gql__customer_email_cohorts` models where incremental runs could result in records with a null `cohort_month_number`.
-  - **Action Required**: A full refresh is recommended for the `shopify_gql__customer_cohorts` and `shopify_gql__customer_email_cohorts` models to correct any existing data with null `cohort_month_number` values.
+## Schema/Data Changes
+**3 total changes • 3 possible breaking changes**
+
+| Data Model(s) | Change type | Field | Old | New | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `shopify_gql__customer_cohorts`<br>`shopify_gql__customer_email_cohorts`<br>`shopify__customer_email_cohorts` | Data quality | `cohort_month_number` | May contain null values on incremental runs | Properly calculated values | `--full-refresh` recommended |
 
 # dbt_shopify v1.5.2
 
