@@ -1,3 +1,10 @@
+# dbt_shopify v1.5.3-a1
+
+[PR #152](https://github.com/fivetran/dbt_shopify/pull/152) includes the following updates:
+
+## Bug Fix
+- Fixes an issue in the `shopify_gql__customer_cohorts` and `shopify_gql__customer_email_cohorts` models where incremental runs could result in records with a null `cohort_month_number`.
+
 # dbt_shopify v1.5.2
 
 [PR #144](https://github.com/fivetran/dbt_shopify/pull/144) includes the following updates:
