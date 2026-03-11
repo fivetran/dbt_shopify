@@ -7,7 +7,7 @@
 
 | Data Model(s) | Change type | Field | Old | New | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `shopify_gql__customer_cohorts`<br>`shopify_gql__customer_email_cohorts`<br>`shopify__customer_email_cohorts` | Data quality | `cohort_month_number` | May contain null values on incremental runs | Properly calculated values | `--full-refresh` recommended |
+| `shopify_gql__customer_cohorts`<br>`shopify_gql__customer_email_cohorts`<br>`shopify__customer_email_cohorts` | Data quality | `cohort_month_number`<br>`total_price_lifetime`<br>`order_count_lifetime`<br>`line_item_count_lifetime` | May contain null values on incremental runs | Properly calculated values | `--full-refresh` recommended |
 
 # dbt_shopify v1.5.2
 
