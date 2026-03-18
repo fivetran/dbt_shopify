@@ -21,17 +21,16 @@ fields as (
             union_database_variable='shopify_union_databases')
         }}
     from base
-
 ),
 
 final as (
 
     select
-        id                                                              as return_id,
+        id as return_id,
         order_id,
         name,
-        lower(status)                                                   as status,
-        decline_reason,
+        lower(status) as status,
+        lower(decline_reason) as decline_reason,
         decline_note,
         total_quantity,
         {{ shopify.fivetran_convert_timezone(column='cast(_fivetran_synced as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as _fivetran_synced,
@@ -39,7 +38,6 @@ final as (
         {{ dbt_utils.generate_surrogate_key(['id', 'source_relation']) }} as unique_key
 
     from fields
-
 )
 
 select *

@@ -64,8 +64,7 @@ order_aggregates as (
         min(created_timestamp) as first_order_timestamp,
         max(created_timestamp) as last_order_timestamp,
         sum(gross_sales) as gross_sales,
-        sum(discounts) as discounts,
-        sum(net_sales) as net_sales
+        sum(discounts) as discounts
 
     from orders
     group by 1,2
@@ -96,7 +95,7 @@ refund_discrepancy_aggregates as (
     inner join order_adjustments
         on refunds.refund_id = order_adjustments.refund_id
         and refunds.source_relation = order_adjustments.source_relation
-    where order_adjustments.kind = 'refund_discrepancy'
+    where lower(order_adjustments.kind) = 'refund_discrepancy'
     group by 1, 2
 
 ),
@@ -154,12 +153,15 @@ final as (
         order_aggregates.last_order_timestamp,
         coalesce(order_aggregates.gross_sales, 0) as gross_sales,
         coalesce(order_aggregates.discounts, 0) as discounts,
-        coalesce(order_aggregates.net_sales, 0) as net_sales,
         coalesce(refund_aggregates.refund_subtotal, 0) as refund_subtotal,
         coalesce(refund_aggregates.refund_total_tax, 0) as refund_total_tax,
         coalesce(refund_aggregates.count_orders_with_refunds, 0) as count_orders_with_refunds,
         coalesce(refund_aggregates.refund_subtotal_non_gift_card, 0)
             - coalesce(refund_discrepancy_aggregates.refund_discrepancy_amount, 0) as returns,
+        coalesce(order_aggregates.gross_sales, 0)
+            - coalesce(order_aggregates.discounts, 0)
+            - (coalesce(refund_aggregates.refund_subtotal_non_gift_card, 0)
+                - coalesce(refund_discrepancy_aggregates.refund_discrepancy_amount, 0)) as net_sales,
         order_line_aggregates.quantity_sold,
         order_line_aggregates.quantity_refunded,
         order_line_aggregates.quantity_net,

@@ -21,24 +21,22 @@ fields as (
             union_database_variable='shopify_union_databases')
         }}
     from base
-
 ),
 
 final as (
 
     select
-        id                                                              as return_shipping_fee_id,
+        id as return_shipping_fee_id,
         return_id,
-        amount_set_presentment_money_amount                             as amount_pres_amount,
-        amount_set_presentment_money_currency_code                      as amount_pres_currency_code,
-        amount_set_shop_money_amount                                    as amount_shop_amount,
-        amount_set_shop_money_currency_code                             as amount_shop_currency_code,
+        amount_set_presentment_money_amount as amount_pres_amount,
+        amount_set_presentment_money_currency_code as amount_pres_currency_code,
+        amount_set_shop_money_amount as amount_shop_amount,
+        amount_set_shop_money_currency_code as amount_shop_currency_code,
         {{ shopify.fivetran_convert_timezone(column='cast(_fivetran_synced as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as _fivetran_synced,
         source_relation,
         {{ dbt_utils.generate_surrogate_key(['id', 'source_relation']) }} as unique_key
 
     from fields
-
 )
 
 select *

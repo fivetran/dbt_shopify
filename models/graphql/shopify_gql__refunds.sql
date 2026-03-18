@@ -47,10 +47,10 @@ with refunds as (
     select
         refund_id,
         source_relation,
-        sum(amount_shop)        as refund_discrepancy_shop_amount,
-        sum(tax_amount_shop)    as refund_discrepancy_tax_shop_amount,
-        sum(amount_pres)        as refund_discrepancy_pres_amount,
-        sum(tax_amount_pres)    as refund_discrepancy_tax_pres_amount
+        sum(amount_shop) as refund_discrepancy_shop_amount,
+        sum(tax_amount_shop) as refund_discrepancy_tax_shop_amount,
+        sum(amount_pres) as refund_discrepancy_pres_amount,
+        sum(tax_amount_pres) as refund_discrepancy_tax_pres_amount
     from {{ ref('stg_shopify_gql__order_adjustment') }}
     where lower(reason) = 'refund_discrepancy'
     group by 1, 2
@@ -173,8 +173,7 @@ with refunds as (
         order_line_refunds.restock_type in ('return', 'cancel', 'legacy_restock') as is_restocked,
         (coalesce(order_line_refunds.subtotal_shop_amount, 0) = 0
             and coalesce(order_line_refunds.total_tax_shop_amount, 0) = 0
-            and order_line_refunds.restock_type
-                in ('return', 'cancel', 'legacy_restock')) as is_restock_only,
+            and order_line_refunds.restock_type in ('return', 'cancel', 'legacy_restock')) as is_restock_only,
 
         -- refund-level discrepancy adjustment (shop and presentment)
         order_adjustment_aggregates.refund_discrepancy_shop_amount,

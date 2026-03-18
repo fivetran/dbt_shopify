@@ -48,7 +48,7 @@ with refunds as (
         sum(amount) as refund_discrepancy_amount,
         sum(tax_amount) as refund_discrepancy_tax_amount
     from {{ ref('stg_shopify__order_adjustment') }}
-    where kind = 'refund_discrepancy'
+    where lower(kind) = 'refund_discrepancy'
     group by 1, 2
 
 ), joined as (

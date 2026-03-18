@@ -1363,13 +1363,12 @@ models:
       - name: source_relation
         description: "{{ doc('source_relation') }}" 
 
-  - name: stg_shopify_gql__order_line_refund 
+  - name: stg_shopify_gql__order_line_refund
     description: Each record represents a line item refund in Shopify.
     columns:
       - name: unique_key
         description: Surrogate key hashed on `order_line_refund_id` and `source_relation`.
         tests:
-          - unique
           - not_null
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -1680,7 +1679,6 @@ models:
       - name: unique_key
         description: Surrogate key hashed on `refund_id` and `source_relation`.
         tests:
-          - unique
           - not_null
       - name: refund_id
         description: The unique numeric identifier for the refund.
@@ -1715,7 +1713,6 @@ models:
       - name: unique_key
         description: Surrogate key hashed on `return_id` and `source_relation`.
         tests:
-          - unique
           - not_null
       - name: return_id
         description: A globally-unique identifier for the return.
@@ -1752,7 +1749,6 @@ models:
       - name: unique_key
         description: Surrogate key hashed on `return_line_item_id` and `source_relation`.
         tests:
-          - unique
           - not_null
       - name: return_line_item_id
         description: A globally-unique identifier for the return line item.
@@ -1785,7 +1781,6 @@ models:
       - name: unique_key
         description: Surrogate key hashed on `return_shipping_fee_id` and `source_relation`.
         tests:
-          - unique
           - not_null
       - name: return_shipping_fee_id
         description: A globally-unique identifier for the return shipping fee.

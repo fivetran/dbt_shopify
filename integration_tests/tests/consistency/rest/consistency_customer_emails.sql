@@ -3,7 +3,7 @@
     enabled=var('fivetran_validation_tests_enabled', false) and var('shopify_api', 'rest') == 'rest'
 ) }}
 
-{% set exclude_cols = ['customer_tags'] + var('consistency_test_exclude_metrics', []) %}
+{% set exclude_cols = ['customer_tags', 'lifetime_total_discount', 'avg_discount_per_order'] + var('consistency_test_exclude_metrics', []) %}
 
 with prod as (
     select 

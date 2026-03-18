@@ -1,33 +1,33 @@
-# dbt_shopify v1.5.3
+# dbt_shopify v1.6.0
 
 [PR #145](https://github.com/fivetran/dbt_shopify/pull/145) includes the following updates:
 
-## Bug Fixes
-- Fixes `stg_shopify_gql__return_shipping_fee` source column names to match the Fivetran Shopify GraphQL connector ERD. The columns `amount_set_pres_amount`, `amount_set_pres_currency_code`, `amount_set_shop_amount`, and `amount_set_shop_currency_code` have been renamed to `amount_set_presentment_money_amount`, `amount_set_presentment_money_currency_code`, `amount_set_shop_money_amount`, and `amount_set_shop_money_currency_code`. Previously, all return shipping fee amounts resolved to `NULL` due to this mismatch.
-
 ## Schema/Data Changes
-**7 total changes • 7 possible breaking changes**
+**17 total changes • 8 possible breaking changes**
 
 | Data Model(s) | Change type | Old | New | Notes |
 | ---------- | ----------- | -------- | -------- | ----- |
-| `shopify_gql__refunds` | New column | - | `refund_updated_at` | Timestamp of the last update to the refund. |
-| `shopify_gql__refunds` | New column | - | `price_shop_amount` | Unit price of the refunded line item in shop currency. |
-| `shopify_gql__refunds` | New column | - | `price_pres_amount` | Unit price of the refunded line item in presentment currency. |
-| `shopify_gql__refunds` | New column | - | `price_pres_currency_code` | Three-letter presentment currency code for the unit price. |
+| `shopify__customers` <br> `shopify__customer_emails` <br> `shopify_gql__customers` <br> `shopify_gql__customer_emails` | Changed field | `lifetime_total_discount` and `avg_discount_per_order` sourced from `order_line.total_discount` | Now sourced from `discount_allocation` | `discount_allocation` is the more reliable source for order line discount values. |
+| `shopify__products` <br> `shopify_gql__products` | Changed field | `product_total_discount` and `product_avg_discount_per_order_line` sourced from `order_line.total_discount` | Now sourced from `discount_allocation` | `discount_allocation` is the more reliable source for order line discount values. |
+| `shopify_gql__refunds` | Renamed column | `refunded_quantity` | `refund_line_item_quantity` | Disambiguates from `return_line_items.refunded_quantity` (total items refunded across the return) — this field is the quantity on this specific refund transaction. |
+| `shopify__refunds` | New model | - | - | New REST final model exposing refund-level data. See documentation for full column list. |
+| `shopify_gql__refunds` | New model | - | - | New GraphQL final model exposing refund-level data. See documentation for full column list. |
+| `stg_shopify_gql__return` | New model | - | - | New GraphQL staging model for return records. |
+| `stg_shopify_gql__return_line_item` | New model | - | - | New GraphQL staging model for return line item records. |
+| `stg_shopify_gql__return_shipping_fee` | New model | - | - | New GraphQL staging model for return shipping fee records. |
+| `shopify_gql__daily_shop` | New fields | - | `gross_sales`, `discounts`, `returns`, `net_sales` | Finance metrics for the GQL path, matching the REST `shopify__daily_shop` columns. |
+| `shopify_gql__orders` | New fields | - | `gross_sales`, `discounts`, `returns`, `net_sales` | Finance metrics at the order level, matching the REST `shopify__orders` columns. |
 | `stg_shopify_gql__order_line_refund` | New columns | - | `price_pres_amount`, `price_pres_currency_code`, `price_shop_amount`, `price_shop_currency_code`, `restocked` | Unit price at refund time (shop and presentment) and Shopify-native restock boolean. |
 | `stg_shopify_gql__refund` | New column | - | `updated_at` | Timestamp of the last update to the refund record. |
 | `int_shopify_gql__orders_order_refunds` | New column | - | `is_gift_card` | Aligns with the REST equivalent model for gift card filtering. |
-| `shopify_gql__refunds` | Renamed column | `refunded_quantity` | `refund_line_item_quantity` | Disambiguates from `return_line_items.refunded_quantity` (total items refunded across the return) — this field is the quantity on this specific refund transaction. |
 
 ## Feature Updates
 - Introduces the `shopify_gql_using_return` variable (default `false`) to opt into return modeling. When enabled, `stg_shopify_gql__return`, `stg_shopify_gql__return_line_item`, and `stg_shopify_gql__return_shipping_fee` are materialized and `shopify_gql__refunds` is enriched with return lifecycle, return line item detail, and return shipping fee columns.
 
 ## Under the Hood
-- Adds `unique` and `not_null` tests and full column documentation in `stg_shopify_graphql.yml` for the previously undocumented `stg_shopify_gql__return`, `stg_shopify_gql__return_line_item`, and `stg_shopify_gql__return_shipping_fee` staging models.
-- Adds source definitions in `src_shopify_graphql.yml` for the `return`, `return_line_item`, and `return_shipping_fee` tables.
-- Adds integration test seed variable identifiers for `return`, `return_line_item`, and `return_shipping_fee`.
-- Updates `shopify_gql_return_shipping_fee_data.csv` and `shopify_gql_refund_line_item_data.csv` seeds to reflect corrected column names and new columns.
-- Clarifies the comment about `processed_at` in `shopify_gql__refunds` — the Shopify GraphQL API has `processedAt`, but the Fivetran connector does not sync it.
+- Adds YAML documentation for new models and columns.
+- Updates seed files to reflect corrected column names and new columns.
+- Removes DECISIONLOG entry for aggregating returns on order date to reflect that returns are now correctly bucketed on the refund date, matching Shopify Finance report behavior.
 
 # dbt_shopify v1.5.2
 

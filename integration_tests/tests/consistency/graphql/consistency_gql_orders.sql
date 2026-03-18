@@ -3,7 +3,7 @@
     enabled=var('fivetran_validation_tests_enabled', false) and var('shopify_api', 'rest') == 'graphql'
 ) }}
 
-{% set exclude_cols = var('consistency_test_exclude_metrics', []) %}
+{% set exclude_cols = ['gross_sales', 'discounts', 'returns', 'net_sales'] + var('consistency_test_exclude_metrics', []) %}
 
 with prod as (
     select 
