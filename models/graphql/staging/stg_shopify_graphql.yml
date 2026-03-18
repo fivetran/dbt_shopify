@@ -1383,18 +1383,28 @@ models:
         description: The quantity of the associated line item that was returned.
       - name: refund_id
         description: The ID of the related refund.
+      - name: price_pres_amount
+        description: The unit price of the refunded line item in the customer's presentment currency.
+      - name: price_pres_currency_code
+        description: The three-letter currency code for the presentment currency unit price.
+      - name: price_shop_amount
+        description: The unit price of the refunded line item in the shop currency.
+      - name: price_shop_currency_code
+        description: The three-letter currency code for the shop currency unit price.
+      - name: restocked
+        description: Whether Shopify has restocked the line item inventory as part of this refund.
       - name: subtotal_pres_amount
         description: The refunded subtotal amount of a line item in currency the customer paid in.
       - name: subtotal_pres_currency_code
         description: The three letter currency code for the subtotal the customer paid in.
       - name: subtotal_shop_amount
-        description: The refunded subtotal amount of a line item in the currency of the shop.         
+        description: The refunded subtotal amount of a line item in the currency of the shop.
       - name: subtotal_shop_currency_code
-        description: The three letter currency code for the subtotal in the currency of the shop.   
+        description: The three letter currency code for the subtotal in the currency of the shop.
       - name: total_tax_pres_amount
         description: The total tax amount of a line item in currency the customer paid in.
       - name: total_tax_pres_currency_code
-        description: The three letter currency code of the tax the customer paid in.          
+        description: The three letter currency code of the tax the customer paid in.
       - name: total_tax_shop_amount
         description: The total tax amount of a line item in the currency of the shop.
       - name: total_tax_shop_currency_code
@@ -1402,7 +1412,7 @@ models:
       - name: restock_type
         description: How this refund line item affects inventory levels.
       - name: source_relation
-        description: "{{ doc('source_relation') }}" 
+        description: "{{ doc('source_relation') }}"
 
   - name: stg_shopify_gql__order_note_attribute
     description: Table storing custom attributes placed on orders.
@@ -1693,9 +1703,106 @@ models:
       - name: total_refunded_pres_currency_code
         description: The three letter currency code for the refund in the customer currency.
       - name: total_refunded_shop_amount
-        description:  The total amount across all transactions for the refund in the shop currency.
+        description: The total amount across all transactions for the refund in the shop currency.
       - name: total_refunded_shop_currency_code
         description: The three letter currency code for the refund in the shop currency.
+      - name: updated_at
+        description: The date and time when the refund was last updated.
+
+  - name: stg_shopify_gql__return
+    description: Each record represents a return within Shopify.
+    columns:
+      - name: unique_key
+        description: Surrogate key hashed on `return_id` and `source_relation`.
+        tests:
+          - unique
+          - not_null
+      - name: return_id
+        description: A globally-unique identifier for the return.
+      - name: order_id
+        description: The ID of the order the return belongs to.
+      - name: name
+        description: The name of the return.
+      - name: status
+        description: >
+          The status of the return. Possible values (lowercased):
+          - open: The return is in progress.
+          - requested: The return was requested.
+          - declined: The return was declined.
+          - closed: The return has been completed.
+          - canceled: The return has been canceled.
+      - name: decline_reason
+        description: >
+          The reason the return was declined. Possible values (lowercased):
+          - final_sale: The return contains final sale items.
+          - return_period_ended: The return period has ended.
+          - other: The return is declined for another reason.
+      - name: decline_note
+        description: The notification message sent to the customer about their declined return request.
+      - name: total_quantity
+        description: The sum of all return line item quantities for the return.
+      - name: _fivetran_synced
+        description: "{{ doc('_fivetran_synced') }}"
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+
+  - name: stg_shopify_gql__return_line_item
+    description: Each record represents a line item within a return in Shopify.
+    columns:
+      - name: unique_key
+        description: Surrogate key hashed on `return_line_item_id` and `source_relation`.
+        tests:
+          - unique
+          - not_null
+      - name: return_line_item_id
+        description: A globally-unique identifier for the return line item.
+      - name: return_id
+        description: The ID of the return this line item belongs to.
+      - name: order_line_id
+        description: The ID of the original order line being returned.
+      - name: customer_note
+        description: A note from the customer describing the item to be returned.
+      - name: quantity
+        description: The number of items being returned.
+      - name: refundable_quantity
+        description: The count of items still eligible for refund processing.
+      - name: refunded_quantity
+        description: The count of items that have already been refunded.
+      - name: return_reason
+        description: >
+          Deprecated by Shopify. The standardized return category. Possible values (lowercased):
+          color, defective, not_as_described, other, size_too_large, size_too_small, style, unknown, unwanted, wrong_item.
+      - name: return_reason_note
+        description: Additional information about the reason for the return.
+      - name: _fivetran_synced
+        description: "{{ doc('_fivetran_synced') }}"
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+
+  - name: stg_shopify_gql__return_shipping_fee
+    description: Each record represents a shipping fee associated with a return in Shopify. A single return may have multiple shipping fees.
+    columns:
+      - name: unique_key
+        description: Surrogate key hashed on `return_shipping_fee_id` and `source_relation`.
+        tests:
+          - unique
+          - not_null
+      - name: return_shipping_fee_id
+        description: A globally-unique identifier for the return shipping fee.
+      - name: return_id
+        description: The ID of the return this shipping fee belongs to.
+      - name: amount_pres_amount
+        description: The shipping fee amount in the customer's presentment currency.
+      - name: amount_pres_currency_code
+        description: The three-letter currency code for the presentment currency shipping fee.
+      - name: amount_shop_amount
+        description: The shipping fee amount in the shop currency.
+      - name: amount_shop_currency_code
+        description: The three-letter currency code for the shop currency shipping fee.
+      - name: _fivetran_synced
+        description: "{{ doc('_fivetran_synced') }}"
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
 
   - name: stg_shopify_gql__shop
     description: The Shop resource is a collection of general business and store management settings and information about the store.

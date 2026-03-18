@@ -493,6 +493,77 @@ sources:
           - name: currency_exchange_currency
             description: The shop currency.
             
+      - name: return
+        identifier: "{{ var('shopify_gql_return_identifier', 'return') }}"
+        description: Each record represents a return within Shopify.
+        config:
+          enabled: "{{ var('shopify_gql_using_return', false) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') }}"
+        columns:
+          - name: id
+            description: A globally-unique identifier for the return.
+          - name: order_id
+            description: The ID of the order the return belongs to.
+          - name: name
+            description: The name of the return.
+          - name: status
+            description: The status of the return.
+          - name: decline_reason
+            description: The reason the return was declined.
+          - name: decline_note
+            description: The notification message sent to the customer about their declined return request.
+          - name: total_quantity
+            description: The sum of all return line item quantities for the return.
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+
+      - name: return_line_item
+        identifier: "{{ var('shopify_gql_return_line_item_identifier', 'return_line_item') }}"
+        description: Each record represents a line item within a return in Shopify.
+        config:
+          enabled: "{{ var('shopify_gql_using_return', false) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') }}"
+        columns:
+          - name: id
+            description: A globally-unique identifier for the return line item.
+          - name: return_id
+            description: The ID of the return this line item belongs to.
+          - name: order_line_id
+            description: The ID of the original order line being returned.
+          - name: customer_note
+            description: A note from the customer describing the item to be returned.
+          - name: quantity
+            description: The number of items being returned.
+          - name: refundable_quantity
+            description: The count of items still eligible for refund processing.
+          - name: refunded_quantity
+            description: The count of items that have already been refunded.
+          - name: return_reason
+            description: Deprecated. The standardized return category.
+          - name: return_reason_note
+            description: Additional information about the reason for the return.
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+
+      - name: return_shipping_fee
+        identifier: "{{ var('shopify_gql_return_shipping_fee_identifier', 'return_shipping_fee') }}"
+        description: Each record represents a shipping fee associated with a return in Shopify.
+        config:
+          enabled: "{{ var('shopify_gql_using_return', false) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') }}"
+        columns:
+          - name: id
+            description: A globally-unique identifier for the return shipping fee.
+          - name: return_id
+            description: The ID of the return this shipping fee belongs to.
+          - name: amount_set_presentment_money_amount
+            description: The shipping fee amount in the customer's presentment currency.
+          - name: amount_set_presentment_money_currency_code
+            description: The three-letter currency code for the presentment currency shipping fee.
+          - name: amount_set_shop_money_amount
+            description: The shipping fee amount in the shop currency.
+          - name: amount_set_shop_money_currency_code
+            description: The three-letter currency code for the shop currency shipping fee.
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+
       - name: refund
         identifier: "{{ var('shopify_gql_refund_identifier', 'refund') }}"
         description: Each record represents a refund within Shopify.
