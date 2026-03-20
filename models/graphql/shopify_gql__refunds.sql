@@ -116,7 +116,7 @@ with refunds as (
         order_adjustment_aggregates.refund_discrepancy_shop_amount,
         order_adjustment_aggregates.refund_discrepancy_tax_shop_amount,
         order_adjustment_aggregates.refund_discrepancy_pres_amount,
-        order_adjustment_aggregates.refund_discrepancy_tax_pres_amount,
+        order_adjustment_aggregates.refund_discrepancy_tax_pres_amount
 
         {% if var('shopify_gql_using_return', False) %}
         -- return context (only when shopify_gql_using_return is enabled)
