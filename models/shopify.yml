@@ -1195,7 +1195,7 @@ models:
       - name: source_relation
         description: "{{ doc('source_relation') }}"
 
-  - name: shopify__refunds
+  - name: shopify__refund_lines
     description: Each record represents a refunded order line item. Joins refund, order line refund, order line, and order context for line-item level refund analysis.
     columns:
       - name: unique_key
@@ -1261,9 +1261,60 @@ models:
         description: Whether the item was physically restocked (restock_type is 'return', 'cancel', or 'legacy_restock').
       - name: is_restock_only
         description: Whether this refund line had no financial value and only restocked inventory (subtotal and total_tax are both zero and the item was restocked).
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+
+  - name: shopify__refunds
+    description: Each record represents a refund transaction. Aggregates line item financials to the refund grain and includes discrepancy adjustments for accurate reconciliation.
+    columns:
+      - name: unique_key
+        description: Unique key representing a refund transaction. Hashed on 'refund_id' and 'source_relation'.
+        tests:
+          - unique
+          - not_null
+      - name: refund_id
+        description: The ID of the refund.
+      - name: order_id
+        description: The ID of the order the refund belongs to.
+      - name: customer_id
+        description: The ID of the customer who placed the original order.
+      - name: email
+        description: The email address of the customer who placed the original order.
+      - name: order_channel
+        description: The channel where the original order was placed (e.g. web, pos).
+      - name: order_created_at
+        description: The timestamp when the original order was created.
+      - name: refund_created_at
+        description: The timestamp when the refund was created.
+      - name: refund_processed_at
+        description: The timestamp when the refund was processed.
+      - name: is_processed
+        description: Whether the refund has been processed (i.e. processed_at is not null).
+      - name: days_to_refund
+        description: Number of days between the original order creation date and the refund creation date.
+      - name: refund_note
+        description: An optional note attached to the refund by the merchant or staff.
+      - name: staff_user_id
+        description: The ID of the staff member who processed the refund.
+      - name: count_refund_line_items
+        description: The number of line items included in this refund.
+      - name: total_quantity_refunded
+        description: The total quantity of items refunded across all line items.
+      - name: subtotal
+        description: The sum of line item subtotals for this refund, before tax (in shop currency).
+      - name: total_tax
+        description: The total tax refunded across all line items (in shop currency).
+      - name: total_refunded
+        description: The total amount refunded across all line items including tax (in shop currency). Equal to subtotal + total_tax.
+      - name: quantity_restocked
+        description: The total quantity of items physically restocked as part of this refund.
+      - name: count_restocked_line_items
+        description: The number of line items that were restocked as part of this refund.
+      - name: has_restock
+        description: Whether any line items in this refund were restocked.
       - name: refund_discrepancy_amount
-        description: The refund-level discrepancy adjustment amount (in shop currency). Applied when the sum of line item refunds does not exactly match the total refund processed. This value repeats across all order_line_refund rows for the same refund — do not sum when aggregating at the order_line_refund grain.
+        description: The discrepancy adjustment amount (in shop currency). Applied when the sum of line item refunds does not exactly match the total refund amount processed by Shopify.
       - name: refund_discrepancy_tax_amount
-        description: The tax portion of the refund-level discrepancy adjustment (in shop currency). This value repeats across all order_line_refund rows for the same refund — do not sum when aggregating at the order_line_refund grain.
+        description: The tax portion of the discrepancy adjustment (in shop currency).
       - name: source_relation
         description: "{{ doc('source_relation') }}"

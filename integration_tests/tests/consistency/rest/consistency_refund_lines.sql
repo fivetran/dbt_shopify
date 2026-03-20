@@ -3,17 +3,17 @@
     enabled=var('fivetran_validation_tests_enabled', false) and var('shopify_api', 'rest') == 'rest'
 ) }}
 
-{% set exclude_cols = var('consistency_test_exclude_metrics', []) %}
+{% set exclude_cols = ['pre_tax_price_set', 'price_set', 'total_discount_set', 'properties'] + var('consistency_test_exclude_metrics', []) %}
 
--- this test ensures the shopify__refunds end model matches the prior version
+-- this test ensures the shopify__refund_lines end model matches the prior shopify__refunds version
 with prod as (
-    select {{ dbt_utils.star(from=ref('shopify__refunds'), except=exclude_cols) }}
+    select {{ dbt_utils.star(from=ref('shopify__refund_lines'), except=exclude_cols) }}
     from {{ target.schema }}_shopify_prod.shopify__refunds
 ),
 
 dev as (
-    select {{ dbt_utils.star(from=ref('shopify__refunds'), except=exclude_cols) }}
-    from {{ target.schema }}_shopify_dev.shopify__refunds
+    select {{ dbt_utils.star(from=ref('shopify__refund_lines'), except=exclude_cols) }}
+    from {{ target.schema }}_shopify_dev.shopify__refund_lines
 ),
 
 prod_not_in_dev as (

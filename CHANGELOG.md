@@ -9,9 +9,10 @@
 | ---------- | ----------- | -------- | -------- | ----- |
 | `shopify__customers` <br> `shopify__customer_emails` <br> `shopify_gql__customers` <br> `shopify_gql__customer_emails` | Changed field | `lifetime_total_discount` and `avg_discount_per_order` sourced from `order_line.total_discount` | Now sourced from `discount_allocation` | `discount_allocation` is the more reliable source for order line discount values. |
 | `shopify__products` <br> `shopify_gql__products` | Changed field | `product_total_discount` and `product_avg_discount_per_order_line` sourced from `order_line.total_discount` | Now sourced from `discount_allocation` | `discount_allocation` is the more reliable source for order line discount values. |
-| `shopify_gql__refunds` | Renamed column | `refunded_quantity` | `refund_line_item_quantity` | Disambiguates from `return_line_items.refunded_quantity` (total items refunded across the return) — this field is the quantity on this specific refund transaction. |
-| `shopify__refunds` | New model | - | - | New REST final model exposing refund-level data. See documentation for full column list. |
-| `shopify_gql__refunds` | New model | - | - | New GraphQL final model exposing refund-level data. See documentation for full column list. |
+| `shopify__refund_lines` | New model | - | - | New REST final model at the order line refund grain. Exposes per-line refund financials, product context, and restock classification. |
+| `shopify_gql__refund_lines` | New model | - | - | New GraphQL final model at the order line refund grain. Exposes per-line refund financials, product context, restock classification, and optional return line item detail.  |
+| `shopify__refunds` | New model | - | - | New REST final model at the refund transaction grain. Aggregates line item financials and includes discrepancy adjustments for accurate reconciliation.  |
+| `shopify_gql__refunds` | New model | - | - | New GraphQL final model at the refund transaction grain. Aggregates line item financials, includes discrepancy adjustments, and exposes optional return context and shipping fee columns.  |
 | `stg_shopify_gql__return` | New model | - | - | New GraphQL staging model for return records. |
 | `stg_shopify_gql__return_line_item` | New model | - | - | New GraphQL staging model for return line item records. |
 | `stg_shopify_gql__return_shipping_fee` | New model | - | - | New GraphQL staging model for return shipping fee records. |
@@ -22,9 +23,10 @@
 | `int_shopify_gql__orders_order_refunds` | New column | - | `is_gift_card` | Aligns with the REST equivalent model for gift card filtering. |
 
 ## Feature Updates
-- Introduces the `shopify_gql_using_return` variable (default `false`) to opt into return modeling. When enabled, `stg_shopify_gql__return`, `stg_shopify_gql__return_line_item`, and `stg_shopify_gql__return_shipping_fee` are materialized and `shopify_gql__refunds` is enriched with return lifecycle, return line item detail, and return shipping fee columns.
+
 
 ## Under the Hood
+- Introduces the `shopify_gql_using_return` variable (default `false`) to opt into return modeling. When enabled, `shopify_gql__refund_lines` is enriched with return lifecycle and return line item detail columns. `shopify_gql__refunds` is enriched with return context and return shipping fee columns.
 - Adds YAML documentation for new models and columns.
 - Updates seed files to reflect corrected column names and new columns.
 - Removes DECISIONLOG entry for aggregating returns on order date to reflect that returns are now correctly bucketed on the refund date, matching Shopify Finance report behavior.

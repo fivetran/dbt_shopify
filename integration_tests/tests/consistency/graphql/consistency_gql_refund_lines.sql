@@ -5,15 +5,15 @@
 
 {% set exclude_cols = var('consistency_test_exclude_metrics', []) %}
 
--- this test ensures the shopify_gql__refunds end model matches the prior version
+-- this test ensures the shopify_gql__refund_lines end model matches the prior shopify_gql__refunds version
 with prod as (
-    select {{ dbt_utils.star(from=ref('shopify_gql__refunds'), except=exclude_cols) }}
+    select {{ dbt_utils.star(from=ref('shopify_gql__refund_lines'), except=exclude_cols) }}
     from {{ target.schema }}_shopify_prod.shopify_gql__refunds
 ),
 
 dev as (
-    select {{ dbt_utils.star(from=ref('shopify_gql__refunds'), except=exclude_cols) }}
-    from {{ target.schema }}_shopify_dev.shopify_gql__refunds
+    select {{ dbt_utils.star(from=ref('shopify_gql__refund_lines'), except=exclude_cols) }}
+    from {{ target.schema }}_shopify_dev.shopify_gql__refund_lines
 ),
 
 prod_not_in_dev as (
