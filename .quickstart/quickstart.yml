@@ -16,11 +16,6 @@ table_variables:
     - discount_code_app
   shopify_using_product_variant_media:
     - product_variant_media
-  shopify_using_return:
-    - return
-    - return_line
-    - return_shipping_fee
-
   _fivetran_quickstart_customer_address:
     - customer_address
   _fivetran_quickstart_customer_tag:
