@@ -3,27 +3,23 @@
 [PR #145](https://github.com/fivetran/dbt_shopify/pull/145) includes the following updates:
 
 ## Schema/Data Changes
-**17 total changes • 8 possible breaking changes**
+**19 total changes • 10 possible breaking changes**
 
 | Data Model(s) | Change type | Old | New | Notes |
-| ---------- | ----------- | -------- | -------- | ----- |
-| `shopify__customers` <br> `shopify__customer_emails` <br> `shopify_gql__customers` <br> `shopify_gql__customer_emails` | Changed field | `lifetime_total_discount` and `avg_discount_per_order` sourced from `order_line.total_discount` | Now sourced from `discount_allocation` | `discount_allocation` is the more reliable source for order line discount values. |
-| `shopify__products` <br> `shopify_gql__products` | Changed field | `product_total_discount` and `product_avg_discount_per_order_line` sourced from `order_line.total_discount` | Now sourced from `discount_allocation` | `discount_allocation` is the more reliable source for order line discount values. |
-| `shopify__refund_lines` | New model | - | - | New REST final model at the order line refund grain. Exposes per-line refund financials, product context, and restock classification. |
-| `shopify_gql__refund_lines` | New model | - | - | New GraphQL final model at the order line refund grain. Exposes per-line refund financials, product context, restock classification, and optional return line item detail.  |
-| `shopify__refunds` | New model | - | - | New REST final model at the refund transaction grain. Aggregates line item financials and includes discrepancy adjustments for accurate reconciliation.  |
-| `shopify_gql__refunds` | New model | - | - | New GraphQL final model at the refund transaction grain. Aggregates line item financials, includes discrepancy adjustments, and exposes optional return context and shipping fee columns.  |
-| `stg_shopify_gql__return` | New model | - | - | New GraphQL staging model for return records. |
-| `stg_shopify_gql__return_line_item` | New model | - | - | New GraphQL staging model for return line item records. |
-| `stg_shopify_gql__return_shipping_fee` | New model | - | - | New GraphQL staging model for return shipping fee records. |
-| `shopify_gql__daily_shop` | New fields | - | `gross_sales`, `discounts`, `returns`, `net_sales` | Finance metrics for the GQL path, matching the REST `shopify__daily_shop` columns. |
-| `shopify_gql__orders` | New fields | - | `gross_sales`, `discounts`, `returns`, `net_sales` | Finance metrics at the order level, matching the REST `shopify__orders` columns. |
-| `stg_shopify_gql__order_line_refund` | New columns | - | `price_pres_amount`, `price_pres_currency_code`, `price_shop_amount`, `price_shop_currency_code`, `restocked` | Unit price at refund time (shop and presentment) and Shopify-native restock boolean. |
-| `stg_shopify_gql__refund` | New column | - | `updated_at` | Timestamp of the last update to the refund record. |
-| `int_shopify_gql__orders_order_refunds` | New column | - | `is_gift_card` | Aligns with the REST equivalent model for gift card filtering. |
-
-## Feature Updates
-
+| ------------- | ----------- | --- | --- | ----- |
+| [shopify__refund_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__refund_lines) or<br>[shopify_gql__refund_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__refund_lines) | New model | - | - | New final model at the refund line item grain. Exposes per-line refund financials, product context, and restock classification. |
+| [shopify__refunds](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__refunds) or<br>[shopify_gql__refunds](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__refunds) | New model | - | - | New final model at the refund transaction grain. Aggregates line item financials and includes discrepancy adjustments for accurate reconciliation. |
+| [shopify__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__daily_shop) or<br>[shopify_gql__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__daily_shop) | Data change | `refund_subtotal`, `refund_total_tax`, and `count_orders_with_refunds` bucketed by order creation date | Now bucketed by refund creation date | Aligns with Shopify Finance report behavior, which attributes refunds to the date the refund was issued. |
+| [shopify__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customers)<br>[shopify__customer_emails](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_emails) or<br>[shopify_gql__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customers)<br>[shopify_gql__customer_emails](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customer_emails) | Data change | `lifetime_total_discount` and `avg_discount_per_order` sourced from `order_line.total_discount` | Now sourced from `discount_allocation` | `discount_allocation` is the more reliable source for order line discount values. |
+| [shopify__products](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__products) or<br>[shopify_gql__products](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__products) | Data change | `product_total_discount` and `product_avg_discount_per_order_line` sourced from `order_line.total_discount` | Now sourced from `discount_allocation` | `discount_allocation` is the more reliable source for order line discount values. |
+| [shopify__orders](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__orders) or<br>[shopify_gql__orders](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__orders)<br>[shopify__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__daily_shop) or<br>[shopify_gql__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__daily_shop) | Data change | `gross_sales` included orders with `financial_status = 'voided'` | `gross_sales` now excludes voided orders | Voided orders are cancelled before payment capture and should not count toward gross sales. |
+| [shopify__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__daily_shop) or<br>[shopify_gql__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__daily_shop) | New fields | - | `gross_sales`, `discounts`, `returns`, `net_sales` | Finance metrics for the GQL path, matching the REST `shopify__daily_shop` columns. |
+| [shopify__orders](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__orders) or<br>[shopify_gql__orders](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__orders) | New fields | - | `gross_sales`, `discounts`, `returns`, `net_sales` | Finance metrics at the order level, matching the REST `shopify__orders` columns. |
+| [stg_shopify_gql__return](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify_gql__return) | New model | - | - | New GraphQL staging model for return records. |
+| [stg_shopify_gql__return_line_item](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify_gql__return_line_item) | New model | - | - | New GraphQL staging model for return line item records. |
+| [stg_shopify_gql__return_shipping_fee](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify_gql__return_shipping_fee) | New model | - | - | New GraphQL staging model for return shipping fee records. |
+| [stg_shopify_gql__order_line_refund](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify_gql__order_line_refund) | New columns | - | `price_pres_amount`, `price_pres_currency_code`, `price_shop_amount`, `price_shop_currency_code`, `restocked` | Unit price at refund time (shop and presentment) and Shopify-native restock boolean. |
+| [stg_shopify_gql__refund](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify_gql__refund) | New column | - | `updated_at` | Timestamp of the last update to the refund record. | 
 
 ## Under the Hood
 - Introduces the `shopify_gql_using_return` variable (default `false`) to opt into return modeling. When enabled, `shopify_gql__refund_lines` is enriched with return lifecycle and return line item detail columns. `shopify_gql__refunds` is enriched with return context and return shipping fee columns.

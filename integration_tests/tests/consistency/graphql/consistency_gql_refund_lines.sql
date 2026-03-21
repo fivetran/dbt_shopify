@@ -8,7 +8,7 @@
 -- this test ensures the shopify_gql__refund_lines end model matches the prior shopify_gql__refunds version
 with prod as (
     select {{ dbt_utils.star(from=ref('shopify_gql__refund_lines'), except=exclude_cols) }}
-    from {{ target.schema }}_shopify_prod.shopify_gql__refunds
+    from {{ target.schema }}_shopify_prod.shopify_gql__refund_line
 ),
 
 dev as (

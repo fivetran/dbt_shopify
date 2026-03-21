@@ -8,7 +8,7 @@
 -- this test ensures the shopify__refund_lines end model matches the prior shopify__refunds version
 with prod as (
     select {{ dbt_utils.star(from=ref('shopify__refund_lines'), except=exclude_cols) }}
-    from {{ target.schema }}_shopify_prod.shopify__refunds
+    from {{ target.schema }}_shopify_prod.shopify__refund_lines
 ),
 
 dev as (
