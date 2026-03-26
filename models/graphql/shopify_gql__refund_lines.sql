@@ -135,7 +135,6 @@ with refunds as (
             and coalesce(order_line_refunds.total_tax_shop_amount, 0) = 0
             and order_line_refunds.restock_type in ('return', 'cancel', 'legacy_restock')) as is_restock_only
 
-
     from order_line_refunds
     join refunds
         on order_line_refunds.refund_id = refunds.refund_id

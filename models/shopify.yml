@@ -27,8 +27,6 @@ models:
         description: Number of orders purchased in the `date_month`
       - name: order_count_lifetime
         description: Number of orders purchased up until and including this `date_month`.
-      - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
       - name: total_price_in_month
         description: Total amount (in shop currency) purchased in the `date_month`
       - name: total_price_lifetime
@@ -62,15 +60,13 @@ models:
         description: Number of orders purchased in the `date_month`
       - name: order_count_lifetime
         description: Number of orders purchased up until and including this `date_month`.
-      - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
       - name: total_price_in_month
         description: Total amount (in shop currency) purchased in the `date_month`
       - name: total_price_lifetime
         description: Total amount (in shop currency) up until and including this `date_month`.
       - name: source_relation
         description: "{{ doc('source_relation') }}"
-        
+
   - name: shopify__orders
     description: Each record represents an order in Shopify. Will also include `ORDER` metafields if enabled.
     columns:
@@ -188,7 +184,7 @@ models:
       - name: source_name
         description: Where the order originated. Can be set only during order creation, and is not writeable afterwards.
       - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+        description: "{{ doc('source_relation') }}"
       - name: subtotal_price
         description: The price of the order in the shop currency after discounts but before shipping, taxes, and tips.
       - name: has_taxes_included
@@ -284,9 +280,17 @@ models:
         description: The total amount of discount (in shop currency) allocated via a fixed-amount discount
       - name: count_discount_codes_applied
         description: Distinct discount codes applied on the order
+      - name: gross_sales
+        description: The total revenue from sales before discounts and returns are applied (in shop currency).
+      - name: discounts
+        description: The total amount of discounts applied to the order (in shop currency).
+      - name: returns
+        description: The total value of goods returned on the order (in shop currency).
+      - name: net_sales
+        description: The net revenue from the order after discounts and returns (gross_sales - discounts - returns, in shop currency).
       - name: source_relation
-        description: The ID of the order placed on the originating platform. This value doesn't correspond to the Shopify ID that's generated from a completed draft.
-  
+        description: "{{ doc('source_relation') }}"
+
   - name: shopify__customers
     description: Each record represents a customer in Shopify. Will also include `CUSTOMER` metafields if enabled.
     columns:
@@ -329,11 +333,11 @@ models:
       - name: lifetime_total_net
         description: The total amount of money (minus refunds) that the customer has spent across their order history.
       - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+        description: "{{ doc('source_relation') }}"
       - name: lifetime_abandoned_checkouts
         description: Total number of abandoned checkouts abandoned by the customer.
       - name: customer_tags
-        description: A string aggregated list of all tags associated with a customer. 
+        description: A string aggregated list of all tags associated with a customer.
       - name: avg_quantity_per_order
         description: Average quantity of items per order customer orders.
       - name: lifetime_total_tax
@@ -413,7 +417,7 @@ models:
       - name: last_account_created_at
         description: Timestamp of when the last account associated with this email was created.
       - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+        description: "{{ doc('source_relation') }}"
       - name: lifetime_abandoned_checkouts
         description: Total number of abandoned checkouts abandoned by the customer.
       - name: customer_tags
@@ -497,7 +501,7 @@ models:
       - name: most_recent_order_timestamp
         description: The timestamp the product was most recently ordered.
       - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+        description: "{{ doc('source_relation') }}"
       - name: avg_quantity_per_order_line
         description: Average quantity per order line with this product.
       - name: product_total_discount
@@ -635,7 +639,7 @@ models:
       - name: subtotal_net_refunds
         description: Subtotal of the order line with refunds subtracted in shop currency.
       - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+        description: "{{ doc('source_relation') }}"
       - name: restock_types
         description: List of how this refund line item affects inventory levels.
       - name: order_line_tax
@@ -726,7 +730,7 @@ models:
       - name: currency_exchange_calculated_amount
         description: The total amount of the transaction with the currency exchange rate applied.
       - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+        description: "{{ doc('source_relation') }}"
       - name: payment_method
         description: Method of payment.
       - name: parent_created_timestamp
@@ -1192,6 +1196,14 @@ models:
         description: Average quantity sold per order on this day. Includes refunds. (in shop currency)
       - name: avg_quantity_net
         description: Average net quantity sold per order on this day. Excludes refunds. (in shop currency)
+      - name: gross_sales
+        description: The total revenue from sales before discounts and returns are applied for this day (in shop currency).
+      - name: discounts
+        description: The total amount of discounts applied to orders on this day (in shop currency).
+      - name: returns
+        description: The total value of goods returned on orders on this day (in shop currency).
+      - name: net_sales
+        description: The net revenue from orders on this day after discounts and returns (gross_sales - discounts - returns, in shop currency).
       - name: source_relation
         description: "{{ doc('source_relation') }}"
 

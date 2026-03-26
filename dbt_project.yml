@@ -124,6 +124,9 @@ vars:
     gql_customer_visit_source: "{{ source('shopify_graphql', 'customer_visit') }}"
     gql_customer_address_source: "{{ source('shopify_graphql', 'customer_address') }}"
     gql_collection_rule_source: "{{ source('shopify_graphql', 'collection_rule') }}"
+    gql_return_source: "{{ source('shopify_graphql', 'return') }}"
+    gql_return_line_item_source: "{{ source('shopify_graphql', 'return_line_item') }}"
+    gql_return_shipping_fee_source: "{{ source('shopify_graphql', 'return_shipping_fee') }}"
 
     customer_pass_through_columns: []
     order_line_refund_pass_through_columns: []

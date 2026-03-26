@@ -3,7 +3,7 @@
     enabled=var('fivetran_validation_tests_enabled', false) and var('shopify_api', 'rest') == 'rest'
 ) }}
 
-{% set exclude_cols = ['pre_tax_price_set', 'price_set', 'total_discount_set', 'properties'] + var('consistency_test_exclude_metrics', []) %}
+{% set exclude_cols = var('consistency_test_exclude_metrics', []) %}
 
 -- this test ensures the shopify__refund_lines end model matches the prior shopify__refunds version
 with prod as (
