@@ -23,6 +23,10 @@
 - Updates seed files to reflect corrected column names and new columns.
 - Removes DECISIONLOG entry for aggregating returns on order date to reflect that returns are now correctly applied on the refund date, matching Shopify finance report behavior.
 
+## Contributors
+- [Scott Zakrajsek, Power Digital Marketing](https://powerdigitalmarketing.com) ([PR #147](https://github.com/fivetran/dbt_shopify/pull/147))
+
+
 # dbt_shopify v1.5.2
 
 [PR #144](https://github.com/fivetran/dbt_shopify/pull/144) includes the following updates:
