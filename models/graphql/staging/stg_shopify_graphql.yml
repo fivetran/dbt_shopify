@@ -1781,6 +1781,7 @@ models:
       - name: unique_key
         description: Surrogate key hashed on `return_shipping_fee_id` and `source_relation`.
         tests:
+          - unique
           - not_null
       - name: return_shipping_fee_id
         description: A globally-unique identifier for the return shipping fee.
