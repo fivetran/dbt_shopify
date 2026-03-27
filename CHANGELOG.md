@@ -1,13 +1,13 @@
 # dbt_shopify v1.6.0
 
-[PR #145](https://github.com/fivetran/dbt_shopify/pull/145) includes the following updates:
+[PR #147](https://github.com/fivetran/dbt_shopify/pull/147) includes the following updates:
 
 ## Schema/Data Changes
 **21 total changes • 9 possible breaking changes**
 
 | Data Model(s) | Change type | Old | New | Notes |
 | ------------- | ----------- | --- | --- | ----- |
-| [shopify__refund_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__refund_lines) or<br>[shopify_gql__refund_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__refund_lines) | New model | - | - | New final model at the refund line item grain. Exposes per-line refund financials, product context, and restock classification. |
+| [shopify__refund_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__refund_lines) or<br>[shopify_gql__refund_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__refund_lines) | New model |  |  | New final model at the refund line item grain. Exposes per-line refund financials, product context, and restock classification. |
 | [shopify__refunds](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__refunds) or<br>[shopify_gql__refunds](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__refunds) | New model | - | - | New final model at the refund transaction grain. Aggregates line item financials and includes discrepancy adjustments for accurate reconciliation. |
 | [shopify__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__daily_shop) or<br>[shopify_gql__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__daily_shop) | Data change | `refund_subtotal`, `refund_total_tax`, and `count_orders_with_refunds` bucketed by order creation date | Now bucketed by refund creation date | **Possible breaking change** New refund metrics now likely to change values. Aligns with Shopify Finance report behavior, which attributes refunds to the date the refund was issued. |
 | [shopify__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customers)<br> and [shopify__customer_emails](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_emails) or<br>[shopify_gql__customers](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customers)<br> and [shopify_gql__customer_emails](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customer_emails) | Data change | `lifetime_total_discount` and `avg_discount_per_order` sourced from `order_line.total_discount` | Now sourced from `discount_allocation` | **Possible breaking change** New discount metrics now likely to change values. `discount_allocation` is the more reliable source for order line discount values. |
@@ -21,7 +21,7 @@
 ## Under the Hood
 - Adds YAML documentation for new models and columns.
 - Updates seed files to reflect corrected column names and new columns.
-- Removes DECISIONLOG entry for aggregating returns on order date to reflect that returns are now correctly bucketed on the refund date, matching Shopify Finance report behavior.
+- Removes DECISIONLOG entry for aggregating returns on order date to reflect that returns are now correctly applied on the refund date, matching Shopify finance report behavior.
 
 # dbt_shopify v1.5.2
 

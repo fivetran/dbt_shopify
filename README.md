@@ -271,7 +271,7 @@ vars:
     shopify_gql_using_fulfillment_event: true # FALSE by default.
     shopify_gql_using_fulfillment_tracking_info: true # FALSE by default.
     shopify_gql_using_product_variant_media: true # FALSE by default.
-    shopify_gql_using_return: true # FALSE by default. Setting to true will enable `return`, `return_line_item`, and `return_shipping_fee` and enrich `shopify_gql__refunds` with return lifecycle and shipping fee data.
+    shopify_gql_using_return: true # FALSE by default. Setting to true will enable `return`, `return_line_item`, and `return_shipping_fee` enriching `shopify_gql__refunds` and `shopify_gql__refund_lines` with respective return details.
 ```
 
 ### Setting your timezone
