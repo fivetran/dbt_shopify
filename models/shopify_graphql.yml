@@ -1244,8 +1244,6 @@ models:
         description: The reason the return was declined, if applicable. Only populated when `shopify_gql_using_return` is enabled.
       - name: return_decline_note
         description: A note explaining why the return was declined. Only populated when `shopify_gql_using_return` is enabled.
-      - name: return_reason
-        description: The reason the customer returned this specific line item. Only populated when `shopify_gql_using_return` is enabled.
       - name: return_reason_note
         description: An optional note providing more detail on the return reason. Only populated when `shopify_gql_using_return` is enabled.
       - name: return_customer_note

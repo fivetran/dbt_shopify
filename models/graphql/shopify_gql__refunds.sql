@@ -69,7 +69,7 @@ with refunds as (
 
     select
         -- identity / keys
-        {{ dbt_utils.generate_surrogate_key(['refunds.refund_id', 'refunds.source_relation']) }} as unique_key,
+        refunds.unique_key,
         refunds.refund_id,
         refunds.source_relation,
         refunds.return_id,

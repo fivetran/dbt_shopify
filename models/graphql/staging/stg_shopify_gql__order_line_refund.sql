@@ -32,7 +32,7 @@ final as (
         price_set_pres_currency_code as price_pres_currency_code,
         price_set_shop_amount as price_shop_amount,
         price_set_shop_currency_code as price_shop_currency_code,
-        restocked,
+        restocked as is_restocked,
         subtotal_set_pres_amount as subtotal_pres_amount,
         subtotal_set_pres_currency_code as subtotal_pres_currency_code,
         subtotal_set_shop_amount as subtotal_shop_amount,

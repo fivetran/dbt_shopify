@@ -9,7 +9,6 @@
     {"name": "refundable_quantity", "datatype": dbt.type_int()},
     {"name": "refunded_quantity", "datatype": dbt.type_int()},
     {"name": "return_id", "datatype": dbt.type_int()},
-    {"name": "return_reason", "datatype": dbt.type_string()},
     {"name": "return_reason_note", "datatype": dbt.type_string()}
 ] %}
 

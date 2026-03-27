@@ -1369,6 +1369,7 @@ models:
       - name: unique_key
         description: Surrogate key hashed on `order_line_refund_id` and `source_relation`.
         tests:
+          - unique
           - not_null
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -1390,7 +1391,7 @@ models:
         description: The unit price of the refunded line item in the shop currency.
       - name: price_shop_currency_code
         description: The three-letter currency code for the shop currency unit price.
-      - name: restocked
+      - name: is_restocked
         description: Whether Shopify has restocked the line item inventory as part of this refund.
       - name: subtotal_pres_amount
         description: The refunded subtotal amount of a line item in currency the customer paid in.
@@ -1679,6 +1680,7 @@ models:
       - name: unique_key
         description: Surrogate key hashed on `refund_id` and `source_relation`.
         tests:
+          - unique
           - not_null
       - name: refund_id
         description: The unique numeric identifier for the refund.
@@ -1713,6 +1715,7 @@ models:
       - name: unique_key
         description: Surrogate key hashed on `return_id` and `source_relation`.
         tests:
+          - unique
           - not_null
       - name: return_id
         description: A globally-unique identifier for the return.
@@ -1749,6 +1752,7 @@ models:
       - name: unique_key
         description: Surrogate key hashed on `return_line_item_id` and `source_relation`.
         tests:
+          - unique
           - not_null
       - name: return_line_item_id
         description: A globally-unique identifier for the return line item.
@@ -1764,10 +1768,6 @@ models:
         description: The count of items still eligible for refund processing.
       - name: refunded_quantity
         description: The count of items that have already been refunded.
-      - name: return_reason
-        description: >
-          Deprecated by Shopify. The standardized return category. Possible values (lowercased):
-          color, defective, not_as_described, other, size_too_large, size_too_small, style, unknown, unwanted, wrong_item.
       - name: return_reason_note
         description: Additional information about the reason for the return.
       - name: _fivetran_synced

@@ -3,25 +3,27 @@
     enabled=var('fivetran_validation_tests_enabled', false) and var('shopify_api', 'rest') == 'graphql'
 ) }}
 
-{% set exclude_cols = ['avg_quantity_per_order_line', 'product_total_discount', 'product_avg_discount_per_order_line'] + var('consistency_test_exclude_metrics', []) %}
+{% set exclude_cols = ['avg_quantity_per_order_line', 'product_avg_discount_per_order_line'] + var('consistency_test_exclude_metrics', []) %}
 
 with prod as (
-    select 
+    select
         {{ dbt_utils.star(
-            from=ref('shopify_gql__products'), 
-            except=exclude_cols) 
+            from=ref('shopify_gql__products'),
+            except=exclude_cols)
         }},
-        round(avg_quantity_per_order_line, 2) as avg_quantity_per_order_line
+        round(avg_quantity_per_order_line, 2) as avg_quantity_per_order_line,
+        round(product_avg_discount_per_order_line, 2) as product_avg_discount_per_order_line
     from {{ target.schema }}_shopify_prod.shopify_gql__products
 ),
 
 dev as (
-    select 
+    select
         {{ dbt_utils.star(
-            from=ref('shopify_gql__products'), 
-            except=exclude_cols) 
+            from=ref('shopify_gql__products'),
+            except=exclude_cols)
         }},
-        round(avg_quantity_per_order_line, 2) as avg_quantity_per_order_line
+        round(avg_quantity_per_order_line, 2) as avg_quantity_per_order_line,
+        round(product_avg_discount_per_order_line, 2) as product_avg_discount_per_order_line
     from {{ target.schema }}_shopify_dev.shopify_gql__products
 ), 
 

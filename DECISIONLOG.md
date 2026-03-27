@@ -2,9 +2,9 @@
 
 In creating this package, which is meant for a wide range of use cases, we had to take opinionated stances on a few different questions we came across during development. We've consolidated significant choices we made here, and will continue to update as the package evolves. 
 
-### Using an Order's `created_timestamp` Instead of `processed_timestamp` 
+### Using an Order's `created_timestamp` Instead of `processed_timestamp`
 
-In a similar vein to the above, in the customer cohort and daily shop models, we aggregate orders on a daily grain. To do so, we truncate the timestamp at which the order was _created_. In contrast, Shopify in-app reports truncate the timestamp at which the order was _processed_. This may also contribute to discrepancies when comparing the package models to in-app reports. We felt that the creation timestamp makes more sense to use in reality, but please reach out if you have other thoughts by opening an [issue](https://github.com/fivetran/dbt_shopify/issues/new?assignees=&labels=enhancement&template=feature-request.yml&title=%5BFeature%5D+%3Ctitle%3E).
+In the customer cohort and daily shop models, we aggregate orders on a daily grain. To do so, we truncate the timestamp at which the order was _created_. In contrast, Shopify in-app reports truncate the timestamp at which the order was _processed_. This may cause discrepancies when comparing the package models to in-app reports. We felt that the creation timestamp makes more sense to use, but if you disagree or have context on how processed timestamp better fits your use case, please open a [feature request](https://github.com/fivetran/dbt_shopify/issues/new?assignees=&labels=enhancement&template=feature-request.yml&title=%5BFeature%5D+%3Ctitle%3E) — we welcome feedback on this decision.
 
 ### Creating Empty Tables for Refunds, Order Line Refunds, Order Adjustments, and Discount Codes
 

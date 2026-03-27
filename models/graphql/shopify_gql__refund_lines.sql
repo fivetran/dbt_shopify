@@ -55,10 +55,7 @@ with refunds as (
 
     select
         -- identity / keys
-        {{ dbt_utils.generate_surrogate_key([
-            'order_line_refunds.order_line_refund_id',
-            'order_line_refunds.source_relation'
-        ]) }} as unique_key,
+        order_line_refunds.unique_key,
         refunds.refund_id,
         refunds.source_relation,
         refunds.return_id,
@@ -90,7 +87,6 @@ with refunds as (
         returns.decline_note as return_decline_note,
 
         -- return line item detail (why the customer returned this specific item)
-        return_line_items.return_reason,
         return_line_items.return_reason_note,
         return_line_items.customer_note as return_customer_note,
         return_line_items.quantity as return_requested_quantity,

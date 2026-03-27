@@ -38,7 +38,6 @@ with order_lines as (
         min(orders.created_timestamp) as first_order_timestamp,
         max(orders.created_timestamp) as most_recent_order_timestamp,
 
-        -- new columns
         sum(coalesce(discount_allocation_agg.discount_allocation_amount, 0)) as product_total_discount,
         sum(order_lines.order_line_tax) as product_total_tax,
         avg(order_lines.quantity) as avg_quantity_per_order_line,
