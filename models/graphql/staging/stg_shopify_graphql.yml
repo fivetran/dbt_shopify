@@ -1390,7 +1390,7 @@ models:
         description: The unit price of the refunded line item in the shop currency.
       - name: price_shop_currency_code
         description: The three-letter currency code for the shop currency unit price.
-      - name: restocked
+      - name: is_restocked
         description: Whether Shopify has restocked the line item inventory as part of this refund.
       - name: subtotal_pres_amount
         description: The refunded subtotal amount of a line item in currency the customer paid in.
