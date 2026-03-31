@@ -38,6 +38,8 @@ with order_lines as (
         min(orders.created_timestamp) as first_order_timestamp,
         max(orders.created_timestamp) as most_recent_order_timestamp,
 
+        -- Coalesce to 0 because the join to discount_allocation_agg is a left join; order lines
+        -- with no discount allocations will have a null discount_allocation_amount.
         sum(coalesce(discount_allocation_agg.discount_allocation_amount, 0)) as product_total_discount,
         sum(order_lines.order_line_tax) as product_total_tax,
         avg(order_lines.quantity) as avg_quantity_per_order_line,
