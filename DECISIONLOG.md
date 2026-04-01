@@ -2,15 +2,9 @@
 
 In creating this package, which is meant for a wide range of use cases, we had to take opinionated stances on a few different questions we came across during development. We've consolidated significant choices we made here, and will continue to update as the package evolves. 
 
-### Refund/Return Timestamp Mismatch
+### Using an Order's `created_timestamp` Instead of `processed_timestamp`
 
-In validating metrics with the Sales over Time reports in the Shopify UI, you may detect discrepancies in reported revenue. A known difference between this package's reporting and the Shopify UI is that Shopify's UI will report refunded revenue on the date that the _return was processed_ (see Shopify [docs](https://help.shopify.com/en/manual/reports-and-analytics/shopify-reports/report-types/sales-report)), whereas this package reports on the date the _order was placed_. So, if a customer placed an order amounting to $50 on November 30th, 2022 and fully returned it on December 1st, 2022, the package would report $0 net sales for this customer on November 30th, while Shopify would report $50 in sales on November 30th and -$50 on December 1st. 
-
-We felt that reporting on the order date made more sense in reality, but, if you feel differently, please reach out and create a Feature Request. To align with the Shopify method yourself, this would most likely involve aggregating `transactions` data (relying on the `kind` column to determine sales vs returns) instead of `orders`.
-
-### Using an Order's `created_timestamp` Instead of `processed_timestamp` 
-
-In a similar vein to the above, in the customer cohort and daily shop models, we aggregate orders on a daily grain. To do so, we truncate the timestamp at which the order was _created_. In contrast, Shopify in-app reports truncate the timestamp at which the order was _processed_. This may also contribute to discrepancies when comparing the package models to in-app reports. We felt that the creation timestamp makes more sense to use in reality, but please reach out if you have other thoughts by opening an [issue](https://github.com/fivetran/dbt_shopify/issues/new?assignees=&labels=enhancement&template=feature-request.yml&title=%5BFeature%5D+%3Ctitle%3E).
+In the customer cohort and daily shop models, we aggregate orders on a daily grain. To do so, we truncate the timestamp at which the order was _created_. In contrast, Shopify in-app reports truncate the timestamp at which the order was _processed_. This may cause discrepancies when comparing the package models to in-app reports. We felt that the creation timestamp makes more sense to use, but if you disagree or have context on how processed timestamp better fits your use case, please open a [feature request](https://github.com/fivetran/dbt_shopify/issues/new?assignees=&labels=enhancement&template=feature-request.yml&title=%5BFeature%5D+%3Ctitle%3E) — we welcome feedback on this decision.
 
 ### Creating Empty Tables for Refunds, Order Line Refunds, Order Adjustments, and Discount Codes
 

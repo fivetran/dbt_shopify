@@ -24,7 +24,8 @@ with orders as (
         order_id,
         source_relation,
         sum(amount) as order_adjustment_amount,
-        sum(tax_amount) as order_adjustment_tax_amount
+        sum(tax_amount) as order_adjustment_tax_amount,
+        sum(case when lower(kind) = 'refund_discrepancy' then amount else 0 end) as refund_discrepancy_amount
     from order_adjustments
     group by 1,2
 
@@ -38,7 +39,8 @@ with orders as (
         order_id,
         source_relation,
         sum(subtotal) as refund_subtotal,
-        sum(total_tax) as refund_total_tax
+        sum(total_tax) as refund_total_tax,
+        sum(case when is_gift_card = false then coalesce(subtotal, 0) else 0 end) as refund_subtotal_non_gift_card
     from refunds
     group by 1,2
 
@@ -52,9 +54,9 @@ with orders as (
     select 
         order_id,
         source_relation,
-        sum(case when type = 'shipping' then amount else 0 end) as shipping_discount_amount,
-        sum(case when type = 'percentage' then amount else 0 end) as percentage_calc_discount_amount,
-        sum(case when type = 'fixed_amount' then amount else 0 end) as fixed_amount_discount_amount,
+        sum(case when lower(type) = 'shipping' then amount else 0 end) as shipping_discount_amount,
+        sum(case when lower(type) = 'percentage' then amount else 0 end) as percentage_calc_discount_amount,
+        sum(case when lower(type) = 'fixed_amount' then amount else 0 end) as fixed_amount_discount_amount,
         count(distinct code) as count_discount_codes_applied
 
     from order_discount_code
@@ -120,8 +122,12 @@ with orders as (
         fulfillments.number_of_fulfillments,
         fulfillments.fulfillment_services,
         fulfillments.tracking_companies,
-        fulfillments.tracking_numbers
+        fulfillments.tracking_numbers,
 
+        coalesce(order_lines.gross_sales, 0) as gross_sales,
+        coalesce(order_lines.discount_allocation_amount, 0) as discounts,
+        coalesce(refund_aggregates.refund_subtotal_non_gift_card, 0) - coalesce(order_adjustments_aggregates.refund_discrepancy_amount, 0) as returns,
+        coalesce(order_lines.gross_sales, 0) - coalesce(order_lines.discount_allocation_amount, 0) - (coalesce(refund_aggregates.refund_subtotal_non_gift_card, 0) - coalesce(order_adjustments_aggregates.refund_discrepancy_amount, 0)) as net_sales
 
     from orders
     left join order_lines

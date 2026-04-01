@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '1.5.2'
+version: '1.6.0'
 profile: 'integration_tests'
 config-version: 2
 
@@ -18,6 +18,7 @@ vars:
   # shopify_gql_using_fulfillment_event: true # @docs-include
   # shopify_gql_using_fulfillment_tracking_info: true # @docs-include
   # shopify_gql_using_product_variant_media: true # @docs-include
+  # shopify_gql_using_return: true # @docs-include
   
   shopify_schema: shopify_integration_tests
   shopify_api_override: rest
@@ -116,6 +117,9 @@ vars:
     shopify_gql_customer_address_identifier: "shopify_gql_customer_address_data"
     shopify_gql_collection_rule_identifier: "shopify_gql_collection_rule_data"
     shopify_gql_refund_identifier: "shopify_gql_refund_data"
+    shopify_gql_return_identifier: "shopify_gql_return_data"
+    shopify_gql_return_line_item_identifier: "shopify_gql_return_line_item_data"
+    shopify_gql_return_shipping_fee_identifier: "shopify_gql_return_shipping_fee_data"
 
 dispatch:
   - macro_namespace: dbt_utils
@@ -185,6 +189,13 @@ seeds:
     shopify_gql_refund_line_item_data:
       +column_types:
         quantity: float
+        price_set_pres_amount: float
+        price_set_shop_amount: float
+        restocked: boolean
+    shopify_gql_return_shipping_fee_data:
+      +column_types:
+        amount_set_presentment_money_amount: float
+        amount_set_shop_money_amount: float
     shopify_order_line_refund_data:
       +column_types:
         _fivetran_synced: timestamp

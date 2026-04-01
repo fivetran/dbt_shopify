@@ -27,8 +27,6 @@ models:
         description: Number of orders purchased in the `date_month`
       - name: order_count_lifetime
         description: Number of orders purchased up until and including this `date_month`.
-      - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
       - name: total_price_in_month
         description: Total amount (in shop currency) purchased in the `date_month`
       - name: total_price_lifetime
@@ -62,15 +60,13 @@ models:
         description: Number of orders purchased in the `date_month`
       - name: order_count_lifetime
         description: Number of orders purchased up until and including this `date_month`.
-      - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
       - name: total_price_in_month
         description: Total amount (in shop currency) purchased in the `date_month`
       - name: total_price_lifetime
         description: Total amount (in shop currency) up until and including this `date_month`.
       - name: source_relation
         description: "{{ doc('source_relation') }}"
-        
+
   - name: shopify__orders
     description: Each record represents an order in Shopify. Will also include `ORDER` metafields if enabled.
     columns:
@@ -188,7 +184,7 @@ models:
       - name: source_name
         description: Where the order originated. Can be set only during order creation, and is not writeable afterwards.
       - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+        description: "{{ doc('source_relation') }}"
       - name: subtotal_price
         description: The price of the order in the shop currency after discounts but before shipping, taxes, and tips.
       - name: has_taxes_included
@@ -284,9 +280,17 @@ models:
         description: The total amount of discount (in shop currency) allocated via a fixed-amount discount
       - name: count_discount_codes_applied
         description: Distinct discount codes applied on the order
+      - name: gross_sales
+        description: The total revenue from sales before discounts and returns are applied (in shop currency).
+      - name: discounts
+        description: The total amount of discounts applied to the order (in shop currency).
+      - name: returns
+        description: The total value of goods returned on the order (in shop currency).
+      - name: net_sales
+        description: The net revenue from the order after discounts and returns (gross_sales - discounts - returns, in shop currency).
       - name: source_relation
-        description: The ID of the order placed on the originating platform. This value doesn't correspond to the Shopify ID that's generated from a completed draft.
-  
+        description: "{{ doc('source_relation') }}"
+
   - name: shopify__customers
     description: Each record represents a customer in Shopify. Will also include `CUSTOMER` metafields if enabled.
     columns:
@@ -329,11 +333,11 @@ models:
       - name: lifetime_total_net
         description: The total amount of money (minus refunds) that the customer has spent across their order history.
       - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+        description: "{{ doc('source_relation') }}"
       - name: lifetime_abandoned_checkouts
         description: Total number of abandoned checkouts abandoned by the customer.
       - name: customer_tags
-        description: A string aggregated list of all tags associated with a customer. 
+        description: A string aggregated list of all tags associated with a customer.
       - name: avg_quantity_per_order
         description: Average quantity of items per order customer orders.
       - name: lifetime_total_tax
@@ -413,7 +417,7 @@ models:
       - name: last_account_created_at
         description: Timestamp of when the last account associated with this email was created.
       - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+        description: "{{ doc('source_relation') }}"
       - name: lifetime_abandoned_checkouts
         description: Total number of abandoned checkouts abandoned by the customer.
       - name: customer_tags
@@ -497,7 +501,7 @@ models:
       - name: most_recent_order_timestamp
         description: The timestamp the product was most recently ordered.
       - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+        description: "{{ doc('source_relation') }}"
       - name: avg_quantity_per_order_line
         description: Average quantity per order line with this product.
       - name: product_total_discount
@@ -635,7 +639,7 @@ models:
       - name: subtotal_net_refunds
         description: Subtotal of the order line with refunds subtracted in shop currency.
       - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+        description: "{{ doc('source_relation') }}"
       - name: restock_types
         description: List of how this refund line item affects inventory levels.
       - name: order_line_tax
@@ -726,7 +730,7 @@ models:
       - name: currency_exchange_calculated_amount
         description: The total amount of the transaction with the currency exchange rate applied.
       - name: source_relation
-        description: The schema or database this record came from, if you are unioning multiple connectors. Null if not.
+        description: "{{ doc('source_relation') }}"
       - name: payment_method
         description: Method of payment.
       - name: parent_created_timestamp
@@ -1192,5 +1196,137 @@ models:
         description: Average quantity sold per order on this day. Includes refunds. (in shop currency)
       - name: avg_quantity_net
         description: Average net quantity sold per order on this day. Excludes refunds. (in shop currency)
+      - name: gross_sales
+        description: The total revenue from sales before discounts and returns are applied for this day (in shop currency).
+      - name: discounts
+        description: The total amount of discounts applied to orders on this day (in shop currency).
+      - name: returns
+        description: The total value of goods returned on orders on this day (in shop currency).
+      - name: net_sales
+        description: The net revenue from orders on this day after discounts and returns (gross_sales - discounts - returns, in shop currency).
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+
+  - name: shopify__refund_lines
+    description: Each record represents a refunded order line item. Joins refund, order line refund, order line, and order context for line-item level refund analysis.
+    columns:
+      - name: unique_key
+        description: Unique key representing a refunded order line item. Hashed on 'order_line_refund_id' and 'source_relation'.
+        tests:
+          - unique
+          - not_null
+      - name: refund_id
+        description: The ID of the refund.
+      - name: order_line_refund_id
+        description: The ID of the refunded order line item.
+      - name: order_line_id
+        description: The ID of the associated order line item.
+      - name: order_id
+        description: The ID of the order the refund belongs to.
+      - name: customer_id
+        description: The ID of the customer who placed the original order.
+      - name: email
+        description: The email address of the customer who placed the original order.
+      - name: order_channel
+        description: The channel where the original order was placed (e.g. web, pos).
+      - name: order_created_at
+        description: The timestamp when the original order was created.
+      - name: refund_created_at
+        description: The timestamp when the refund was created.
+      - name: refund_processed_at
+        description: The timestamp when the refund was processed.
+      - name: is_processed
+        description: Whether the refund has been processed (i.e. processed_at is not null).
+      - name: days_to_refund
+        description: Number of days between the original order creation date and the refund creation date.
+      - name: refund_note
+        description: An optional note attached to the refund by the merchant or staff.
+      - name: staff_user_id
+        description: The ID of the staff member who processed the refund.
+      - name: product_id
+        description: The ID of the product associated with the refunded line item.
+      - name: variant_id
+        description: The ID of the product variant associated with the refunded line item.
+      - name: product_title
+        description: The title of the product at the time of the original order.
+      - name: sku
+        description: The SKU of the product variant at the time of the original order.
+      - name: vendor
+        description: The vendor of the product at the time of the original order.
+      - name: original_unit_price
+        description: The unit price of the product at the time of the original order (in shop currency).
+      - name: is_gift_card
+        description: Whether the refunded line item was a gift card.
+      - name: refunded_quantity
+        description: The quantity of items refunded on this line item.
+      - name: subtotal
+        description: The subtotal of the refund for this line item, before tax (in shop currency).
+      - name: total_tax
+        description: The total tax refunded for this line item (in shop currency).
+      - name: total_refunded
+        description: The total amount refunded for this line item, including tax (in shop currency). Equal to subtotal + total_tax.
+      - name: restock_type
+        description: How the refunded item was restocked. One of 'return', 'cancel', 'legacy_restock', or 'no_restock'.
+      - name: restock_location_id
+        description: The ID of the location where the item was restocked, if applicable.
+      - name: is_restocked
+        description: Whether the item was physically restocked (restock_type is 'return', 'cancel', or 'legacy_restock').
+      - name: is_restock_only
+        description: Whether this refund line had no financial value and only restocked inventory (subtotal and total_tax are both zero and the item was restocked).
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+
+  - name: shopify__refunds
+    description: Each record represents a refund transaction. Aggregates line item financials to the refund grain and includes discrepancy adjustments for accurate reconciliation.
+    columns:
+      - name: unique_key
+        description: Unique key representing a refund transaction. Hashed on 'refund_id' and 'source_relation'.
+        tests:
+          - unique
+          - not_null
+      - name: refund_id
+        description: The ID of the refund.
+      - name: order_id
+        description: The ID of the order the refund belongs to.
+      - name: customer_id
+        description: The ID of the customer who placed the original order.
+      - name: email
+        description: The email address of the customer who placed the original order.
+      - name: order_channel
+        description: The channel where the original order was placed (e.g. web, pos).
+      - name: order_created_at
+        description: The timestamp when the original order was created.
+      - name: refund_created_at
+        description: The timestamp when the refund was created.
+      - name: refund_processed_at
+        description: The timestamp when the refund was processed.
+      - name: is_processed
+        description: Whether the refund has been processed (i.e. processed_at is not null).
+      - name: days_to_refund
+        description: Number of days between the original order creation date and the refund creation date.
+      - name: refund_note
+        description: An optional note attached to the refund by the merchant or staff.
+      - name: staff_user_id
+        description: The ID of the staff member who processed the refund.
+      - name: count_refund_line_items
+        description: The number of line items included in this refund.
+      - name: total_quantity_refunded
+        description: The total quantity of items refunded across all line items.
+      - name: subtotal
+        description: The sum of line item subtotals for this refund, before tax (in shop currency).
+      - name: total_tax
+        description: The total tax refunded across all line items (in shop currency).
+      - name: total_refunded
+        description: The total amount refunded across all line items including tax (in shop currency). Equal to subtotal + total_tax.
+      - name: quantity_restocked
+        description: The total quantity of items physically restocked as part of this refund.
+      - name: count_restocked_line_items
+        description: The number of line items that were restocked as part of this refund.
+      - name: has_restock
+        description: Whether any line items in this refund were restocked.
+      - name: refund_discrepancy_amount
+        description: The discrepancy adjustment amount (in shop currency). Applied when the sum of line item refunds does not exactly match the total refund amount processed by Shopify.
+      - name: refund_discrepancy_tax_amount
+        description: The tax portion of the discrepancy adjustment (in shop currency).
       - name: source_relation
         description: "{{ doc('source_relation') }}"

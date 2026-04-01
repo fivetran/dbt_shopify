@@ -105,7 +105,11 @@ final as (
         coalesce(daily_orders.count_variants_sold, 0) as count_variants_sold,
         coalesce(daily_orders.count_products_sold, 0) as count_products_sold,
         coalesce(daily_orders.quantity_gift_cards_sold, 0) as quantity_gift_cards_sold,
-        coalesce(daily_orders.quantity_requiring_shipping, 0) as quantity_requiring_shipping
+        coalesce(daily_orders.quantity_requiring_shipping, 0) as quantity_requiring_shipping,
+        coalesce(daily_orders.gross_sales, 0) as gross_sales,
+        coalesce(daily_orders.discounts, 0) as discounts,
+        coalesce(daily_orders.returns, 0) as returns,
+        coalesce(daily_orders.net_sales, 0) as net_sales
 
         {% if var('shopify_gql_using_abandoned_checkout', True) %}
         , coalesce(daily_abandoned_checkouts.count_abandoned_checkouts, 0) as count_abandoned_checkouts,

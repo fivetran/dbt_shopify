@@ -1,0 +1,11 @@
+_fivetran_synced,id,order_id,name,status,decline_reason,decline_note,total_quantity
+2025-07-18 11:00:00,8001,5001,#R1001,closed,,, 1
+2025-07-18 11:01:00,8002,5002,#R1002,closed,,,2
+2025-07-18 11:02:00,8003,5003,#R1003,declined,FINAL_SALE,Item is final sale and not eligible for return,1
+2025-07-18 11:03:00,8004,5004,#R1004,closed,,,3
+2025-07-18 11:04:00,8005,5005,#R1005,open,,,2
+2025-07-18 11:05:00,8006,5006,#R1006,closed,,,1
+2025-07-18 11:06:00,8007,5007,#R1007,declined,RETURN_PERIOD_EXPIRED,Return window has expired,2
+2025-07-18 11:07:00,8008,5008,#R1008,closed,,,1
+2025-07-18 11:08:00,8009,5009,#R1009,requested,,,3
+2025-07-18 11:09:00,8010,5010,#R1010,closed,,,1

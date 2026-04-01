@@ -5,7 +5,7 @@ This dbt package transforms data from Fivetran's Shopify connector into analytic
 
 ## Resources
 
-- Number of materialized models¹: 107 (REST API) / 117 (GraphQL API)
+- Number of materialized models¹: 109 (REST API) / 125 (GraphQL API)
 - Connector documentation
   - [Shopify connector documentation](https://fivetran.com/docs/connectors/applications/shopify)
   - [Shopify ERD](https://fivetran.com/docs/connectors/applications/shopify#schemainformation)
@@ -44,6 +44,8 @@ By default, this package materializes the following final tables:
 | [shopify__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__daily_shop) or<br>[shopify_gql__daily_shop](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__daily_shop) | Daily business performance metrics including orders, revenue, customers, abandoned checkouts, and fulfillment events for operational dashboards. Includes `SHOP` metafields if enabled. <br><br>**Example Analytics Questions:**<br>• What are the peak sales days and how does daily revenue trend over the past year?<br>• How do daily order counts correlate with shipping costs and discount usage? |
 | [shopify__discounts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__discounts) or<br>[shopify_gql__discounts](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__discounts) | Discount code performance with redemption rates, revenue impact, and customer usage patterns for promotional campaign analysis. <br><br>**Example Analytics Questions:**<br>• Which discount codes have the highest redemption rates and total revenue impact?<br>• What is the average order value for customers using percentage vs fixed amount discounts? |
 | [shopify__inventory_levels](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__inventory_levels) or<br>[shopify_gql__inventory_levels](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__inventory_levels) | Product variant inventory tracking by location with sales performance, stock levels, and fulfillment metrics for supply chain optimization. Includes `PRODUCT_VARIANT` metafields if enabled. <br><br>**Example Analytics Questions:**<br>• Which product variants have the lowest inventory levels relative to their sales velocity?<br>• What is the total inventory value by location and which locations are most profitable? |
+| [shopify__refunds](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__refunds) or<br>[shopify_gql__refunds](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__refunds) | One record per refund transaction, with line item financials aggregated to the refund level. Use this model when you need refund-level totals (e.g., total amount refunded, total items restocked, discrepancy adjustments) or when joining refund data to order-level context. You cannot derive per-line product detail or per-line restock classification from this model alone. <br><br>**Example Analytics Questions:**<br>• What is the total refund value per order and how does it compare to the original order value?<br>• What is the average time between order creation and refund processing? |
+| [shopify__refund_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__refund_lines) or<br>[shopify_gql__refund_lines](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__refund_lines) | One record per refund line item, the most granular refund grain. Use this model when you need to analyze refunds at the product or variant level, including per-line financials, restock classification, and product context. You cannot derive this detail from the refunds model without re-joining to source tables. <br><br>**Example Analytics Questions:**<br>• Which product variants have the highest refund rates and what restock types are most common?<br>• What is the refund amount breakdown by product category and restock classification? |
 | [shopify__line_item_enhanced](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__line_item_enhanced) or<br>[shopify_gql__line_item_enhanced](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__line_item_enhanced) | Standardized billing model that aligns with other platforms (Recharge, Stripe, Zuora, Recurly) for cross-platform revenue analysis and reporting. This comprehensive view enables consistent reporting across billing platforms. To see example insights, explore the [Fivetran Billing Model Streamlit App](https://fivetran-billing-model.streamlit.app/). <br><br>**Example Analytics Questions:**<br>• What are the monthly recurring revenue trends and how do subscription vs one-time purchase patterns compare?<br>• Which product categories and customer segments drive the highest lifetime value and retention rates? |
 
 ¹ Each Quickstart transformation job run materializes these models if all components of this data model are enabled. This count includes all staging, intermediate, and final models materialized as `view`, `table`, or `incremental`.
@@ -79,7 +81,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=1.5.0", "<1.6.0"]
+    version: [">=1.6.0", "<1.7.0"]
 ```
 
 > All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/shopify_source` in your `packages.yml` since this package has been deprecated.
@@ -254,7 +256,7 @@ vars:
 #### GraphQL API
 > If your Shopify connection is leveraging the newer Shopify GraphQL API and you are not running the package via Fivetran Quickstart, refer to the following variables.
 
-The package takes into consideration that not every Shopify connection may have the `collection_rule`, `customer_visit`, `fulfillment_event`, `fulfillment_tracking_info`, `fulfillment_order_line_item`, `metafield`, `discount_code_app`, `product_variant_media` or `abandoned_checkout` tables (including `abandoned_checkout` and `abandoned_checkout_discount_code`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
+The package takes into consideration that not every Shopify connection may have the `collection_rule`, `customer_visit`, `fulfillment_event`, `fulfillment_tracking_info`, `fulfillment_order_line_item`, `metafield`, `discount_code_app`, `product_variant_media`, `return` (including `return_line_item` and `return_shipping_fee`) or `abandoned_checkout` tables (including `abandoned_checkout` and `abandoned_checkout_discount_code`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
 
 ```yml
 # dbt_project.yml
@@ -264,11 +266,12 @@ vars:
     shopify_gql_using_customer_visit: false # TRUE by default
     shopify_gql_using_fulfillment_order_line_item: false # TRUE by default
     shopify_gql_using_metafield: false  # TRUE by default.
-    shopify_gql_using_collection_rule: true # FALSE by default. 
+    shopify_gql_using_collection_rule: true # FALSE by default.
     shopify_gql_using_discount_code_app: true # FALSE by default.
     shopify_gql_using_fulfillment_event: true # FALSE by default.
-    shopify_gql_using_fulfillment_tracking_info: true # FALSE by default.  
+    shopify_gql_using_fulfillment_tracking_info: true # FALSE by default.
     shopify_gql_using_product_variant_media: true # FALSE by default.
+    shopify_gql_using_return: true # FALSE by default. Setting to true will enable `return`, `return_line_item`, and `return_shipping_fee` enriching `shopify_gql__refunds` and `shopify_gql__refund_lines` with respective return details.
 ```
 
 ### Setting your timezone

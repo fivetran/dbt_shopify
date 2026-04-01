@@ -8,6 +8,27 @@ with orders as (
     where not coalesce(is_deleted, false)
 ),
 
+order_refunds as (
+
+    select *
+    from {{ ref('int_shopify_gql__orders_order_refunds') }}
+
+),
+
+refunds as (
+
+    select *
+    from {{ ref('stg_shopify_gql__refund') }}
+
+),
+
+order_adjustments as (
+
+    select *
+    from {{ ref('stg_shopify_gql__order_adjustment') }}
+
+),
+
 order_lines as(
 
     select *
@@ -29,8 +50,6 @@ order_aggregates as (
         sum(coalesce(shipping_cost_shop_amount, 0)) as shipping_cost,
         sum(coalesce(order_adjustment_amount, 0)) as order_adjustment_amount,
         sum(coalesce(order_adjustment_tax_amount, 0)) as order_adjustment_tax_amount,
-        sum(coalesce(refund_subtotal, 0)) as refund_subtotal,
-        sum(coalesce(refund_total_tax, 0)) as refund_total_tax,
         sum(coalesce(total_discounts_shop_amount, 0)) as total_discounts,
         avg(total_discounts_shop_amount) as avg_discount,
         sum(coalesce(shipping_discount_amount, 0)) as shipping_discount_amount,
@@ -42,12 +61,42 @@ order_aggregates as (
         sum(coalesce(count_discount_codes_applied, 0)) as count_discount_codes_applied,
         count(distinct location_id) as count_locations_ordered_from,
         sum(coalesce(case when count_discount_codes_applied > 0 then 1 else 0 end, 0)) as count_orders_with_discounts,
-        sum(coalesce(case when refund_subtotal > 0 then 1 else 0 end, 0)) as count_orders_with_refunds,
         min(created_timestamp) as first_order_timestamp,
-        max(created_timestamp) as last_order_timestamp
+        max(created_timestamp) as last_order_timestamp,
+        sum(gross_sales) as gross_sales,
+        sum(discounts) as discounts
 
     from orders
     group by 1,2
+
+),
+
+refund_aggregates as (
+
+    select
+        source_relation,
+        cast({{ dbt.date_trunc('day', 'created_at') }} as date) as date_day,
+        sum(subtotal) as refund_subtotal,
+        sum(total_tax) as refund_total_tax,
+        count(distinct order_id) as count_orders_with_refunds,
+        sum(case when not is_gift_card then coalesce(subtotal, 0) else 0 end) as refund_subtotal_non_gift_card
+    from order_refunds
+    group by 1, 2
+
+),
+
+refund_discrepancy_aggregates as (
+
+    select
+        refunds.source_relation,
+        cast({{ dbt.date_trunc('day', 'refunds.created_at') }} as date) as date_day,
+        sum(amount_shop) as refund_discrepancy_amount
+    from refunds
+    inner join order_adjustments
+        on refunds.refund_id = order_adjustments.refund_id
+        and refunds.source_relation = order_adjustments.source_relation
+    where lower(order_adjustments.reason) = 'refund_discrepancy'
+    group by 1, 2
 
 ),
 
@@ -61,8 +110,8 @@ order_line_aggregates as (
         sum(coalesce(order_lines.quantity_net_refunds, 0)) as quantity_net,
         sum(coalesce(order_lines.quantity, 0)) / count(distinct order_lines.order_id) as avg_quantity_sold,
         sum(coalesce(order_lines.quantity_net_refunds, 0)) / count(distinct order_lines.order_id) as avg_quantity_net,
-        count(distinct order_lines.variant_id) as count_variants_sold, 
-        count(distinct order_lines.product_id) as count_products_sold, 
+        count(distinct order_lines.variant_id) as count_variants_sold,
+        count(distinct order_lines.product_id) as count_products_sold,
         sum(coalesce(case when order_lines.is_gift_card then order_lines.quantity_net_refunds else 0 end, 0)) as quantity_gift_cards_sold,
         sum(coalesce(case when order_lines.is_shipping_required then order_lines.quantity_net_refunds else 0 end, 0)) as quantity_requiring_shipping
 
@@ -76,8 +125,43 @@ order_line_aggregates as (
 
 final as (
 
-    select 
-        order_aggregates.*,
+    select
+        coalesce(order_aggregates.source_relation, refund_aggregates.source_relation) as source_relation,
+        coalesce(order_aggregates.date_day, refund_aggregates.date_day) as date_day,
+        coalesce(order_aggregates.count_orders, 0) as count_orders,
+        coalesce(order_aggregates.count_line_items, 0) as count_line_items,
+        order_aggregates.avg_line_item_count,
+        coalesce(order_aggregates.count_customers, 0) as count_customers,
+        coalesce(order_aggregates.count_customer_emails, 0) as count_customer_emails,
+        coalesce(order_aggregates.order_adjusted_total, 0) as order_adjusted_total,
+        order_aggregates.avg_order_value,
+        coalesce(order_aggregates.shipping_cost, 0) as shipping_cost,
+        coalesce(order_aggregates.order_adjustment_amount, 0) as order_adjustment_amount,
+        coalesce(order_aggregates.order_adjustment_tax_amount, 0) as order_adjustment_tax_amount,
+        coalesce(order_aggregates.total_discounts, 0) as total_discounts,
+        order_aggregates.avg_discount,
+        coalesce(order_aggregates.shipping_discount_amount, 0) as shipping_discount_amount,
+        order_aggregates.avg_shipping_discount_amount,
+        coalesce(order_aggregates.percentage_calc_discount_amount, 0) as percentage_calc_discount_amount,
+        order_aggregates.avg_percentage_calc_discount_amount,
+        coalesce(order_aggregates.fixed_amount_discount_amount, 0) as fixed_amount_discount_amount,
+        order_aggregates.avg_fixed_amount_discount_amount,
+        coalesce(order_aggregates.count_discount_codes_applied, 0) as count_discount_codes_applied,
+        coalesce(order_aggregates.count_locations_ordered_from, 0) as count_locations_ordered_from,
+        coalesce(order_aggregates.count_orders_with_discounts, 0) as count_orders_with_discounts,
+        order_aggregates.first_order_timestamp,
+        order_aggregates.last_order_timestamp,
+        coalesce(order_aggregates.gross_sales, 0) as gross_sales,
+        coalesce(order_aggregates.discounts, 0) as discounts,
+        coalesce(refund_aggregates.refund_subtotal, 0) as refund_subtotal,
+        coalesce(refund_aggregates.refund_total_tax, 0) as refund_total_tax,
+        coalesce(refund_aggregates.count_orders_with_refunds, 0) as count_orders_with_refunds,
+        coalesce(refund_aggregates.refund_subtotal_non_gift_card, 0)
+            - coalesce(refund_discrepancy_aggregates.refund_discrepancy_amount, 0) as returns,
+        coalesce(order_aggregates.gross_sales, 0)
+            - coalesce(order_aggregates.discounts, 0)
+            - (coalesce(refund_aggregates.refund_subtotal_non_gift_card, 0)
+                - coalesce(refund_discrepancy_aggregates.refund_discrepancy_amount, 0)) as net_sales,
         order_line_aggregates.quantity_sold,
         order_line_aggregates.quantity_refunded,
         order_line_aggregates.quantity_net,
@@ -89,9 +173,15 @@ final as (
         order_line_aggregates.avg_quantity_net
 
     from order_aggregates
+    full outer join refund_aggregates
+        on order_aggregates.date_day = refund_aggregates.date_day
+        and order_aggregates.source_relation = refund_aggregates.source_relation
+    left join refund_discrepancy_aggregates
+        on coalesce(order_aggregates.date_day, refund_aggregates.date_day) = refund_discrepancy_aggregates.date_day
+        and coalesce(order_aggregates.source_relation, refund_aggregates.source_relation) = refund_discrepancy_aggregates.source_relation
     left join order_line_aggregates
-        on order_aggregates.date_day = order_line_aggregates.date_day
-        and order_aggregates.source_relation = order_line_aggregates.source_relation
+        on coalesce(order_aggregates.date_day, refund_aggregates.date_day) = order_line_aggregates.date_day
+        and coalesce(order_aggregates.source_relation, refund_aggregates.source_relation) = order_line_aggregates.source_relation
 )
 
 select *

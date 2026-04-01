@@ -35,6 +35,7 @@ final as (
         total_refunded_set_shop_amount as total_refunded_shop_amount,
         total_refunded_set_shop_currency_code as total_refunded_shop_currency_code,
         {{ shopify.fivetran_convert_timezone(column='cast(created_at as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as created_at,
+        {{ shopify.fivetran_convert_timezone(column='cast(updated_at as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as updated_at,
         {{ shopify.fivetran_convert_timezone(column='cast(_fivetran_synced as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as _fivetran_synced,
         source_relation,
         {{ dbt_utils.generate_surrogate_key(['id', 'source_relation']) }} as unique_key

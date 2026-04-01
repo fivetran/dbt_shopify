@@ -16,7 +16,6 @@ table_variables:
     - discount_code_app
   shopify_using_product_variant_media:
     - product_variant_media
-
   _fivetran_quickstart_customer_address:
     - customer_address
   _fivetran_quickstart_customer_tag:
@@ -71,6 +70,10 @@ table_variables:
     - order_line_tax_line
   shopify_gql_using_refund_line_item:
     - refund_line_item
+  shopify_gql_using_return:
+    - return
+    - return_line_item
+    - return_shipping_fee
   
   shopify_using_all_metafields:
     - metafield
@@ -117,6 +120,8 @@ public_models: [
   "shopify__transactions",
   "shopify__customers",
   "shopify__order_lines",
+  "shopify__refunds",
+  "shopify__refund_lines",
   "shopify__line_item_enhanced",
   "shopify_gql__customer_email_cohorts",
   "shopify_gql__customer_cohorts",
@@ -129,6 +134,8 @@ public_models: [
   "shopify_gql__transactions",
   "shopify_gql__customers",
   "shopify_gql__order_lines",
+  "shopify_gql__refunds",
+  "shopify_gql__refund_lines",
   "shopify_gql__line_item_enhanced"
 ]
 

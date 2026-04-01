@@ -42,7 +42,7 @@
 
         {%- elif id_column == 'order_id' -%}
             {# shopify__orders #}
-            {{ return(20) }}
+            {{ return(24) }}
 
         {%- elif id_column == 'product_id' -%}
             {# shopify__products #}
@@ -55,7 +55,7 @@
 
         {%- elif id_column == 'shop_id' %}
             {# shopify__daily_shop #}
-            {{ return(36 + (3 if var('shopify_using_abandoned_checkout', True) else 0) + (11 if var('shopify_using_fulfillment_event', false) else 0)) }}
+            {{ return(40 + (3 if var('shopify_using_abandoned_checkout', True) else 0) + (11 if var('shopify_using_fulfillment_event', false) else 0)) }}
 
         {%- else -%}
             {# collection - not joined anywhere downstream #}
@@ -70,7 +70,7 @@
 
         {%- elif id_column == 'order_id' -%}
             {# shopify_gql__orders #}
-            {{ return(22) }}
+            {{ return(26) }}
 
         {%- elif id_column == 'product_id' -%}
             {# shopify_gql__products #}
@@ -83,7 +83,7 @@
 
         {%- elif id_column == 'shop_id' %}
             {# shopify_gql__daily_shop #}
-            {{ return(36 + (3 if var('shopify_gql_using_abandoned_checkout', True) else 0) + (10 if var('shopify_gql_using_fulfillment_event', false) else 0)) }}
+            {{ return(40 + (3 if var('shopify_gql_using_abandoned_checkout', True) else 0) + (10 if var('shopify_gql_using_fulfillment_event', false) else 0)) }}
 
         {%- else -%}
             {# collection - not joined anywhere downstream #}
