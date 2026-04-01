@@ -2,11 +2,19 @@
 
 [PR #148](https://github.com/fivetran/dbt_shopify/pull/148) includes the following updates:
 
+
+[PR #152](https://github.com/fivetran/dbt_shopify/pull/152) includes the following updates:
+
+## Schema/Data Changes
+**3 total changes • 3 possible breaking changes**
+
+| Data Model(s) | Change type | Field(s) | Old | New | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `shopify_gql__customer_cohorts`<br>`shopify_gql__customer_email_cohorts`<br>`shopify__customer_email_cohorts` | Data quality | `cohort_month_number`<br>`total_price_lifetime`<br>`order_count_lifetime`<br>`line_item_count_lifetime` | May contain null values on incremental runs | Properly calculated values | `--full-refresh` recommended [PR #152](https://github.com/fivetran/dbt_shopify/pull/152) |
+
+
 ## Bug Fixes
 - Resolves an intermittent Databricks error in `shopify__customer_emails` caused by a non-deterministic `row_number()` window function in `int_shopify__customer_email_rollup`. The ordering now includes `customer_id desc` as a tiebreaker so results are deterministic when multiple customers share the same email and `created_timestamp`. ([#148](https://github.com/fivetran/dbt_shopify/pull/148))
-
-## Under the Hood
-- Adds an integrity test to assert deterministic `customer_index` assignment for customers that share an email and `created_timestamp`.
 
 # dbt_shopify v1.6.0
 
@@ -36,6 +44,16 @@
 ## Contributors
 - [Scott Zakrajsek, Power Digital Marketing](https://powerdigitalmarketing.com) ([PR #147](https://github.com/fivetran/dbt_shopify/pull/147))
 
+# dbt_shopify v1.6.0-a1
+
+[PR #152](https://github.com/fivetran/dbt_shopify/pull/152) includes the following updates:
+
+## Schema/Data Changes
+**3 total changes • 3 possible breaking changes**
+
+| Data Model(s) | Change type | Field(s) | Old | New | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `shopify_gql__customer_cohorts`<br>`shopify_gql__customer_email_cohorts`<br>`shopify__customer_email_cohorts` | Data quality | `cohort_month_number`<br>`total_price_lifetime`<br>`order_count_lifetime`<br>`line_item_count_lifetime` | May contain null values on incremental runs | Properly calculated values | `--full-refresh` recommended |
 
 # dbt_shopify v1.5.2
 
