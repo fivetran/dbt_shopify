@@ -1,3 +1,13 @@
+# dbt_shopify v1.6.1
+
+[PR #148](https://github.com/fivetran/dbt_shopify/pull/148) includes the following updates:
+
+## Bug Fixes
+- Resolves an intermittent Databricks error in `shopify__customer_emails` caused by a non-deterministic `row_number()` window function in `int_shopify__customer_email_rollup`. The ordering now includes `customer_id desc` as a tiebreaker so results are deterministic when multiple customers share the same email and `created_timestamp`. ([#148](https://github.com/fivetran/dbt_shopify/pull/148))
+
+## Under the Hood
+- Adds an integrity test to assert deterministic `customer_index` assignment for customers that share an email and `created_timestamp`.
+
 # dbt_shopify v1.6.0
 
 [PR #147](https://github.com/fivetran/dbt_shopify/pull/147) includes the following updates:
