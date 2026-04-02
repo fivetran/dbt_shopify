@@ -81,11 +81,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-<<<<<<< HEAD
-    version: [">=1.6.0", "<1.7.0"]
-=======
-    version: "1.6.0-a1"
->>>>>>> origin/bug/gql-customer-cohorts
+    version: [">=1.7.0", "<1.8.0"]
 ```
 
 > All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/shopify_source` in your `packages.yml` since this package has been deprecated.
