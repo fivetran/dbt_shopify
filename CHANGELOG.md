@@ -1,6 +1,6 @@
 # dbt_shopify v1.7.0
 
-[PR #154](https://github.com/fivetran/dbt_shopify/pull/154) includes the following updates:
+This release includes the following updates:
 
 ## Schema/Data Changes (--full-refresh required after upgrading)
 **3 total changes • 3 possible breaking changes**
@@ -10,7 +10,7 @@
 | `shopify_gql__customer_cohorts`<br>`shopify_gql__customer_email_cohorts`<br>`shopify__customer_email_cohorts` | Data change | `cohort_month_number`<br>`total_price_lifetime`<br>`order_count_lifetime`<br>`line_item_count_lifetime` | May contain null values on incremental runs | Properly calculated values | [PR #152](https://github.com/fivetran/dbt_shopify/pull/152) |
 
 ## Bug Fix
-- Resolves an intermittent Databricks error in `shopify__customer_emails` and `shopify_gql__customer_emails` caused by a non-deterministic `row_number()` window function in `int_shopify__customer_email_rollup` and `int_shopify_gql__customer_email_rollup`. The ordering now includes `customer_id` as a tiebreaker so results are deterministic when multiple customers share the same email and `created_timestamp`. ([#148](https://github.com/fivetran/dbt_shopify/pull/148))
+- Resolves an intermittent Databricks error in `shopify__customer_emails` and `shopify_gql__customer_emails` caused by a non-deterministic `row_number()` window function in `int_shopify__customer_email_rollup` and `int_shopify_gql__customer_email_rollup`. The ordering now includes `customer_id` as a tiebreaker so results are deterministic when multiple customers share the same email and `created_timestamp`. ([#154](https://github.com/fivetran/dbt_shopify/pull/154))
 
 # dbt_shopify v1.6.0
 
