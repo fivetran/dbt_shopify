@@ -6,7 +6,7 @@ with customers as (
         *,
         row_number() over(
             partition by {{ shopify.shopify_partition_by_cols('email', 'source_relation') }}
-            order by created_timestamp desc) 
+            order by created_timestamp desc, customer_id desc) 
             as customer_index
 
     from {{ ref('stg_shopify__customer') }}
