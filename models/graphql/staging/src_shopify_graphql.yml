@@ -1561,7 +1561,7 @@ sources:
           - name: applies_once_per_customer
             description: Whether a customer can only use the discount once.
           - name: async_usage_count
-            description: The number of times the discount has been used, updated asynchronously.
+            description: (DEPRECATED) The number of times the discount has been used, updated asynchronously. This field now returns null following a connector update and will be removed in a future release.
           - name: usage_limit
             description: The maximum number of times the discount can be used across all customers.
           - name: codes_count_count
@@ -1608,7 +1608,7 @@ sources:
           - name: applies_once_per_customer
             description: Whether a customer can only use the discount once.
           - name: async_usage_count
-            description: The number of times the discount has been used, updated asynchronously.
+            description: (DEPRECATED) The number of times the discount has been used, updated asynchronously. This field now returns null following a connector update and will be removed in a future release.
           - name: usage_limit
             description: The maximum number of times the discount can be used.
           - name: codes_count
@@ -1652,7 +1652,7 @@ sources:
           - name: applies_once_per_customer
             description: Whether a customer can only use the discount once.
           - name: async_usage_count
-            description: The number of times the discount has been used, updated asynchronously.
+            description: (DEPRECATED) The number of times the discount has been used, updated asynchronously. This field now returns null following a connector update and will be removed in a future release.
           - name: usage_limit
             description: The maximum number of times the discount can be used across all customers.
           - name: codes_count
@@ -1698,7 +1698,7 @@ sources:
           - name: applies_once_per_customer
             description: Whether a customer can only use the discount once.
           - name: async_usage_count
-            description: The number of times the discount has been used, updated asynchronously.
+            description: (DEPRECATED) The number of times the discount has been used, updated asynchronously. This field now returns null following a connector update and will be removed in a future release.
           - name: usage_limit
             description: The maximum number of times the discount can be used across all customers.
           - name: codes_count
@@ -1729,8 +1729,7 @@ sources:
           - name: id
             description: The unique ID of the redeem code.
           - name: async_usage_count
-            description: >
-              The number of times that the redeem code has been used. This value is updated asynchronously and may not match real-time usage counts.
+            description: (DEPRECATED) The number of times that the redeem code has been used. This field now returns null following a connector update and will be removed in a future release.
           - name: code
             description: The redeemable code that a customer can enter at checkout (e.g., `SUMMER20`).
           - name: created_by_description
