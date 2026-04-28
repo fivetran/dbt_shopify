@@ -129,8 +129,8 @@ models:
   +persist_docs:
     relation: true
     columns: "{{ false if target.type in ('databricks') else true }}"
-  # +schema: "{{ 'shopify_integration_tests_sqlw' if target.name == 'databricks-sql' else 'shopify' }}"
-  +schema: "shopify_{{ var('directed_schema','dev') }}" ## To be used for validation tests
+  +schema: "{{ 'shopify_integration_tests_sqlw' if target.name == 'databricks-sql' else 'shopify' }}"
+  # +schema: "shopify_{{ var('directed_schema','dev') }}" ## To be used for validation tests
 
 seeds:
   shopify_integration_tests:
