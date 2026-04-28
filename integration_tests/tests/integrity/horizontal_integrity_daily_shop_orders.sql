@@ -32,19 +32,21 @@ daily_shop_metrics as (
 
     select 
         source_relation,
+        shop_id,
         date_day,
         sum(count_orders) as count_orders,
         sum(order_adjusted_total) as order_adjusted_total
 
     from daily_shop
     where date_day >= '2020-01-01' and date_day < '2024-06-10'
-    group by 1,2
+    group by 1,2,3
 ),
 
 final as (
 
     select
         daily_shop_metrics.source_relation,
+        daily_shop_metrics.date_day,
         coalesce(daily_shop_metrics.count_orders, 0) as daily_shop_count_orders,
         coalesce(order_metrics.count_orders, 0) as order_count_orders,
         coalesce(daily_shop_metrics.order_adjusted_total, 0) as daily_shop_order_adjusted_total,

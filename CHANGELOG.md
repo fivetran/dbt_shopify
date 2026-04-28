@@ -1,14 +1,25 @@
 # dbt_shopify v1.8.0
 
-## Schema/Data Change
-**4 total changes • 4 possible breaking changes**
+## Schema/Data Changes
+**3 total changes • 3 possible breaking changes**
 
 | Data Model(s) | Change type | Old | New | Notes |
 | ------------- | ----------- | --- | --- | ----- |
 | `shopify__order_lines` | Removed columns | `variant_fulfillment_service`<br>`variant_grams`<br>`variant_weight`<br>`variant_weight_unit`<br>`variant_option_1`<br>`variant_option_2`<br>`variant_option_3` | | Completes deprecation of `product_variant` source, [which was removed in earlier Shopify connector updates](https://fivetran.com/docs/connectors/applications/shopify/changelog#january2025). |
 | `shopify__inventory_levels` | Removed columns | `variant_fulfillment_service`<br>`variant_inventory_management`<br>`variant_grams`<br>`variant_weight`<br>`variant_weight_unit`<br>`variant_option_1`<br>`variant_option_2`<br>`variant_option_3` | | Columns sourced from deprecated `product_variant` source, [removed in earlier Shopify connector updates](https://fivetran.com/docs/connectors/applications/shopify/changelog#january2025). |
-| `stg_shopify__product_variant` | Removed columns | `fulfillment_service`<br>`grams`<br>`inventory_management`<br>`old_inventory_quantity`<br>`weight`<br>`weight_unit`<br>`option_1`<br>`option_2`<br>`option_3` |  | Completes deprecation of `product_variant` source, [removed in earlier Shopify connector updates](https://fivetran.com/docs/connectors/applications/shopify/changelog#january2025). |
-| `stg_shopify__inventory_level` | Removed column | `available_quantity` | | Deprecated `inventory_level` source column removed from the package. |
+| `shopify__daily_shop`<br>`shopify_gql__daily_shop` | Data changes | Order metrics may be inflated | Order metrics now correctly calculated | Soft-deleted staging shop records filtered out, which previously could incorrectly inflate metrics. |
+
+<details><summary> <i>dbt Core/Additional Details</i> </summary>
+
+**3 total changes • 2 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| `stg_shopify__product_variant` | Removed columns | `fulfillment_service`<br>`grams`<br>`inventory_management`<br>`old_inventory_quantity`<br>`weight`<br>`weight_unit`<br>`option_1`<br>`option_2`<br>`option_3` |  | **Breaking change** Completes deprecation of `product_variant` source, [removed in earlier Shopify connector updates](https://fivetran.com/docs/connectors/applications/shopify/changelog#january2025). |
+| `stg_shopify__inventory_level` | Removed column | `available_quantity` | | **Breaking change** Completes deprecation of field, [removed in earlier Shopify connector updates](https://fivetran.com/docs/connectors/applications/shopify/changelog#january2025) |
+| `stg_shopify__shop`<br>`stg_shopify__gql_shop` | Data change (bug fix) | Keeps in soft deleted records. | Soft deleted records filtered out. | Ensures there is no metric inflation in downstream shop models. |
+</details>
+<br>
 
 ## Documentation
 - Adds deprecation notes to fields no longer supported by the connector. These fields now return null and will be removed in a future release.
