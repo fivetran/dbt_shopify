@@ -1,5 +1,7 @@
 # dbt_shopify v1.8.0
 
+[PR #155](https://github.com/fivetran/dbt_shopify/pull/155) includes the following updates:
+
 ## Schema/Data Changes
 **3 total changes • 3 possible breaking changes**
 
