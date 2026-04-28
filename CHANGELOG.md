@@ -6,12 +6,12 @@
 | Data Model(s) | Change type | Old | New | Notes |
 | ------------- | ----------- | --- | --- | ----- |
 | `shopify__order_lines` | Removed columns | `variant_fulfillment_service`<br>`variant_grams`<br>`variant_weight`<br>`variant_weight_unit`<br>`variant_option_1`<br>`variant_option_2`<br>`variant_option_3` | | Completes deprecation of `product_variant` source, [which was removed in earlier Shopify connector updates](https://fivetran.com/docs/connectors/applications/shopify/changelog#january2025). |
-| `shopify__inventory_levels` | Removed columns | `variant_fulfillment_service`<br>`variant_inventory_management`<br>`variant_grams`<br>`variant_weight`<br>`variant_weight_unit`<br>`variant_option_1`<br>`variant_option_2`<br>`variant_option_3` | | Columns sourced from deprecated `product_variant` source, [removed in earlier Shopify connector updates](https://fivetran.com/docs/connectors/applications/shopify/changelog#january2025) |
+| `shopify__inventory_levels` | Removed columns | `variant_fulfillment_service`<br>`variant_inventory_management`<br>`variant_grams`<br>`variant_weight`<br>`variant_weight_unit`<br>`variant_option_1`<br>`variant_option_2`<br>`variant_option_3` | | Columns sourced from deprecated `product_variant` source, [removed in earlier Shopify connector updates](https://fivetran.com/docs/connectors/applications/shopify/changelog#january2025). |
 | `stg_shopify__product_variant` | Removed columns | `fulfillment_service`<br>`grams`<br>`inventory_management`<br>`old_inventory_quantity`<br>`weight`<br>`weight_unit`<br>`option_1`<br>`option_2`<br>`option_3` |  | Completes deprecation of `product_variant` source, [removed in earlier Shopify connector updates](https://fivetran.com/docs/connectors/applications/shopify/changelog#january2025). |
 | `stg_shopify__inventory_level` | Removed column | `available_quantity` | | Deprecated `inventory_level` source column removed from the package. |
 
 ## Documentation
-- Adds deprecation notes to fields no longer supported by the connector. These fields now return null and will be removed in a future release.    
+- Adds deprecation notes to fields no longer supported by the connector. These fields now return null and will be removed in a future release.
 
 # dbt_shopify v1.7.0
 
