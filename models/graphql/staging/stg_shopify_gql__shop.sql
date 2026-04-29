@@ -78,3 +78,4 @@ final as (
 
 select *
 from final
+where not coalesce(is_deleted, false)

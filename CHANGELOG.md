@@ -1,3 +1,18 @@
+# dbt_shopify v1.8.0
+
+[PR #155](https://github.com/fivetran/dbt_shopify/pull/155) includes the following updates:
+
+## Schema/Data Changes
+**5 total changes • 5 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| `shopify__order_lines` | Sunset columns | `variant_fulfillment_service`<br>`variant_grams`<br>`variant_weight`<br>`variant_weight_unit`<br>`variant_option_1`<br>`variant_option_2`<br>`variant_option_3` | | [Completes sunset of deprecated fields from January updates](https://fivetran.com/docs/connectors/applications/shopify/changelog#january2025). |
+| `shopify__inventory_levels` | Sunset columns | `variant_fulfillment_service`<br>`variant_inventory_management`<br>`variant_grams`<br>`variant_weight`<br>`variant_weight_unit`<br>`variant_option_1`<br>`variant_option_2`<br>`variant_option_3` | | [Completes sunset of deprecated fields from January updates](https://fivetran.com/docs/connectors/applications/shopify/changelog#january2025). |
+| `shopify__daily_shop`<br>`shopify_gql__daily_shop` | Data changes | Order metrics may be inflated | Order metrics now correctly calculated | Soft-deleted staging shop records are now filtered out, which previously could have incorrectly inflated metrics. |
+| `shopify__order_lines` | Deprecated columns | `pre_tax_price`<br>`pre_tax_price_set` | | These fields now return null and will be sunset in a future release. |
+| `shopify__products` | Deprecated column | `published_scope` | | This field now returns null and will be sunset in a future release. |
+
 # dbt_shopify v1.7.0
 
 This release includes the following updates:

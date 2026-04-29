@@ -830,7 +830,7 @@ models:
         tests:
           - not_null
       - name: async_usage_count
-        description: The number of times that the redeem code has been used. This is updated asynchronously and may differ from real-time usage.
+        description: (DEPRECATED) The number of times that the redeem code has been used. This field now returns null following a connector update and will be removed in a future release.
       - name: code
         description: The redeemable code that a customer can enter at checkout (e.g., `SUMMER20`).
       - name: created_by_description

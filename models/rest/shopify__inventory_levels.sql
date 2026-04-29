@@ -62,19 +62,11 @@ inventory_quantity_aggregated as (
         {% set inventory_states = var('shopify_inventory_states', ['incoming', 'on_hand', 'available', 'committed', 'reserved', 'damaged', 'safety_stock', 'quality_control']) -%}
         {% for inventory_state in inventory_states -%}
             , sum(case when lower(inventory_state_name) = {{ "'" ~ inventory_state|lower ~ "'" }}
-                {% if inventory_state|lower == 'available ' -%}
-                then coalesce(inventory_quantity.quantity, inventory_level.available_quantity)
-                {% else -%}
                 then inventory_quantity.quantity
-                {% endif -%}
                 end) as {{ inventory_state }}_quantity
         {% endfor -%}
 
     from inventory_quantity
-    left join inventory_level
-        on inventory_quantity.inventory_item_id = inventory_level.inventory_item_id
-        and inventory_quantity.inventory_level_id = inventory_level.inventory_level_id
-        and inventory_quantity.source_relation = inventory_level.source_relation
     group by 1,2,3
 ),
 
@@ -137,17 +129,9 @@ joined_info as (
         product_variant_media.media_id as variant_media_id,
         {% endif %}
 
-        product_variant.fulfillment_service as variant_fulfillment_service,
-        product_variant.inventory_management as variant_inventory_management,
         product_variant.is_taxable as is_variant_taxable,
         product_variant.barcode as variant_barcode,
-        product_variant.grams as variant_grams, 
         product_variant.inventory_quantity as variant_inventory_quantity,
-        product_variant.weight as variant_weight,
-        product_variant.weight_unit as variant_weight_unit,
-        product_variant.option_1 as variant_option_1,
-        product_variant.option_2 as variant_option_2,
-        product_variant.option_3 as variant_option_3,
         product_variant.tax_code as variant_tax_code,
         product_variant.created_timestamp as variant_created_at,
         product_variant.updated_timestamp as variant_updated_at,

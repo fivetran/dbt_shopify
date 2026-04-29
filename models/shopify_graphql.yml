@@ -663,7 +663,7 @@ models:
       - name: index
         description: The index associated with the order.
       - name: pre_tax_price
-        description: The total pre tax price of the order.
+        description: The total pre tax price of the order. On the GraphQL path, this is computed as `price_shop_amount - order_line_tax` rather than sourced directly from the connector. Note that the equivalent REST field is deprecated and returns null.
       - name: weight_unit
         description: The unit of measurement for the weight of a single item (e.g., grams, ounces).
       - name: weight_value
