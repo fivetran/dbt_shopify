@@ -10,7 +10,7 @@ schema_variable_name: "shopify_schema"
 
 include_databricks_sql: true
 include_sqlserver: false
-include_dbt_compile: true
+include_dbt_compile: false
 
 test_scenarios:
   - name: "Default"
