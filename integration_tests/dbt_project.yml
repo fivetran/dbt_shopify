@@ -107,7 +107,7 @@ vars:
     shopify_gql_tender_transaction_identifier: "shopify_gql_tender_transaction_data"
     shopify_gql_transaction_identifier: "shopify_gql_transaction_data"
     shopify_gql_abandoned_checkout_discount_code_identifier: "shopify_gql_abandoned_checkout_discount_code_data"
-    shopify_gql_order_discount_code_identifier: "shopify_gql_order_discount_code_data"
+    # shopify_gql_order_discount_code_identifier: "shopify_gql_order_discount_code_data"
     shopify_gql_fulfillment_event_identifier: "shopify_gql_fulfillment_event_data"
     shopify_gql_tax_line_identifier: "shopify_gql_tax_line_data"
     shopify_gql_order_line_tax_line_identifier: "shopify_gql_order_line_tax_line_data"
