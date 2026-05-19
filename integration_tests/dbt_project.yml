@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '1.8.0'
+version: '1.8.1'
 profile: 'integration_tests'
 config-version: 2
 
@@ -107,7 +107,7 @@ vars:
     shopify_gql_tender_transaction_identifier: "shopify_gql_tender_transaction_data"
     shopify_gql_transaction_identifier: "shopify_gql_transaction_data"
     shopify_gql_abandoned_checkout_discount_code_identifier: "shopify_gql_abandoned_checkout_discount_code_data"
-    # shopify_gql_order_discount_code_identifier: "shopify_gql_order_discount_code_data"
+    shopify_gql_order_discount_code_identifier: "shopify_gql_order_discount_code_data"
     shopify_gql_fulfillment_event_identifier: "shopify_gql_fulfillment_event_data"
     shopify_gql_tax_line_identifier: "shopify_gql_tax_line_data"
     shopify_gql_order_line_tax_line_identifier: "shopify_gql_order_line_tax_line_data"

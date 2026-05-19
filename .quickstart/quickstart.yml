@@ -50,7 +50,7 @@ table_variables:
     - order_url_tag
   _fivetran_quickstart_product_tag:
     - product_tag
-  _fivetran_tax_line:
+  _fivetran_quickstart_tax_line:
     - tax_line
 
   shopify_gql_using_abandoned_checkout:
