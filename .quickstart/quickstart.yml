@@ -32,18 +32,26 @@ table_variables:
     - discount_redeem_code
   _fivetran_quickstart_fulfillment:
     - fulfillment
+  _fivetran_quickstart_location:
+    - location
   _fivetran_quickstart_media:
     - media
   _fivetran_quickstart_media_image:
     - media_image
+  _fivetran_quickstart_order_discount_code:
+    - order_discount_code
   _fivetran_quickstart_order_note_attribute:
     - order_note_attribute
+  _fivetran_quickstart_order_shipping_tax_line:
+    - order_shipping_tax_line
   _fivetran_quickstart_order_tag:
     - order_tag
   _fivetran_quickstart_order_url_tag:
     - order_url_tag
   _fivetran_quickstart_product_tag:
     - product_tag
+  _fivetran_quickstart_tax_line:
+    - tax_line
 
   shopify_gql_using_abandoned_checkout:
     - abandoned_checkout

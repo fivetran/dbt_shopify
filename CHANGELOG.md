@@ -1,3 +1,15 @@
+# dbt_shopify v1.8.1
+
+[PR #157](https://github.com/fivetran/dbt_shopify/pull/157) includes the following update:
+
+## Quickstart Update
+- Adds `table_variables` for the following sources to prevent missing sources from blocking downstream Quickstart models:
+  - `location`
+  - `order_discount_code`
+  - `order_shipping_tax_line`
+  - `tax_line`
+
+
 # dbt_shopify v1.8.0
 
 [PR #155](https://github.com/fivetran/dbt_shopify/pull/155) includes the following updates:
