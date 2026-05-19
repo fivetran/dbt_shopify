@@ -43,7 +43,7 @@ table_variables:
   _fivetran_quickstart_order_note_attribute:
     - order_note_attribute
   _fivetran_quickstart_order_shipping_tax_line:
-    - shopify_order_shipping_tax_line
+    - order_shipping_tax_line
   _fivetran_quickstart_order_tag:
     - order_tag
   _fivetran_quickstart_order_url_tag:
