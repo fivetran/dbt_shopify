@@ -47,7 +47,10 @@ final as (
         {{ shopify.fivetran_convert_timezone(column='cast(_fivetran_synced as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as _fivetran_synced,
         source_relation,
         {{ dbt_utils.generate_surrogate_key(['id', 'source_relation']) }} as unique_key,
-        row_number() over ({{ shopify.shopify_partition_by_cols('order_id', 'source_relation') }} order by occurred_at desc) = 1 as is_most_recent_order_visit
+        row_number() over (
+            partition by {{ shopify.shopify_partition_by_cols('order_id', 'source_relation') }}
+            order by occurred_at desc
+            ) = 1 as is_most_recent_order_visit
 
     from fields
 )
