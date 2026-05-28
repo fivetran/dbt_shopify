@@ -25,8 +25,8 @@ fields as (
 ),
 
 final as (
-    
-    select 
+
+    select
         id as customer_visit_id,
         order_id,
         type,
@@ -46,7 +46,8 @@ final as (
         {{ shopify.fivetran_convert_timezone(column='cast(occurred_at as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as occurred_at,
         {{ shopify.fivetran_convert_timezone(column='cast(_fivetran_synced as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as _fivetran_synced,
         source_relation,
-        {{ dbt_utils.generate_surrogate_key(['id', 'source_relation']) }} as unique_key
+        {{ dbt_utils.generate_surrogate_key(['id', 'source_relation']) }} as unique_key,
+        row_number() over ({{ shopify.shopify_partition_by_cols('order_id', 'source_relation') }} order by occurred_at desc) = 1 as is_most_recent_order_visit
 
     from fields
 )

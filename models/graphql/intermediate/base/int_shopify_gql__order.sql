@@ -11,6 +11,7 @@ with orders as (
     
     select * 
     from {{ ref('stg_shopify_gql__customer_visit') }}
+    where is_most_recent_order_visit
 ),
 
 joined as (
