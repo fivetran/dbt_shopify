@@ -25,8 +25,14 @@ tax_line_aggregated as (
 {% if var('shopify_gql_using_fulfillment_order_line_item', True) %}
 fulfillment_order_line_item as (
 
-    select *
+    select
+        order_line_item_id,
+        source_relation,
+        sum(remaining_quantity) as remaining_quantity,
+        max(weight_unit) as weight_unit,
+        max(weight_value) as weight_value
     from {{ ref('stg_shopify_gql__fulfillment_order_line_item') }}
+    group by 1, 2
 ),
 {% endif %}
 
