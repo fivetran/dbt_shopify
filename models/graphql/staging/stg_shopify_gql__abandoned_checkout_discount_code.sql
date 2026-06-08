@@ -16,10 +16,7 @@ fields as (
             )
         }}
 
-        {{ fivetran_utils.source_relation(
-            union_schema_variable='shopify_union_schemas', 
-            union_database_variable='shopify_union_databases') 
-        }}
+        {{ fivetran_utils.apply_source_relation(package_name='shopify') }}
 
     from base
 
@@ -32,7 +29,7 @@ final as (
         upper(code) as code,
         {{ shopify.fivetran_convert_timezone(column='cast(_fivetran_synced as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as _fivetran_synced,
         source_relation, 
-        row_number() over(partition by checkout_id, upper(code), source_relation order by index desc) as index,
+        row_number() over(partition by checkout_id, upper(code) {{ fivetran_utils.partition_by_source_relation(package_name='shopify') }} order by index desc) as index,
         {{ dbt_utils.generate_surrogate_key(['checkout_id', 'code', 'source_relation']) }} as unique_key
 
     from fields
