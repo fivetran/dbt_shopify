@@ -157,7 +157,7 @@ with orders as (
     select 
         *,
         row_number() over (
-            partition by {{ shopify.shopify_partition_by_cols('customer_id', 'source_relation') }}
+            partition by customer_id {{ fivetran_utils.partition_by_source_relation(package_name='shopify') }}
             order by created_timestamp) 
             as customer_order_seq_number
     from joined

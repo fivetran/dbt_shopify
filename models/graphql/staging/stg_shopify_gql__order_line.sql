@@ -15,10 +15,7 @@ fields as (
                 staging_columns=get_graphql_order_line_columns()
             )
         }}
-        {{ fivetran_utils.source_relation(
-            union_schema_variable='shopify_union_schemas', 
-            union_database_variable='shopify_union_databases') 
-        }}
+        {{ fivetran_utils.apply_source_relation(package_name='shopify') }}
     from base
 ),
 
@@ -26,7 +23,7 @@ final as (
     
     select 
         id as order_line_id,
-        row_number() over(partition by order_id, source_relation order by id asc) as index,
+        row_number() over(partition by order_id {{ fivetran_utils.partition_by_source_relation(package_name='shopify') }} order by id asc) as index,
         name,
         order_id,
         case 
