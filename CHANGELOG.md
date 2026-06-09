@@ -3,7 +3,7 @@
 [PR #158](https://github.com/fivetran/dbt_shopify/pull/158) includes the following update:
 
 ## Bug Fix
-- Fixes duplicate `order_line_id` values in `shopify_gql__order_lines` caused by order lines that belong to multiple fulfillment orders. `int_shopify_gql__order_line` now aggregates `stg_shopify_gql__fulfillment_order_line_item` to the order line grain before joining, so `fulfillable_quantity` correctly reflects the total remaining quantity across all fulfillment orders rather than producing duplicate rows.
+- Fixes duplicate `order_line_id` values in `shopify_gql__order_lines` caused by order lines that belong to multiple fulfillment orders. 
 
 # dbt_shopify v1.8.2-a1
 
