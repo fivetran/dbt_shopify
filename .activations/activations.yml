@@ -1,0 +1,155 @@
+activations:
+
+  past_purchasers:
+    model: shopify_gql__past_purchasers
+    description: >
+      Customer-grain audience built from Shopify purchase history for re-engagement,
+      win-back, and lookalike campaigns.
+
+    required_variables:
+      shopify_api_override: graphql
+
+    # Fields used to match audience members to identities in destination platforms
+    identity_fields:
+      - email
+      - phone
+      - first_name
+      - last_name
+      - default_address_city
+      - default_address_province
+      - default_address_zip
+      - default_address_country_code
+
+    # Fields exposed for building audience filter rules in the Activations UI
+    segment_fields:
+      - field: days_since_last_purchase
+        type: integer
+        description: "Days since the customer last placed an order."
+      - field: lifetime_count_orders
+        type: integer
+        description: "Total number of orders placed by the customer."
+      - field: lifetime_total_net
+        type: float
+        description: "Total revenue net of refunds across all orders."
+      - field: avg_order_value
+        type: float
+        description: "Mean spend per order."
+      - field: lifetime_total_discount
+        type: float
+        description: "Total discount value applied across all orders."
+      - field: lifetime_abandoned_checkouts
+        type: integer
+        description: "Number of abandoned checkouts. Requires shopify_gql_using_abandoned_checkout=true."
+      - field: is_email_marketing_opted_in
+        type: boolean
+        description: "Whether the customer has opted in to email marketing."
+      - field: customer_tags
+        type: string
+        description: "Comma-separated Shopify customer tags."
+      - field: most_recent_order_timestamp
+        type: timestamp
+        description: "Timestamp of the customer's most recent order."
+      - field: first_order_timestamp
+        type: timestamp
+        description: "Timestamp of the customer's first order."
+      - field: default_address_country_code
+        type: string
+        description: "Two-letter ISO country code for geo targeting."
+
+  customer_lifecycle:
+    model: shopify_gql__customer_lifecycle
+    description: >
+      Customer-grain model tagged by lifecycle stage (new, active, vip, lapsed) using
+      LTV and last-order recency. Designed to trigger journey automations in Braze,
+      Iterable, Klaviyo, and Marketo directly from warehouse truth.
+
+    required_variables:
+      shopify_api_override: graphql
+
+    # Fields used to resolve identity in destination platforms
+    identity_fields:
+      - email
+      - phone
+      - first_name
+      - last_name
+
+    # Fields exposed for journey trigger rules and audience segmentation
+    segment_fields:
+      - field: customer_stage
+        type: string
+        description: "Lifecycle stage: new, active, vip, or lapsed. Primary field for triggering journeys."
+      - field: days_since_last_purchase
+        type: integer
+        description: "Days since the customer last placed an order."
+      - field: days_since_first_purchase
+        type: integer
+        description: "Days since the customer's first order (tenure)."
+      - field: lifetime_count_orders
+        type: integer
+        description: "Total number of orders placed."
+      - field: lifetime_total_net
+        type: float
+        description: "Net lifetime value (spent minus refunded)."
+      - field: avg_order_value
+        type: float
+        description: "Mean spend per order."
+      - field: lifetime_total_discount
+        type: float
+        description: "Total discount value applied across all orders."
+      - field: marketing_consent_state
+        type: string
+        description: "Email marketing consent status from Shopify."
+      - field: customer_tags
+        type: string
+        description: "Comma-separated Shopify customer tags."
+
+  customer_category_affinity:
+    model: shopify_gql__customer_category_affinity
+    description: >
+      Email-grain model showing which Shopify product types and vendors each customer
+      has purchased. Powers "bought category A, not B" cross-sell audiences for
+      Meta Ads, Google Ads, and Pinterest Ads without writing SQL.
+
+    required_variables:
+      shopify_api_override: graphql
+
+    # Fields used to resolve identity in destination platforms
+    identity_fields:
+      - email
+      - phone
+      - first_name
+      - last_name
+
+    # Fields exposed for audience filter rules in the Activations UI
+    # Primary pattern: purchased_product_types CONTAINS 'X' AND NOT CONTAINS 'Y'
+    segment_fields:
+      - field: purchased_product_types
+        type: string
+        description: "Comma-separated list of every Shopify product type the customer has bought. Use CONTAINS / NOT CONTAINS to build cross-sell segments."
+      - field: purchased_vendors
+        type: string
+        description: "Comma-separated list of every vendor the customer has bought from."
+      - field: total_distinct_product_types
+        type: integer
+        description: "Number of distinct product categories purchased. 1 = single-category buyer; 3+ = broad buyer."
+      - field: top_product_type
+        type: string
+        description: "The product type with the most orders for this customer."
+      - field: last_purchased_product_type
+        type: string
+        description: "Product type from the customer's most recent order."
+      - field: last_purchased_vendor
+        type: string
+        description: "Vendor from the customer's most recent order."
+      - field: days_since_last_purchase
+        type: integer
+        description: "Days since the customer last placed an order."
+      - field: total_orders
+        type: integer
+        description: "Total number of orders placed."
+      - field: lifetime_total_net
+        type: float
+        description: "Net lifetime value (spent minus refunded)."
+      - field: avg_order_value
+        type: float
+        description: "Mean spend per order."

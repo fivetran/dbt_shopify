@@ -21,10 +21,14 @@ customer_default_address as (
 
 joined as (
 
-    select 
+    select
         customer.*,
-        customer_default_address.customer_address_id as default_address_id
-        {# QUESTION: maybe add other fields that are helpful (would be new)? #}
+        customer_default_address.customer_address_id as default_address_id,
+        customer_default_address.city as default_address_city,
+        customer_default_address.country as default_address_country,
+        customer_default_address.country_code as default_address_country_code,
+        customer_default_address.province as default_address_province,
+        customer_default_address.zip as default_address_zip
     
     from customer 
     left join customer_default_address

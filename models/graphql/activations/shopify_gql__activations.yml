@@ -1,0 +1,89 @@
+version: 2
+
+models:
+  - name: shopify_gql__customer_category_affinity
+    description: >
+      Email-grain model summarizing what each customer has bought, using order lines joined to products. It rolls up purchased product types, vendors, and titles into delimited lists, plus distinct-category counts, top category, and most-recent category.
+      Solves for: "bought A, not B" cross-sell and upsell audiences, which normally require joining three raw tables. This pre-flattens that into filterable string and count fields.
+      How to use: sync to Meta, Google, Pinterest. Filter purchased_product_types CONTAINS 'Jeans' AND NOT CONTAINS 'Sneakers' for cross-sell, total_distinct_product_types = 1 for single-category buyers ripe for expansion, or >= 3 for broad buyers worth a loyalty push.
+    columns:
+      - name: email
+      - name: first_name
+      - name: last_name
+      - name: phone
+      - name: purchased_product_types
+      - name: purchased_vendors
+      - name: total_distinct_product_types
+      - name: total_distinct_vendors
+      - name: top_product_type
+      - name: last_purchased_product_type
+      - name: last_purchased_vendor
+      - name: total_orders
+      - name: total_units_purchased
+      - name: total_gross_revenue
+      - name: lifetime_total_net
+      - name: avg_order_value
+      - name: lifetime_count_orders
+      - name: most_recent_order_timestamp
+      - name: first_order_timestamp
+      - name: days_since_last_purchase
+      - name: customer_id
+      - name: source_relation
+
+  - name: shopify_gql__customer_lifecycle
+    description: >
+      Email-grain model that assigns each buyer a single customer_stage (VIP, new, active, lapsed) from LTV, order count, and recency, alongside value signals and marketing_consent_state.
+      Solves for: turning raw purchase data into a marketer-readable segment so non-SQL users can target a stage.
+      How to use: sync to marketing automation (Braze, Iterable, Klaviyo, Marketo) and trigger journeys per stage: win-back for lapsed, onboarding for new, rewards for VIP. The consent field lets you respect opt-in status at sync time. Same model also works as ad-network audiences when you want stage-based targeting or suppression.
+    columns:
+      - name: email
+      - name: first_name
+      - name: last_name
+      - name: phone
+      - name: customer_stage
+      - name: days_since_last_purchase
+      - name: days_since_first_purchase
+      - name: first_order_timestamp
+      - name: most_recent_order_timestamp
+      - name: lifetime_count_orders
+      - name: lifetime_total_net
+      - name: avg_order_value
+      - name: lifetime_total_discount
+      - name: lifetime_abandoned_checkouts
+      - name: marketing_consent_state
+      - name: customer_tags
+      - name: customer_created_at
+      - name: customer_id
+      - name: source_relation
+
+  - name: shopify_gql__past_purchasers
+    description: >
+      One row per customer keyed on email, combining the Shopify customer record with aggregated order history (total orders, first/last purchase, days since last purchase, lifetime spend, refunds, AOV) plus identity, location, and tags.
+      Solves for: a clean, deduplicated purchaser list with a stable match key (email) and the recency/value fields needed to slice it.
+      How to use: this is your suppression and seed base. Sync to Meta, Google, Pinterest as a customer list to either exclude past purchasers from prospecting or include them for loyalty/retargeting. The location and lifetime fields also let you build geo or high-spender lookalike seeds without extra modeling.
+    columns:
+      - name: email
+      - name: first_name
+      - name: last_name
+      - name: phone
+      - name: default_address_city
+      - name: default_address_country
+      - name: default_address_country_code
+      - name: default_address_province
+      - name: default_address_zip
+      - name: first_order_timestamp
+      - name: most_recent_order_timestamp
+      - name: days_since_last_purchase
+      - name: lifetime_count_orders
+      - name: lifetime_total_spent
+      - name: lifetime_total_refunded
+      - name: lifetime_total_net
+      - name: avg_order_value
+      - name: lifetime_total_discount
+      - name: lifetime_abandoned_checkouts
+      - name: is_email_marketing_opted_in
+      - name: account_state
+      - name: customer_tags
+      - name: order_names
+      - name: customer_id
+      - name: source_relation
