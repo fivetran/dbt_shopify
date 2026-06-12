@@ -10,8 +10,8 @@ sources:
       - name: order
         description: Each record represents an order in Shopify.
         identifier: >
-          {% if target.type == 'snowflake' %}{{ var('shopify_gql_order_identifier', '"ORDER"') }}
-          {%- else %}{{ var('shopify_gql_order_identifier', 'order') }}{% endif %}
+          {% if target.type == 'snowflake' %}{{ var('shopify_graphql_order_identifier', '"ORDER"') }}
+          {%- else %}{{ var('shopify_graphql_order_identifier', 'order') }}{% endif %}
         quoting:
           identifier: "{{ false if target.type == 'snowflake' else true }}"
         columns:
@@ -189,7 +189,7 @@ sources:
             description: Whether the order is confirmed.
       
       - name: customer
-        identifier: "{{ var('shopify_gql_customer_identifier', 'customer') }}"
+        identifier: "{{ var('shopify_graphql_customer_identifier', 'customer') }}"
         description: Each record represents a customer in Shopify.
         columns:
           - name: _fivetran_synced
@@ -230,7 +230,7 @@ sources:
             description: The three-letter code (ISO 4217 format) for the currency that the customer used when they paid for their last order. Defaults to the shop currency. Returns the shop currency for test orders.
       
       - name: order_line
-        identifier: "{{ var('shopify_gql_order_line_identifier', 'order_line') }}"
+        identifier: "{{ var('shopify_graphql_order_line_identifier', 'order_line') }}"
         description: Each record represents a line item for an order in Shopify.
         columns:
           - name: _fivetran_synced
@@ -281,7 +281,7 @@ sources:
             description: The title of the product variant.
 
       - name: order_line_refund # applies to Shopify connections created before November 2025
-        identifier: "{{ var('shopify_gql_order_line_refund_identifier', 'order_line_refund') }}"
+        identifier: "{{ var('shopify_graphql_order_line_refund_identifier', 'order_line_refund') }}"
         description: Each record represents a line item refund in Shopify.
         columns:
           - name: _fivetran_synced
@@ -316,7 +316,7 @@ sources:
             description: How this refund line item affects inventory levels.
 
       - name: refund_line_item # applies to Shopify connections created after November 2025
-        identifier: "{{ var('shopify_gql_refund_line_item_identifier', 'refund_line_item') }}"
+        identifier: "{{ var('shopify_graphql_refund_line_item_identifier', 'refund_line_item') }}"
         description: Each record represents a line item refund in Shopify.
         columns:
           - name: _fivetran_synced
@@ -351,7 +351,7 @@ sources:
             description: How this refund line item affects inventory levels.
 
       - name: product
-        identifier: "{{ var('shopify_gql_product_identifier', 'product') }}"
+        identifier: "{{ var('shopify_graphql_product_identifier', 'product') }}"
         description: Each record represents a product in Shopify.
         columns:
           - name: _fivetran_deleted
@@ -382,7 +382,7 @@ sources:
               - draft: The product isn't ready to sell and is unavailable to customers on sales channels and apps. By default, duplicated and unarchived products are set to draft.
 
       - name: product_variant
-        identifier: "{{ var('shopify_gql_product_variant_identifier', 'product_variant') }}"
+        identifier: "{{ var('shopify_graphql_product_variant_identifier', 'product_variant') }}"
         description: Each record represents a product variant in Shopify
         columns:
           - name: barcode
@@ -429,7 +429,7 @@ sources:
             description: "{{ doc('_fivetran_synced') }}"
 
       - name: transaction
-        identifier: "{{ var('shopify_gql_transaction_identifier', 'transaction') }}"
+        identifier: "{{ var('shopify_graphql_transaction_identifier', 'transaction') }}"
         description: Each record represents a transaction in Shopify.
         columns:
           - name: id
@@ -494,7 +494,7 @@ sources:
             description: The shop currency.
             
       - name: return
-        identifier: "{{ var('shopify_gql_return_identifier', 'return') }}"
+        identifier: "{{ var('shopify_graphql_return_identifier', 'return') }}"
         description: Each record represents a return within Shopify.
         config:
           enabled: "{{ var('shopify_gql_using_return', false) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') }}"
@@ -517,7 +517,7 @@ sources:
             description: "{{ doc('_fivetran_synced') }}"
 
       - name: return_line_item
-        identifier: "{{ var('shopify_gql_return_line_item_identifier', 'return_line_item') }}"
+        identifier: "{{ var('shopify_graphql_return_line_item_identifier', 'return_line_item') }}"
         description: Each record represents a line item within a return in Shopify.
         config:
           enabled: "{{ var('shopify_gql_using_return', false) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') }}"
@@ -542,7 +542,7 @@ sources:
             description: "{{ doc('_fivetran_synced') }}"
 
       - name: return_shipping_fee
-        identifier: "{{ var('shopify_gql_return_shipping_fee_identifier', 'return_shipping_fee') }}"
+        identifier: "{{ var('shopify_graphql_return_shipping_fee_identifier', 'return_shipping_fee') }}"
         description: Each record represents a shipping fee associated with a return in Shopify.
         config:
           enabled: "{{ var('shopify_gql_using_return', false) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') }}"
@@ -563,7 +563,7 @@ sources:
             description: "{{ doc('_fivetran_synced') }}"
 
       - name: refund
-        identifier: "{{ var('shopify_gql_refund_identifier', 'refund') }}"
+        identifier: "{{ var('shopify_graphql_refund_identifier', 'refund') }}"
         description: Each record represents a refund within Shopify.
         columns:
           - name: id
@@ -592,7 +592,7 @@ sources:
             description: The three letter currency code for the refund in the shop currency.
 
       - name: order_adjustment
-        identifier: "{{ var('shopify_gql_order_adjustment_identifier', 'order_adjustment') }}"
+        identifier: "{{ var('shopify_graphql_order_adjustment_identifier', 'order_adjustment') }}"
         description: Each record represents and adjustment to and order within Shopify.
         columns:
           - name: id
@@ -622,7 +622,7 @@ sources:
       
       - name: abandoned_checkout
         description: A checkout is considered abandoned after the customer has added contact information, but before the customer has completed their purchase.
-        identifier: "{{ var('shopify_gql_abandoned_checkout_identifier', 'abandoned_checkout') }}"
+        identifier: "{{ var('shopify_graphql_abandoned_checkout_identifier', 'abandoned_checkout') }}"
         config:
           enabled: "{{ var('shopify_gql_using_abandoned_checkout', true) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') }}"   
         columns:
@@ -759,7 +759,7 @@ sources:
 
       - name: collection_product
         description: Table relating products to the collections they belong to. Use this instead of the deprecated `COLLECT` table.
-        identifier: "{{ var('shopify_gql_collection_product_identifier', 'collection_product') }}"
+        identifier: "{{ var('shopify_graphql_collection_product_identifier', 'collection_product') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -772,7 +772,7 @@ sources:
         description: >
           A collection is a grouping of products that merchants can create to make their stores easier to browse.
           Merchants can create collections by selecting products individually or by defining rules that automatically determine whether products are included (aka a "smart collection").
-        identifier: "{{ var('shopify_gql_collection_identifier', 'collection') }}"
+        identifier: "{{ var('shopify_graphql_collection_identifier', 'collection') }}"
         columns:
           - name: _fivetran_deleted
             description: "{{ doc('_fivetran_deleted') }}"
@@ -802,7 +802,7 @@ sources:
 
       - name: customer_tag
         description: Tags that the shop owner has attached to the customer. A customer can have up to 250 tags.
-        identifier: "{{ var('shopify_gql_customer_tag_identifier', 'customer_tag') }}"
+        identifier: "{{ var('shopify_graphql_customer_tag_identifier', 'customer_tag') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -817,7 +817,7 @@ sources:
         description: >
           A fulfillment order represents a group of one or more items in an order that will be fulfilled from the same location. 
           A fulfillment represents work that is completed as part of a fulfillment order and can include one or more items.
-        identifier: "{{ var('shopify_gql_fulfillment_identifier', 'fulfillment') }}"
+        identifier: "{{ var('shopify_graphql_fulfillment_identifier', 'fulfillment') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -858,7 +858,7 @@ sources:
         description: >
           An inventory item represents a physical good. It holds essential information about the physical good, including its SKU and whether its inventory is tracked.
           There is a 1:1 relationship between a product variant and an inventory item.
-        identifier: "{{ var('shopify_gql_inventory_item_identifier', 'inventory_item') }}"
+        identifier: "{{ var('shopify_graphql_inventory_item_identifier', 'inventory_item') }}"
         columns:
           - name: _fivetran_deleted
             description: "{{ doc('_fivetran_deleted') }}"
@@ -909,7 +909,7 @@ sources:
 
           Each inventory level belongs to one inventory item and has one location. For every location where an inventory item can be stocked, there's an inventory level that represents 
           the inventory item's quantities relating to that location.
-        identifier: "{{ var('shopify_gql_inventory_level_identifier', 'inventory_level') }}"
+        identifier: "{{ var('shopify_graphql_inventory_level_identifier', 'inventory_level') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -930,7 +930,7 @@ sources:
 
       - name: inventory_quantity
         description: The total quantity of the inventory item available at all locations.
-        identifier: "{{ var('shopify_gql_inventory_quantity_identifier', 'inventory_quantity') }}"
+        identifier: "{{ var('shopify_graphql_inventory_quantity_identifier', 'inventory_quantity') }}"
         columns:
           - name: id
             description: The unique identifier for the record.
@@ -949,7 +949,7 @@ sources:
 
       - name: location
         description: A location represents a geographical location where your stores, pop-up stores, headquarters, and warehouses exist.
-        identifier: "{{ var('shopify_gql_location_identifier', 'location') }}"
+        identifier: "{{ var('shopify_graphql_location_identifier', 'location') }}"
         columns:
           - name: _fivetran_deleted
             description: "{{ doc('_fivetran_deleted') }}"
@@ -993,7 +993,7 @@ sources:
         description: >
           Metafields are a flexible way to attach additional information to a Shopify resource (e.g. Product, Collection, etc.). Some examples of data stored using metafields include specifications, size charts, 
           downloadable documents, release dates, images, or part numbers. Metafields are identified by an owner resource, a namespace, and a key and they store a value along with type information for that context.
-        identifier: "{{ var('shopify_gql_metafield_identifier', 'metafield') }}"
+        identifier: "{{ var('shopify_graphql_metafield_identifier', 'metafield') }}"
         config:
           enabled: "{{ var('shopify_gql_using_metafield', true) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') }}"
         columns:
@@ -1024,7 +1024,7 @@ sources:
 
       - name: order_note_attribute # applies to Shopify connections created before November 2025
         description: Table storing custom attributes placed on orders. 
-        identifier: "{{ var('shopify_gql_order_note_attribute_identifier', 'order_note_attribute') }}"
+        identifier: "{{ var('shopify_graphql_order_note_attribute_identifier', 'order_note_attribute') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1037,7 +1037,7 @@ sources:
 
       - name: order_custom_attribute # applies to Shopify connections created after November 2025
         description: Table storing custom attributes placed on orders. 
-        identifier: "{{ var('shopify_gql_order_custom_attribute_identifier', 'order_custom_attribute') }}"
+        identifier: "{{ var('shopify_graphql_order_custom_attribute_identifier', 'order_custom_attribute') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1052,7 +1052,7 @@ sources:
 
       - name: order_shipping_line
         description: Represents the shipping details that the customer chose for their order.
-        identifier: "{{ var('shopify_gql_order_shipping_line_identifier', 'order_shipping_line') }}"
+        identifier: "{{ var('shopify_graphql_order_shipping_line_identifier', 'order_shipping_line') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1103,7 +1103,7 @@ sources:
 
       - name: order_shipping_tax_line
         description: Represents taxes associated with order shipping lines.
-        identifier: "{{ var('shopify_gql_order_shipping_tax_line_identifier', 'order_shipping_tax_line') }}"
+        identifier: "{{ var('shopify_graphql_order_shipping_tax_line_identifier', 'order_shipping_tax_line') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1128,7 +1128,7 @@ sources:
 
       - name: order_tag
         description: Tags that the shop owner has attached to the order.
-        identifier: "{{ var('shopify_gql_order_tag_identifier', 'order_tag') }}"
+        identifier: "{{ var('shopify_graphql_order_tag_identifier', 'order_tag') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1141,7 +1141,7 @@ sources:
 
       - name: media
         description: Table storing media metadata, including status and timestamps.
-        identifier: "{{ var('shopify_gql_media_identifier', 'media') }}"
+        identifier: "{{ var('shopify_graphql_media_identifier', 'media') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1174,7 +1174,7 @@ sources:
 
       - name: media_image
         description: Table storing image-specific properties for media assets.
-        identifier: "{{ var('shopify_gql_media_image_identifier', 'media_image') }}"
+        identifier: "{{ var('shopify_graphql_media_image_identifier', 'media_image') }}"
         columns:
           - name: media_id
             description: The unique identifier for the media associated with the product image.
@@ -1191,7 +1191,7 @@ sources:
 
       - name: product_media
         description: Table mapping products to their associated media.
-        identifier: "{{ var('shopify_gql_product_media_identifier', 'product_media') }}"
+        identifier: "{{ var('shopify_graphql_product_media_identifier', 'product_media') }}"
         columns:
           - name: product_id
             description: The id of the product associated with the media.
@@ -1202,7 +1202,7 @@ sources:
 
       - name: product_variant_media
         description: Table mapping product variants to their associated media.
-        identifier: "{{ var('shopify_gql_product_variant_media_identifier', 'product_variant_media') }}"
+        identifier: "{{ var('shopify_graphql_product_variant_media_identifier', 'product_variant_media') }}"
         config:
           enabled: "{{ var('shopify_gql_using_product_variant_media', false) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') }}"    
         columns:
@@ -1213,7 +1213,7 @@ sources:
 
       - name: product_tag
         description: Tags that the shop owner has attached to the product.
-        identifier: "{{ var('shopify_gql_product_tag_identifier', 'product_tag') }}"
+        identifier: "{{ var('shopify_graphql_product_tag_identifier', 'product_tag') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1226,7 +1226,7 @@ sources:
 
       - name: shop
         description: The Shop resource is a collection of general business and store management settings and information about the store.
-        identifier: "{{ var('shopify_gql_shop_identifier', 'shop') }}"
+        identifier: "{{ var('shopify_graphql_shop_identifier', 'shop') }}"
         columns:
           - name: _fivetran_deleted
             description: "{{ doc('_fivetran_deleted') }}"
@@ -1320,7 +1320,7 @@ sources:
           Each tender transaction represents money passing between the merchant and a customer. A tender transaction with a positive amount 
           represents a transaction where the customer paid money to the merchant. A negative amount represents a transaction where the 
           merchant refunded money back to the customer. Tender transactions represent transactions that modify the shop's balance.
-        identifier: "{{ var('shopify_gql_tender_transaction_identifier', 'tender_transaction') }}"
+        identifier: "{{ var('shopify_graphql_tender_transaction_identifier', 'tender_transaction') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1358,7 +1358,7 @@ sources:
 
       - name: abandoned_checkout_discount_code
         description: Abandoned checkouts that applied a discount code. 
-        identifier: "{{ var('shopify_gql_abandoned_checkout_discount_code_identifier', 'abandoned_checkout_discount_code') }}"
+        identifier: "{{ var('shopify_graphql_abandoned_checkout_discount_code_identifier', 'abandoned_checkout_discount_code') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1371,7 +1371,7 @@ sources:
       
       - name: order_discount_code
         description: Discount codes placed on orders.
-        identifier: "{{ var('shopify_gql_order_discount_code_identifier', 'order_discount_code') }}"
+        identifier: "{{ var('shopify_graphql_order_discount_code_identifier', 'order_discount_code') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1386,7 +1386,7 @@ sources:
         description: >
           The FulfillmentEvent resource represents tracking events that belong to a fulfillment of one or more items in an order. 
           Fulfillment events are displayed on the order status page to update customers on the status of their shipment.
-        identifier: "{{ var('shopify_gql_fulfillment_event_identifier', 'fulfillment_event') }}"
+        identifier: "{{ var('shopify_graphql_fulfillment_event_identifier', 'fulfillment_event') }}"
         config:
           enabled: "{{ var('shopify_gql_using_fulfillment_event', true) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') }}"
         columns:
@@ -1438,7 +1438,7 @@ sources:
             
       - name: tax_line # applies to Shopify connections created before November 2025
         description: Represents a single tax applied to the associated line item.
-        identifier: "{{ var('shopify_gql_tax_line_identifier', 'tax_line') }}"
+        identifier: "{{ var('shopify_graphql_tax_line_identifier', 'tax_line') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1461,7 +1461,7 @@ sources:
 
       - name: order_line_tax_line # applies to Shopify connections created after November 2025
         description: Represents a single tax applied to the associated line item.
-        identifier: "{{ var('shopify_gql_order_line_tax_line_identifier', 'order_line_tax_line') }}"
+        identifier: "{{ var('shopify_graphql_order_line_tax_line_identifier', 'order_line_tax_line') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1485,7 +1485,7 @@ sources:
       - name: discount_allocation
         description: >
           Table storing allocation amounts applied to order lines from discount applications. Discount allocations indicate how much of the discount was applied and how it was split across line items.
-        identifier: "{{ var('shopify_gql_discount_allocation_identifier', 'discount_allocation') }}"
+        identifier: "{{ var('shopify_graphql_discount_allocation_identifier', 'discount_allocation') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1507,7 +1507,7 @@ sources:
       - name: discount_application
         description: >
           Table storing discount applications, which define how discounts were applied to an order or shipping line. This includes metadata like allocation method, target type, and value type.
-        identifier: "{{ var('shopify_gql_discount_application_identifier', 'discount_application') }}"
+        identifier: "{{ var('shopify_graphql_discount_application_identifier', 'discount_application') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1536,7 +1536,7 @@ sources:
       - name: discount_code_app
         description: >
           Table storing discount codes created and managed through apps using Shopify Functions. These app-based discounts support advanced, dynamic behavior and custom targeting.
-        identifier: "{{ var('shopify_gql_discount_code_app_identifier', 'discount_code_app') }}"
+        identifier: "{{ var('shopify_graphql_discount_code_app_identifier', 'discount_code_app') }}"
         config:
           enabled: "{{ var('shopify_gql_using_discount_code_app', false) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') }}"    
         columns:
@@ -1585,7 +1585,7 @@ sources:
       - name: discount_code_basic
         description: >
           Table storing basic discount codes and their metadata. This includes usage limits, timeframes, eligible customers, combination rules, and tracked usage.
-        identifier: "{{ var('shopify_gql_discount_code_basic_identifier', 'discount_code_basic') }}"
+        identifier: "{{ var('shopify_graphql_discount_code_basic_identifier', 'discount_code_basic') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1631,7 +1631,7 @@ sources:
       - name: discount_code_bxgy
         description: >
           Table storing Buy X Get Y discount codes, including conditions for what customers must buy, what they receive, and metadata such as usage, status, and combination eligibility.
-        identifier: "{{ var('shopify_gql_discount_code_bxgy_identifier', 'discount_code_bxgy') }}"
+        identifier: "{{ var('shopify_graphql_discount_code_bxgy_identifier', 'discount_code_bxgy') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1675,7 +1675,7 @@ sources:
       - name: discount_code_free_shipping
         description: >
           Table storing free shipping discount codes and metadata, including subscription and one-time purchase applicability, eligible countries, usage limits, and combination rules.
-        identifier: "{{ var('shopify_gql_discount_code_free_shipping_identifier', 'discount_code_free_shipping') }}"
+        identifier: "{{ var('shopify_graphql_discount_code_free_shipping_identifier', 'discount_code_free_shipping') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1722,7 +1722,7 @@ sources:
         description: >
           Table storing individual redeem codes that customers can use at checkout to receive a discount. 
           Each code is tied to a parent discount and may be created by an app or manually by a merchant.
-        identifier: "{{ var('shopify_gql_discount_redeem_code_identifier', 'discount_redeem_code') }}"
+        identifier: "{{ var('shopify_graphql_discount_redeem_code_identifier', 'discount_redeem_code') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
@@ -1746,7 +1746,7 @@ sources:
 
       - name: fulfillment_tracking_info
         description: Represents tracking information associated with a fulfillment. Used by Shopify to generate clickable tracking numbers and delivery updates.
-        identifier: "{{ var('shopify_gql_fulfillment_tracking_info_identifier', 'fulfillment_tracking_info') }}"
+        identifier: "{{ var('shopify_graphql_fulfillment_tracking_info_identifier', 'fulfillment_tracking_info') }}"
         config:
           enabled: "{{ var('shopify_gql_using_fulfillment_tracking_info', true) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') }}"
         columns:
@@ -1766,7 +1766,7 @@ sources:
       - name: customer_visit
         description: Metadata about a customer's session visiting a Shopify store, including session, landing page, referrer, marketing campaign, and source attribution information.
           This data helps merchants analyze the effectiveness of marketing campaigns and customer engagement.
-        identifier: "{{ var('shopify_gql_customer_visit_identifier', 'customer_visit') }}"
+        identifier: "{{ var('shopify_graphql_customer_visit_identifier', 'customer_visit') }}"
         config:
           enabled: "{{ var('shopify_gql_using_customer_visit', true) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') }}"   
         columns:
@@ -1814,7 +1814,7 @@ sources:
           Defines the rules used to automatically include products in a smart collection.
           Each rule specifies a product attribute, a comparison relation, and a condition value to match against.
           These rules are evaluated dynamically to determine collection membership without manual curation.
-        identifier: "{{ var('shopify_gql_collection_rule_identifier', 'collection_rule') }}"
+        identifier: "{{ var('shopify_graphql_collection_rule_identifier', 'collection_rule') }}"
         config:
           enabled: "{{ var('shopify_gql_using_collection_rule', false) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') }}"   
         columns:
@@ -1861,7 +1861,7 @@ sources:
       - name: fulfillment_order_line_item
         description: Links a fulfillment order to specific items that require fulfillment. Contains detailed product information, quantity tracking, variant metadata, and shipping requirements.
           This is a core entity for determining which products and how many units are involved in a given fulfillment process.
-        identifier: "{{ var('shopify_gql_fulfillment_order_line_item_identifier', 'fulfillment_order_line_item') }}"
+        identifier: "{{ var('shopify_graphql_fulfillment_order_line_item_identifier', 'fulfillment_order_line_item') }}"
         config:
           enabled: "{{ var('shopify_gql_using_fulfillment_order_line_item', true) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') }}"
         columns:
@@ -1908,7 +1908,7 @@ sources:
 
       - name: customer_address
         description: Represents a customer's mailing address and includes additional geographic metadata.
-        identifier: "{{ var('shopify_gql_customer_address_identifier', 'customer_address') }}"
+        identifier: "{{ var('shopify_graphql_customer_address_identifier', 'customer_address') }}"
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"

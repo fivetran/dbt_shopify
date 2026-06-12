@@ -442,7 +442,9 @@ If an individual source table has a different name than the package expects, add
 # dbt_project.yml
 
 vars:
-    shopify_<default_source_table_name>_identifier: your_table_name 
+    shopify_<default_source_table_name>_identifier: your_table_name ## For Shopify rest sources
+    shopify_graphql_<default_source_table_name>_identifier: your_table_name ## For Shopify graphql sources
+
 ```
 
 #### Source casing for case-sensitive destinations

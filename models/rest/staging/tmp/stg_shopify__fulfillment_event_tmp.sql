@@ -1,5 +1,7 @@
 {{ config(enabled=(var('shopify_using_fulfillment_event', false) and var('shopify_api', 'rest') == 'rest')) }}
 
+{% if var('shopify_union_schemas', []) | length > 0 or var('shopify_union_databases', []) | length > 0 %}
+
 {{
     shopify.shopify_union_data(
         table_identifier='fulfillment_event', 
@@ -7,8 +9,19 @@
         schema_variable='shopify_schema', 
         default_database=target.database,
         default_schema='shopify',
-        default_variable='fulfillment_event_source',
         union_schema_variable='shopify_union_schemas',
         union_database_variable='shopify_union_databases'
     )
 }}
+
+{% else %}
+
+{{
+    fivetran_utils.union_connections(
+        connection_dictionary='shopify_sources',
+        single_source_name='shopify',
+        single_table_name='fulfillment_event'
+    )
+}}
+
+{% endif %}

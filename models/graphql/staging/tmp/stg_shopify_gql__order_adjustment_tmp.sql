@@ -1,6 +1,6 @@
 {{ config(enabled=var('shopify_api', 'rest') == var('shopify_api_override','graphql')) }}
 
--- this model will be all NULL until you have made an order adjustment in Shopify
+{% if var('shopify_union_schemas', []) | length > 0 or var('shopify_union_databases', []) | length > 0 %}
 
 {{
     shopify.shopify_union_data(
@@ -9,9 +9,20 @@
         schema_variable='shopify_schema', 
         default_database=target.database,
         default_schema='shopify',
-        default_variable='gql_order_adjustment_source',
         union_schema_variable='shopify_union_schemas',
         union_database_variable='shopify_union_databases',
         shopify_model_api='graphql'
     )
 }}
+
+{% else %}
+
+{{
+    fivetran_utils.union_connections(
+        connection_dictionary='shopify_sources',
+        single_source_name='shopify_graphql',
+        single_table_name='order_adjustment'
+    )
+}}
+
+{% endif %}
