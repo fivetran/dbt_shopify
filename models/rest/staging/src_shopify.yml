@@ -5,7 +5,7 @@ sources:
     schema: "{{ var('shopify_schema', 'shopify') }}"
     database: "{% if target.type not in ('spark') %}{{ var('shopify_database', target.database) }}{% endif %}"
     config:
-      enabled: "{{ var('shopify_api', 'rest') == 'rest' }}"
+      enabled: "{{ var('shopify_api', 'rest') == 'rest' and var('shopify_sources', []) == [] }}"
     tables:
       - name: order
         description: Each record represents an order in Shopify.
@@ -1092,7 +1092,7 @@ sources:
         description: Table mapping product variants to their associated media.
         identifier: "{{ var('shopify_product_variant_media_identifier', 'product_variant_media') }}"
         config:
-          enabled: "{{ var('shopify_using_product_variant_media', false) }}"    
+          enabled: "{{ var('shopify_using_product_variant_media', false) and var('shopify_sources', []) == [] }}"    
         columns:
           - name: product_variant_id
             description: The id of the product variant associated with the media.
@@ -1488,7 +1488,7 @@ sources:
           Table storing discount codes created and managed through apps using Shopify Functions. These app-based discounts support advanced, dynamic behavior and custom targeting.
         identifier: "{{ var('shopify_discount_code_app_identifier', 'discount_code_app') }}"
         config:
-          enabled: "{{ var('shopify_using_discount_code_app', false) }}"    
+          enabled: "{{ var('shopify_using_discount_code_app', false) and var('shopify_sources', []) == [] }}"    
         columns:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
