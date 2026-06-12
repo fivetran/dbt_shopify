@@ -9,6 +9,9 @@
 | ------------- | ----------- | --- | --- | ----- |
 | All models | `source_relation` column (when using a single shopify schema) | Empty string (`''`) | `<database>.<schema>` |  |
 
+## Breaking Changes
+- Shopify GraphQL table identifier variables have been renamed (`shopify_gql_*` → `shopify_grahpql_*`) to for consistency with other Fivetran dbt packages and to ensure union functionality works as expected. If you have configured any identifier variables in your project, update them to the new format.
+
 ## Feature Updates
 - Introduces the new (recommended) `shopify_sources` variable for more robust union data configuration. The old `shopify_union_schemas` and `shopify_union_databases` variables will still be supported. See the [README](https://github.com/fivetran/dbt_shopify/tree/main#define-database-and-schema-variables) for specific details.
 
