@@ -1,3 +1,19 @@
+# dbt_shopify v1.8.2
+
+[PR #160](https://github.com/fivetran/dbt_shopify/pull/160) includes the following updates:
+
+## Schema/Data Change
+**1 total change • 0 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| `stg_shopify_gql__customer_visit` | New column | | `is_most_recent_order_visit` | Boolean field indicating whether this visit is the most recent for a given order. |
+
+## Bug Fix
+- Fixes duplicate records in `shopify_gql__orders` when multiple customer visits are attributed to the same order.
+- Fixes duplicate rows in `shopify_gql__order_lines` for order lines that belong to multiple fulfillment orders.
+- Fixes a model failure that occurred when `checkout_id` was absent from the source.
+
 # dbt_shopify v1.8.2-a2
 
 [PR #158](https://github.com/fivetran/dbt_shopify/pull/158) includes the following update:
