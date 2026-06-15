@@ -74,7 +74,7 @@
     {"name": "_fivetran_synced", "datatype": dbt.type_timestamp()},
     {"name": "_fivetran_deleted", "datatype": dbt.type_boolean()},
     {"name": "app_id", "datatype": dbt.type_int()},
-    {"name": "checkout_id", "datatype": dbt.type_int()},
+    {"name": "checkout_id", "datatype": dbt.type_string()},
     {"name": "client_details_user_agent", "datatype": dbt.type_string()},
     {"name": "customer_locale", "datatype": dbt.type_string()},
     {"name": "order_status_url", "datatype": dbt.type_string()},
