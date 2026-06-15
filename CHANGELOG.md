@@ -17,7 +17,7 @@
 
 ## Under the Hood
 - Adds the `fivetran_using_source_casing` variable for case-sensitive destination support. When enabled, downstream transformations respect source casing to ensure consistent results. See the [Additional Configurations](https://github.com/fivetran/dbt_shopify/#source-casing-for-case-sensitive-destinations) section of the README for details.
-- Introduces `fivetran_utils.partition_by_source_relation` to conditionally include `source_relation` in partition clauses only when multiple sources are configured.
+- Introduces `fivetran_utils.partition_by_source_relation` macro and replaces the `shopify_partition_by_cols` macro to conditionally include `source_relation` in partition clauses only when multiple sources are configured.
 
 # dbt_shopify v1.8.2
 
