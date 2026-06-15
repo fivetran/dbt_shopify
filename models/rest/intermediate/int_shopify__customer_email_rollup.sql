@@ -5,7 +5,7 @@ with customers as (
     select 
         *,
         row_number() over(
-            partition by {{ shopify.shopify_partition_by_cols('email', 'source_relation') }}
+            partition by email {{ fivetran_utils.partition_by_source_relation(package_name='shopify') }}
             order by created_timestamp desc, customer_id desc) 
             as customer_index
 
