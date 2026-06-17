@@ -2093,6 +2093,8 @@ models:
         description: Search terms associated with paid campaigns.
       - name: source_relation
         description: "{{ doc('source_relation') }}"
+      - name: is_most_recent_order_visit
+        description: Boolean indicating whether this visit is the most recent one associated with the order.
 
   - name: stg_shopify_gql__collection_rule
     description: >
