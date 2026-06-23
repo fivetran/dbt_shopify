@@ -1,3 +1,25 @@
+# dbt_shopify v1.9.0
+
+[PR #159](https://github.com/fivetran/dbt_shopify/pull/159) includes the following updates:
+
+## Schema/Data Changes (--full-refresh required after upgrading)
+**1 total change • 1 possible breaking change**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| All models | `source_relation` column (when using a single shopify schema) | Empty string (`''`) | `<database>.<schema>` |  |
+
+## Breaking Changes
+- Shopify GraphQL table identifier variables have been renamed (`shopify_gql_*` → `shopify_grahpql_*`) to for consistency with other Fivetran dbt packages and to ensure union functionality works as expected. If you have configured any identifier variables in your project, update them to the new format.
+
+## Feature Updates
+- Introduces the new (recommended) `shopify_sources` variable for more robust union data configuration. The old `shopify_union_schemas` and `shopify_union_databases` variables will still be supported. See the [README](https://github.com/fivetran/dbt_shopify/tree/main#define-database-and-schema-variables) for specific details.
+
+## Under the Hood
+- Adds the `fivetran_using_source_casing` variable for case-sensitive destination support. When enabled, downstream transformations respect source casing to ensure consistent results. See the [Additional Configurations](https://github.com/fivetran/dbt_shopify/#source-casing-for-case-sensitive-destinations) section of the README for details.
+- Introduces `fivetran_utils.partition_by_source_relation` macro and replaces the `shopify_partition_by_cols` macro to conditionally include `source_relation` in partition clauses only when multiple sources are configured.
+
+<<<<<<< HEAD
 # dbt_shopify v1.8.2
 
 [PR #160](https://github.com/fivetran/dbt_shopify/pull/160) includes the following updates:
@@ -35,6 +57,8 @@ This release includes the following updates:
 ## Bug Fix
 - Fixes duplicate customer visits in `int_shopify_gql__order` by filtering to include only the most recent visit per order, preventing duplicate visits in downstream models.
 
+=======
+>>>>>>> a6132fd68f4d88f6fee0662ca6ffdb61cf286c0f
 # dbt_shopify v1.8.1
 
 [PR #157](https://github.com/fivetran/dbt_shopify/pull/157) includes the following update:

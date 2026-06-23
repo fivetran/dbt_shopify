@@ -36,3 +36,9 @@ test_scenarios:
       shopify_gql_using_customer_visit: false
       shopify_gql_using_return: true
     include_incremental: false
+
+  - name: "MDLS"
+    vars:
+      fivetran_using_source_casing: true
+    include_incremental: false
+    include_dbt_seed: true

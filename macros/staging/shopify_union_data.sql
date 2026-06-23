@@ -110,7 +110,7 @@
         {% endfor %}
     {% else %}
         {# In order for this macro to effectively work within upstream integration tests (mainly used by the Fivetran dbt package maintainers), this identifier variable selection is required to use the macro with different identifier names. #}
-        {% set identifier_var = default_schema + ('_gql_' if shopify_model_api == 'graphql' else '_') + table_identifier + "_identifier"  %}
+        {% set identifier_var = default_schema + ('_graphql_' if shopify_model_api == 'graphql' else '_') + table_identifier + "_identifier"  %}
         {# Unfortunately the Twitter Organic identifiers were misspelled. As such, we will need to account for this in the model. This will be adjusted in the Twitter Organic package, but to ensure backwards compatibility, this needs to be included. #}
         {% if var(identifier_var, none) is none %} 
             {% set identifier_var = default_schema + "_" + table_identifier + "_identifer"  %}

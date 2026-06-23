@@ -81,7 +81,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=1.8.0", "<1.9.0"]
+    version: [">=1.9.0", "<1.10.0"]
 ```
 
 > All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/shopify_source` in your `packages.yml` since this package has been deprecated.
@@ -209,29 +209,40 @@ Overall, the package aims for parity across the different API versions and align
 - `ORDER_URL_TAG`: The absence of this table will result in no `shopify_gql__orders.order_url_tags` field.
 
 ### Define database and schema variables
-#### Single connection
+#### Option A: Single connection
 By default, this package runs using your destination and the `shopify` schema. If this is not where your Shopify data is (for example, if your Shopify schema is named `shopify_fivetran`), add the following configuration to your root `dbt_project.yml` file:
 
 ```yml
-# dbt_project.yml
-
 vars:
-    shopify_database: your_database_name
+    shopify_database: your_destination_name
     shopify_schema: your_schema_name
 ```
-#### Union multiple connections
-If you have multiple Shopify connections in Fivetran and would like to use this package on all of them simultaneously, we have provided functionality to do so. The package will union all of the data together and pass the unioned table into the transformations. You will be able to see which source it came from in the `source_relation` column of each model. To use this functionality, you will need to set either the `shopify_union_schemas` OR `shopify_union_databases` variables (cannot do both) in your root `dbt_project.yml` file:
+
+#### Option B: Union multiple connections
+If you have multiple Shopify connections in Fivetran and would like to use this package on all of them simultaneously, we have provided functionality to do so. For each source table, the package will union all of the data together and pass the unioned table into the transformations. The `source_relation` column in each model indicates the origin of each record.
+
+To use this functionality, you will need to set the `shopify_sources` variable in your root `dbt_project.yml` file:
 
 ```yml
 # dbt_project.yml
 
 vars:
-    shopify_union_schemas: ['shopify_usa','shopify_canada'] # use this if the data is in different schemas/datasets of the same database/project
-    shopify_union_databases: ['shopify_usa','shopify_canada'] # use this if the data is in different databases/projects but uses the same schema name
-```
-> NOTE: The native `source.yml` connection set up in the package will not function when the union schema/database feature is utilized. Although the data will be correctly combined, you will not observe the sources linked to the package models in the Directed Acyclic Graph (DAG). This happens because the package includes only one defined `source.yml`.
+  shopify:
+    shopify_sources:
+      - database: connection_1_destination_name # Required
+        schema: connection_1_schema_name # Required
+        name: connection_1_source_name # Required only if following the step in the following subsection
 
-To connect your multiple schema/database sources to the package models, follow the steps outlined in the [Union Data Defined Sources Configuration](https://github.com/fivetran/dbt_fivetran_utils/tree/releases/v0.4.latest#union_data-source) section of the Fivetran Utils documentation for the union_data macro. This will ensure a proper configuration and correct visualization of connections in the DAG.
+      - database: connection_2_destination_name
+        schema: connection_2_schema_name
+        name: connection_2_source_name
+```
+
+> Previous versions of this package employed two separate, mutually exclusive variables for unioning: `shopify_union_schemas` and `shopify_union_databases`. While these variables are still supported, `shopify_sources` is the recommended variable to configure.
+
+#### Optional: Incorporate unioned sources into DAG
+
+If you use [Fivetran Transformations for dbt Core™](https://fivetran.com/docs/transformations/dbt#transformationsfordbtcore) and are unioning multiple Shopify connections, you can define your sources in a property `.yml` file, [using this as a template](https://github.com/fivetran/dbt_shopify/blob/main/models/staging/src_shopify.yml). Set the variable `has_defined_sources: true` under the Shopify namespace in your `dbt_project.yml`. Otherwise, your Shopify connections won't appear in your DAG. See the `union_connections` macro [documentation](https://github.com/fivetran/dbt_fivetran_utils/tree/releases/v0.4.latest#optional-union-connections-defined-sources-configuration) for full configuration details.
 
 ### Disable models for non-existent sources
 
@@ -431,7 +442,17 @@ If an individual source table has a different name than the package expects, add
 # dbt_project.yml
 
 vars:
-    shopify_<default_source_table_name>_identifier: your_table_name 
+    shopify_<default_source_table_name>_identifier: your_table_name ## For Shopify rest sources
+    shopify_graphql_<default_source_table_name>_identifier: your_table_name ## For Shopify graphql sources
+
+```
+
+#### Source casing for case-sensitive destinations
+By default, the package applies case-insensitive comparisons when resolving `source_relation` values. If your destination is case-sensitive and you want downstream transformations to respect the exact casing of your source database and schema names, set the following variable:
+
+```yml
+vars:
+    fivetran_using_source_casing: true
 ```
 
 #### Lookback Window
