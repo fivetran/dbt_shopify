@@ -15,10 +15,11 @@
 {%- set source_column_count = source_columns | length -%}
 
 {# Get the pivot fields dynamically based on the reference values while respecting warehouse column limits #}
+{%- set _warehouse_col_limit = shopify.max_columns(source_column_count, id_column) -%}
 {%- set pivot_fields = dbt_utils.get_column_values(
     table=ref(lookup_object),
     column=key_field,
-    max_records=[var('shopify_max_metafields', 50), shopify.max_columns(source_column_count, id_column)]|sort|first if target.type != 'snowflake' else var('shopify_max_metafields', 50),
+    max_records=([var('shopify_max_metafields', 50), _warehouse_col_limit]|sort|first if _warehouse_col_limit is not none else var('shopify_max_metafields', 50)) if target.type != 'snowflake' else var('shopify_max_metafields', 50),
     where="lower(" ~ reference_field ~ ") in (" ~ reference_values_clause ~ ")") -%}
 
 {# Create slug:[metafields] dictionary #}
