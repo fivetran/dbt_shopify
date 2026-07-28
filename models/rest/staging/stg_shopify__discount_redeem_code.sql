@@ -27,9 +27,9 @@ final as (
         id as discount_code_id,
         async_usage_count,
         code,
-        created_by_description,
+        created_by_description, -- deprecated as of August 2026. Will be removed in a future release.
         created_by_id,
-        created_by_title,
+        created_by_title, -- deprecated as of August 2026. Will be removed in a future release.
         discount_id,
         discount_type,
         source_relation
