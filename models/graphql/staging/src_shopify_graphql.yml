@@ -1733,11 +1733,11 @@ sources:
           - name: code
             description: The redeemable code that a customer can enter at checkout (e.g., `SUMMER20`).
           - name: created_by_description
-            description: A descriptive label of the app or user who created the redeem code.
+            description: (DEPRECATED) A descriptive label of the app or user who created the redeem code. This field is deprecated as of August 2026 and will be removed in a future release.
           - name: created_by_id
             description: The internal ID of the app or user that created the redeem code.
           - name: created_by_title
-            description: The name or title of the creator of the redeem code (usually an app name).
+            description: (DEPRECATED) The name or title of the creator of the redeem code (usually an app name). This field is deprecated as of August 2026 and will be removed in a future release.
           - name: discount_id
             description: The unique ID of the parent discount associated with this redeem code.
           - name: discount_type

@@ -1,3 +1,14 @@
+# dbt_shopify v1.9.1
+
+[PR #162](https://github.com/fivetran/dbt_shopify/pull/162) includes the following update:
+
+## Schema/Data Changes
+**1 total change • 0 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| [`stg_shopify__discount_redeem_code`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__discount_redeem_code)<br>[`stg_shopify_gql__discount_redeem_code`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify_gql__discount_redeem_code) | Deprecated columns | `created_by_description`<br>`created_by_title` | | These fields are deprecated as of August 2026 and will be removed in a future release. See [GitHub Issue #163](https://github.com/fivetran/dbt_shopify/issues/163) for details. |
+
 # dbt_shopify v1.9.0
 
 [PR #159](https://github.com/fivetran/dbt_shopify/pull/159) includes the following updates:
