@@ -1,3 +1,11 @@
+# dbt_shopify v1.9.1
+
+[PR #164](https://github.com/fivetran/dbt_shopify/pull/164) includes the following updates:
+
+## Feature Updates
+- Adds DuckDB as a supported destination.
+
+
 # dbt_shopify v1.9.0
 
 [PR #159](https://github.com/fivetran/dbt_shopify/pull/159) includes the following updates:
