@@ -3,10 +3,6 @@ version: '1.9.1'
 config-version: 2
 require-dbt-version: [">=1.3.0", "<3.0.0"]
 
-dispatch:
-  - macro_namespace: fivetran_utils
-    search_order: ['shopify', 'fivetran_utils']
-
 models:
   shopify:
     +schema: shopify

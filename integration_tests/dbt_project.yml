@@ -124,8 +124,6 @@ vars:
 dispatch:
   - macro_namespace: dbt_utils
     search_order: ['spark_utils', 'dbt_utils']
-  - macro_namespace: fivetran_utils
-    search_order: ['shopify', 'fivetran_utils']
 
 models:
   +persist_docs:
