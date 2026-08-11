@@ -1,10 +1,20 @@
-# dbt_shopify v1.9.1
+# dbt_shopify v1.9.2
 
 [PR #164](https://github.com/fivetran/dbt_shopify/pull/164) includes the following updates:
 
 ## Feature Updates
 - Adds DuckDB as a supported destination.
 
+# dbt_shopify v1.9.1
+
+[PR #162](https://github.com/fivetran/dbt_shopify/pull/162) includes the following update:
+
+## Schema/Data Changes
+**1 total change • 0 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| [`stg_shopify__discount_redeem_code`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__discount_redeem_code)<br>[`stg_shopify_gql__discount_redeem_code`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify_gql__discount_redeem_code) | Deprecated columns | `created_by_description`<br>`created_by_title` | | These fields are deprecated as of August 2026 and will be removed in a future release. See [GitHub Issue #163](https://github.com/fivetran/dbt_shopify/issues/163) for details. |
 
 # dbt_shopify v1.9.0
 
@@ -27,7 +37,6 @@
 - Adds the `fivetran_using_source_casing` variable for case-sensitive destination support. When enabled, downstream transformations respect source casing to ensure consistent results. See the [Additional Configurations](https://github.com/fivetran/dbt_shopify/#source-casing-for-case-sensitive-destinations) section of the README for details.
 - Introduces `fivetran_utils.partition_by_source_relation` macro and replaces the `shopify_partition_by_cols` macro to conditionally include `source_relation` in partition clauses only when multiple sources are configured.
 
-<<<<<<< HEAD
 # dbt_shopify v1.8.2
 
 [PR #160](https://github.com/fivetran/dbt_shopify/pull/160) includes the following updates:
@@ -65,8 +74,6 @@ This release includes the following updates:
 ## Bug Fix
 - Fixes duplicate customer visits in `int_shopify_gql__order` by filtering to include only the most recent visit per order, preventing duplicate visits in downstream models.
 
-=======
->>>>>>> a6132fd68f4d88f6fee0662ca6ffdb61cf286c0f
 # dbt_shopify v1.8.1
 
 [PR #157](https://github.com/fivetran/dbt_shopify/pull/157) includes the following update:
