@@ -1,3 +1,11 @@
+# dbt_shopify v1.9.2-dev
+
+## Bug Fixes
+- Fixed quantity double-counting in the GraphQL models ([Issue #165](https://github.com/fivetran/dbt_shopify/issues/165)). `stg_shopify_gql__order_line.price_shop_amount` is derived from `original_total_set_shop_amount`, which is already a line **total** (unit price × quantity), so multiplying it by `quantity` again produced `quantity² × unit price`:
+  - `int_shopify_gql__orders_order_line_aggregates`: `gross_sales` no longer multiplies by `quantity`. This also corrects `net_sales` and every downstream consumer (`shopify_gql__orders`, `shopify_gql__daily_shop`, customer cohort models).
+  - `shopify_gql__line_item_enhanced`: `total_amount` no longer multiplies by `quantity`, and `unit_amount` is now derived as `price_shop_amount / nullif(quantity, 0)` since the staging column is a line total, not a unit price.
+  - Orders where every line has `quantity = 1` were unaffected; multi-quantity (e.g. wholesale/B2B) lines were inflated by up to several orders of magnitude.
+
 # dbt_shopify v1.9.1
 
 [PR #162](https://github.com/fivetran/dbt_shopify/pull/162) includes the following update:
