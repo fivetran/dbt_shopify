@@ -36,9 +36,9 @@ final as (
         {{ shopify.fivetran_convert_timezone(column='cast(updated_at as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as updated_at,
         {{ shopify.fivetran_convert_timezone(column='cast(_fivetran_synced as ' ~ dbt.type_timestamp() ~ ')', target_tz=var('shopify_timezone', "UTC"), source_tz="UTC") }} as _fivetran_synced,
         lower({{ dbt.concat(["namespace","'_'","key"]) }}) as metafield_reference,
-        row_number() over(partition by id {{ fivetran_utils.partition_by_source_relation(package_name='shopify') }} order by updated_at desc) = 1 as is_most_recent_record,
+        row_number() over(partition by id, owner_id, owner_resource {{ fivetran_utils.partition_by_source_relation(package_name='shopify') }} order by updated_at desc) = 1 as is_most_recent_record,
         source_relation,
-        {{ dbt_utils.generate_surrogate_key(['id', 'source_relation']) }} as unique_key
+        {{ dbt_utils.generate_surrogate_key(['id', 'owner_id', 'owner_resource', 'source_relation']) }} as unique_key
         
     from fields
 )

@@ -1,5 +1,14 @@
 # dbt_shopify v1.10.0
 
+[PR #167](https://github.com/fivetran/dbt_shopify/pull/167) includes the following update:
+
+## Schema/Data Changes
+**1 total change • 0 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| [`stg_shopify_gql__metafield`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify_gql__metafield) | Deduplication logic and `unique_key` value | Deduplicated on `id` only; `unique_key` hashed on `metafield_id` and `source_relation` | Deduplicated on `id`, `owner_id`, and `owner_resource`; `unique_key` hashed on `metafield_id`, `owner_resource_id`, `owner_resource`, and `source_relation` | Shopify changed the underlying `METAFIELD` table's primary key to a composite of `owner_id` and `owner_resource` to fix cross-entity ID collisions. This change does not affect any downstream `shopify_gql__*_metafields` models, since `unique_key` is never selected from `stg_shopify_gql__metafield` into those outputs. |
+
 # dbt_shopify v1.9.2
 
 [PR #164](https://github.com/fivetran/dbt_shopify/pull/164) includes the following updates:
