@@ -20,11 +20,6 @@ vars:
   # shopify_gql_using_product_variant_media: true # @docs-include
   # shopify_gql_using_return: true # @docs-include
 
-  # Uncomment when running fivetran_validations consistency tests. customer_tags
-  # is built from a string aggregation with no deterministic order, so it can
-  # produce false-positive diffs between otherwise-identical prod/dev runs.
-  # consistency_test_exclude_metrics: ['customer_tags']
-
   shopify_schema: shopify_integration_tests
   shopify_api_override: rest
 
