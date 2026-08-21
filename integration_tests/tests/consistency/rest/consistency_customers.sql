@@ -3,7 +3,8 @@
     enabled=var('fivetran_validation_tests_enabled', false) and var('shopify_api', 'rest') == 'rest'
 ) }}
 
-{% set exclude_cols = var('consistency_test_exclude_metrics', []) %}
+{% set exclude_cols = ['customer_tags'] + var('consistency_test_exclude_metrics', []) %}
+-- have to exclude customer_tags since it's built from a string aggregation with no deterministic order
 
 with prod as (
     select 

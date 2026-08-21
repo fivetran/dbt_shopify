@@ -1,5 +1,22 @@
 # dbt_shopify v1.10.0
 
+[PR #167](https://github.com/fivetran/dbt_shopify/pull/167), [PR #172](https://github.com/fivetran/dbt_shopify/pull/172) include the following updates:
+
+## Schema/Data Changes
+**3 total changes • 0 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| [`stg_shopify_gql__metafield`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify_gql__metafield) | Deduplication logic and `unique_key` value | Deduplicated on `id` only; `unique_key` hashed on `metafield_id` and `source_relation` | Deduplicated on `id`, `owner_id`, and `owner_resource`; `unique_key` hashed on `metafield_id`, `owner_resource_id`, `owner_resource`, and `source_relation` | Shopify changed the underlying `METAFIELD` table's primary key to a composite of `owner_id` and `owner_resource` to fix cross-entity ID collisions. This change does not affect any downstream `shopify_gql__*_metafields` models, since `unique_key` is never selected from `stg_shopify_gql__metafield` into those outputs. |
+| [`shopify_gql__orders`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__orders), [`shopify_gql__daily_shop`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__daily_shop), customer cohort models | Column value | `gross_sales` / `net_sales` = `Σ quantity² × unit_price` | `gross_sales` / `net_sales` = `Σ quantity × unit_price` | Fixes a bug where GraphQL orders with any line `quantity > 1` had sales figures inflated quadratically. Orders where every line has `quantity = 1` are unaffected. |
+| [`shopify_gql__line_item_enhanced`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__line_item_enhanced) | Column value | `total_amount = quantity² × unit_price`; `unit_amount` = line total | `total_amount = quantity × unit_price`; `unit_amount` = true unit price | Same root cause as above, corrected. |
+
+## Under the Hood
+- Permanently excludes `customer_tags` from the `consistency_customers`/`consistency_gql_customers` validation tests, since it's built from a string aggregation with no deterministic order.
+
+## Contributors
+- [liuhui998](https://github.com/liuhui998) ([PR #166](https://github.com/fivetran/dbt_shopify/pull/166))
+
 # dbt_shopify v1.9.2
 
 [PR #164](https://github.com/fivetran/dbt_shopify/pull/164) includes the following updates:
