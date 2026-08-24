@@ -11,9 +11,6 @@
 | [`shopify_gql__orders`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__orders), [`shopify_gql__daily_shop`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__daily_shop), customer cohort models | Column value | `gross_sales` / `net_sales` = `Σ quantity² × unit_price` | `gross_sales` / `net_sales` = `Σ quantity × unit_price` | Fixes a bug where GraphQL orders with any line `quantity > 1` had sales figures inflated quadratically. Orders where every line has `quantity = 1` are unaffected. |
 | [`shopify_gql__line_item_enhanced`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__line_item_enhanced) | Column value | `total_amount = quantity² × unit_price`; `unit_amount` = line total | `total_amount = quantity × unit_price`; `unit_amount` = true unit price | Same root cause as above, corrected. |
 
-## Under the Hood
-- Permanently excludes `customer_tags` from the `consistency_customers`/`consistency_gql_customers` validation tests, since it's built from a string aggregation with no deterministic order.
-
 ## Contributors
 - [liuhui998](https://github.com/liuhui998) ([PR #166](https://github.com/fivetran/dbt_shopify/pull/166))
 
