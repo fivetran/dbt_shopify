@@ -74,10 +74,10 @@ with line_items as (
         null as billing_type,
         p.product_type as product_type,
         li.quantity as quantity,
-        li.price_shop_amount as unit_amount,
+        li.price_shop_amount / nullif(li.quantity, 0) as unit_amount,
         o.total_discounts_shop_amount as discount_amount,
         o.total_tax_shop_amount as tax_amount,
-        (li.quantity * li.price_shop_amount) as total_amount,  
+        li.price_shop_amount as total_amount,
         t.transaction_id as payment_id,
         null as payment_method_id,
         t.gateway as payment_method, -- payment_method in tender_transaction can be something like 'apply_pay', where gateway is like 'gift card' or 'shopify payments' which I think is more relevant here
