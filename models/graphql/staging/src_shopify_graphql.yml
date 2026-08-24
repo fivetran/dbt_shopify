@@ -253,6 +253,14 @@ sources:
             description: The total price of the line item when the order was created, in *shop* currency. This value doesn't include discounts.
           - name: original_total_set_shop_currency_code
             description: The three-letter code (ISO 4217 format) for the shop currency used to display the total price.
+          - name: original_unit_price_set_pres_amount
+            description: The unit price of the line item when the order was created, in *presentment* currency. This value doesn't include discounts.
+          - name: original_unit_price_set_pres_currency_code
+            description: The three-letter code (ISO 4217 format) for the presentment currency used to display the unit price.
+          - name: original_unit_price_set_shop_amount
+            description: The unit price of the line item when the order was created, in *shop* currency. This value doesn't include discounts.
+          - name: original_unit_price_set_shop_currency_code
+            description: The three-letter code (ISO 4217 format) for the shop currency used to display the unit price.
           - name: product_id
             description: The ID of the product that the line item belongs to. Can be null if the original product associated with the order is deleted at a later date.
           - name: quantity
