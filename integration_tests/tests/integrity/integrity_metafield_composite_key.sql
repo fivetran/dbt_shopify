@@ -3,59 +3,43 @@
     enabled=var('fivetran_validation_tests_enabled', false) and var('shopify_api', 'rest') == 'graphql' and var('shopify_gql_using_metafield', True)
 ) }}
 
--- Confirms the composite-key dedup in stg_shopify_gql__metafield (partitioned on
--- id, owner_id, owner_resource) does not error or regress: every group should
--- resolve to exactly one most-recent row, and no two most-recent rows should
--- collide on unique_key. A non-empty result means the dedup or surrogate key
--- logic is broken, not that the underlying data is wrong.
+-- Confirms the composite-key fix actually works: two metafields that collide on
+-- `id` alone (different owner_id/owner_resource) must BOTH survive as
+-- is_most_recent_record = true. A regression to the old `partition by id`
+-- dedup would silently drop one of them without tripping any duplicate-key
+-- test, since it's a suppression bug, not a duplication bug -- so this checks
+-- for the missing survivor directly rather than for accidental duplicates
+-- (duplicate unique_key values are already covered by the `unique` test on
+-- stg_shopify_gql__metafield.unique_key in stg_shopify_graphql.yml).
 
 with stg as (
 
     select *
     from {{ target.schema }}_shopify_dev.stg_shopify_gql__metafield
+    where metafield_id = 7003  -- seeded cross-entity collision: customer 1001 + order 4001
 
 ),
 
-duplicate_most_recent_groups as (
+expected_survivors as (
 
-    select
-        metafield_id,
-        owner_resource_id,
-        owner_resource,
-        source_relation,
-        count(*) as most_recent_row_count
-    from stg
-    where is_most_recent_record
-    group by 1, 2, 3, 4
-    having count(*) > 1
-),
+    select 1001 as owner_resource_id, 'customer' as owner_resource
+    union all
+    select 4001, 'order'
 
-duplicate_unique_keys as (
-
-    select
-        unique_key,
-        count(*) as unique_key_count
-    from stg
-    where is_most_recent_record
-    group by 1
-    having count(*) > 1
 ),
 
 final as (
 
     select
-        'duplicate_most_recent_groups' as failure_type,
-        cast(metafield_id as {{ dbt.type_string() }}) as failing_value,
-        most_recent_row_count as failure_count
-    from duplicate_most_recent_groups
+        expected_survivors.owner_resource_id,
+        expected_survivors.owner_resource
+    from expected_survivors
+    left join stg
+        on stg.owner_resource_id = expected_survivors.owner_resource_id
+        and stg.owner_resource = expected_survivors.owner_resource
+        and stg.is_most_recent_record
+    where stg.metafield_id is null  -- expected survivor is missing
 
-    union all
-
-    select
-        'duplicate_unique_keys' as failure_type,
-        cast(unique_key as {{ dbt.type_string() }}) as failing_value,
-        unique_key_count as failure_count
-    from duplicate_unique_keys
 )
 
 select *

@@ -74,7 +74,7 @@ with line_items as (
         null as billing_type,
         p.product_type as product_type,
         li.quantity as quantity,
-        li.price_shop_amount / nullif(li.quantity, 0) as unit_amount,
+        coalesce(li.price_shop_amount / nullif(li.quantity, 0), 0) as unit_amount,
         o.total_discounts_shop_amount as discount_amount,
         o.total_tax_shop_amount as tax_amount,
         li.price_shop_amount as total_amount,
