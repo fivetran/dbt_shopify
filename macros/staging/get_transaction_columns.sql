@@ -34,10 +34,10 @@
     {"name": "authorization_expires_at", "datatype": dbt.type_timestamp()}
 ] %}
 
-{% if target.type in ('redshift','postgres') %}
- {{ columns.append({"name": "authorization", "datatype": dbt.type_string(), "quote": True, "alias": "authorization_code"}) }}
+{% if target.type in ('redshift','postgres','duckdb') %}
+    {{ columns.append({"name": "authorization", "datatype": dbt.type_string(), "quote": True, "alias": "authorization_code"}) }}
 {% else %}
- {{ columns.append({"name": "authorization", "datatype": dbt.type_string(), "alias": "authorization_code"}) }}
+    {{ columns.append({"name": "authorization", "datatype": dbt.type_string(), "alias": "authorization_code"}) }}
 {% endif %}
 
 {{ fivetran_utils.add_pass_through_columns(columns, var('transaction_pass_through_columns')) }}

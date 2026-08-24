@@ -1,10 +1,25 @@
-# dbt_shopify v1.9.2-dev
+# dbt_shopify v1.10.0
 
-## Bug Fixes
-- Fixed quantity double-counting in the GraphQL models ([Issue #165](https://github.com/fivetran/dbt_shopify/issues/165)). `stg_shopify_gql__order_line.price_shop_amount` is derived from `original_total_set_shop_amount`, which is already a line **total** (unit price × quantity), so multiplying it by `quantity` again produced `quantity² × unit price`:
-  - `int_shopify_gql__orders_order_line_aggregates`: `gross_sales` no longer multiplies by `quantity`. This also corrects `net_sales` and every downstream consumer (`shopify_gql__orders`, `shopify_gql__daily_shop`, customer cohort models).
-  - `shopify_gql__line_item_enhanced`: `total_amount` no longer multiplies by `quantity`, and `unit_amount` is now derived as `price_shop_amount / nullif(quantity, 0)` since the staging column is a line total, not a unit price.
-  - Orders where every line has `quantity = 1` were unaffected; multi-quantity (e.g. wholesale/B2B) lines were inflated by up to several orders of magnitude.
+[PR #167](https://github.com/fivetran/dbt_shopify/pull/167), [PR #172](https://github.com/fivetran/dbt_shopify/pull/172) include the following updates:
+
+## Schema/Data Changes
+**3 total changes • 0 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| [`stg_shopify_gql__metafield`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify_gql__metafield) | Deduplication logic and `unique_key` value | Deduplicated on `id` only; `unique_key` hashed on `metafield_id` and `source_relation` | Deduplicated on `id`, `owner_id`, and `owner_resource`; `unique_key` hashed on `metafield_id`, `owner_resource_id`, `owner_resource`, and `source_relation` | Shopify changed the underlying `METAFIELD` table's primary key to a composite of `owner_id` and `owner_resource` to fix cross-entity ID collisions. This change does not affect any downstream `shopify_gql__*_metafields` models, since `unique_key` is never selected from `stg_shopify_gql__metafield` into those outputs. |
+| [`shopify_gql__orders`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__orders), [`shopify_gql__daily_shop`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__daily_shop), customer cohort models | Column value | `gross_sales` / `net_sales` = `Σ quantity² × unit_price` | `gross_sales` / `net_sales` = `Σ quantity × unit_price` | Fixes a bug where GraphQL orders with any line `quantity > 1` had sales figures inflated quadratically. Orders where every line has `quantity = 1` are unaffected. |
+| [`shopify_gql__line_item_enhanced`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__line_item_enhanced) | Column value | `total_amount = quantity² × unit_price`; `unit_amount` = line total | `total_amount = quantity × unit_price`; `unit_amount` = true unit price | Same root cause as above, corrected. |
+
+## Contributors
+- [liuhui998](https://github.com/liuhui998) ([PR #166](https://github.com/fivetran/dbt_shopify/pull/166))
+
+# dbt_shopify v1.9.2
+
+[PR #164](https://github.com/fivetran/dbt_shopify/pull/164) includes the following updates:
+
+## Feature Updates
+- Adds DuckDB as a supported destination.
 
 # dbt_shopify v1.9.1
 
@@ -38,7 +53,6 @@
 - Adds the `fivetran_using_source_casing` variable for case-sensitive destination support. When enabled, downstream transformations respect source casing to ensure consistent results. See the [Additional Configurations](https://github.com/fivetran/dbt_shopify/#source-casing-for-case-sensitive-destinations) section of the README for details.
 - Introduces `fivetran_utils.partition_by_source_relation` macro and replaces the `shopify_partition_by_cols` macro to conditionally include `source_relation` in partition clauses only when multiple sources are configured.
 
-<<<<<<< HEAD
 # dbt_shopify v1.8.2
 
 [PR #160](https://github.com/fivetran/dbt_shopify/pull/160) includes the following updates:
@@ -76,8 +90,6 @@ This release includes the following updates:
 ## Bug Fix
 - Fixes duplicate customer visits in `int_shopify_gql__order` by filtering to include only the most recent visit per order, preventing duplicate visits in downstream models.
 
-=======
->>>>>>> a6132fd68f4d88f6fee0662ca6ffdb61cf286c0f
 # dbt_shopify v1.8.1
 
 [PR #157](https://github.com/fivetran/dbt_shopify/pull/157) includes the following update:
