@@ -12,3 +12,4 @@ _fivetran_synced,created_at,description,id,key,namespace,owner_id,owner_resource
 2025-07-18 11:04:00,2025-07-14 06:00:00,bea81c1795a612d8fc3a232b156467c0,7011,different_field,bea81c1795a612d8fc3a232b156467c0,1007,shop,string,string,2025-07-18 11:04:00,some_value
 2025-07-18 11:05:00,2025-07-13 05:00:00,bea81c1795a612d8fc3a232b156467c1,7012,extra_field,bea81c1795a612d8fc3a232b156467c1,101,productvariant,boolean,string,2025-07-18 11:05:00,bea81c1795a612d8fc3a232b156467c1
 2025-07-18 11:05:00,2025-07-13 05:00:00,bea81c1795a612d8fc3a232b156467c1,7013,extra-field,bea81c1795a612d8fc3a232b156467c1,101,productvariant,boolean,string,2025-07-19 11:05:00,bea81c1795a612d8fc3a232b156467c1
+2025-07-19 12:00:00,2025-07-19 11:00:00,collision_test_description,7003,collision_test_field,collision_test_namespace,4001,order,string,string,2025-07-19 12:00:00,collision_test_value

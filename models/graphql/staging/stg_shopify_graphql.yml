@@ -1247,7 +1247,7 @@ models:
       downloadable documents, release dates, images, or part numbers. Metafields are identified by an owner resource, a namespace, and a key and they store a value along with type information for that context. 
     columns:
       - name: unique_key
-        description: Surrogate key hashed on `metafield_id` and `source_relation`.
+        description: Surrogate key hashed on `metafield_id`, `owner_resource_id`, `owner_resource`, and `source_relation`.
         tests:
           - unique
           - not_null
