@@ -37,8 +37,6 @@ final as (
         original_total_set_pres_currency_code as price_pres_currency_code,
         original_total_set_shop_amount as price_shop_amount,
         original_total_set_shop_currency_code as price_shop_currency_code,
-        original_unit_price_set_pres_amount as unit_price_pres_amount,
-        original_unit_price_set_pres_currency_code as unit_price_pres_currency_code,
         original_unit_price_set_shop_amount as unit_price_shop_amount,
         original_unit_price_set_shop_currency_code as unit_price_shop_currency_code,
         product_id,

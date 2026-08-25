@@ -49,8 +49,6 @@
     {"name": "original_total_set_pres_currency_code", "datatype": dbt.type_string()},
     {"name": "original_total_set_shop_amount", "datatype": dbt.type_float()},
     {"name": "original_total_set_shop_currency_code", "datatype": dbt.type_string()},
-    {"name": "original_unit_price_set_pres_amount", "datatype": dbt.type_float()},
-    {"name": "original_unit_price_set_pres_currency_code", "datatype": dbt.type_string()},
     {"name": "original_unit_price_set_shop_amount", "datatype": dbt.type_float()},
     {"name": "original_unit_price_set_shop_currency_code", "datatype": dbt.type_string()},
     {"name": "product_id", "datatype": dbt.type_int()},
