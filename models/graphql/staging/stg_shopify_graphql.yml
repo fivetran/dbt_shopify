@@ -263,6 +263,10 @@ models:
         description: The total price of the line item when the order was created, in *shop* currency. This value doesn't include discounts.
       - name: price_shop_currency_code
         description: The three-letter code (ISO 4217 format) for the shop currency used to display the total price.
+      - name: unit_price_shop_amount
+        description: The unit price of the line item when the order was created, in *shop* currency. This value doesn't include discounts.
+      - name: unit_price_shop_currency_code
+        description: The three-letter code (ISO 4217 format) for the shop currency used to display the unit price.
       - name: product_id
         description: The ID of the product that the line item belongs to. Can be null if the original product associated with the order is deleted at a later date.
       - name: quantity
@@ -1247,7 +1251,7 @@ models:
       downloadable documents, release dates, images, or part numbers. Metafields are identified by an owner resource, a namespace, and a key and they store a value along with type information for that context. 
     columns:
       - name: unique_key
-        description: Surrogate key hashed on `metafield_id` and `source_relation`.
+        description: Surrogate key hashed on `metafield_id`, `owner_resource_id`, `owner_resource`, and `source_relation`.
         tests:
           - unique
           - not_null

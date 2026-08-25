@@ -62,7 +62,7 @@ with order_line as (
         sum(coalesce(order_line.quantity, 0)) as order_total_quantity,
         sum(coalesce(tax_aggregates.price, 0)) as order_total_tax,
         sum(coalesce(order_line.total_discount_shop_amount, 0)) as order_total_discount,
-        sum(case when not order_line.is_gift_card and coalesce(orders.financial_status, '') != 'voided' then order_line.quantity * order_line.price_shop_amount else 0 end) as gross_sales,
+        sum(case when not order_line.is_gift_card and coalesce(orders.financial_status, '') != 'voided' then order_line.price_shop_amount else 0 end) as gross_sales,
         sum(coalesce(discount_allocation_agg.discount_allocation_amount, 0)) as discount_allocation_amount,
         sum(coalesce(price_pres_amount, 0)) as total_line_items_price_pres_amount,
         sum(coalesce(price_shop_amount, 0)) as total_line_items_price_shop_amount,
