@@ -3,15 +3,6 @@
     enabled=var('fivetran_validation_tests_enabled', false) and var('shopify_api', 'rest') == 'graphql' and var('shopify_gql_using_metafield', True)
 ) }}
 
--- Confirms the composite-key fix actually works: two metafields that collide on
--- `id` alone (different owner_id/owner_resource) must BOTH survive as
--- is_most_recent_record = true. A regression to the old `partition by id`
--- dedup would silently drop one of them without tripping any duplicate-key
--- test, since it's a suppression bug, not a duplication bug -- so this checks
--- for the missing survivor directly rather than for accidental duplicates
--- (duplicate unique_key values are already covered by the `unique` test on
--- stg_shopify_gql__metafield.unique_key in stg_shopify_graphql.yml).
-
 with stg as (
 
     select *
