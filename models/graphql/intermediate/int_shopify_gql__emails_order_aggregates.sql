@@ -30,6 +30,18 @@ with orders as (
     from transactions
     group by 1, 2, 3
 
+), payment_aggregates as (
+    -- one row per order: an order can have a `sale` AND a `capture` (for example when it is paid
+    -- through more than one gateway), and joining to both rows duplicated every order-level column
+    select
+        order_id,
+        source_relation,
+        sum(currency_exchange_calculated_amount) as currency_exchange_calculated_amount
+
+    from transaction_aggregates
+    where kind in ('sale','capture')
+    group by 1, 2
+
 ), customer_emails as (
 -- in case any orders records don't have the customer email attached yet
     select 
@@ -67,10 +79,9 @@ with orders as (
     join customer_emails
         on orders.customer_id = customer_emails.customer_id
         and orders.source_relation = customer_emails.source_relation
-    left join transaction_aggregates 
+    left join payment_aggregates as transaction_aggregates
         on orders.order_id = transaction_aggregates.order_id
         and orders.source_relation = transaction_aggregates.source_relation
-        and transaction_aggregates.kind in ('sale','capture')
     left join transaction_aggregates as refunds
         on orders.order_id = refunds.order_id
         and orders.source_relation = refunds.source_relation
