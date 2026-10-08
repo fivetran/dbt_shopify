@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '1.10.0'
+version: '1.10.1'
 profile: 'integration_tests'
 config-version: 2
 
@@ -311,6 +311,7 @@ seeds:
     shopify_gql_shop_data:
       +column_types:
         billing_address_phone: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
+        shop_address_phone: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
     shopify_inventory_level_data:
       +column_types:
         updated_at: timestamp
