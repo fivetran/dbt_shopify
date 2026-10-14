@@ -27,7 +27,7 @@ final as (
         id as shop_id,
         name,
         _fivetran_deleted as is_deleted,
-        {# billing_address_* source columns are deprecated as of the December 2026 connector release; coalesce prefers shop_address_* and falls back for older syncs #}
+        {# billing_address_* source columns are deprecated as of the October 2026 connector release; replaced with shop_address_* #}
         coalesce(shop_address_address_1, billing_address_address_1) as address_1,
         coalesce(shop_address_address_2, billing_address_address_2) as address_2,
         coalesce(shop_address_city, billing_address_city) as city,
