@@ -1,3 +1,14 @@
+# dbt_shopify v1.10.1
+
+[PR #178](https://github.com/fivetran/dbt_shopify/pull/178) includes the following updates:
+
+## Schema/Data Changes
+**1 total change • 0 possible breaking changes**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| [`stg_shopify_gql__shop`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify_gql__shop) | Replaced source columns | `billing_address_*` fields as source for address columns | `shop_address_*` fields preferred via `coalesce`, falling back to now deprecated `billing_address_*` for older syncs | Schema is unchanged. |
+
 # dbt_shopify v1.10.0
 
 [PR #167](https://github.com/fivetran/dbt_shopify/pull/167), [PR #172](https://github.com/fivetran/dbt_shopify/pull/172) include the following updates:

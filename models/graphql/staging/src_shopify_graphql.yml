@@ -1237,17 +1237,17 @@ sources:
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
           - name: billing_address_address_1
-            description: The shop's street address (or PO Box number).
+            description: "**Deprecated.** Use `shop_address_address_1` instead. The shop's street address (or PO Box number)."
           - name: billing_address_address_2
-            description: The optional second line of the shop's street address.
+            description: "**Deprecated.** Use `shop_address_address_2` instead. The optional second line of the shop's street address."
           - name: checkout_api_supported
             description: Boolean representing whether the shop is capable of accepting payments directly through the Checkout API.
           - name: billing_address_city
-            description: The shop's city.
+            description: "**Deprecated.** Use `shop_address_city` instead. The shop's city."
           - name: billing_address_country
-            description: The shop's country. In most cases, this value matches the country_code.
+            description: "**Deprecated.** Use `shop_address_country` instead. The shop's country. In most cases, this value matches the country_code."
           - name: billing_address_country_code_v_2
-            description: The two-letter country code corresponding to the shop's country.
+            description: "**Deprecated.** Use `shop_address_country_code_v_2` instead. The two-letter country code corresponding to the shop's country."
           - name: created_at
             description: The date and time (ISO 8601) when the shop was created.
           - name: currency_code
@@ -1267,11 +1267,11 @@ sources:
           - name: id
             description: The ID for the shop. A 64-bit unsigned integer.
           - name: billing_address_latitude
-            description: The latitude of the shop's location.
+            description: "**Deprecated.** Use `shop_address_latitude` instead. The latitude of the shop's location."
           - name: billing_address_longitude
-            description: The longitude of the shop's location.
+            description: "**Deprecated.** Use `shop_address_longitude` instead. The longitude of the shop's location."
           - name: billing_address_zip
-            description: The shop's zip or postal code.
+            description: "**Deprecated.** Use `shop_address_zip` instead. The shop's zip or postal code."
           - name: currency_formats_money_format
             description: A string representing the way currency is formatted when the currency isn't specified.
           - name: currency_formats_money_in_emails_format
@@ -1289,7 +1289,7 @@ sources:
           - name: password_enabled
             description: Boolean representing whether the password protection page is enabled on the shop's online store.
           - name: billing_address_phone
-            description: The contact phone number for the shop.
+            description: "**Deprecated.** Use `shop_address_phone` instead. The contact phone number for the shop."
           - name: plan_display_name
             description: The display name of the Shopify plan the shop is on.
           - name: primary_domain_host
@@ -1297,11 +1297,33 @@ sources:
           - name: primary_domain_localization_default_locale
             description: The localization of the domain of the shop's online store, if the domain doesn't redirect.
           - name: billing_address_province
-            description: The shop's normalized province or state name.
+            description: "**Deprecated.** Use `shop_address_province` instead. The shop's normalized province or state name."
           - name: billing_address_province_code
-            description: The two- or three-letter code for the shop's province or state.
+            description: "**Deprecated.** Use `shop_address_province_code` instead. The two- or three-letter code for the shop's province or state."
           - name: setup_required
             description: Boolean representing whether the shop has any outstanding setup steps.
+          - name: shop_address_address_1
+            description: The shop's street address (or PO Box number).
+          - name: shop_address_address_2
+            description: The optional second line of the shop's street address.
+          - name: shop_address_city
+            description: The shop's city.
+          - name: shop_address_country
+            description: The shop's country. In most cases, this value matches the country_code.
+          - name: shop_address_country_code_v_2
+            description: The two-letter country code corresponding to the shop's country.
+          - name: shop_address_latitude
+            description: The latitude of the shop's location.
+          - name: shop_address_longitude
+            description: The longitude of the shop's location.
+          - name: shop_address_phone
+            description: The contact phone number for the shop.
+          - name: shop_address_province
+            description: The shop's normalized province or state name.
+          - name: shop_address_province_code
+            description: The two- or three-letter code for the shop's province or state.
+          - name: shop_address_zip
+            description: The shop's zip or postal code.
           - name: shop_owner_name
             description: The username of the shop owner.
           - name: tax_shipping
