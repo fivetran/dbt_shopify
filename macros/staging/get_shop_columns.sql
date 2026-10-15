@@ -65,17 +65,6 @@
 {% set columns = [
     {"name": "_fivetran_deleted", "datatype": dbt.type_boolean()},
     {"name": "_fivetran_synced", "datatype": dbt.type_timestamp()},
-    {"name": "billing_address_address_1", "datatype": dbt.type_string()},
-    {"name": "billing_address_address_2", "datatype": dbt.type_string()},
-    {"name": "billing_address_city", "datatype": dbt.type_string()},
-    {"name": "billing_address_country", "datatype": dbt.type_string()},
-    {"name": "billing_address_country_code_v_2", "datatype": dbt.type_string()},
-    {"name": "billing_address_latitude", "datatype": dbt.type_float()},
-    {"name": "billing_address_longitude", "datatype": dbt.type_float()},
-    {"name": "billing_address_phone", "datatype": dbt.type_string()},
-    {"name": "billing_address_province", "datatype": dbt.type_string()},
-    {"name": "billing_address_province_code", "datatype": dbt.type_string()},
-    {"name": "billing_address_zip", "datatype": dbt.type_string()},
     {"name": "checkout_api_supported", "datatype": dbt.type_boolean()},
     {"name": "contact_email", "datatype": dbt.type_string()},
     {"name": "created_at", "datatype": dbt.type_timestamp()},
@@ -114,8 +103,20 @@
     {"name": "timezone_offset", "datatype": dbt.type_string()},
     {"name": "timezone_offset_minutes", "datatype": dbt.type_int()},
     {"name": "updated_at", "datatype": dbt.type_timestamp()},
-    {"name": "weight_unit", "datatype": dbt.type_string()}
+    {"name": "weight_unit", "datatype": dbt.type_string()},
+    {"name": "billing_address_address_1", "datatype": dbt.type_string()},
+    {"name": "billing_address_address_2", "datatype": dbt.type_string()},
+    {"name": "billing_address_city", "datatype": dbt.type_string()},
+    {"name": "billing_address_country", "datatype": dbt.type_string()},
+    {"name": "billing_address_country_code_v_2", "datatype": dbt.type_string()},
+    {"name": "billing_address_latitude", "datatype": dbt.type_float()},
+    {"name": "billing_address_longitude", "datatype": dbt.type_float()},
+    {"name": "billing_address_phone", "datatype": dbt.type_string()},
+    {"name": "billing_address_province", "datatype": dbt.type_string()},
+    {"name": "billing_address_province_code", "datatype": dbt.type_string()},
+    {"name": "billing_address_zip", "datatype": dbt.type_string()},
 ] %}
+{# Billing address columns are deprecated as of the October 2026 connector release and will be removed in a future package version. Use shop_address_* instead. #}
 
 {{ return(columns) }}
 
