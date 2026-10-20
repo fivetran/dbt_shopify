@@ -52,7 +52,8 @@ joined as (
         orders.created_timestamp as order_created_timestamp,
         fulfillment.status as fulfillment_status, 
         refunds_aggregated.subtotal as subtotal_sold_refunds, 
-        refunds_aggregated.quantity as quantity_sold_refunds
+        refunds_aggregated.quantity as quantity_sold_refunds,
+        row_number() over (partition by order_lines.order_line_id, fulfillment.location_id, order_lines.source_relation order by fulfillment.fulfillment_id) as order_line_location_index
 
     from order_lines
     join orders
@@ -72,8 +73,8 @@ aggregated as (
         variant_id,
         location_id,
         source_relation,
-        sum(coalesce(pre_tax_price, 0)) as subtotal_sold,
-        sum(coalesce(quantity, 0)) as quantity_sold,
+        sum(coalesce(case when order_line_location_index = 1 then pre_tax_price end, 0)) as subtotal_sold,
+        sum(coalesce(case when order_line_location_index = 1 then quantity end, 0)) as quantity_sold,
         count(distinct order_id) as count_distinct_orders,
         count(distinct customer_id) as count_distinct_customers,
         count(distinct email) as count_distinct_customer_emails,
@@ -85,8 +86,8 @@ aggregated as (
         , count(distinct case when fulfillment_status = '{{ status }}' then fulfillment_id end) as count_fulfillment_{{ status }}
         {% endfor %}
 
-        , sum(coalesce(subtotal_sold_refunds, 0)) as subtotal_sold_refunds
-        , sum(coalesce(quantity_sold_refunds, 0)) as quantity_sold_refunds
+        , sum(coalesce(case when order_line_location_index = 1 then subtotal_sold_refunds end, 0)) as subtotal_sold_refunds
+        , sum(coalesce(case when order_line_location_index = 1 then quantity_sold_refunds end, 0)) as quantity_sold_refunds
 
     from joined
 
