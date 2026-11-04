@@ -1,0 +1,16 @@
+version: 1.11.0
+pr_number: 183
+is_breaking: true
+schema_data_changes:
+  entries:
+  - models:
+    - '`shopify__customer_cohorts`'
+    - '`shopify__customer_email_cohorts`'
+    - '`shopify_gql__customer_cohorts`'
+    - '`shopify_gql__customer_email_cohorts`'
+    change_type: Materialization
+    old: file_format `parquet` on Databricks all-purpose clusters, `delta` on SQL warehouses
+    new: file_format `delta` everywhere
+    is_breaking: true
+    notes: Fixes incremental run errors on newer Databricks versions. Requires a `--full-refresh`
+      after upgrading to convert existing tables to Delta format.
