@@ -19,7 +19,7 @@ include_dbt_compile: false
 test_scenarios:
   - name: "Default"
     vars: {}
-    include_incremental: false
+    include_incremental: true
 
   - name: "features enabled"
     vars:

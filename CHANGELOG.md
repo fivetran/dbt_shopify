@@ -1,3 +1,17 @@
+# dbt_shopify v1.11.0
+
+[PR #PENDING](https://github.com/fivetran/dbt_shopify/pull/PENDING) includes the following updates:
+
+## Schema/Data Changes (--full-refresh required after upgrading)
+**1 total change • 1 possible breaking change**
+
+| Data Model(s) | Change type | Old | New | Notes |
+| ------------- | ----------- | --- | --- | ----- |
+| [`shopify__customer_cohorts`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_cohorts), [`shopify__customer_email_cohorts`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify__customer_email_cohorts), [`shopify_gql__customer_cohorts`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customer_cohorts), [`shopify_gql__customer_email_cohorts`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.shopify_gql__customer_email_cohorts) | File format | `parquet` on Databricks all-purpose clusters, `delta` on SQL warehouses | `delta` everywhere | Fixes `[DELTA_ONLY_OPERATION] INSERT REPLACE ON is only supported for Delta tables` failures on the incremental run, which recent `dbt-databricks` versions raise against `parquet` tables. Requires a `--full-refresh` to convert existing tables from `parquet` to `delta`. |
+
+## Under the Hood
+- Added an incremental run to the `Default` CI test scenario so Databricks incremental paths are tested going forward.
+
 # dbt_shopify v1.10.1
 
 [PR #178](https://github.com/fivetran/dbt_shopify/pull/178) includes the following updates:
