@@ -21,5 +21,7 @@ schema_data_changes:
     change_type: Removed field/model
     old: '`created_by_description`, `created_by_title`'
     is_breaking: true
-    notes: These columns have been deprecated since August 2026 and are not used by any downstream model. If you reference them in your own downstream models, update your code before upgrading.
+    notes: These columns have been deprecated since August 2026 and are not used by
+      any downstream model. If you reference them in your own downstream models, update
+      your code before upgrading.
 date: '2026-11-04'

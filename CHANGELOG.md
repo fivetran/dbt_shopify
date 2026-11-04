@@ -8,7 +8,7 @@
 | Data Model(s) | Change type | Old | New | Notes |
 | ------------- | ----------- | --- | --- | ----- |
 | `shopify__customer_cohorts`<br>`shopify__customer_email_cohorts`<br>`shopify_gql__customer_cohorts`<br>`shopify_gql__customer_email_cohorts`<br>(Breaking) | Materialization | file_format `parquet` on Databricks all-purpose clusters, `delta` on SQL warehouses | file_format `delta` everywhere | Fixes incremental run errors on newer Databricks versions. Requires a `--full-refresh` after upgrading to convert existing tables to Delta format. |
-| [`stg_shopify__discount_redeem_code`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify__discount_redeem_code), [`stg_shopify_gql__discount_redeem_code`](https://fivetran.github.io/dbt_shopify/#!/model/model.shopify.stg_shopify_gql__discount_redeem_code)<br>(Breaking) | Removed columns | `created_by_description`, `created_by_title` | Not present | These columns have been deprecated since August 2026 and are not used by any downstream model. We have removed them from the models. If you reference these columns in your own downstream models, you will need to update your code before upgrading. |
+| `stg_shopify__discount_redeem_code`<br>`stg_shopify_gql__discount_redeem_code`<br>(Breaking) | Removed field/model | `created_by_description`, `created_by_title` |  | These columns have been deprecated since August 2026 and are not used by any downstream model. If you reference them in your own downstream models, update your code before upgrading. |
 
 # dbt_shopify v1.10.1
 
