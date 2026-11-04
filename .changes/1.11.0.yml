@@ -9,8 +9,10 @@ schema_data_changes:
     - '`shopify_gql__customer_cohorts`'
     - '`shopify_gql__customer_email_cohorts`'
     change_type: Materialization
-    old: file_format `parquet` on Databricks all-purpose clusters, `delta` on SQL warehouses
+    old: file_format `parquet` on Databricks all-purpose clusters, `delta` on SQL
+      warehouses
     new: file_format `delta` everywhere
     is_breaking: true
     notes: Fixes incremental run errors on newer Databricks versions. Requires a `--full-refresh`
       after upgrading to convert existing tables to Delta format.
+date: '2026-11-04'
