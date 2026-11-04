@@ -15,4 +15,11 @@ schema_data_changes:
     is_breaking: true
     notes: Fixes incremental run errors on newer Databricks versions. Requires a `--full-refresh`
       after upgrading to convert existing tables to Delta format.
+  - models:
+    - '`stg_shopify__discount_redeem_code`'
+    - '`stg_shopify_gql__discount_redeem_code`'
+    change_type: Removed field/model
+    old: '`created_by_description`, `created_by_title`'
+    is_breaking: true
+    notes: These columns have been deprecated since August 2026 and are not used by any downstream model. If you reference them in your own downstream models, update your code before upgrading.
 date: '2026-11-04'

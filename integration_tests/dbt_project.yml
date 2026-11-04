@@ -439,8 +439,6 @@ seeds:
         async_usage_count: integer
         code: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
         discount_type: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
-        created_by_description: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
-        created_by_title: "{{ 'string' if target.type in ('bigquery', 'spark', 'databricks') else 'varchar' }}"
     shopify_discount_allocation_data:
       +column_types:
         amount: float
