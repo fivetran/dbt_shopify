@@ -1,6 +1,6 @@
 # dbt_shopify v1.11.0
 
-[PR #PENDING](https://github.com/fivetran/dbt_shopify/pull/PENDING) includes the following updates:
+[PR #183](https://github.com/fivetran/dbt_shopify/pull/183) includes the following updates:
 
 ## Schema/Data Changes (--full-refresh required after upgrading)
 **1 total change • 1 possible breaking change**
