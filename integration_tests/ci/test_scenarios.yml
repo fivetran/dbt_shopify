@@ -19,7 +19,14 @@ include_dbt_compile: false
 test_scenarios:
   - name: "Default"
     vars: {}
+    include_incremental: false
+
+  # Redshift is excluded: on dbt v2 the incremental rerun intermittently fails with
+  # "cache lookup failed for relation" (SQLSTATE XX000). Add it back once dbt fixes it.
+  - name: "incremental"
+    vars: {}
     include_incremental: true
+    warehouses: ["snowflake", "bigquery", "postgres", "databricks", "databricks_sql", "duckdb"]
 
   - name: "features enabled"
     vars:
