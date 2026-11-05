@@ -16,10 +16,14 @@ include_sqlserver: false
 include_duckdb: true
 include_dbt_compile: false
 
+# dbt v2 runs only on these warehouses until upstream dbt bugs are fixed:
+# - redshift: view rebuilds fail on the second run (GA-1044262, dbt-labs/dbt#14082)
+dbt_v2_warehouses: ["snowflake", "bigquery", "databricks", "databricks_sql", "duckdb"]
+
 test_scenarios:
   - name: "Default"
     vars: {}
-    include_incremental: false
+    include_incremental: true
 
   - name: "features enabled"
     vars:

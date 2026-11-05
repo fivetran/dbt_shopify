@@ -1,0 +1,27 @@
+version: 1.11.0
+pr_number: 183
+is_breaking: true
+schema_data_changes:
+  entries:
+  - models:
+    - '`shopify__customer_cohorts`'
+    - '`shopify__customer_email_cohorts`'
+    - '`shopify_gql__customer_cohorts`'
+    - '`shopify_gql__customer_email_cohorts`'
+    change_type: Materialization
+    old: file_format `parquet` on Databricks all-purpose clusters, `delta` on SQL
+      warehouses
+    new: file_format `delta` everywhere on Databricks
+    is_breaking: true
+    notes: Fixes incremental run errors on newer Databricks versions. Requires a `--full-refresh`
+      after upgrading to convert existing tables to Delta format.
+  - models:
+    - '`stg_shopify__discount_redeem_code`'
+    - '`stg_shopify_gql__discount_redeem_code`'
+    change_type: Removed field/model
+    old: '`created_by_description`, `created_by_title`'
+    is_breaking: true
+    notes: These columns have been deprecated since August 2026 and are not used by
+      any downstream model. If you reference them in your own downstream models, update
+      your code before upgrading.
+date: '2026-11-04'

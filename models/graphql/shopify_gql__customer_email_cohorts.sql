@@ -10,8 +10,8 @@
             } if target.type not in ('spark', 'databricks', 'duckdb') 
             else ['date_month'],
         cluster_by=['date_month', 'email'],
-        file_format='delta' if shopify.shopify_is_databricks_sql_warehouse() else 'parquet'
-        ) 
+        file_format='delta'
+        )
 }}
 
 with calendar as (
