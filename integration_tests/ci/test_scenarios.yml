@@ -16,17 +16,14 @@ include_sqlserver: false
 include_duckdb: true
 include_dbt_compile: false
 
+# dbt v2 runs only on these warehouses until upstream dbt bugs are fixed:
+# - redshift: view rebuilds fail on the second run (GA-1044262, dbt-labs/dbt#14082)
+dbt_v2_warehouses: ["snowflake", "bigquery", "databricks", "databricks_sql", "duckdb"]
+
 test_scenarios:
   - name: "Default"
     vars: {}
-    include_incremental: false
-
-  # Redshift is excluded: on dbt v2 the incremental rerun intermittently fails with
-  # "cache lookup failed for relation" (SQLSTATE XX000). Add it back once dbt fixes it.
-  - name: "incremental"
-    vars: {}
     include_incremental: true
-    warehouses: ["snowflake", "bigquery", "postgres", "databricks", "databricks_sql", "duckdb"]
 
   - name: "features enabled"
     vars:
