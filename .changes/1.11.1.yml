@@ -1,4 +1,5 @@
 version: 1.11.1
+pr_number: 185
 bug_fixes:
 - description: Replaces `fivetran_utils.string_agg` with dbt's built-in `dbt.listagg`. On Databricks,
     aggregated values that contain a comma followed by a space are no longer split apart. Lists
