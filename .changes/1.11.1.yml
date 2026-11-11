@@ -1,0 +1,8 @@
+version: 1.11.1
+bug_fixes:
+- description: Replaces `fivetran_utils.string_agg` with dbt's built-in `dbt.listagg`. On Databricks,
+    aggregated values that contain a comma followed by a space are no longer split apart. Lists
+    built without `distinct` also keep duplicate values on Databricks now, which matches the other
+    warehouses. Output on other warehouses doesn't change.
+under_the_hood:
+- description: Replaces `fivetran_utils.max_bool` with dbt's built-in `dbt.bool_or`. Output doesn't change.

@@ -60,7 +60,7 @@ with refunds as (
         source_relation,
         sum(amount_shop_amount) as return_shipping_fee_shop_amount,
         sum(amount_pres_amount) as return_shipping_fee_pres_amount,
-        {{ fivetran_utils.string_agg("distinct cast(amount_pres_currency_code as " ~ dbt.type_string() ~ ")", "', '") }} as return_shipping_fee_pres_currency_codes
+        {{ dbt.listagg("distinct cast(amount_pres_currency_code as " ~ dbt.type_string() ~ ")", "', '") }} as return_shipping_fee_pres_currency_codes
     from {{ ref('stg_shopify_gql__return_shipping_fee') }}
     group by 1, 2
 {% endif %}

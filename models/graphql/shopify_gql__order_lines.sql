@@ -32,7 +32,7 @@ refunds_aggregated as (
         source_relation,
         sum(quantity) as quantity,
         sum(coalesce(subtotal, 0)) as subtotal,
-        {{ fivetran_utils.string_agg("distinct cast(refunds.restock_type as " ~ dbt.type_string() ~ ")", "', '") }} as restock_types
+        {{ dbt.listagg("distinct cast(refunds.restock_type as " ~ dbt.type_string() ~ ")", "', '") }} as restock_types
     from refunds
     group by 1,2
 

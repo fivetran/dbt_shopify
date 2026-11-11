@@ -66,8 +66,8 @@ with order_line as (
         sum(coalesce(discount_allocation_agg.discount_allocation_amount, 0)) as discount_allocation_amount,
         sum(coalesce(price_pres_amount, 0)) as total_line_items_price_pres_amount,
         sum(coalesce(price_shop_amount, 0)) as total_line_items_price_shop_amount,
-        {{ fivetran_utils.string_agg("distinct cast(order_line.price_pres_currency_code as " ~ dbt.type_string() ~ ")", "', '") }} as total_line_items_price_pres_currency_codes,
-        {{ fivetran_utils.string_agg("distinct cast(order_line.price_shop_currency_code as " ~ dbt.type_string() ~ ")", "', '") }} as total_line_items_price_shop_currency_codes
+        {{ dbt.listagg("distinct cast(order_line.price_pres_currency_code as " ~ dbt.type_string() ~ ")", "', '") }} as total_line_items_price_pres_currency_codes,
+        {{ dbt.listagg("distinct cast(order_line.price_shop_currency_code as " ~ dbt.type_string() ~ ")", "', '") }} as total_line_items_price_shop_currency_codes
 
     from order_line
     left join orders

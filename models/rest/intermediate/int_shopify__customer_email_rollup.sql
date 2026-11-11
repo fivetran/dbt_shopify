@@ -26,9 +26,9 @@ with customers as (
         customers.source_relation,
 
         -- fields to string agg together
-        {{ fivetran_utils.string_agg("distinct cast(customers.customer_id as " ~ dbt.type_string() ~ ")", "', '") }} as customer_ids,
-        {{ fivetran_utils.string_agg("distinct cast(customers.phone as " ~ dbt.type_string() ~ ")", "', '") }} as phone_numbers,
-        {{ fivetran_utils.string_agg("distinct cast(customer_tags.value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags,
+        {{ dbt.listagg("distinct cast(customers.customer_id as " ~ dbt.type_string() ~ ")", "', '") }} as customer_ids,
+        {{ dbt.listagg("distinct cast(customers.phone as " ~ dbt.type_string() ~ ")", "', '") }} as phone_numbers,
+        {{ dbt.listagg("distinct cast(customer_tags.value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags,
 
         -- fields to take aggregates of
         min(customers.created_timestamp) as first_account_created_at,
@@ -38,8 +38,8 @@ with customers as (
         max(customers._fivetran_synced) as last_fivetran_synced,
 
         -- take true if ever given for boolean fields
-        {{ fivetran_utils.max_bool("case when customers.customer_index = 1 then customers.is_tax_exempt else null end") }} as is_tax_exempt, -- since this changes every year
-        {{ fivetran_utils.max_bool("customers.is_verified_email") }} as is_verified_email
+        {{ dbt.bool_or("case when customers.customer_index = 1 then customers.is_tax_exempt else null end") }} as is_tax_exempt, -- since this changes every year
+        {{ dbt.bool_or("customers.is_verified_email") }} as is_verified_email
 
         -- for all other fields, just take the latest value
         {% set cols = adapter.get_columns_in_relation(ref('stg_shopify__customer')) %}

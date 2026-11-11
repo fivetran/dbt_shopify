@@ -30,7 +30,7 @@ with customers as (
     select 
         customer_id,
         source_relation,
-        {{ fivetran_utils.string_agg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags
+        {{ dbt.listagg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as customer_tags
 
     from {{ ref('stg_shopify_gql__customer_tag') }}
     group by 1,2
