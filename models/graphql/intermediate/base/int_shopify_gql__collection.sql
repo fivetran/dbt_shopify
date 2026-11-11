@@ -27,7 +27,7 @@ agg_collection_rule as (
     select 
         collection_id,
         source_relation,
-        '[' || {{ fivetran_utils.string_agg("rule", "','") }} || ']' as rules
+        '[' || {{ dbt.listagg("rule", "','") }} || ']' as rules
     from prep_collection_rule
     group by 1,2
 ),

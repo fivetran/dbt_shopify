@@ -29,10 +29,10 @@ joined as (
     select 
         fulfillment.order_id,
         fulfillment.source_relation,
-        {{ fivetran_utils.string_agg("distinct cast(fulfillment_tracking_info.tracking_number as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_numbers,
-        {{ fivetran_utils.string_agg("distinct cast(fulfillment_tracking_info.tracking_url as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_urls,
-        {{ fivetran_utils.string_agg("distinct cast(fulfillment_tracking_info.tracking_company as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_companies,
-        {{ fivetran_utils.string_agg("distinct cast(fulfillment.service as " ~ dbt.type_string() ~ ")", "', '") }} as fulfillment_services
+        {{ dbt.listagg("distinct cast(fulfillment_tracking_info.tracking_number as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_numbers,
+        {{ dbt.listagg("distinct cast(fulfillment_tracking_info.tracking_url as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_urls,
+        {{ dbt.listagg("distinct cast(fulfillment_tracking_info.tracking_company as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_companies,
+        {{ dbt.listagg("distinct cast(fulfillment.service as " ~ dbt.type_string() ~ ")", "', '") }} as fulfillment_services
     from fulfillment 
     left join fulfillment_tracking_info
         on fulfillment.fulfillment_id = fulfillment_tracking_info.fulfillment_id
@@ -66,7 +66,7 @@ final as (
         max(cast(null as {{ dbt.type_string() }})) as tracking_numbers,
         max(cast(null as {{ dbt.type_string() }})) as tracking_urls,
         max(cast(null as {{ dbt.type_string() }})) as tracking_companies,
-        {{ fivetran_utils.string_agg("distinct cast(fulfillment.service as " ~ dbt.type_string() ~ ")", "', '") }} as fulfillment_services
+        {{ dbt.listagg("distinct cast(fulfillment.service as " ~ dbt.type_string() ~ ")", "', '") }} as fulfillment_services
         
     from fulfillment
     left join count_fulfillments

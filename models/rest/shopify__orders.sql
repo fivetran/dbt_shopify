@@ -67,7 +67,7 @@ with orders as (
     select
         order_id,
         source_relation,
-        {{ fivetran_utils.string_agg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as order_tags
+        {{ dbt.listagg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as order_tags
     
     from {{ ref('stg_shopify__order_tag') }}
     group by 1,2
@@ -77,7 +77,7 @@ with orders as (
     select
         order_id,
         source_relation,
-        {{ fivetran_utils.string_agg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as order_url_tags
+        {{ dbt.listagg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as order_url_tags
     
     from {{ ref('stg_shopify__order_url_tag') }}
     group by 1,2
@@ -88,9 +88,9 @@ with orders as (
         order_id,
         source_relation,
         count(fulfillment_id) as number_of_fulfillments,
-        {{ fivetran_utils.string_agg("distinct cast(service as " ~ dbt.type_string() ~ ")", "', '") }} as fulfillment_services,
-        {{ fivetran_utils.string_agg("distinct cast(tracking_company as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_companies,
-        {{ fivetran_utils.string_agg("distinct cast(tracking_number as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_numbers
+        {{ dbt.listagg("distinct cast(service as " ~ dbt.type_string() ~ ")", "', '") }} as fulfillment_services,
+        {{ dbt.listagg("distinct cast(tracking_company as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_companies,
+        {{ dbt.listagg("distinct cast(tracking_number as " ~ dbt.type_string() ~ ")", "', '") }} as tracking_numbers
 
     from {{ ref('stg_shopify__fulfillment') }}
     group by 1,2

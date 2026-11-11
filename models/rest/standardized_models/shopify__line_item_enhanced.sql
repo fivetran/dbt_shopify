@@ -21,9 +21,9 @@ with line_items as (
         order_id,
         kind, 
         source_relation,
-        {{ fivetran_utils.string_agg("cast (transaction_id as " ~ dbt.type_string() ~ ")", "', '") }} AS transaction_id,
-        {{ fivetran_utils.string_agg("cast (processed_timestamp as " ~ dbt.type_string() ~ ")", "', '") }} as processed_timestamp,
-        {{ fivetran_utils.string_agg('gateway', "', '") }} as gateway
+        {{ dbt.listagg("cast (transaction_id as " ~ dbt.type_string() ~ ")", "', '") }} AS transaction_id,
+        {{ dbt.listagg("cast (processed_timestamp as " ~ dbt.type_string() ~ ")", "', '") }} as processed_timestamp,
+        {{ dbt.listagg('gateway', "', '") }} as gateway
 
     from {{ ref('stg_shopify__transaction') }}
     where kind = 'capture'

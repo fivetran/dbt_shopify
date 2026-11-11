@@ -45,7 +45,7 @@ collections_aggregated as (
     select
         collection_product.product_id,
         collection_product.source_relation,
-        {{ fivetran_utils.string_agg(field_to_agg='collection.title', delimiter="', '") }} as collections
+        {{ dbt.listagg(measure='collection.title', delimiter_text="', '") }} as collections
 
     from collection_product 
     join collection 
@@ -60,7 +60,7 @@ tags_aggregated as (
     select 
         product_id,
         source_relation,
-        {{ fivetran_utils.string_agg(field_to_agg='value', delimiter="', '") }} as tags
+        {{ dbt.listagg(measure='value', delimiter_text="', '") }} as tags
     
     from product_tag
     group by 1,2

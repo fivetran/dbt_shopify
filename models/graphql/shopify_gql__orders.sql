@@ -70,7 +70,7 @@ with orders as (
     select
         order_id,
         source_relation,
-        {{ fivetran_utils.string_agg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as order_tags
+        {{ dbt.listagg("distinct cast(value as " ~ dbt.type_string() ~ ")", "', '") }} as order_tags
     
     from {{ ref('stg_shopify_gql__order_tag') }}
     group by 1,2
