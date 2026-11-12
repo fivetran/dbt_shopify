@@ -23,12 +23,13 @@
     {%- set max_metafields = [var_shopify_max_metafields, warehouse_col_limit] | min -%}
 {%- endif -%}
 
-{%- set pivot_fields = dbt_utils.get_column_values(
-    table=ref(lookup_object),
+{%- set lookup_relation = ref(lookup_object) -%}
+{%- set pivot_fields = (dbt_utils.get_column_values(
+    table=lookup_relation,
     column=key_field,
     max_records=max_metafields,
     where="lower(" ~ reference_field ~ ") in (" ~ reference_values_clause ~ ")"
-) -%}
+) or []) if execute and flags.WHICH in ('run', 'build') else [] -%}
 
 {# Create slug:[metafields] dictionary #}
 {%- set slug_to_field_dict = {} -%}
