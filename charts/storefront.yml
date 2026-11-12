@@ -1,0 +1,116 @@
+title: Shopify Storefront
+notes: Uses the official Shopify orders and order lines models. Excludes orders marked deleted or test and canceled orders; unset flags are included. Order value includes tax and shipping and is before refunds. Gross line value is price times quantity, before discounts and refunds.
+text: |
+  Follow sales, new and repeat orders, and the products customers buy.
+  Amounts stay separate by currency. The date picker starts with all available history.
+  Order value includes tax and shipping, before refunds. Gross line value is before discounts and refunds.
+
+variables:
+  period:
+    input: daterange
+
+queries:
+  orders:
+    dialect: duckdb
+    sql: |
+      SELECT source_relation, order_id, CAST(created_timestamp AS DATE) AS order_date,
+             currency, new_vs_repeat, financial_status, total_price, total_discounts
+      FROM {{ ref('shopify__orders') }}
+      WHERE is_deleted IS NOT TRUE
+        AND is_test_order IS NOT TRUE
+        AND cancelled_timestamp IS NULL
+        AND {{ filter_date_range('created_timestamp', period) }}
+
+  sales_summary:
+    dialect: duckdb
+    sql: |
+      SELECT currency, COUNT(*) AS orders, SUM(total_price) AS order_value,
+             SUM(total_price) / NULLIF(COUNT(*), 0) AS average_order_value,
+             SUM(total_discounts) AS discounts
+      FROM {{ queries.orders.cache }}
+      GROUP BY currency
+      ORDER BY currency
+
+  daily_sales:
+    dialect: duckdb
+    sql: |
+      SELECT order_date, currency, SUM(total_price) AS order_value
+      FROM {{ queries.orders.cache }}
+      GROUP BY order_date, currency
+      ORDER BY order_date, currency
+
+  customer_mix:
+    dialect: duckdb
+    sql: |
+      SELECT DATE_TRUNC('month', order_date) AS order_month,
+             new_vs_repeat AS customer_type, COUNT(*) AS orders
+      FROM {{ queries.orders.cache }}
+      GROUP BY order_month, customer_type
+      ORDER BY order_month, customer_type
+
+  top_products:
+    dialect: duckdb
+    sql: |
+      SELECT lines.title AS product, orders.currency,
+             SUM(lines.price * lines.quantity) AS gross_line_value
+      FROM {{ ref('shopify__order_lines') }} AS lines
+      JOIN {{ ref('shopify__orders') }} AS orders
+        ON lines.order_id = orders.order_id
+        AND lines.source_relation = orders.source_relation
+      WHERE orders.is_deleted IS NOT TRUE
+        AND orders.is_test_order IS NOT TRUE
+        AND orders.cancelled_timestamp IS NULL
+        AND {{ filter_date_range('orders.created_timestamp', period) }}
+      GROUP BY product, orders.currency
+      ORDER BY gross_line_value DESC, product, orders.currency
+      LIMIT 10
+
+  order_status:
+    dialect: duckdb
+    sql: |
+      SELECT financial_status, COUNT(*) AS orders
+      FROM {{ queries.orders.cache }}
+      GROUP BY financial_status
+      ORDER BY orders DESC, financial_status
+
+charts:
+  sales_summary:
+    type: table
+    title: Orders by Currency
+    query: sales_summary
+  daily_sales:
+    type: line
+    title: Daily Order Value by Currency
+    query: daily_sales
+    x: order_date
+    color: currency
+    y: order_value
+  customer_mix:
+    type: line
+    title: New and Repeat Orders by Month
+    query: customer_mix
+    x: order_month
+    color: customer_type
+    y: orders
+  top_products:
+    type: bar
+    title: Top Products by Gross Line Value
+    query: top_products
+    x: product
+    color: currency
+    y: gross_line_value
+  order_status:
+    type: bar
+    title: Orders by Financial Status
+    query: order_status
+    x: financial_status
+    y: orders
+
+rows:
+  - sales_summary
+  - cols:
+      - daily_sales
+      - customer_mix
+  - cols:
+      - top_products
+      - order_status
