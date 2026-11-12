@@ -311,6 +311,12 @@ models:
 
   - name: shopify_gql__customers
     description: Each record represents a customer in Shopify. Will also include `CUSTOMER` metafields if enabled.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - source_relation
+              - customer_id
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -393,6 +399,12 @@ models:
 
   - name: shopify_gql__customer_emails
     description: Each record represents a customer email in Shopify. Does **not** include `CUSTOMER` metafields.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - source_relation
+              - email
     columns:
       - name: last_fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -766,6 +778,13 @@ models:
       Inventory Level = Inventory item @ a Location.
 
       Will also include `PRODUCT_VARIANT` metafields if enabled.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - source_relation
+              - inventory_item_id
+              - location_id
     columns:
       - name: inventory_level_id
         description: A globally unique identifier for the inventory level.
@@ -1067,6 +1086,13 @@ models:
   - name: shopify_gql__daily_shop
     description: >
       Each record represents a day in your Shop, enriched with a suite of metrics. Will also include `SHOP` metafields if enabled.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - source_relation
+              - date_day
+              - shop_id
     columns:
       - name: date_day
         description: Day for which the shop activity is being measured.
