@@ -41,8 +41,8 @@ with transactions as (
     select
         *,
         {# QUESTION/ISSUE: Cannot confirm if receipt looks the same in GraphQL #}
-        coalesce(cast(nullif({{ fivetran_utils.json_parse("receipt",["charges","data",0,"balance_transaction","exchange_rate"]) }}, '') as {{ dbt.type_numeric() }} ),1) as exchange_rate,
-        coalesce(cast(nullif({{ fivetran_utils.json_parse("receipt",["charges","data",0,"balance_transaction","exchange_rate"]) }}, '') as {{ dbt.type_numeric() }} ),1) * amount_shop as currency_exchange_calculated_amount
+        coalesce(cast(nullif({{ dbt.json_parse("receipt",["charges","data",0,"balance_transaction","exchange_rate"]) }}, '') as {{ dbt.type_numeric() }} ),1) as exchange_rate,
+        coalesce(cast(nullif({{ dbt.json_parse("receipt",["charges","data",0,"balance_transaction","exchange_rate"]) }}, '') as {{ dbt.type_numeric() }} ),1) * amount_shop as currency_exchange_calculated_amount
     from joined
 
 )

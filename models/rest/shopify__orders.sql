@@ -99,7 +99,7 @@ with orders as (
 
     select
         orders.*,
-        coalesce(cast({{ fivetran_utils.json_parse("total_shipping_price_set",["shop_money","amount"]) }} as {{ dbt.type_float() }}) ,0) as shipping_cost,
+        coalesce(cast({{ dbt.json_parse("total_shipping_price_set",["shop_money","amount"]) }} as {{ dbt.type_float() }}) ,0) as shipping_cost,
         
         order_adjustments_aggregates.order_adjustment_amount,
         order_adjustments_aggregates.order_adjustment_tax_amount,
