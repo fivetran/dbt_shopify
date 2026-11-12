@@ -1,4 +1,4 @@
 version: 1.11.1
 pr_number: 187
 bug_fixes:
-  - description: "`dbt compile` fails on a new schema because the `get_metafields` macro queries `stg_shopify__metafield` before it exists. The macro now queries metafield keys only during `dbt run` and `dbt build`, which fixes compile for all `*_metafields` models. See [#186](https://github.com/fivetran/dbt_shopify/issues/186)."
+  - description: "`dbt compile` fails on a new schema because the `get_metafields` macro queries `stg_shopify__metafield` before it exists. The macro now queries metafield keys only during `dbt run` and `dbt build`, which fixes compile for all `*_metafields` models."
