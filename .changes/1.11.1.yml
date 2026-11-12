@@ -5,4 +5,9 @@ bug_fixes:
     queries `stg_shopify__metafield` before it exists. The macro now queries metafield
     keys only during `dbt run` and `dbt build`, which fixes compile for all `*_metafields`
     models.'
+- description: dbt v2 strict compile (`--static-analysis strict`) fails on DuckDB because
+    `shopify__calendar` compares a timestamp to a date. `shopify__calendar.date_day` is now
+    a date on every warehouse, and the `shopify_lookback` macro now returns a date. This fixes
+    strict compile for `shopify__calendar`, the `*__daily_shop` models and the `*__customer_cohorts`
+    and `*__customer_email_cohorts` models. Their output values don't change.
 date: '2026-11-12'
