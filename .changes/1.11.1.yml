@@ -6,5 +6,8 @@ bug_fixes:
     built without `distinct` also keep duplicate values on Databricks now, which matches the other
     warehouses. Output on other warehouses doesn't change.
 under_the_hood:
+- description: Replaces the package's `shopify_lookback` macro with `fivetran_utils.lookback`, which uses the
+    same logic. Calls cast its result to date, so incremental runs pass dbt v2 strict compile.
+    Output doesn't change.
 - description: Replaces `fivetran_utils.json_parse` with dbt's built-in `dbt.json_parse`.
 - description: Replaces `fivetran_utils.max_bool` with dbt's built-in `dbt.bool_or`. Output doesn't change.

@@ -21,7 +21,7 @@ with calendar as (
     where cast({{ dbt.date_trunc('month','date_day') }} as date) = date_day
 
     {% if is_incremental() %}
-    and cast(date_day as date) >= {{ shopify.shopify_lookback(from_date="max(date_month)", interval=1, datepart='month') }}
+    and cast(date_day as date) >= cast({{ fivetran_utils.lookback(from_date="max(date_month)", interval=1, datepart='month') }} as date)
     {% endif %}
 
 ), customers as (
@@ -90,7 +90,7 @@ with calendar as (
         max(line_item_count_lifetime) as previous_line_item_count_lifetime,
         max(cohort_month_number) as previous_cohort_month_number
     from {{ this }}
-    where date_month < {{ shopify.shopify_lookback(from_date="max(date_month)", interval=1, datepart='month') }}
+    where date_month < cast({{ fivetran_utils.lookback(from_date="max(date_month)", interval=1, datepart='month') }} as date)
     group by 1,2
 
 ), final as (
