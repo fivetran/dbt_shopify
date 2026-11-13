@@ -3,6 +3,7 @@
 [PR #187](https://github.com/fivetran/dbt_shopify/pull/187) and [PR #190](https://github.com/fivetran/dbt_shopify/pull/190) include the following updates:
 
 ## Bug Fix
+- Calculate REST order-line subtotals after discounts and refunds from `price`, `quantity`, and allocated discounts, rather than the deprecated `pre_tax_price` field that the connector now leaves null.
 - `dbt compile` fails on a new schema because the `get_metafields` macro queries `stg_shopify__metafield` before it exists. The macro now queries metafield keys only during `dbt run` and `dbt build`, which fixes compile for all `*_metafields` models.
 - dbt v2 strict compile (`--static-analysis strict`) fails on DuckDB because `shopify__calendar` compares a timestamp to a date. `shopify__calendar.date_day` is now a date on every warehouse, and the `shopify_lookback` macro now returns a date. This fixes strict compile for `shopify__calendar`, the `*__daily_shop` models and the `*__customer_cohorts` and `*__customer_email_cohorts` models. Their output values don't change.
 
