@@ -10,4 +10,7 @@ bug_fixes:
     a date on every warehouse, and the `shopify_lookback` macro now returns a date. This fixes
     strict compile for `shopify__calendar`, the `*__daily_shop` models and the `*__customer_cohorts`
     and `*__customer_email_cohorts` models. Their output values don't change.
+- description: REST order-line subtotals after discounts and refunds now use price,
+    quantity, and allocated discounts instead of the deprecated pre_tax_price field
+    that the connector leaves null.
 date: '2026-11-12'
