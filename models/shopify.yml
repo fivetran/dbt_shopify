@@ -619,7 +619,7 @@ models:
       - name: refunded_subtotal
         description: Subtotal amount of the refund applied to the order line in shop currency.
       - name: subtotal_net_refunds
-        description: Subtotal of the order line with refunds subtracted in shop currency.
+        description: Subtotal of the order line in shop currency, calculated as price times quantity less discounts from the discount allocation table and the refunded subtotal.
       - name: source_relation
         description: "{{ doc('source_relation') }}"
       - name: restock_types

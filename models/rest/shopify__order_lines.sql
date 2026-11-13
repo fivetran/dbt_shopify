@@ -12,6 +12,15 @@ with order_lines as (
     select *
     from {{ ref('stg_shopify__product_variant') }}
 
+), discount_allocations as (
+
+    select
+        order_line_id,
+        source_relation,
+        sum(amount) as discount_amount
+    from {{ ref('stg_shopify__discount_allocation') }}
+    group by 1,2
+
 ), refunds as (
 
     select *
@@ -63,7 +72,7 @@ refunds_aggregated as (
         coalesce(refunds_aggregated.quantity,0) as refunded_quantity,
         coalesce(refunds_aggregated.subtotal,0) as refunded_subtotal,
         order_lines.quantity - coalesce(refunds_aggregated.quantity,0) as quantity_net_refunds,
-        order_lines.pre_tax_price  - coalesce(refunds_aggregated.subtotal,0) as subtotal_net_refunds,
+        order_lines.price * order_lines.quantity - coalesce(discount_allocations.discount_amount, 0) - coalesce(refunds_aggregated.subtotal, 0) as subtotal_net_refunds,
         
         product_variants.created_timestamp as variant_created_at,
         product_variants.updated_timestamp as variant_updated_at,
@@ -92,6 +101,9 @@ refunds_aggregated as (
         tax_lines_aggregated.order_line_tax
 
     from order_lines
+    left join discount_allocations
+        on discount_allocations.order_line_id = order_lines.order_line_id
+        and discount_allocations.source_relation = order_lines.source_relation
     left join refunds_aggregated
         on refunds_aggregated.order_line_id = order_lines.order_line_id
         and refunds_aggregated.source_relation = order_lines.source_relation
