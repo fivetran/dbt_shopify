@@ -15,7 +15,7 @@ This dbt package transforms data from Fivetran's Shopify connector into analytic
   - [DAG](https://fivetran.github.io/dbt_shopify/#!/overview?g_v=1)
   - [Changelog](https://github.com/fivetran/dbt_shopify/blob/main/CHANGELOG.md)
 - dbt Core™ supported versions
-  - `>=1.3.0, <3.0.0`
+  - `>=1.10.0, <3.0.0`
 
 ## What does this dbt package do?
 This package enables you to transform core object tables into analytics-ready models and understand customer behavior over time through cohort analysis. It creates enriched models with metrics focused on customer retention, product performance, and revenue analysis.
@@ -81,7 +81,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=1.11.0", "<1.12.0"]
+    version: [">=1.12.0", "<1.13.0"]
 ```
 
 > All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/shopify_source` in your `packages.yml` since this package has been deprecated.
@@ -218,7 +218,7 @@ vars:
     shopify_schema: your_schema_name
 ```
 
-#### Option B: Union multiple connections
+#### Option B: union multiple connections
 If you have multiple Shopify connections in Fivetran and would like to use this package on all of them simultaneously, we have provided functionality to do so. For each source table, the package will union all of the data together and pass the unioned table into the transformations. The `source_relation` column in each model indicates the origin of each record.
 
 To use this functionality, you will need to set the `shopify_sources` variable in your root `dbt_project.yml` file:
@@ -500,7 +500,7 @@ The Fivetran team maintaining this package only maintains the [latest version](h
 ### Contributions
 A small team of analytics engineers at Fivetran develops these dbt packages. However, the packages are made better by community contributions.
 
-We highly encourage and welcome contributions to this package. Learn how to contribute to a package in dbt's [Contributing to an external dbt package article](https://discourse.getdbt.com/t/contributing-to-a-dbt-package/657).
+We highly encourage and welcome contributions to this package. Learn how to contribute to a package by reading the guidelines in our [CONTRIBUTING.md](https://github.com/fivetran/dbt_shopify/blob/main/CONTRIBUTING.md) document.
 
 <!--section-end-->
 
