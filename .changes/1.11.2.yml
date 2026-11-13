@@ -1,8 +1,16 @@
 version: 1.11.2
 pr_number: 191
 under_the_hood:
-  - description: Aligns the column documentation in the package yml files with the columns the models actually output. No model output changed.
-    details:
-      - "Documents the `inventory_level_id` field in `shopify__inventory_levels`, the `unit_price_shop_amount` and `unit_price_shop_currency_code` fields in `shopify_gql__order_lines`, and the `source_relation` field in `stg_shopify__tax_line`."
-      - "Removes documentation for the `_fivetran_synced` field in `shopify__discounts`, `stg_shopify__discount_allocation`, and `stg_shopify__discount_application`, as these models do not output the field."
-      - "Removes documentation for the `test` field in `stg_shopify__transaction`, which the model uses only as a filter, and for the `buyer_accepts_marketing` field in `stg_shopify_gql__order`, which the model outputs as `has_buyer_accepted_marketing`."
+- description: Aligns the column documentation in the package yml files with the columns
+    the models actually output. No model output changed.
+  details:
+  - Documents the `inventory_level_id` field in `shopify__inventory_levels`, the `unit_price_shop_amount`
+    and `unit_price_shop_currency_code` fields in `shopify_gql__order_lines`, and
+    the `source_relation` field in `stg_shopify__tax_line`.
+  - Removes documentation for the `_fivetran_synced` field in `shopify__discounts`,
+    `stg_shopify__discount_allocation`, and `stg_shopify__discount_application`, as
+    these models do not output the field.
+  - Removes documentation for the `test` field in `stg_shopify__transaction`, which
+    the model uses only as a filter, and for the `buyer_accepts_marketing` field in
+    `stg_shopify_gql__order`, which the model outputs as `has_buyer_accepted_marketing`.
+date: '2026-11-13'

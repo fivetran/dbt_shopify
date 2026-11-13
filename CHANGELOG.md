@@ -1,9 +1,20 @@
+# dbt_shopify v1.11.2
+
+[PR #191](https://github.com/fivetran/dbt_shopify/pull/191) includes the following updates:
+
+## Under the Hood
+- Aligns the column documentation in the package yml files with the columns the models actually output. No model output changed.
+  - Documents the `inventory_level_id` field in `shopify__inventory_levels`, the `unit_price_shop_amount` and `unit_price_shop_currency_code` fields in `shopify_gql__order_lines`, and the `source_relation` field in `stg_shopify__tax_line`.
+  - Removes documentation for the `_fivetran_synced` field in `shopify__discounts`, `stg_shopify__discount_allocation`, and `stg_shopify__discount_application`, as these models do not output the field.
+  - Removes documentation for the `test` field in `stg_shopify__transaction`, which the model uses only as a filter, and for the `buyer_accepts_marketing` field in `stg_shopify_gql__order`, which the model outputs as `has_buyer_accepted_marketing`.
+
 # dbt_shopify v1.11.1
 
-[PR #187](https://github.com/fivetran/dbt_shopify/pull/187) includes the following updates:
+[PR #187](https://github.com/fivetran/dbt_shopify/pull/187) and [PR #190](https://github.com/fivetran/dbt_shopify/pull/190) include the following updates:
 
 ## Bug Fix
 - `dbt compile` fails on a new schema because the `get_metafields` macro queries `stg_shopify__metafield` before it exists. The macro now queries metafield keys only during `dbt run` and `dbt build`, which fixes compile for all `*_metafields` models.
+- dbt v2 strict compile (`--static-analysis strict`) fails on DuckDB because `shopify__calendar` compares a timestamp to a date. `shopify__calendar.date_day` is now a date on every warehouse, and the `shopify_lookback` macro now returns a date. This fixes strict compile for `shopify__calendar`, the `*__daily_shop` models and the `*__customer_cohorts` and `*__customer_email_cohorts` models. Their output values don't change.
 
 # dbt_shopify v1.11.0
 
