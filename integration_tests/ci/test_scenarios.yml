@@ -14,6 +14,8 @@ schema_variable_name: "shopify_schema"
 include_databricks_sql: true
 include_sqlserver: false
 include_duckdb: true
+include_dbt_v2_strict: true
+
 include_dbt_compile: true
 include_dbt_v2_strict: true
 
