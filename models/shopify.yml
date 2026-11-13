@@ -739,6 +739,8 @@ models:
     columns:
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
+      - name: inventory_level_id
+        description: The ID of the inventory level record.
       - name: inventory_item_id
         description: The ID of the inventory item associated with the inventory level.
         tests:
@@ -942,8 +944,6 @@ models:
         tests:
           - unique
           - not_null
-      - name: _fivetran_synced
-        description: "{{ doc('_fivetran_synced') }}"
       - name: code
         description: The case-insensitive discount code that customers use at checkout. 
       - name: discount_code_id

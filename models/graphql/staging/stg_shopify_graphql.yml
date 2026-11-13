@@ -94,8 +94,6 @@ models:
         description: The postal code (zip, postcode, Eircode, …) of the billing address.
       - name: browser_ip
         description: The IP address of the customer who placed the order. Useful for fraud detection and geographic analysis.
-      - name: buyer_accepts_marketing
-        description: Whether the customer agreed to receive marketing emails at the time of purchase.
       - name: cancel_reason
         description: The reason why the order was canceled.
       - name: cancelled_timestamp
