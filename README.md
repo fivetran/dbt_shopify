@@ -15,7 +15,7 @@ This dbt package transforms data from Fivetran's Shopify connector into analytic
   - [DAG](https://fivetran.github.io/dbt_shopify/#!/overview?g_v=1)
   - [Changelog](https://github.com/fivetran/dbt_shopify/blob/main/CHANGELOG.md)
 - dbt Core™ supported versions
-  - `>=1.3.0, <3.0.0`
+  - `>=1.10.0, <3.0.0`
 
 ## What does this dbt package do?
 This package enables you to transform core object tables into analytics-ready models and understand customer behavior over time through cohort analysis. It creates enriched models with metrics focused on customer retention, product performance, and revenue analysis.
@@ -81,7 +81,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=1.11.0", "<1.12.0"]
+    version: [">=1.12.0", "<1.13.0"]
 ```
 
 > All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/shopify_source` in your `packages.yml` since this package has been deprecated.
