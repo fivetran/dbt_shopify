@@ -16,6 +16,8 @@ table_variables:
     - discount_code_app
   shopify_using_product_variant_media:
     - product_variant_media
+  shopify_using_fulfillment_order_line:
+    - fulfillment_order_line
   _fivetran_quickstart_customer_address:
     - customer_address
   _fivetran_quickstart_customer_tag:
@@ -60,6 +62,8 @@ table_variables:
     - customer_visit
   shopify_gql_using_fulfillment_order_line_item:
     - fulfillment_order_line_item
+  shopify_gql_using_fulfillment_line_item:
+    - fulfillment_line_item
   shopify_gql_using_metafield:
     - metafield
   shopify_gql_using_collection_rule:

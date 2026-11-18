@@ -1,5 +1,5 @@
 name: 'shopify'
-version: '1.11.1'
+version: '1.12.0'
 config-version: 2
 require-dbt-version: [">=1.3.0", "<3.0.0"]
 
@@ -61,6 +61,7 @@ vars:
     discount_code_free_shipping_source: "{{ source('shopify','discount_code_free_shipping') }}"
     discount_redeem_code_source: "{{ source('shopify','discount_redeem_code') }}"
     fulfillment_source: "{{ source('shopify','fulfillment') }}"
+    fulfillment_order_line_source: "{{ source('shopify','fulfillment_order_line') }}"
     inventory_item_source: "{{ source('shopify','inventory_item') }}"
     inventory_level_source: "{{ source('shopify','inventory_level') }}"
     inventory_quantity_source: "{{ source('shopify','inventory_quantity') }}"
@@ -122,6 +123,7 @@ vars:
     gql_order_line_tax_line_source: "{{ source('shopify_graphql', 'order_line_tax_line') }}"
     gql_fulfillment_tracking_info_source: "{{ source('shopify_graphql', 'fulfillment_tracking_info') }}"
     gql_fulfillment_order_line_item_source: "{{ source('shopify_graphql', 'fulfillment_order_line_item') }}"
+    gql_fulfillment_line_item_source: "{{ source('shopify_graphql', 'fulfillment_line_item') }}"
     gql_customer_visit_source: "{{ source('shopify_graphql', 'customer_visit') }}"
     gql_customer_address_source: "{{ source('shopify_graphql', 'customer_address') }}"
     gql_collection_rule_source: "{{ source('shopify_graphql', 'collection_rule') }}"

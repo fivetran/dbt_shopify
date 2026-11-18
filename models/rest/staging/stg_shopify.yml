@@ -779,6 +779,54 @@ models:
       - name: source_relation
         description: "{{ doc('source_relation') }}"
 
+  - name: stg_shopify__fulfillment_order_line
+    description: Each record represents an order line included in a fulfillment, and the quantity of that line in the fulfillment. An order line can appear in more than one fulfillment.
+    columns:
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+      - name: fulfillment_id
+        description: The ID of the fulfillment that the line belongs to.
+        tests:
+          - not_null
+      - name: order_line_id
+        description: The ID of the order line that was fulfilled.
+        tests:
+          - not_null
+      - name: order_id
+        description: The ID of the order that the line belongs to.
+      - name: product_id
+        description: The ID of the product of the line item.
+      - name: variant_id
+        description: The ID of the product variant.
+      - name: quantity
+        description: The quantity of the order line included in the fulfillment.
+      - name: fulfillable_quantity
+        description: The quantity of the order line that is still available to fulfill.
+      - name: price
+        description: The price of the line item in shop currency.
+      - name: name
+        description: The name of the product variant.
+      - name: title
+        description: The title of the product.
+      - name: variant_title
+        description: The title of the product variant.
+      - name: sku
+        description: The SKU of the product variant.
+      - name: vendor
+        description: The name of the item's supplier.
+      - name: grams
+        description: The weight of the line item in grams.
+      - name: fulfillment_service
+        description: The service provider that fulfilled the line item.
+      - name: gift_card
+        description: Whether the line item is a gift card.
+      - name: requires_shipping
+        description: Whether the line item requires shipping.
+      - name: taxable
+        description: Whether the line item is taxable.
+      - name: _fivetran_synced
+        description: "{{ doc('_fivetran_synced') }}"
+
   - name: stg_shopify__inventory_item
     description: >
       An inventory item represents a physical good. It holds essential information about the physical good, including its SKU and whether its inventory is tracked.

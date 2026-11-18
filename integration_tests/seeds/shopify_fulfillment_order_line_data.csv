@@ -1,0 +1,6 @@
+fulfillment_id,order_line_id,order_id,product_id,variant_id,quantity,fulfillable_quantity,price,name,title,variant_title,sku,vendor,grams,fulfillment_service,gift_card,requires_shipping,taxable,_fivetran_synced
+900001,5699743678561,2669509541985,4526236893281,31879811629153,1,0,4.4,Sample Item,Sample Item,,,Sample Vendor,100,manual,FALSE,TRUE,TRUE,2024-11-07 10:00:00.000000
+900002,5699758784609,2669516488801,4506451050593,31814873481313,1,0,2.8,Sample Item,Sample Item,,,Sample Vendor,100,manual,FALSE,TRUE,TRUE,2024-11-07 10:00:00.000000
+900003,5699758784609,2669516488801,4506451050593,31814873481313,1,0,2.8,Sample Item,Sample Item,,,Sample Vendor,100,manual,FALSE,TRUE,TRUE,2024-11-07 10:00:00.000000
+900004,5708321914977,2674098602081,4505775439969,31812476895329,1,0,2.8,Sample Item,Sample Item,,,Sample Vendor,100,manual,FALSE,TRUE,TRUE,2024-11-07 10:00:00.000000
+900005,5708321914977,2674098602081,4505775439969,31812476895329,1,0,2.8,Sample Item,Sample Item,,,Sample Vendor,100,manual,FALSE,TRUE,TRUE,2024-11-07 10:00:00.000000

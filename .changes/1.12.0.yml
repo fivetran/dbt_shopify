@@ -1,0 +1,33 @@
+version: 1.12.0
+pr_number: null # TODO: set once the PR is open
+is_breaking: true
+schema_data_changes:
+  entries:
+  - models:
+    - '`shopify__inventory_levels`'
+    - '`shopify_gql__inventory_levels`'
+    change_type: Corrected values
+    old: Every fulfillment on an order is linked to every line on that order. `quantity_sold`,
+      `subtotal_sold`, and the refund metrics are counted once per fulfillment, including
+      cancelled fulfillments and fulfillments at other locations.
+    new: Each line is linked only to the fulfillments that contain it. `quantity_sold`
+      counts the units each location shipped, excluding `cancelled`, `error`, and `failure`
+      fulfillments. `subtotal_sold` and the refund metrics are split by each location's
+      share of the line.
+    is_breaking: true
+    notes: Fixes inflated sold and refund metrics for orders with more than one fulfillment
+      ([#179](https://github.com/fivetran/dbt_shopify/issues/179)). `quantity_sold_refunds`
+      can now be a fraction when a line ships from more than one location. Thanks to
+      [@porkedchop](https://github.com/porkedchop) for reporting the issue and opening
+      [PR #180](https://github.com/fivetran/dbt_shopify/pull/180).
+  - models:
+    - '`stg_shopify__fulfillment_order_line`'
+    - '`stg_shopify_gql__fulfillment_line_item`'
+    change_type: New model
+    new: Staging models for the `fulfillment_order_line` (REST API) and `fulfillment_line_item`
+      (GraphQL API) source tables.
+    is_breaking: false
+    notes: Enabled by default. If your connection doesn't sync these tables, set `shopify_using_fulfillment_order_line`
+      or `shopify_gql_using_fulfillment_line_item` to `false`. The inventory metrics then
+      fall back to the order-level link, counted once per line and location.
+date: '2026-11-18'

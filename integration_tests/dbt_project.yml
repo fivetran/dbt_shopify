@@ -1,5 +1,5 @@
 name: 'shopify_integration_tests'
-version: '1.11.1'
+version: '1.12.0'
 profile: 'integration_tests'
 config-version: 2
 
@@ -45,6 +45,7 @@ vars:
     shopify_discount_code_free_shipping_identifier: "shopify_discount_code_free_shipping_data"
     shopify_discount_redeem_code_identifier: "shopify_discount_redeem_code_data"
     shopify_fulfillment_identifier: "shopify_fulfillment_data"
+    shopify_fulfillment_order_line_identifier: "shopify_fulfillment_order_line_data"
     shopify_inventory_item_identifier: "shopify_inventory_item_data"
     shopify_inventory_level_identifier: "shopify_inventory_level_data"
     shopify_inventory_quantity_identifier: "shopify_inventory_quantity_data"
@@ -113,6 +114,7 @@ vars:
     shopify_graphql_order_line_tax_line_identifier: "shopify_gql_order_line_tax_line_data"
     shopify_graphql_fulfillment_tracking_info_identifier: "shopify_gql_fulfillment_tracking_info_data"
     shopify_graphql_fulfillment_order_line_item_identifier: "shopify_gql_fulfillment_order_line_item_data"
+    shopify_graphql_fulfillment_line_item_identifier: "shopify_gql_fulfillment_line_item_data"
     shopify_graphql_customer_visit_identifier: "shopify_gql_customer_visit_data"
     shopify_graphql_customer_address_identifier: "shopify_gql_customer_address_data"
     shopify_graphql_collection_rule_identifier: "shopify_gql_collection_rule_data"
@@ -195,6 +197,24 @@ seeds:
       +column_types:
         amount_set_presentment_money_amount: float
         amount_set_shop_money_amount: float
+    shopify_fulfillment_data:
+      +column_types:
+        _fivetran_synced: timestamp
+        id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        location_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        order_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+    shopify_fulfillment_order_line_data:
+      +column_types:
+        _fivetran_synced: timestamp
+        fulfillment_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        order_line_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        order_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        product_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        variant_id: "{%- if target.type == 'bigquery' -%} INT64 {%- else -%} bigint {%- endif -%}"
+        price: float
+        gift_card: boolean
+        requires_shipping: boolean
+        taxable: boolean
     shopify_order_line_refund_data:
       +column_types:
         _fivetran_synced: timestamp

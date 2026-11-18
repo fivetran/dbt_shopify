@@ -1,0 +1,5 @@
+_fivetran_synced,discounted_total_set_pres_amount,discounted_total_set_pres_currency_code,discounted_total_set_shop_amount,discounted_total_set_shop_currency_code,fulfillment_id,id,order_line_id,original_total_set_pres_amount,original_total_set_pres_currency_code,original_total_set_shop_amount,original_total_set_shop_currency_code,product_id,product_variant_id,quantity
+2025-07-18 10:10:00,19.99,USD,19.99,USD,900101,900401,900011,19.99,USD,19.99,USD,2001,3001,1
+2025-07-18 10:10:00,19.99,USD,19.99,USD,900102,900402,900011,19.99,USD,19.99,USD,2001,3001,1
+2025-07-18 10:10:00,14.995,USD,14.995,USD,900103,900403,900012,14.995,USD,14.995,USD,2002,3002,1
+2025-07-18 10:10:00,14.995,USD,14.995,USD,900104,900404,900012,14.995,USD,14.995,USD,2002,3002,1

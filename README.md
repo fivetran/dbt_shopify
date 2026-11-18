@@ -81,7 +81,7 @@ If you are **not** using the [Shopify Holistic reporting package](https://github
 ```yml
 packages:
   - package: fivetran/shopify
-    version: [">=1.11.0", "<1.12.0"]
+    version: [">=1.12.0", "<1.13.0"]
 ```
 
 > All required sources and staging models are now bundled into this transformation package. Do not include `fivetran/shopify_source` in your `packages.yml` since this package has been deprecated.
@@ -144,6 +144,7 @@ To use this dbt package, you must have either at least one Fivetran REST API-bas
 - order_discount_code
 - abandoned_checkout_shipping_line
 - fulfillment_event
+- fulfillment_order_line
 - tax_line
 
 #### Shopify GraphQL
@@ -181,6 +182,7 @@ To use this dbt package, you must have either at least one Fivetran REST API-bas
 - fulfillment_event
 - fulfillment_tracking_info
 - fulfillment_order_line_item
+- fulfillment_line_item
 - customer_visit
 - customer_address
 - collection_rule
@@ -251,7 +253,7 @@ The Shopify package will automatically create null staging models for missing ta
 #### REST API
 > If your Shopify connection is leveraging the older Shopify REST API and you are not running the package via Fivetran Quickstart, refer to the following variables.
 
-The package takes into consideration that not every Shopify connection may have the `fulfillment_event`, `metadata`, `discount_code_app`, `product_variant_media`, or `abandoned_checkout` tables (including `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
+The package takes into consideration that not every Shopify connection may have the `fulfillment_event`, `fulfillment_order_line`, `metadata`, `discount_code_app`, `product_variant_media`, or `abandoned_checkout` tables (including `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
 
 ```yml
 # dbt_project.yml
@@ -259,6 +261,7 @@ The package takes into consideration that not every Shopify connection may have 
 vars:
     shopify_using_abandoned_checkout: false # TRUE by default. Setting to false will disable `abandoned_checkout`, `abandoned_checkout_discount_code`, and `abandoned_checkout_shipping_line`.
     shopify_using_metafield: false  # TRUE by default.
+    shopify_using_fulfillment_order_line: false # TRUE by default. Setting to false makes `shopify__inventory_levels` link every fulfillment on an order to every line on that order.
     shopify_using_discount_code_app: true # FALSE by default.
     shopify_using_fulfillment_event: true # FALSE by default. 
     shopify_using_product_variant_media: true # FALSE by default.
@@ -267,7 +270,7 @@ vars:
 #### GraphQL API
 > If your Shopify connection is leveraging the newer Shopify GraphQL API and you are not running the package via Fivetran Quickstart, refer to the following variables.
 
-The package takes into consideration that not every Shopify connection may have the `collection_rule`, `customer_visit`, `fulfillment_event`, `fulfillment_tracking_info`, `fulfillment_order_line_item`, `metafield`, `discount_code_app`, `product_variant_media`, `return` (including `return_line_item` and `return_shipping_fee`) or `abandoned_checkout` tables (including `abandoned_checkout` and `abandoned_checkout_discount_code`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
+The package takes into consideration that not every Shopify connection may have the `collection_rule`, `customer_visit`, `fulfillment_event`, `fulfillment_tracking_info`, `fulfillment_order_line_item`, `fulfillment_line_item`, `metafield`, `discount_code_app`, `product_variant_media`, `return` (including `return_line_item` and `return_shipping_fee`) or `abandoned_checkout` tables (including `abandoned_checkout` and `abandoned_checkout_discount_code`) and allows you to enable or disable the corresponding functionality. To enable/disable the modeling of the mentioned source tables and their downstream references, add the following variable to your `dbt_project.yml` file:
 
 ```yml
 # dbt_project.yml
@@ -276,6 +279,7 @@ vars:
     shopify_gql_using_abandoned_checkout: false # TRUE by default. Setting to false will disable `abandoned_checkout` and `abandoned_checkout_discount_code`
     shopify_gql_using_customer_visit: false # TRUE by default
     shopify_gql_using_fulfillment_order_line_item: false # TRUE by default
+    shopify_gql_using_fulfillment_line_item: false # TRUE by default. Setting to false makes `shopify_gql__inventory_levels` link every fulfillment on an order to every line on that order.
     shopify_gql_using_metafield: false  # TRUE by default.
     shopify_gql_using_collection_rule: true # FALSE by default.
     shopify_gql_using_discount_code_app: true # FALSE by default.

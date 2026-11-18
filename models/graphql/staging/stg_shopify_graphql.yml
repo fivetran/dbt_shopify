@@ -1008,6 +1008,51 @@ models:
       - name: source_relation
         description: "{{ doc('source_relation') }}"
 
+  - name: stg_shopify_gql__fulfillment_line_item
+    description: Each record represents a line item from an order that is included in a fulfillment, and the quantity of that line item the fulfillment contains.
+    columns:
+      - name: unique_key
+        description: Surrogate key hashed on `fulfillment_line_item_id` and `source_relation`.
+        tests:
+          - unique
+          - not_null
+      - name: _fivetran_synced
+        description: "{{ doc('_fivetran_synced') }}"
+      - name: fulfillment_line_item_id
+        description: The ID of the fulfillment line item.
+      - name: fulfillment_id
+        description: The ID of the fulfillment that contains this line item.
+        tests:
+          - not_null
+      - name: order_line_id
+        description: The ID of the order line item that is fulfilled.
+        tests:
+          - not_null
+      - name: product_id
+        description: The ID of the product that is fulfilled.
+      - name: product_variant_id
+        description: The ID of the product variant that is fulfilled.
+      - name: quantity
+        description: The number of units of the order line item that the fulfillment contains.
+      - name: discounted_total_pres_amount
+        description: The total price after discounts of the fulfilled units, in the presentment currency.
+      - name: discounted_total_pres_currency_code
+        description: The presentment currency code of `discounted_total_pres_amount`.
+      - name: discounted_total_shop_amount
+        description: The total price after discounts of the fulfilled units, in the shop currency.
+      - name: discounted_total_shop_currency_code
+        description: The shop currency code of `discounted_total_shop_amount`.
+      - name: original_total_pres_amount
+        description: The total price before discounts of the fulfilled units, in the presentment currency.
+      - name: original_total_pres_currency_code
+        description: The presentment currency code of `original_total_pres_amount`.
+      - name: original_total_shop_amount
+        description: The total price before discounts of the fulfilled units, in the shop currency.
+      - name: original_total_shop_currency_code
+        description: The shop currency code of `original_total_shop_amount`.
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
+
   - name: stg_shopify_gql__fulfillment_tracking_info
     description: Represents tracking information associated with a fulfillment. Used by Shopify to generate clickable tracking numbers and delivery updates.
     columns:

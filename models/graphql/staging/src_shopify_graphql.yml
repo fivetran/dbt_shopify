@@ -1928,6 +1928,43 @@ sources:
           - name: weight_value
             description: The numeric weight of a single unit of the line item using the specified `weight_unit`.
 
+      - name: fulfillment_line_item
+        description: Each record represents a line item from an order that is included in a fulfillment, and the quantity of that line item the fulfillment contains.
+        identifier: "{{ var('shopify_graphql_fulfillment_line_item_identifier', 'fulfillment_line_item') }}"
+        config:
+          enabled: "{{ var('shopify_gql_using_fulfillment_line_item', true) and var('shopify_api', 'rest') == var('shopify_api_override','graphql') and var('shopify_sources', []) == [] }}"
+        columns:
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+          - name: discounted_total_set_pres_amount
+            description: The total price after discounts of the fulfilled units, in the presentment currency.
+          - name: discounted_total_set_pres_currency_code
+            description: The presentment currency code of `discounted_total_set_pres_amount`.
+          - name: discounted_total_set_shop_amount
+            description: The total price after discounts of the fulfilled units, in the shop currency.
+          - name: discounted_total_set_shop_currency_code
+            description: The shop currency code of `discounted_total_set_shop_amount`.
+          - name: fulfillment_id
+            description: The ID of the fulfillment that contains this line item.
+          - name: id
+            description: The ID of the fulfillment line item.
+          - name: order_line_id
+            description: The ID of the order line item that is fulfilled.
+          - name: original_total_set_pres_amount
+            description: The total price before discounts of the fulfilled units, in the presentment currency.
+          - name: original_total_set_pres_currency_code
+            description: The presentment currency code of `original_total_set_pres_amount`.
+          - name: original_total_set_shop_amount
+            description: The total price before discounts of the fulfilled units, in the shop currency.
+          - name: original_total_set_shop_currency_code
+            description: The shop currency code of `original_total_set_shop_amount`.
+          - name: product_id
+            description: The ID of the product that is fulfilled.
+          - name: product_variant_id
+            description: The ID of the product variant that is fulfilled.
+          - name: quantity
+            description: The number of units of the order line item that the fulfillment contains.
+
       - name: customer_address
         description: Represents a customer's mailing address and includes additional geographic metadata.
         identifier: "{{ var('shopify_graphql_customer_address_identifier', 'customer_address') }}"
