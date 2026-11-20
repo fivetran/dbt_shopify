@@ -10,7 +10,7 @@ models:
         description: The 'number' of the `date_month` of the record, i.e. how many months from their start month this cohort occurred
       - name: customer_cohort_id
         description: Unique key representing a customer in a given month. Hashed on 'date_month', 'customer_id', and 'source_relation'.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: customer_id
@@ -43,7 +43,7 @@ models:
         description: The 'number' of the `date_month` of the record, i.e. how many months from their start month this cohort occurred
       - name: customer_cohort_id
         description: Unique key representing a customer in a given month. Hashed on 'date_month','email', and 'source_relation'.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: email
@@ -72,7 +72,7 @@ models:
     columns:
       - name: orders_unique_key
         description: Unique key representing an order. Hashed on 'order_id' and 'source_relation'.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
@@ -550,7 +550,7 @@ models:
     columns:
       - name: order_lines_unique_key
         description: Unique key representing an order line. Hashed on 'order_line_id' and 'source_relation'.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
@@ -664,7 +664,7 @@ models:
     columns:
       - name: transactions_unique_id
         description: Unique key representing a transaction. Hashed on 'transaction_id' and 'source_relation'.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: transaction_id
@@ -766,11 +766,11 @@ models:
         description: "{{ doc('_fivetran_synced') }}"
       - name: inventory_item_id
         description: The ID of the inventory item associated with the inventory level.
-        tests:
+        data_tests:
           - not_null
       - name: location_id
         description: The ID of the location that the inventory level belongs to.
-        tests:
+        data_tests:
           - not_null
       - name: updated_at
         description: The date and time (ISO 8601 format) when the inventory level was last modified.
@@ -964,7 +964,7 @@ models:
           Hashed on 'source_relation', 'discount_code_id', 'discount_id', 'discount_type',
           'code', 'allocation_method', 'description', 'target_selection', 'target_type',
           'type', 'value', 'value_type'.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
@@ -973,7 +973,7 @@ models:
         description: The case-insensitive discount code that customers use at checkout. 
       - name: discount_code_id
         description: The ID for the discount code.
-        tests:
+        data_tests:
           - not_null
       - name: discount_type
         description: The type of discount (e.g. 'basic', 'bxgy', 'free_shipping', 'app').
@@ -1070,7 +1070,7 @@ models:
         description: Day for which the shop activity is being measured.
       - name: shop_id
         description: The ID for the shop. A 64-bit unsigned integer.
-        tests:
+        data_tests:
           - not_null
       - name: name
         description: The name of the shop.
@@ -1203,7 +1203,7 @@ models:
     columns:
       - name: unique_key
         description: Unique key representing a refunded order line item. Hashed on 'order_line_refund_id' and 'source_relation'.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: refund_id
@@ -1272,7 +1272,7 @@ models:
     columns:
       - name: unique_key
         description: Unique key representing a refund transaction. Hashed on 'refund_id' and 'source_relation'.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: refund_id

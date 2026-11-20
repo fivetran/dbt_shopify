@@ -627,7 +627,7 @@ models:
         description: The payment gateway used by the checkout.
       - name: checkout_id
         description: The ID for the checkout.
-        tests:
+        data_tests:
           - not_null
       - name: landing_site_base_url
         description: The URL for the page where the customer entered the shop.
@@ -714,11 +714,11 @@ models:
         description: "{{ doc('_fivetran_synced') }}"
       - name: collection_id
         description: ID referencing the `collection` the product belongs to.
-        tests:
+        data_tests:
           - not_null
       - name: product_id
         description: ID referencing the `product`.
-        tests:
+        data_tests:
           - not_null
       - name: source_relation
         description: "{{ doc('source_relation') }}"
@@ -744,7 +744,7 @@ models:
         description: A unique, human-readable string for the collection automatically generated from its title. This is used in themes by the Liquid templating language to refer to the collection.
       - name: collection_id
         description: The ID for the collection.
-        tests:
+        data_tests:
           - not_null
       - name: published_at
         description: The time and date (ISO 8601 format) when the collection was made visible. Returns null for a hidden collection.
@@ -791,11 +791,11 @@ models:
         description: "{{ doc('_fivetran_synced') }}"
       - name: index
         description: Index (starting from 1) representing when the tag was placed on the customer. 
-        tests:
+        data_tests:
           - not_null
       - name: customer_id
         description: ID of the customer being tagged.
-        tests:
+        data_tests:
           - not_null
       - name: value
         description: Value of the tag.
@@ -819,7 +819,7 @@ models:
         description: The date and time when the fulfillment was created. The API returns this value in ISO 8601 format.
       - name: fulfillment_id
         description: The ID for the fulfillment.
-        tests:
+        data_tests:
           - not_null
       - name: location_id
         description: The unique identifier of the location that the fulfillment was processed at.
@@ -886,7 +886,7 @@ models:
         description: The date and time (ISO 8601 format) when the inventory item was created.
       - name: inventory_item_id
         description: The ID of the inventory item.
-        tests:
+        data_tests:
           - not_null
       - name: province_code_of_origin
         description: The province code (ISO 3166-2 alpha-2) of where the item came from. The province code is only used if the shipping provider for the inventory item is Canada Post.
@@ -1018,7 +1018,7 @@ models:
         description: The date and time (ISO 8601 format) when the location was created.
       - name: location_id
         description: The ID of the location.
-        tests:
+        data_tests:
           - not_null
       - name: is_legacy
         description: >
@@ -1054,7 +1054,7 @@ models:
     columns:
       - name: media_id
         description: The unique identifier for the media associated with a product image.
-        tests:
+        data_tests:
           - not_null
       - name: status
         description: The status of the product image, indicating its availability or processing state.
@@ -1077,7 +1077,7 @@ models:
     columns:
       - name: media_id
         description: The unique identifier for the media associated with the product image.
-        tests:
+        data_tests:
           - not_null
       - name: image_id
         description: Unique numeric identifier of the product image.
@@ -1113,7 +1113,7 @@ models:
         description: A description of the information that the metafield contains.
       - name: metafield_id
         description: The unique ID of the metafield.
-        tests:
+        data_tests:
           - not_null
       - name: key
         description: The key of the metafield. Keys can be up to 64 characters long and can contain alphanumeric characters, hyphens, underscores, and periods.
@@ -1150,11 +1150,11 @@ models:
         description: "{{ doc('_fivetran_synced') }}"
       - name: name
         description: Name of the attribute.
-        tests:
+        data_tests:
           - not_null
       - name: order_id
         description: ID referencing the order the note attribute belongs to.
-        tests:
+        data_tests:
           - not_null
       - name: value
         description: Value of the attribute.
@@ -1184,7 +1184,7 @@ models:
         description: The pre-tax shipping price with discounts applied (JSON) in presentment and shop currencies.
       - name: order_shipping_line_id
         description: A globally-unique identifier.
-        tests:
+        data_tests:
           - not_null
       - name: order_id
         description: ID of the associated order.
@@ -1217,11 +1217,11 @@ models:
         description: "{{ doc('_fivetran_synced') }}"
       - name: index
         description: Index (from 1) representing the order of shipping lines per order.
-        tests:
+        data_tests:
           - not_null
       - name: order_shipping_line_id
         description: ID of the order shipping line this record is associated with.
-        tests:
+        data_tests:
           - not_null
       - name: price
         description: The amount of tax, in shop currency, after discounts and before returns.
@@ -1248,11 +1248,11 @@ models:
         description: "{{ doc('_fivetran_synced') }}"
       - name: index
         description: Index (starting from 1) representing when the tag was placed on the order. 
-        tests:
+        data_tests:
           - not_null
       - name: order_id
         description: ID of the order being tagged.
-        tests:
+        data_tests:
           - not_null
       - name: value
         description: Value of the tag.
@@ -1273,11 +1273,11 @@ models:
         description: "{{ doc('_fivetran_synced') }}"
       - name: key
         description: Key of the tag pair.
-        tests:
+        data_tests:
           - not_null
       - name: order_id
         description: ID of the order url being tagged.
-        tests:
+        data_tests:
           - not_null
       - name: value
         description: Value of the tag.
@@ -1296,11 +1296,11 @@ models:
     columns:
       - name: product_id
         description: The id of the product associated with the media.
-        tests:
+        data_tests:
           - not_null
       - name: media_id
         description: The unique identifier for the media asset linked to the product.
-        tests:
+        data_tests:
           - not_null
       - name: source_relation
         description: "{{ doc('source_relation') }}"
@@ -1317,11 +1317,11 @@ models:
     columns:
       - name: product_variant_id
         description: The id of the product variant associated with the media.
-        tests:
+        data_tests:
           - not_null
       - name: media_id
         description: The unique identifier for the media asset linked to the product.
-        tests:
+        data_tests:
           - not_null
       - name: source_relation
         description: "{{ doc('source_relation') }}"
@@ -1340,11 +1340,11 @@ models:
         description: "{{ doc('_fivetran_synced') }}"
       - name: index
         description: Index (starting from 1) representing when the tag was placed on the product. 
-        tests:
+        data_tests:
           - not_null
       - name: product_id
         description: ID of the product being tagged.
-        tests:
+        data_tests:
           - not_null
       - name: value
         description: Value of the tag.
@@ -1414,7 +1414,7 @@ models:
         description: The name of the timezone assigned by the [IANA](https://www.iana.org/time-zones).
       - name: shop_id
         description: The ID for the shop. A 64-bit unsigned integer.
-        tests:
+        data_tests:
           - not_null
       - name: latitude
         description: The latitude of the shop's location.
@@ -1491,7 +1491,7 @@ models:
         description: The three-letter code (ISO 4217 format) for the currency used for the tender transaction.
       - name: transaction_id
         description: The ID of the transaction.
-        tests:
+        data_tests:
           - not_null
       - name: order_id
         description: The ID of the order that the tender transaction belongs to.
@@ -1535,7 +1535,7 @@ models:
         description: The amount of the discount in presentment currency.
       - name: checkout_id
         description: ID of the checkout. 
-        tests:
+        data_tests:
           - not_null
       - name: code
         description: The discount code.
@@ -1569,11 +1569,11 @@ models:
         description: The amount that's deducted from the order total.
       - name: code
         description: This property returns the discount code that was entered at checkout. Otherwise this property returns the title of the discount that was applied.
-        tests:
+        data_tests:
           - not_null
       - name: order_id
         description: Associated order ID.
-        tests:
+        data_tests:
           - not_null
       - name: type
         description: The type of discount - `fixed_amount`, `percentage`, or `shipping`.
@@ -1742,13 +1742,13 @@ models:
         description: The shop money currency code for the store’s currency.
       - name: discount_application_index
         description: Index of the discount application this allocation relates to. Used to join with the discount application.
-        tests:
+        data_tests:
           - not_null
       - name: index
         description: The index of the discount allocation within the list of allocations on an order line.
       - name: order_line_id
         description: The ID of the order line item receiving the allocation.
-        tests:
+        data_tests:
           - not_null
       - name: source_relation
         description: "{{ doc('source_relation') }}"
@@ -1774,11 +1774,11 @@ models:
         description: A description of the discount, often corresponding to the rule or promotion name.
       - name: index
         description: The index of the discount application on the order.
-        tests:
+        data_tests:
           - not_null
       - name: order_id
         description: The ID of the order to which the discount was applied.
-        tests:
+        data_tests:
           - not_null
       - name: target_selection
         description: >
@@ -1809,7 +1809,7 @@ models:
     columns:
       - name: discount_code_id
         description: The unique ID for the discount code.
-        tests:
+        data_tests:
           - not_null
       - name: title
         description: The display name for the discount code.
@@ -1861,7 +1861,7 @@ models:
     columns:
       - name: discount_code_id
         description: The unique ID for the discount code.
-        tests:
+        data_tests:
           - not_null
       - name: title
         description: The display name for the discount code.
@@ -1913,7 +1913,7 @@ models:
     columns:
       - name: discount_code_id
         description: The unique ID for the discount code.
-        tests:
+        data_tests:
           - not_null
       - name: title
         description: The display name for the discount code.
@@ -1965,7 +1965,7 @@ models:
     columns:
       - name: discount_code_id
         description: The unique ID for the discount code.
-        tests:
+        data_tests:
           - not_null
       - name: title
         description: The display name for the discount code.
@@ -2017,7 +2017,7 @@ models:
     columns:
       - name: discount_code_id
         description: The unique ID of the redeem code.
-        tests:
+        data_tests:
           - not_null
       - name: async_usage_count
         description: (DEPRECATED) The number of times that the redeem code has been used. This field now returns null following a connector update and will be removed in a future release.
