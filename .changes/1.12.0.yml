@@ -5,4 +5,6 @@ new_features:
   description: Raises the minimum dbt version to 1.10.0.
 - description: Adds `dbt_utils.unique_combination_of_columns` tests to staging and
     end models. If a test fails, please [open an issue](https://github.com/fivetran/dbt_shopify/issues/new/choose).
+under_the_hood:
+- description: Updates yml column documentation to match model output.
 date: '2026-11-18'

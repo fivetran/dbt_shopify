@@ -487,8 +487,6 @@ models:
         description: A standardized error code, independent of the payment provider.
       - name: status
         description: The status of the transaction.
-      - name: test
-        description: Whether the transaction is a test transaction.
       - name: user_id
         description: The ID for the user who was logged into the Shopify POS device when the order was processed, if applicable.
       - name: _fivetran_synced
@@ -1717,6 +1715,8 @@ models:
         description: The proportion of the line item price that the tax represents as a decimal.
       - name: title
         description: The name of the tax.
+      - name: source_relation
+        description: "{{ doc('source_relation') }}"
 
   - name: stg_shopify__discount_allocation
     description: Table storing allocation amounts from discount applications across specific order lines.
@@ -1728,8 +1728,6 @@ models:
               - order_line_id
               - discount_application_index
     columns:
-      - name: _fivetran_synced
-        description: "{{ doc('_fivetran_synced') }}"
       - name: amount
         description: The total amount discounted on the order line from this allocation.
       - name: amount_set_presentment_money_amount
@@ -1763,8 +1761,6 @@ models:
               - index
               - order_id
     columns:
-      - name: _fivetran_synced
-        description: "{{ doc('_fivetran_synced') }}"
       - name: allocation_method
         description: >
           The method by which the discount is allocated. Valid values include `each` (applies the discount to each eligible item) and `across` (spreads the discount value across eligible items).

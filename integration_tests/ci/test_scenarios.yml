@@ -14,8 +14,6 @@ schema_variable_name: "shopify_schema"
 include_databricks_sql: true
 include_sqlserver: false
 include_duckdb: true
-include_dbt_v2_strict: true
-
 include_dbt_compile: true
 include_dbt_v2_strict: true
 
@@ -42,7 +40,7 @@ test_scenarios:
       shopify_using_discount_code_app: true
       shopify_gql_using_discount_code_app: true
       shopify_using_product_variant_media: true
-      shopify_gql_product_variant_media: true
+      shopify_gql_using_product_variant_media: true
       shopify_gql_using_collection_rule: true
       shopify_gql_using_customer_visit: false
       shopify_gql_using_return: true
