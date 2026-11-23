@@ -6,7 +6,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `customer_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: customer_id
@@ -55,7 +55,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `order_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: order_id
@@ -94,8 +94,6 @@ models:
         description: The postal code (zip, postcode, Eircode, …) of the billing address.
       - name: browser_ip
         description: The IP address of the customer who placed the order. Useful for fraud detection and geographic analysis.
-      - name: buyer_accepts_marketing
-        description: Whether the customer agreed to receive marketing emails at the time of purchase.
       - name: cancel_reason
         description: The reason why the order was canceled.
       - name: cancelled_timestamp
@@ -240,7 +238,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `order_line_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: order_line_id
@@ -303,7 +301,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `checkout_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: is_deleted
@@ -348,7 +346,7 @@ models:
         description: ID of the customer with the abandoned checkout.
       - name: checkout_id
         description: The ID for the checkout.
-        tests:
+        data_tests:
           - not_null
       - name: name
         description: Checkout order number. 
@@ -446,14 +444,14 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `checkout_id`, `code`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: checkout_id
         description: ID of the checkout. 
-        tests:
+        data_tests:
           - not_null
       - name: code
         description: The discount code.
@@ -469,12 +467,12 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `collection_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: collection_id
         description: The ID for the collection.
-        tests:
+        data_tests:
           - not_null
       - name: is_deleted
         description: "{{ doc('_fivetran_deleted') }}"
@@ -507,18 +505,18 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `collection_id`, `product_id`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: collection_id
         description: ID referencing the `collection` the product belongs to.
-        tests:
+        data_tests:
           - not_null
       - name: product_id
         description: ID referencing the `product`.
-        tests:
+        data_tests:
           - not_null
       - name: source_relation
         description: "{{ doc('source_relation') }}"
@@ -528,18 +526,18 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `customer_id`, `index`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: index
         description: Index (starting from 1) representing when the tag was placed on the customer. 
-        tests:
+        data_tests:
           - not_null
       - name: customer_id
         description: ID of the customer being tagged.
-        tests:
+        data_tests:
           - not_null
       - name: value
         description: Value of the tag.
@@ -551,7 +549,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `order_line_id`, `discount_application_index`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
@@ -566,13 +564,13 @@ models:
         description: The shop money currency code for the store’s currency
       - name: discount_application_index
         description: Index of the discount application this allocation relates to. Used to join with the discount application.
-        tests:
+        data_tests:
           - not_null
       - name: index
         description: The index of the discount allocation within the list of allocations on an order line.
       - name: order_line_id
         description: The ID of the order line item receiving the allocation.
-        tests:
+        data_tests:
           - not_null
       - name: source_relation
         description: "{{ doc('source_relation') }}"
@@ -582,7 +580,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `order_id`, `index`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
@@ -592,11 +590,11 @@ models:
           The method by which the discount is allocated. Valid values include `each` (applies the discount to each eligible item) and `across` (spreads the discount value across eligible items).
       - name: index
         description: The index of the discount application on the order.
-        tests:
+        data_tests:
           - not_null
       - name: order_id
         description: The ID of the order to which the discount was applied.
-        tests:
+        data_tests:
           - not_null
       - name: target_selection
         description: >
@@ -624,12 +622,12 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `discount_code_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: discount_code_id
         description: The unique ID for the discount code.
-        tests:
+        data_tests:
           - not_null
       - name: title
         description: The display name for the discount code.
@@ -675,12 +673,12 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `discount_code_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: discount_code_id
         description: The unique ID for the discount code.
-        tests:
+        data_tests:
           - not_null
       - name: title
         description: The display name for the discount code.
@@ -726,12 +724,12 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `discount_code_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: discount_code_id
         description: The unique ID for the discount code.
-        tests:
+        data_tests:
           - not_null
       - name: title
         description: The display name for the discount code.
@@ -775,12 +773,12 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `discount_code_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: discount_code_id
         description: The unique ID for the discount code.
-        tests:
+        data_tests:
           - not_null
       - name: title
         description: The display name for the discount code.
@@ -826,12 +824,12 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `discount_code_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: discount_code_id
         description: The unique ID of the redeem code.
-        tests:
+        data_tests:
           - not_null
       - name: async_usage_count
         description: (DEPRECATED) The number of times that the redeem code has been used. This field now returns null following a connector update and will be removed in a future release.
@@ -853,7 +851,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `fulfillment_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
@@ -862,7 +860,7 @@ models:
         description: The date and time when the fulfillment was created. The API returns this value in ISO 8601 format.
       - name: fulfillment_id
         description: The ID for the fulfillment.
-        tests:
+        data_tests:
           - not_null
       - name: location_id
         description: The unique identifier of the location that the fulfillment was processed at.
@@ -907,7 +905,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `fulfillment_event_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
@@ -962,7 +960,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `fulfillment_order_line_item_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
@@ -1013,7 +1011,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `fulfillment_id`, `index`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
@@ -1038,12 +1036,12 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `inventory_item_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: inventory_item_id
         description: The ID of the inventory item.
-        tests: 
+        data_tests: 
           - not_null
       - name: is_deleted
         description: "{{ doc('_fivetran_deleted') }}"
@@ -1096,7 +1094,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `inventory_level_id`, `inventory_item_id`, `location_id`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: inventory_level_id
@@ -1123,7 +1121,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `inventory_quantity_id`, `inventory_level_id`, `inventory_item_id`, `inventory_state_name`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: inventory_quantity_id
@@ -1148,12 +1146,12 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `location_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: location_id
         description: The ID of the location. 
-        tests:
+        data_tests:
           - not_null
       - name: is_deleted
         description: "{{ doc('_fivetran_deleted') }}"
@@ -1200,12 +1198,12 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `media_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: media_id
         description: The unique identifier for the media associated with a product image.
-        tests:
+        data_tests:
           - not_null
       - name: status
         description: The status of the product image, indicating its availability or processing state.
@@ -1221,12 +1219,12 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `media_id`, `image_id`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: media_id
         description: The unique identifier for the media associated with the product image.
-        tests:
+        data_tests:
           - not_null
       - name: image_id
         description: Unique numeric identifier of the product image.
@@ -1248,12 +1246,12 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `metafield_id`, `owner_resource_id`, `owner_resource`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: metafield_id
         description: The unique ID of the metafield.
-        tests: 
+        data_tests: 
           - not_null
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -1289,16 +1287,16 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `product_id`, `media_id`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: product_id
         description: The id of the product associated with the media.
-        tests:
+        data_tests:
           - not_null
       - name: media_id
         description: The unique identifier for the media asset linked to the product.
-        tests:
+        data_tests:
           - not_null
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -1310,7 +1308,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `order_adjustment_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: order_adjustment_id
@@ -1345,18 +1343,18 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `order_id`, `index`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: code
         description: This property returns the discount code that was entered at checkout. Otherwise this property returns the title of the discount that was applied.
-        tests:
+        data_tests:
           - not_null
       - name: order_id
         description: Associated order ID.
-        tests:
+        data_tests:
           - not_null
       - name: index
         description: Pairs with `order_id` to provide unique identifier for order discount code.     
@@ -1368,7 +1366,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `order_line_refund_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
@@ -1419,7 +1417,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `order_id`, `key`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
@@ -1428,11 +1426,11 @@ models:
         description: Name of the attribute. Deprecated in favor of `key`.
       - name: key
         description: Name of the attribute. Replaces `name`.
-        tests:
+        data_tests:
           - not_null
       - name: order_id
         description: ID referencing the order the note attribute belongs to.
-        tests:
+        data_tests:
           - not_null
       - name: value
         description: Value of the attribute.
@@ -1444,12 +1442,12 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `order_shipping_line_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: order_shipping_line_id
         description: A globally-unique identifier.
-        tests:
+        data_tests:
           - not_null
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
@@ -1491,18 +1489,18 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `order_shipping_line_id`, `index`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: order_shipping_line_id
         description: ID of the order shipping line this record is associated with.
-        tests:
+        data_tests:
           - not_null
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: index
         description: Index (from 1) representing the order of shipping lines per order.
-        tests:
+        data_tests:
           - not_null
       - name: price_pres_amount
         description: The amount of tax in customer currency, after discounts and before returns. 
@@ -1524,18 +1522,18 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `order_id`, `index`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: order_id
         description: ID of the order being tagged.
-        tests:
+        data_tests:
           - not_null
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: index
         description: Index (starting from 1) representing when the tag was placed on the order. 
-        tests:
+        data_tests:
           - not_null
       - name: value
         description: Value of the tag.
@@ -1547,7 +1545,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `product_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: is_deleted
@@ -1584,7 +1582,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `variant_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: barcode
@@ -1637,16 +1635,16 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `product_variant_id`, `media_id`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: product_variant_id
         description: The id of the product variant associated with the media.
-        tests:
+        data_tests:
           - not_null
       - name: media_id
         description: The unique identifier for the media asset linked to the product.
-        tests:
+        data_tests:
           - not_null
       - name: source_relation
         description: "{{ doc('source_relation') }}"
@@ -1656,18 +1654,18 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `product_id`, `index`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
         description: "{{ doc('_fivetran_synced') }}"
       - name: index
         description: Index (starting from 1) representing when the tag was placed on the product. 
-        tests:
+        data_tests:
           - not_null
       - name: product_id
         description: ID of the product being tagged.
-        tests:
+        data_tests:
           - not_null
       - name: value
         description: Value of the tag.
@@ -1679,7 +1677,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `refund_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: refund_id
@@ -1714,7 +1712,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `return_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: return_id
@@ -1751,7 +1749,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `return_line_item_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: return_line_item_id
@@ -1780,7 +1778,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `return_shipping_fee_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: return_shipping_fee_id
@@ -1805,7 +1803,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `shop_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: is_deleted
@@ -1844,7 +1842,7 @@ models:
         description: The name of the timezone assigned by the [IANA](https://www.iana.org/time-zones).
       - name: shop_id
         description: The ID for the shop. A 64-bit unsigned integer.
-        tests:
+        data_tests:
           - not_null
       - name: latitude
         description: The latitude of the shop's location.
@@ -1902,7 +1900,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `order_line_id`, `index`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
@@ -1934,7 +1932,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `transaction_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
@@ -1945,7 +1943,7 @@ models:
         description: The three-letter code (ISO 4217 format) for the currency used for the tender transaction.
       - name: transaction_id
         description: The ID of the transaction.
-        tests:
+        data_tests:
           - not_null
       - name: order_id
         description: The ID of the order that the tender transaction belongs to.
@@ -1978,7 +1976,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `transaction_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: transaction_id
@@ -2050,7 +2048,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `customer_visit_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: customer_visit_id
@@ -2104,7 +2102,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `collection_id`, `index`, and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: _fivetran_synced
@@ -2154,7 +2152,7 @@ models:
     columns:
       - name: unique_key
         description: Surrogate key hashed on `customer_address_id` and `source_relation`.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: customer_address_id
